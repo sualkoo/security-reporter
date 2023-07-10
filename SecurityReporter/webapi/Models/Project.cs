@@ -11,6 +11,7 @@ public class Project
     public ProjectScopeEnum ProjectScope { get; set; }
     public ProjectDurationEnum ProjectDuration { get; set; }
     public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public DateOnly? IKO { get; set; }
     public DateOnly? TKO { get; set; }
     public DateOnly RequestCreated { get; set; }
