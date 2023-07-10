@@ -2,7 +2,7 @@
 {
     public enum ProjectDurationEnum
     {
-        TWO_WEEKS,
-        FOUR_WEEKS
+        TwoWeeks,
+        FourWeeks
     }
 }

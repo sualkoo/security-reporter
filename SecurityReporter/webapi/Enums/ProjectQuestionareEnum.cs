@@ -3,7 +3,7 @@
     public enum ProjectQuestionareEnum
     {
         TBS,
-        SENT,
-        RECEIVED
+        Sent,
+        Received
     }
 }

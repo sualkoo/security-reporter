@@ -3,8 +3,8 @@
     public enum ProjectScopeEnum
     {
         TBS,
-        SENT,
-        CONFIRMED,
-        SIGNED
+        Sent,
+        Confirmed,
+        Signed
     }
 }
