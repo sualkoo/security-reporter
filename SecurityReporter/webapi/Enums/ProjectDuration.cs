@@ -1,6 +1,6 @@
 ﻿namespace webapi.Enums
 {
-    public enum ProjectDurationEnum
+    public enum ProjectDuration
     {
         TwoWeeks,
         FourWeeks

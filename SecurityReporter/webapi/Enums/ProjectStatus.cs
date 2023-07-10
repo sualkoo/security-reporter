@@ -1,6 +1,6 @@
 ﻿namespace webapi.Enums
 {
-    public enum ProjectStatusEnum
+    public enum ProjectStatus
     {
         Requested, 
         Planned,

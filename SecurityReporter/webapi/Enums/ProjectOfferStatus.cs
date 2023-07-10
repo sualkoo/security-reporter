@@ -1,6 +1,6 @@
 ﻿namespace webapi.Enums
 {
-    public enum ProjectOfferStatusEnum
+    public enum ProjectOfferStatus
     {
         WaitingForOfferCreation,
         OfferDraftSentForReview,

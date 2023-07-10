@@ -1,9 +1,10 @@
 ﻿namespace webapi.Enums
 {
-    public enum ProjectQuestionareEnum
+    public enum ProjectScope
     {
         TBS,
         Sent,
-        Received
+        Confirmed,
+        Signed
     }
 }

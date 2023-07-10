@@ -6,10 +6,10 @@ public class Project
 {
     public Guid Id { get; set; }
     public string ProjectName { get; set; }
-    public ProjectStatusEnum ProjectStatus { get; set; }
-    public ProjectQuestionareEnum ProjectQuestionare { get; set; }
-    public ProjectScopeEnum ProjectScope { get; set; }
-    public ProjectDurationEnum ProjectDuration { get; set; }
+    public ProjectStatus ProjectStatus { get; set; }
+    public ProjectQuestionare ProjectQuestionare { get; set; }
+    public ProjectScope ProjectScope { get; set; }
+    public ProjectDuration ProjectDuration { get; set; }
     public DateOnly? StartDate { get; set; }
     public DateOnly? EndDate { get; set; }
     public DateOnly? IKO { get; set; }
@@ -17,7 +17,7 @@ public class Project
     public DateOnly RequestCreated { get; set; }
     public List<Comment> Commments { get; set; }
     public int CatsNumber { get; set; }
-    public ProjectOfferStatusEnum ProjectOfferStatus { get; set; }
+    public ProjectOfferStatus ProjectOfferStatus { get; set; }
     public string PentestAspects { get; set; }
     public List<string> WorkingTeam { get; set; }
     public string ProjectLead { get; set; }
