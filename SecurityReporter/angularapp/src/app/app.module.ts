@@ -13,15 +13,20 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatRadioModule} from '@angular/material/radio';
+import {DatepickerComponent } from 'src/app/bratislava/components/datepicker-component/datepicker-component.component'
+import { SelectComponentComponent } from './bratislava/components/select-component/select-component.component';
+import { InputComponentComponent } from './bratislava/components/input-component/input-component.component';
+import { RadioButtonComponentComponent } from './bratislava/components/radio-button-component/radio-button-component.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProjectManagerComponent    
+    ProjectManagerComponent,     
   ],
   imports: [
     BrowserModule, HttpClientModule, MatSlideToggleModule, BrowserAnimationsModule, MatFormFieldModule, MatInputModule, 
-    MatDatepickerModule, MatNativeDateModule, NgFor, MatSelectModule, MatRadioModule, ProjectManagementComponent
+    MatDatepickerModule, MatNativeDateModule, NgFor, MatSelectModule, MatRadioModule, ProjectManagementComponent, DatepickerComponent, 
+    SelectComponentComponent, InputComponentComponent, RadioButtonComponentComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]

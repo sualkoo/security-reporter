@@ -1,86 +1,46 @@
-<h1>Project management</h1>
+<div class="header">
+  <h1>Project management</h1>
+  <h3>ID: 123456</h3>
+</div>
+
 <div class="pm-background">
   <div class="left-column">
-    <mat-form-field class="project-name">
-      <mat-label>Project Name</mat-label>
-      <input matInput placeholder="Ex. Pizza" value="Random project" />
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <mat-label>Pentest aspect</mat-label>
-      <input matInput placeholder="Ex. Pizza" value="" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Start date</mat-label>
-      <input matInput [matDatepicker]="picker" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>End date</mat-label>
-      <input matInput [matDatepicker]="picker" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <h4>Project status</h4>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let food of ProjectStatus" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-input-component [title]="'Project name'"></app-input-component>
+    <datepicker-component id="picker1"></datepicker-component>
+    <datepicker-component id="picker2"></datepicker-component>
 
-    <h4>Project scope</h4>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let food of ProjectScope" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <h4>Questionare</h4>
-    <mat-form-field>
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let food of Questionare" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-select-component
+      [option]="ProjectStatus"
+      [title]="'Project status'"
+    ></app-select-component>
+    <app-select-component
+      [option]="ProjectScope"
+      [title]="'Project scope'"
+    ></app-select-component>
+    <app-select-component
+      [option]="Questionare"
+      [title]="'Questionare'"
+    ></app-select-component>
     <div>
-      <h4>Pentest duration</h4>
-      <mat-radio-group aria-label="Select an option">
-        <mat-radio-button value="1">2 weeks</mat-radio-button>
-        <mat-radio-button value="2">4 weeks</mat-radio-button>
-      </mat-radio-group>
+      <app-radio-button-component></app-radio-button-component>
+      <app-input-component></app-input-component>
+      <p>weeks</p>
     </div>
-    <mat-form-field>
-      <mat-label>IKO</mat-label>
-      <input matInput [matDatepicker]="picker" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>TKO</mat-label>
-      <input matInput [matDatepicker]="picker" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+
+    <datepicker-component id="picker3"></datepicker-component>
+    <datepicker-component id="picker4"></datepicker-component>
+
+    <app-input-component [title]="'Pentest aspect'"></app-input-component>
   </div>
-  <div class="left-column"></div>
+
+  <div class="left-column">
+    <datepicker-component id="picker3"></datepicker-component>
+    <app-input-component [title]="'Cats number'"></app-input-component>
+    <app-input-component [title]="'Project lead'"></app-input-component>
+    <app-input-component [title]="'Working team'"></app-input-component>
+    <app-input-component [title]="'Report status'"></app-input-component>
+    <app-input-component [title]="'Contact for client'"></app-input-component>
+    <app-input-component [title]="'Add comment'"></app-input-component>
+  </div>
+  <button mat-flat-button color="warn">Primary</button>
 </div>

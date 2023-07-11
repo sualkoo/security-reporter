@@ -6,17 +6,12 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {NgFor} from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatRadioModule} from '@angular/material/radio';
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
-interface ProjectStatus {
-  value: string;
-  viewValue: string;
-}
-
+import { DatepickerComponent } from '../components/datepicker-component/datepicker-component.component';
+import { SelectInterface } from '../interfaces/select-interface';
+import { SelectComponentComponent } from '../components/select-component/select-component.component';
+import { InputComponentComponent } from '../components/input-component/input-component.component';
+import { RadioButtonComponentComponent } from '../components/radio-button-component/radio-button-component.component';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-project-management',
@@ -24,26 +19,27 @@ interface ProjectStatus {
   styleUrls: ['./project-management.component.css'], 
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, 
-    MatDatepickerModule, MatNativeDateModule, NgFor, MatSelectModule, MatRadioModule]
+DatepickerComponent,
+MatDatepickerModule, MatNativeDateModule, NgFor, MatSelectModule, MatRadioModule, SelectComponentComponent, InputComponentComponent, RadioButtonComponentComponent,MatButtonModule ]
 })
 export class ProjectManagementComponent {
-  ProjectStatus: ProjectStatus[] = [
+  ProjectStatus: SelectInterface[] = [
     {value: 'requested-0', viewValue: 'Requested'},
     {value: 'planned-1', viewValue: 'Planned'},
     {value: 'inProgress-2', viewValue: 'In progress'},
-    {value: 'finished-2', viewValue: 'Finished'},
-    {value: 'cancelled-2', viewValue: 'Cancelled'},
-    {value: 'onHold-2', viewValue: 'On hold'},
+    {value: 'finished-3', viewValue: 'Finished'},
+    {value: 'cancelled-4', viewValue: 'Cancelled'},
+    {value: 'onHold-5', viewValue: 'On hold'},
   ];
 
-  ProjectScope: ProjectStatus[] = [
+  ProjectScope: SelectInterface[] = [
     {value: 'tbs-0', viewValue: 'TBS'},
     {value: 'sent-1', viewValue: 'Sent'},
     {value: 'confirmed-2', viewValue: 'Confirmed'},
-    {value: 'signed-2', viewValue: 'Signed'},
+    {value: 'signed-3', viewValue: 'Signed'},
   ];
 
-  Questionare: ProjectStatus[] = [
+  Questionare: SelectInterface[] = [
     {value: 'tbs-0', viewValue: 'TBS'},
     {value: 'sent-1', viewValue: 'Sent'},
     {value: 'received-2', viewValue: 'Received'},
