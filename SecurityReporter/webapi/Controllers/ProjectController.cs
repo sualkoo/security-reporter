@@ -9,13 +9,14 @@ namespace webapi.Controllers;
 public class ProjectController : ControllerBase
 {
 
-    [HttpPost("project/add")]
+    [HttpPost("add")]
     public async Task<IActionResult> PostProject(Project project)
     {
         // TODO validate
         
        var db = new DBWrapper();
        bool result = await db.AddProject(project);
+
        if (!result)
        {
             return StatusCode(400, "Error: Unable to insert project into DB.");
