@@ -1,0 +1,28 @@
+.left-column {
+margin: 50px  50px  50px  50px;
+background-color: white;
+height: 90%;
+width: 500px;
+}
+
+.pm-background {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    background-color: aquamarine;
+    height: 100%;
+}
+.project-name {
+    min-width: 150px;
+    max-width: 500px;
+    width: 90%;
+  }
+  
+  .example-full-width {
+    width: 90%;
+  }
+
+  .mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 16px;
+  }

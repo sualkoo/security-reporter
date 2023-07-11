@@ -1,0 +1,86 @@
+<h1>Project management</h1>
+<div class="pm-background">
+  <div class="left-column">
+    <mat-form-field class="project-name">
+      <mat-label>Project Name</mat-label>
+      <input matInput placeholder="Ex. Pizza" value="Random project" />
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Pentest aspect</mat-label>
+      <input matInput placeholder="Ex. Pizza" value="" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Start date</mat-label>
+      <input matInput [matDatepicker]="picker" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>End date</mat-label>
+      <input matInput [matDatepicker]="picker" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <h4>Project status</h4>
+    <mat-form-field>
+      <mat-label>Select</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of ProjectStatus" [value]="food.value">
+          {{ food.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h4>Project scope</h4>
+    <mat-form-field>
+      <mat-label>Select</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of ProjectScope" [value]="food.value">
+          {{ food.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h4>Questionare</h4>
+    <mat-form-field>
+      <mat-label>Select</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of Questionare" [value]="food.value">
+          {{ food.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <h4>Pentest duration</h4>
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="1">2 weeks</mat-radio-button>
+        <mat-radio-button value="2">4 weeks</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <mat-form-field>
+      <mat-label>IKO</mat-label>
+      <input matInput [matDatepicker]="picker" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>TKO</mat-label>
+      <input matInput [matDatepicker]="picker" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="left-column"></div>
+</div>
