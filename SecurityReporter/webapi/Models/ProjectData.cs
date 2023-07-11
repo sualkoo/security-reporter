@@ -4,7 +4,7 @@ namespace webapi.Models;
 
 public class ProjectData
 {
-    public Guid id;
+    public Guid id { get; set; }
     public string ProjectName { get; set; }
     public ProjectStatus ProjectStatus { get; set; }
     public ProjectQuestionare ProjectQuestionare { get; set; }
