@@ -2,9 +2,9 @@ using webapi.Enums;
 
 namespace webapi.Models;
 
-public class Project
+public class ProjectData
 {
-    public Guid id = Guid.NewGuid();
+    public Guid id;
     public string ProjectName { get; set; }
     public ProjectStatus ProjectStatus { get; set; }
     public ProjectQuestionare ProjectQuestionare { get; set; }

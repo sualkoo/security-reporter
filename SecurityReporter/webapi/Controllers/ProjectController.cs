@@ -10,10 +10,10 @@ public class ProjectController : ControllerBase
 {
 
     [HttpPost("add")]
-    public async Task<IActionResult> PostProject(Project project)
-    {
-        // TODO validate
-        
+    public async Task<IActionResult> PostProject(ProjectData project)
+    {      
+       project.id = Guid.NewGuid();
+
        var db = new DBWrapper();
        bool result = await db.AddProject(project);
 
