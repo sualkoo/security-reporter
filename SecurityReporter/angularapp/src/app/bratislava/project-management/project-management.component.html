@@ -1,46 +1,81 @@
-<div class="header">
-  <h1>Project management</h1>
-  <h3>ID: 123456</h3>
-</div>
+<div class="pm">
+  <div class="header">
+    <h1>Project management</h1>
+    <h3 style="color: #009999; font-weight: 400">Project ID: 123456</h3>
+  </div>
+  <div style="margin-bottom: 20px">
+    <app-input-component
+      [title]="'Project name'"
+      class="project-name-input"
+    ></app-input-component>
+  </div>
 
-<div class="pm-background">
-  <div class="left-column">
-    <app-input-component [title]="'Project name'"></app-input-component>
-    <datepicker-component id="picker1"></datepicker-component>
-    <datepicker-component id="picker2"></datepicker-component>
+  <div class="pm-background">
+    <div class="pm-columns">
+      <div class="left-column">
+        <div class="two-in-row">
+          <datepicker-component
+            id="picker1"
+            [title]="'Start Date'"
+          ></datepicker-component>
+          <datepicker-component
+            id="picker2"
+            [title]="'End Date'"
+          ></datepicker-component>
+        </div>
 
-    <app-select-component
-      [option]="ProjectStatus"
-      [title]="'Project status'"
-    ></app-select-component>
-    <app-select-component
-      [option]="ProjectScope"
-      [title]="'Project scope'"
-    ></app-select-component>
-    <app-select-component
-      [option]="Questionare"
-      [title]="'Questionare'"
-    ></app-select-component>
-    <div>
-      <app-radio-button-component></app-radio-button-component>
-      <app-input-component></app-input-component>
-      <p>weeks</p>
+        <app-select-component
+          [option]="ProjectStatus"
+          [title]="'Project status'"
+        ></app-select-component>
+
+        <app-select-component
+          [option]="ProjectScope"
+          [title]="'Project scope'"
+        ></app-select-component>
+
+        <app-select-component
+          [option]="Questionare"
+          [title]="'Questionare'"
+        ></app-select-component>
+        <app-input-component [title]="'Pentest aspect'"></app-input-component>
+        <div>
+          <app-radio-button-component></app-radio-button-component>
+        </div>
+        <div class="two-in-row">
+          <datepicker-component
+            id="picker3"
+            [title]="'IKO'"
+          ></datepicker-component>
+          <datepicker-component
+            id="picker4"
+            [title]="'TKO'"
+          ></datepicker-component>
+        </div>
+      </div>
+
+      <div class="left-column">
+        <div class="two-in-row">
+          <datepicker-component
+            id="picker3"
+            [title]="'Report Delivery Date'"
+          ></datepicker-component>
+          <app-input-component [title]="'Cats number'"></app-input-component>
+        </div>
+
+        <app-input-component [title]="'Project lead'"></app-input-component>
+        <app-input-component [title]="'Working team'"></app-input-component>
+        <app-input-component [title]="'Report status'"></app-input-component>
+        <app-input-component
+          [title]="'Contact for client'"
+        ></app-input-component>
+        <div>
+          <h5>Add comment:</h5>
+          <textarea type="text" class="comment-input"></textarea>
+        </div>
+      </div>
     </div>
 
-    <datepicker-component id="picker3"></datepicker-component>
-    <datepicker-component id="picker4"></datepicker-component>
-
-    <app-input-component [title]="'Pentest aspect'"></app-input-component>
+    <button mat-flat-button color="warn" class="create-button">Create</button>
   </div>
-
-  <div class="left-column">
-    <datepicker-component id="picker3"></datepicker-component>
-    <app-input-component [title]="'Cats number'"></app-input-component>
-    <app-input-component [title]="'Project lead'"></app-input-component>
-    <app-input-component [title]="'Working team'"></app-input-component>
-    <app-input-component [title]="'Report status'"></app-input-component>
-    <app-input-component [title]="'Contact for client'"></app-input-component>
-    <app-input-component [title]="'Add comment'"></app-input-component>
-  </div>
-  <button mat-flat-button color="warn">Primary</button>
 </div>

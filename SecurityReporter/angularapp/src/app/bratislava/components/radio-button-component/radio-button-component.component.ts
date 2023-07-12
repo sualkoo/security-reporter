@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-radio-button-component',
@@ -8,6 +8,4 @@ import {MatRadioModule} from '@angular/material/radio';
   standalone: true,
   imports: [MatRadioModule],
 })
-export class RadioButtonComponentComponent {
-
-}
+export class RadioButtonComponentComponent {}

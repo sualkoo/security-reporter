@@ -1,5 +1,6 @@
-<mat-form-field>
-  <mat-label>Start date</mat-label>
+<h5>{{ title }}:</h5>
+<mat-form-field class="date">
+  <mat-label>Date</mat-label>
   <input matInput [matDatepicker]="picker" />
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
