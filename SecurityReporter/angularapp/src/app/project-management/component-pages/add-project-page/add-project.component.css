@@ -26,7 +26,7 @@ min-width: 500px;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 2000px;
+    height: 1000px;
 }
 
 .page {
@@ -39,7 +39,7 @@ min-width: 500px;
 
 .pm {
 /*padding: 40px 200px 0px 200px;*/
-  width: 1000px;
+  width: 1200px;
 }
 
 .project-name-input {
