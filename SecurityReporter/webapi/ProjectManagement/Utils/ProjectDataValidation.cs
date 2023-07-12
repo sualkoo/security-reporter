@@ -3,18 +3,18 @@ using webapi.Service;
 using webapi.Enums;
 using System.ComponentModel;
 
-namespace webapi.Utils
+namespace webapi.ProjectManagement.Utils
 {
     public class ProjectDataValidation : IProjectDataValidation
     {
         public List<ValidationError> ErrorList { get; set; }
 
-        public void AddError(int index, string message)
+        public void AddError(string index, string message)
         {
             ErrorList.Add(
                 new ValidationError
                 {
-                    FieldNumber = index,
+                    FieldName = index,
                     ErrorMessage = message
                 }
             );

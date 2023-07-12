@@ -1,10 +1,10 @@
 ﻿using webapi.Models;
 
-namespace webapi.Utils
+namespace webapi.ProjectManagement.Utils
 {
     public interface IProjectDataValidation
     {
         bool IsValid(ProjectData data);
-        void AddError(int index, string message);
+        void AddError(string index, string message);
     }
 }
