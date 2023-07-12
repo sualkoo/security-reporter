@@ -7,4 +7,18 @@ import { Component } from '@angular/core';
 })
 export class ProjectSearchComponent {
 
+  uploadedFile?: Blob;
+
+  upload({ event }: { event: any }) {
+    this.uploadedFile = event.target.files[0];
+  }
+
+  uploadFile() {
+    if (this.uploadedFile) {
+      console.log('Uploading file:', this.uploadedFile);
+    } else {
+      console.log('No file selected');
+    }
+  }
+
 }
