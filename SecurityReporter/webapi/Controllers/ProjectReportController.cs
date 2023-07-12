@@ -2,12 +2,14 @@
 
 namespace webapi.Controllers
 {
-    public class SearchController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class ProjectReportController : Controller
     {
-
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        [HttpPost("add")]
+        public async Task<IActionResult> addProjectReport(IFormFile file)
         {
+
 
             // Process or save the uploaded file as needed
 
