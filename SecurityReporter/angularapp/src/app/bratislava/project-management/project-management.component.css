@@ -29,8 +29,17 @@ min-width: 500px;
     height: 2000px;
 }
 
+.page {
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .pm {
-  padding: 40px 200px 0px 200px;
+/*padding: 40px 200px 0px 200px;*/
+  width: 1000px;
 }
 
 .project-name-input {
