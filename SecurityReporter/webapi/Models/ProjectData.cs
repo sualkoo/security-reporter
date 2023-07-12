@@ -1,5 +1,6 @@
 using webapi.Enums;
 using webapi.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace webapi.Models;
 
