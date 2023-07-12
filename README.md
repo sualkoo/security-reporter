@@ -33,11 +33,15 @@ TODO: Enable secret storage on your machine and set Primary Key of your cosmos D
 
    - The Secret Manager tool includes an init command. To use user secrets, run the following command in the project directory:
 
-     dotnet user-secrets init
+   ```
+   dotnet user-secrets init
+   ```
 
 2. Set a secret
 
+   ```
    dotnet user-secrets set "DB:PrimaryKey" "your cosmos db primary key from cosmosDB data explorer"
+   ```
 
 3. Create comsos DB Emulator Container and Database with name ProjectDatabase and ProjectContainer. Paste following items.
    - In Database id: ProjectDatabase
