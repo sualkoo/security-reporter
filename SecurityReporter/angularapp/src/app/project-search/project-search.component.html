@@ -1,1 +1,4 @@
-<p>project-search works!</p>
+<input type="file"
+       (change)="upload({event: $event})"
+       accept=".zip" />
+<button (click)="uploadFile()">Upload</button>
