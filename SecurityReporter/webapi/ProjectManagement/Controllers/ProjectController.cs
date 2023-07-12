@@ -19,14 +19,6 @@ public class ProjectController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
-
-        var validator = new ProjectDataValidation();
-        if (!validator.IsValid(project))
-        {
-           // TODO merge errorlist and json
-            return StatusCode(400, "");
-        }
-
        bool result = await CosmosService.AddProject(project);
 
        if (!result)
