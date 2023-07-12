@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; 
+
+    font-family: "Siemens Sans","SH-Bree-Text","Open Sans","Roboto","Droid Sans","Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-weight: inherit;
+    font-size: inherit;
+}
