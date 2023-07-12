@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using webapi.Enums;
 using webapi.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace webapi.Models;
 
@@ -10,13 +10,35 @@ public class ProjectData
 
     [StringValidation(ErrorMessage = "The Project Name field must not be empty or contain only whitespace.")]
     public string ProjectName { get; set; }
+    
+    [Range(0, 5, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectStatus? ProjectStatus { get; set; }
 
-    [CommentValidation(ErrorMessage = "The comment list field must have at least one object or it could be null.")]
+    [Range(0, 2, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    public ProjectQuestionare? ProjectQuestionare { get; set; }
+
+    [Range(0, 3, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    public ProjectScope? ProjectScope { get; set; }
+
+    [Range(0, 1, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    public ProjectDuration? ProjectDuration { get; set; }
+    public DateOnly StartDate { get; set; }
+
+    [DateRangeValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
+    public DateOnly EndDate { get; set; }
+
+    [DateRangeValidation("IKO", ErrorMessage = "IKO must be less than or equal to end date.")]
+    public DateOnly IKO { get; set; } 
+
+    [DateRangeValidation("TKO", ErrorMessage = "TKO must be less than or equal to end date.")]
+    public DateOnly TKO { get; set; }
+    public DateOnly RequestCreated { get; set; } 
     public List<Comment>? Commments { get; set; }
 
     [StringValidation(ErrorMessage = "The Cats Number field must not be empty or contain only whitespace.")]
     public string? CatsNumber { get; set; }
+
+    [Range(0, 9, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectOfferStatus? ProjectOfferStatus { get; set; }
 
     [StringValidation(ErrorMessage = "The Pentest Aspects field must not be empty or contain only whitespace.")]
