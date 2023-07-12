@@ -21,7 +21,7 @@ namespace webapi.Service
             this.container = cosmosClient.GetContainer(databaseName, containerName);
         }
 
-        public async Task<bool> AddProject(Project data)
+        public async Task<bool> AddProject(ProjectData data)
         {
             try
             {

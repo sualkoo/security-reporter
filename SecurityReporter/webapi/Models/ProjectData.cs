@@ -2,7 +2,7 @@ using webapi.Enums;
 
 namespace webapi.Models;
 
-public class Project
+public class ProjectData
 {
     public Guid id { get; set; }
     public string ProjectName { get; set; }

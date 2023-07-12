@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.Service;
 
 namespace webapi.Controllers;
 
@@ -8,9 +9,17 @@ namespace webapi.Controllers;
 public class ProjectController : ControllerBase
 {
 
-    [HttpPost]
-    public IActionResult Post()
-    {
-        return Ok();
+    [HttpPost("add")]
+    public async Task<IActionResult> PostProject(ProjectData project)
+    {      
+       var db = new DBWrapper();
+       bool result = await db.AddProject(project);
+
+       if (!result)
+       {
+            return StatusCode(400, "Error: Unable to insert project into DB.");
+       }
+
+        return StatusCode(201, project);
     }
 }
