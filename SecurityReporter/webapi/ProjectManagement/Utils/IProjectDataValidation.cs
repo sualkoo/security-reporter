@@ -5,6 +5,6 @@ namespace webapi.ProjectManagement.Utils
     public interface IProjectDataValidation
     {
         bool IsValid(ProjectData data);
-        void AddError(string index, string message);
+        void AddError(string field, string message);
     }
 }

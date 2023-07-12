@@ -7,14 +7,14 @@ namespace webapi.ProjectManagement.Utils
 {
     public class ProjectDataValidation : IProjectDataValidation
     {
-        public List<ValidationError> ErrorList { get; set; }
+        public List<ValidationError> ErrorList = new List<ValidationError>();
 
-        public void AddError(string index, string message)
+        public void AddError(string field, string message)
         {
             ErrorList.Add(
                 new ValidationError
                 {
-                    FieldName = index,
+                    FieldName = field,
                     ErrorMessage = message
                 }
             );
@@ -22,6 +22,11 @@ namespace webapi.ProjectManagement.Utils
 
         public bool IsValid(ProjectData data)
         {
+            if (ErrorList.Count > 0)
+            {
+                return false;
+            }
+
             return true;
         }
     }
