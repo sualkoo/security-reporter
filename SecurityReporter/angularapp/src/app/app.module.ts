@@ -5,6 +5,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppComponent } from './app.component';
 import { ProjectManagerComponent } from './project-manager/project-manager.component';
 import { ProjectSearchComponent } from './project-search/project-search.component';
+import {AppRoutingModule} from "./app-routing.module";
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import { ProjectSearchComponent } from './project-search/project-search.componen
     ProjectSearchComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule, MatSlideToggleModule
+    BrowserModule, HttpClientModule, MatSlideToggleModule, AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
