@@ -17,6 +17,11 @@ import { SelectComponentComponent } from './project-management/components/select
 import { InputComponentComponent } from './project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 
+import { AppRoutingModule } from './app-routing.module';
+
+
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -36,6 +41,7 @@ import { RadioButtonComponentComponent } from './project-management/components/r
     SelectComponentComponent,
     InputComponentComponent,
     RadioButtonComponentComponent,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
