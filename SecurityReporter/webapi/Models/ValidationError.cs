@@ -4,7 +4,7 @@ namespace webapi.Models
 {
     public class ValidationError
     {
-        public int FieldNumber { get; set; }
+        public string FieldName { get; set; }
         public string ErrorMessage { get; set; }
     }
 }
