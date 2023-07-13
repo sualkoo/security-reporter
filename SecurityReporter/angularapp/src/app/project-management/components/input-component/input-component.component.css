@@ -1,0 +1,11 @@
+.project-name {
+    height: 70px;
+    width: 100%;    
+    font-size: 14px;
+}
+
+/* mat-form-field {
+    .mat1-mdc-text-field-wrapper {
+        background-color: rgb(255, 255, 255);
+    }
+} */
