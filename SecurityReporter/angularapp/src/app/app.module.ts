@@ -17,15 +17,9 @@ import { SelectComponentComponent } from './project-management/components/select
 import { InputComponentComponent } from './project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
-import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ProjectSearchPageComponent,
-    AddProjectReportComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -43,9 +37,8 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
     SelectComponentComponent,
     InputComponentComponent,
     RadioButtonComponentComponent,
-    AppRoutingModule,
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
