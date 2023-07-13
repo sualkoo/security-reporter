@@ -11,7 +11,7 @@ import { SelectComponentComponent } from '../../components/select-component/sele
 import { InputComponentComponent } from '../../components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ProjectInterface } from '../../interfaces/project-interface';
+import { ProjectInterface, projectOfferStatusIndex, projectQuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-interface';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { AddProjectService } from '../../services/add-project.service';
@@ -91,9 +91,9 @@ export class AddProjectComponent {
     ProjectName: '',
     StartDate: new Date('0001-01-01'),
     EndDate: new Date('0001-01-01'),
-    ProjectStatus: 'TBS',
-    ProjectScope: 'TBS',
-    ProjectQuestionare: 'TBS',
+    ProjectStatus: projectStatusIndex['TBS'],
+    ProjectScope: projectScopeIndex['TBS'],
+    ProjectQuestionare: projectQuestionareIndex['TBS'],
     PentestAspects: '',
     PentestDuration: -1,
     ReportDueDate: new Date('0001-01-01'),
@@ -102,7 +102,7 @@ export class AddProjectComponent {
     RequestCreated: '',
     Commments: '',
     CatsNumber: '',
-    ProjectOfferStatus: 'TBS',
+    ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
     ProjectLead: '',
     ReportStatus: '',
@@ -136,15 +136,15 @@ export class AddProjectComponent {
         break;
       case 'PST':
         // @ts-ignore
-        this.projectClass.ProjectStatus = value;
+        this.projectClass.ProjectStatus = projectStatusIndex[value];
         break;
       case 'PSC':
         // @ts-ignore
-        this.projectClass.ProjectScope = value;
+        this.projectClass.ProjectScope = projectScopeIndex[value];
         break;
       case 'QUE':
         // @ts-ignore
-        this.projectClass.ProjectQuestionare = value;
+        this.projectClass.ProjectQuestionare = projectQuestionareIndex[value];
         break;
     }
   }
@@ -205,12 +205,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-          .toString()
-          // @ts-ignore
-          .padStart(2, '0')}-${this.projectClass[key]
-          .getUTCDate()
-          .toString()
-          .padStart(2, '0')}`;
+            .toString()
+            // @ts-ignore
+            .padStart(2, '0')}-${this.projectClass[key]
+              .getUTCDate()
+              .toString()
+              .padStart(2, '0')}`;
       }
     }
 
