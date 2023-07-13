@@ -1,9 +1,14 @@
-﻿using webapi.ProjectSearch.Models;
+﻿using System.IO.Compression;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services
 {
-    public class ProjectDataParser
+    public class ProjectDataParser : IProjectDataParser
     {
-        // public ProjectData extract(file) { return new ProjectReportData()}
+        public ProjectReportData Extract(Stream fileStream)
+        {
+
+            throw new NotImplementedException();
+        }
     }
 }

@@ -2,9 +2,9 @@
 {
     public enum Detectability
     {
-        DIFFICULT,
-        AVERAGE,
-        EASY,
+        Difficult,
+        Average,
+        Easy,
         TBR,
     }
 }

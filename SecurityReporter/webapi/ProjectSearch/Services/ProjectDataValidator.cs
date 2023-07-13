@@ -2,15 +2,11 @@
 
 namespace webapi.ProjectSearch.Services
 {
-    public class ProjectDataValidator
+    public class ProjectDataValidator : IProjectDataValidator
     {
-        public bool Validate(ProjectReportData project)
+        public bool Validate(ProjectReportData projectReport)
         {
-            if (project == null)
-            {
-                return false;
-            }
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

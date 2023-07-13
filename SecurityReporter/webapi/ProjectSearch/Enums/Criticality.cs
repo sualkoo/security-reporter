@@ -2,10 +2,10 @@
 {
     public enum Criticality
     {
-        HIGH,
-        MEDIUM,
-        LOW,
-        INFO,
+        High,
+        Medium,
+        Low,
+        Info,
         TBR,
     }
 }
