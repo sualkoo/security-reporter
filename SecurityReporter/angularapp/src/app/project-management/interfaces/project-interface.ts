@@ -6,12 +6,12 @@ export interface ProjectInterface {
   ProjectScope?: ProjectScope;
   ProjectQuestionare?: ProjectQuestionare;
   PentestAspects?: string;
-  PentestDuration?: string;
+  PentestDuration?: number;
   ReportDueDate?: Date;
   IKO?: Date;
   TKO?: Date;
   RequestCreated?: string;
-  Commments?: string;
+  Commments: string;
   CatsNumber?: string;
   ProjectOfferStatus?: ProjectOfferStatus;
   WorkingTeam: string[];

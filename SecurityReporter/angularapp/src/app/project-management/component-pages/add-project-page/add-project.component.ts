@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,39 +35,50 @@ import { CommonModule } from '@angular/common';
   ],
 })
 export class AddProjectComponent {
+  @ViewChild('commentInput') commentInput?: ElementRef;
+
   ProjectStatus: SelectInterface[] = [
-    { value: 'requested-0', viewValue: 'Requested' },
-    { value: 'planned-1', viewValue: 'Planned' },
-    { value: 'inProgress-2', viewValue: 'In progress' },
-    { value: 'finished-3', viewValue: 'Finished' },
-    { value: 'cancelled-4', viewValue: 'Cancelled' },
-    { value: 'onHold-5', viewValue: 'On hold' },
+    { value: 'Requested', viewValue: 'Requested' },
+    { value: 'Planned', viewValue: 'Planned' },
+    { value: 'In progress', viewValue: 'In progress' },
+    { value: 'Finished', viewValue: 'Finished' },
+    { value: 'Cancelled', viewValue: 'Cancelled' },
+    { value: 'On hold', viewValue: 'On hold' },
   ];
 
   ProjectScope: SelectInterface[] = [
-    { value: 'tbs-0', viewValue: 'TBS' },
-    { value: 'sent-1', viewValue: 'Sent' },
-    { value: 'confirmed-2', viewValue: 'Confirmed' },
-    { value: 'signed-3', viewValue: 'Signed' },
+    { value: 'TBS', viewValue: 'TBS' },
+    { value: 'Sent', viewValue: 'Sent' },
+    { value: 'Confirmed', viewValue: 'Confirmed' },
+    { value: 'Signed', viewValue: 'Signed' },
   ];
 
   Questionare: SelectInterface[] = [
-    { value: 'tbs-0', viewValue: 'TBS' },
-    { value: 'sent-1', viewValue: 'Sent' },
-    { value: 'received-2', viewValue: 'Received' },
+    { value: 'TBS', viewValue: 'TBS' },
+    { value: 'Sent', viewValue: 'Sent' },
+    { value: 'Received', viewValue: 'Received' },
   ];
 
   OfferStatus: SelectInterface[] = [
-    { value: '0', viewValue: 'Waiting for Offer creation' },
-    { value: '1', viewValue: 'Offer Draft sent for Review' },
-    { value: '2', viewValue: 'Offer sent for signatue' },
-    { value: '3', viewValue: 'Offer signed - Ready For Invoicing' },
-    { value: '4', viewValue: 'Invoiced' },
-    { value: '5', viewValue: 'Individual Agreement' },
-    { value: '6', viewValue: 'Retest - free of charge' },
-    { value: '7', viewValue: 'Other' },
-    { value: '8', viewValue: 'Cancelled' },
-    { value: '9', viewValue: 'Prepared' },
+    {
+      value: 'Waiting for Offer creation',
+      viewValue: 'Waiting for Offer creation',
+    },
+    {
+      value: 'Offer Draft sent for Review',
+      viewValue: 'Offer Draft sent for Review',
+    },
+    { value: 'Offer sent for signatue', viewValue: 'Offer sent for signatue' },
+    {
+      value: 'Offer signed - Ready For Invoicing',
+      viewValue: 'Offer signed - Ready For Invoicing',
+    },
+    { value: 'Invoiced', viewValue: 'Invoiced' },
+    { value: 'Individual Agreement', viewValue: 'Individual Agreement' },
+    { value: 'Retest - free of charge', viewValue: 'Retest - free of charge' },
+    { value: 'Other', viewValue: 'Other' },
+    { value: 'Cancelled', viewValue: 'Cancelled' },
+    { value: 'Prepared', viewValue: 'Prepared' },
   ];
 
   value = '';
@@ -80,7 +91,7 @@ export class AddProjectComponent {
     ProjectScope: 'TBS',
     ProjectQuestionare: 'TBS',
     PentestAspects: '',
-    PentestDuration: '',
+    PentestDuration: 0,
     ReportDueDate: new Date('0000-01-01'),
     IKO: new Date('0000-01-01'),
     TKO: new Date('0000-01-01'),
@@ -96,6 +107,10 @@ export class AddProjectComponent {
 
   wtField = '';
   cfcField = '';
+
+  onChildRadioValueChanged(value: number) {
+    this.projectClass.PentestDuration = value;
+  }
 
   onChildInputValueChanged(value: string, id: string) {
     this.value = value;
@@ -115,9 +130,32 @@ export class AddProjectComponent {
       case 'RS':
         this.projectClass.ReportStatus = value;
         break;
-      case 'CFC':
-        this.cfcField = value;
+      case 'PST':
+        // @ts-ignore
+        this.projectClass.ProjectStatus = value;
         break;
+      case 'PSC':
+        // @ts-ignore
+        this.projectClass.ProjectScope = value;
+        break;
+      case 'QUE':
+        // @ts-ignore
+        this.projectClass.ProjectQuestionare = value;
+        break;
+    }
+  }
+
+  onChildDateValueChanged(value: Date, id: string) {
+    if (id == 'STR') {
+      this.projectClass.StartDate = value;
+    } else if (id == 'END') {
+      this.projectClass.EndDate = value;
+    } else if (id == 'REP') {
+      this.projectClass.ReportDueDate = value;
+    } else if (id == 'IKO') {
+      this.projectClass.IKO = value;
+    } else {
+      this.projectClass.TKO = value;
     }
   }
 
@@ -178,6 +216,12 @@ export class AddProjectComponent {
       } else {
         console.log('Bad date');
       }
+    }
+  }
+
+  getValueFromTextarea() {
+    if (this.commentInput) {
+      this.projectClass.Commments = this.commentInput.nativeElement.value;
     }
   }
 }
