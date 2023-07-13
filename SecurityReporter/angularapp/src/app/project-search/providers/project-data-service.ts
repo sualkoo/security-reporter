@@ -8,12 +8,15 @@ import * as JSZip from 'jszip';
 export class ProjectDataService {
   private postZipFileUrl: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private notificationService: NotificationSer) {
     this.postZipFileUrl = 'https://localhost:7075/ProjectReport/add';
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.postZipFileUrl, file);
+    return this.http.post(this.postZipFileUrl, file).pipe(res => {
+      // error handling 
+      return res;
+    });
   }
 
   async validateZipFile(file: File): Promise<boolean> {
