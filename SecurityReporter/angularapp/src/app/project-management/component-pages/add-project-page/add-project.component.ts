@@ -14,6 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ProjectInterface } from '../../interfaces/project-interface';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { AddProjectService } from '../../services/add-project.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-management',
@@ -36,6 +38,7 @@ import { v4 as uuidv4 } from 'uuid';
   ],
 })
 export class AddProjectComponent {
+  constructor(private addProjectService: AddProjectService) { }
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -219,6 +222,8 @@ export class AddProjectComponent {
         console.log('Bad date');
       }
     }
+
+    this.addProjectService.submitPMProject(this.projectClass);    
   }
 
   getValueFromTextarea() {
