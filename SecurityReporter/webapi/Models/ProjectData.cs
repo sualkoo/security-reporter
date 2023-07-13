@@ -20,8 +20,8 @@ public class ProjectData
     [Range(0, 3, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectScope? ProjectScope { get; set; }
 
-    [Range(0, 1, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
-    public ProjectDuration? ProjectDuration { get; set; }
+    [StringValidation(ErrorMessage = "The Pentest Duration field must not be empty or contain only whitespace.")]
+    public string? PentestDuration { get; set; }
     public DateOnly StartDate { get; set; }
 
     [StartDateValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
@@ -31,8 +31,8 @@ public class ProjectData
     public DateOnly IKO { get; set; } 
     public DateOnly TKO { get; set; }
 
-    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to request due date.")]
-    public DateOnly RequestDue { get; set; }
+    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
+    public DateOnly ReportDueDate { get; set; }
     public DateOnly RequestCreated { get; set; } 
     public List<Comment>? Commments { get; set; }
 
