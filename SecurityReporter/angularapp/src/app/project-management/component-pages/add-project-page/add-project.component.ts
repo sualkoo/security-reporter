@@ -13,6 +13,7 @@ import { RadioButtonComponentComponent } from '../../components/radio-button-com
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectInterface } from '../../interfaces/project-interface';
 import { CommonModule } from '@angular/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-project-management',
@@ -84,6 +85,7 @@ export class AddProjectComponent {
   value = '';
 
   projectClass: ProjectInterface = {
+    id: uuidv4(),
     ProjectName: '',
     StartDate: new Date('0000-01-01'),
     EndDate: new Date('0000-01-01'),
@@ -208,7 +210,7 @@ export class AddProjectComponent {
       }
     }
 
-    console.log(Object.keys(this.projectClass).length);
+    console.log(this.projectClass.id);
 
     if (this.projectClass.StartDate && this.projectClass.EndDate) {
       if (this.projectClass.StartDate <= this.projectClass.EndDate) {
