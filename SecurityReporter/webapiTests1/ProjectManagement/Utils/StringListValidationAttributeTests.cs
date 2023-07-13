@@ -2,12 +2,12 @@
 
 namespace Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class StringListValidationAttributeTests
     {
     
         [Test]
-        public void ValidStringList_WithNonEmptyStrings()
+        public void IsValid_ValidStringListWithNonEmptyStrings_ShouldPassValidation()
         {
             // Arrange
             var stringList = new List<string> { "Test", "Example" };
@@ -21,7 +21,7 @@ namespace Tests
         }
 
         [Test]
-        public void InvalidStringList_WithEmptyList()
+        public void IsValid_InvalidStringListWithEmptyList_ShouldFailValidation()
         {
             // Arrange
             var stringList = new List<string>();
@@ -35,7 +35,7 @@ namespace Tests
         }
 
         [Test]
-        public void InvalidStringList_WithEmptyStrings()
+        public void IsValid_InvalidStringListWithEmptyStrings_ShouldFailValidation()
         {
             // Arrange
             var stringList = new List<string> { "", "   ", "Test" };
@@ -49,7 +49,7 @@ namespace Tests
         }
 
         [Test]
-        public void ValidStringList_WithNullValues()
+        public void IsValid_ValidStringListWithNullValues_ShouldFailValidation()
         {
             // Arrange
             var stringList = new List<string> { "Test", null, "Example" };
@@ -64,7 +64,7 @@ namespace Tests
 
 
         [Test]
-        public void ValidStringList_Null()
+        public void IsValid_ValidStringListIsNull_ShouldPassValidation()
         {
             // Arrange
             List<string> stringList = null;

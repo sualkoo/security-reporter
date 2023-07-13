@@ -9,11 +9,11 @@ using webapi.Models;
 
 namespace webapi.Utils.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class CommentValidationAttributeTests
     {
-        [Test()]
-        public void NullCommentInListTest()
+        [Test]
+        public void IsValid_CommentListWithNullComment_ValidationFails()
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
@@ -34,8 +34,8 @@ namespace webapi.Utils.Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void EmptyListTest()
+        [Test]
+        public void IsValid_EmptyCommentList_ValidationFails()
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
@@ -48,8 +48,8 @@ namespace webapi.Utils.Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void ValidCommentListTest()
+        [Test]
+        public void IsValid_ValidCommentList_ValidationPasses()
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
@@ -75,8 +75,8 @@ namespace webapi.Utils.Tests
             Assert.IsTrue(isValid);
         }
 
-        [Test()]
-        public void NullListTest()
+        [Test]
+        public void IsValid_NullCommentList_ValidationPasses()
         {
             // Arrange
             var attribute = new CommentValidationAttribute();

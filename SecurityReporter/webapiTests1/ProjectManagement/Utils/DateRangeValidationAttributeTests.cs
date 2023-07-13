@@ -30,7 +30,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void ValidDateRangeTest()
+        public void IsValid_ValidDateRange_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -50,7 +50,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void EqualStartAndEndDates()
+        public void IsValid_EqualStartAndEndDates_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -71,7 +71,7 @@ namespace webapi.Utils.Tests
 
 
         [Test]
-        public void EqualIKOAndEndDate()
+        public void IsValid_EqualIKOAndEndDate_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -92,7 +92,7 @@ namespace webapi.Utils.Tests
 
 
         [Test]
-        public void EqualTKOAndEndDate()
+        public void IsValid_EqualTKOAndEndDate_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -112,7 +112,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void InvalidDateRange()
+        public void IsValid_InvalidDateRange_ValidationFails()
         {
             // Arrange
             var model = new TestModel
@@ -132,7 +132,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void NullValues()
+        public void IsValid_NullValues_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -156,7 +156,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void ValidIKOTest()
+        public void IsValid_ValidIKO_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -176,7 +176,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void ValidTKOTest()
+        public void IsValid_ValidTKO_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -197,7 +197,7 @@ namespace webapi.Utils.Tests
 
 
         [Test]
-        public void InvalidIKOTest()
+        public void IsValid_InvalidIKO_ValidationFails()
         {
             // Arrange
             var model = new TestModel
@@ -218,7 +218,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void InvalidTKOTest()
+        public void IsValid_InvalidTKO_ValidationFails()
         {
             // Arrange
             var model = new TestModel
@@ -239,7 +239,7 @@ namespace webapi.Utils.Tests
         }
 
         [Test]
-        public void ValidRequestDueTest()
+        public void IsValid_ValidRequestDue_ValidationPasses()
         {
             // Arrange
             var model = new TestModel
@@ -260,7 +260,7 @@ namespace webapi.Utils.Tests
 
 
         [Test]
-        public void InvalidRequestDueTest()
+        public void IsValid_InvalidRequestDue_ValidationFails()
         {
             // Arrange
             var model = new TestModel

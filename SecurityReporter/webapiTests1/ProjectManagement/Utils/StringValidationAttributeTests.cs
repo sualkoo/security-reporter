@@ -5,7 +5,7 @@ using webapi.Utils;
 public class StringValidationAttributeTests
 {
     [Test]
-    public void ValidValue_Null()
+    public void IsValid_ValidValueIsNull_ShouldPassValidation()
     {
         // Arrange
         string value = null;
@@ -19,7 +19,7 @@ public class StringValidationAttributeTests
     }
 
     [Test]
-    public void ValidValue_NonEmptyString()
+    public void IsValid_ValidValueIsNonEmptyString_ShouldPassValidation()
     {
         // Arrange
         string value = "Test";
@@ -33,7 +33,7 @@ public class StringValidationAttributeTests
     }
 
     [Test]
-    public void InvalidValue_EmptyString()
+    public void IsValid_InvalidValueIsEmptyString_ShouldFailValidation()
     {
         // Arrange
         string value = "";
@@ -47,7 +47,7 @@ public class StringValidationAttributeTests
     }
 
     [Test]
-    public void InvalidValue_WhitespaceString()
+    public void IsValid_InvalidValueIsWhitespaceString_ShouldFailValidation()
     {
         // Arrange
         string value = "   ";
@@ -61,7 +61,7 @@ public class StringValidationAttributeTests
     }
 
     [Test]
-    public void ValidValue_NonString()
+    public void IsValid_ValidValueIsNonString_ShouldPassValidation()
     {
         // Arrange
         object value = 42;
@@ -75,7 +75,7 @@ public class StringValidationAttributeTests
     }
 
     [Test]
-    public void ValidValue_ValidString()
+    public void IsValid_ValidValueIsValidString_ShouldPassValidation()
     {
         // Arrange
         string value = "Name of this project";

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class EmailListValidationAttributeTests
     {
-        [Test()]
-        public void NullListTest()
+        [Test]
+        public void IsValid_NullList_ShouldPassValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -24,8 +24,8 @@ namespace Tests
             Assert.IsTrue(isValid);
         }
 
-        [Test()]
-        public void ValidEmailsTest()
+        [Test]
+        public void IsValid_ValidEmails_ShouldPassValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -38,8 +38,8 @@ namespace Tests
             Assert.IsTrue(isValid);
         }
 
-        [Test()]
-        public void EmptyListTest()
+        [Test]
+        public void IsValid_EmptyList_ShouldFailValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -52,8 +52,8 @@ namespace Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void EmptyStringTest()
+        [Test]
+        public void IsValid_EmptyString_ShouldFailValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -66,8 +66,8 @@ namespace Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void WhiteSpacesTest()
+        [Test]
+        public void IsValid_WhiteSpaces_ShouldFailValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -80,8 +80,8 @@ namespace Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void InvalidEmailFormatTest()
+        [Test]
+        public void IsValid_InvalidEmailFormat_ShouldFailValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
@@ -94,8 +94,8 @@ namespace Tests
             Assert.IsFalse(isValid);
         }
 
-        [Test()]
-        public void NullStringTest()
+        [Test]
+        public void IsValid_NullString_ShouldFailValidation()
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
