@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Azure.Cosmos;
 using webapi.Models;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -18,7 +19,7 @@ namespace webapi.Service
         public CosmosService(IConfiguration configuration)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
-            CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
+            CosmosClient cosmosClient = new CosmosClient(EndpointUri, "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==");
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
         }
