@@ -25,8 +25,8 @@ public class ProjectData
     public DateOnly StartDate { get; set; }
 
     [StartDateValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
-    [TKOValidation("IKO", ErrorMessage = "End date must be greater than or equal to start date.")]
-    [IKOValidation("TKO", ErrorMessage = "End date must be greater than or equal to start date.")]
+    [TKOValidation("TKO", ErrorMessage = "End date must be greater than or equal to TKO.")]
+    [IKOValidation("IKO", ErrorMessage = "End date must be greater than or equal to IKO.")]
     public DateOnly EndDate { get; set; }
     public DateOnly IKO { get; set; } 
     public DateOnly TKO { get; set; }

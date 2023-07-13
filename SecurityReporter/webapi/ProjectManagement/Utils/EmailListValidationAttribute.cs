@@ -8,13 +8,13 @@ public class EmailListValidationAttribute : ValidationAttribute
         {
             if (stringList.Count == 0)
             {
-                return false; // Empty list is considered invalid
+                return false;
             }
 
             return stringList.All(s => IsValidEmail(s));
         }
 
-        return true; // Non-list values are considered valid
+        return true;
     }
 
     private bool IsValidEmail(string value)

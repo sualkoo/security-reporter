@@ -20,6 +20,7 @@ namespace webapi.Service
 
         public async Task<bool> AddProject(ProjectData data)
         {
+            data.RequestCreated = DateOnly.FromDateTime(DateTime.Today);
             try
             {
                 await Container.CreateItemAsync(data);

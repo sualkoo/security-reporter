@@ -7,13 +7,13 @@ public class StringListValidationAttribute : ValidationAttribute
         {
             if (stringList.Count == 0)
             {
-                return false; // Empty list is considered invalid
+                return false;
             }
 
             return stringList.All(s => !string.IsNullOrWhiteSpace(s));
         }
 
-        return true; // Non-list values are considered valid
+        return true;
     }
 }
 
