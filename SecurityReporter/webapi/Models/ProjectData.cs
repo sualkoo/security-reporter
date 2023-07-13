@@ -24,14 +24,15 @@ public class ProjectData
     public ProjectDuration? ProjectDuration { get; set; }
     public DateOnly StartDate { get; set; }
 
-    [DateRangeValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
+    [StartDateValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
+    [TKOValidation("IKO", ErrorMessage = "End date must be greater than or equal to start date.")]
+    [IKOValidation("TKO", ErrorMessage = "End date must be greater than or equal to start date.")]
     public DateOnly EndDate { get; set; }
-
-    [DateRangeValidation("IKO", ErrorMessage = "IKO must be less than or equal to end date.")]
     public DateOnly IKO { get; set; } 
-
-    [DateRangeValidation("TKO", ErrorMessage = "TKO must be less than or equal to end date.")]
     public DateOnly TKO { get; set; }
+
+    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to request due date.")]
+    public DateOnly RequestDue { get; set; }
     public DateOnly RequestCreated { get; set; } 
     public List<Comment>? Commments { get; set; }
 
@@ -56,5 +57,4 @@ public class ProjectData
     [EmailListValidation(ErrorMessage = "The ContactForClients list must contain non-empty elements in email format.")]
     [DataType(DataType.EmailAddress)]
     public List<string>? ContactForClients { get; set; } 
-
 }

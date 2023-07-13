@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     public class DateRangeValidationAttribute : ValidationAttribute
     {
-        private readonly string _otherPropertyName;
+        protected readonly string _otherPropertyName;
         public DateRangeValidationAttribute(string otherPropertyName)
         {
             _otherPropertyName = otherPropertyName;
