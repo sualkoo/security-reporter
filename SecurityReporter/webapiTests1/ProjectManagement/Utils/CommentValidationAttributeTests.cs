@@ -17,7 +17,7 @@ namespace webapi.Utils.Tests
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
-            List<Comment> commentlList = new List<Comment> {
+            var commentlList = new List<Comment> {
                 new Comment
                 {
                     Author = "John Doe",
@@ -39,7 +39,7 @@ namespace webapi.Utils.Tests
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
-            List<Comment> commentlList = new List<Comment> {};
+            var commentlList = new List<Comment> {};
 
             // Act
             var isValid = attribute.IsValid(commentlList);
@@ -53,7 +53,7 @@ namespace webapi.Utils.Tests
         {
             // Arrange
             var attribute = new CommentValidationAttribute();
-            List<Comment> commentlList = new List<Comment> {
+            var commentlList = new List<Comment> {
                 new Comment
                 {
                     Author = "John Doe",

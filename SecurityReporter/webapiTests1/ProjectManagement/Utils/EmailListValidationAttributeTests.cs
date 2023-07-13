@@ -29,7 +29,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> { "test1@example.com", "test2@example.com", "test3@example.com" };
+            var emailList = new List<string> { "test1@example.com", "test2@example.com", "test3@example.com" };
 
             // Act
             var isValid = attribute.IsValid(emailList);
@@ -43,7 +43,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> {};
+            var emailList = new List<string> {};
 
             // Act
             var isValid = attribute.IsValid(emailList);
@@ -57,7 +57,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> { "test1@example.com", "", "test3@example.com" };
+            var emailList = new List<string> { "test1@example.com", "", "test3@example.com" };
 
             // Act
             var isValid = attribute.IsValid(emailList);
@@ -71,7 +71,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> { "test1@example.com", "       ", "test3@example.com" };
+            var emailList = new List<string> { "test1@example.com", "       ", "test3@example.com" };
 
             // Act
             var isValid = attribute.IsValid(emailList);
@@ -85,7 +85,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> { "test1@example.com", "test3.com" };
+            var emailList = new List<string> { "test1@example.com", "test3.com" };
 
             // Act
             var isValid = attribute.IsValid(emailList);
@@ -99,7 +99,7 @@ namespace Tests
         {
             // Arrange
             var attribute = new EmailListValidationAttribute();
-            List<string> emailList = new List<string> { "test1@example.com", null };
+            var emailList = new List<string> { "test1@example.com", null };
 
             // Act
             var isValid = attribute.IsValid(emailList);
