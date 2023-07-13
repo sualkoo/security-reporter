@@ -20,8 +20,8 @@ public class ProjectData
     [Range(0, 3, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectScope? ProjectScope { get; set; }
 
-    [StringValidation(ErrorMessage = "The Pentest Duration field must not be empty or contain only whitespace.")]
-    public string? PentestDuration { get; set; }
+    [Range(0, int.MaxValue, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    public int? PentestDuration { get; set; }
     public DateOnly StartDate { get; set; }
 
     [StartDateValidation("StartDate", ErrorMessage = "End date must be greater than or equal to start date.")]
