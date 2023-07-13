@@ -17,7 +17,7 @@ public class ProjectController : ControllerBase
 
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
-    {
+    {      
        bool result = await CosmosService.AddProject(project);
 
        if (!result)
