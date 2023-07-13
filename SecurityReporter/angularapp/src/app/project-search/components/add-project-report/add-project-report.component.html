@@ -1,0 +1,8 @@
+<input type="file" (change)="upload({ event: $event })" accept=".zip" />
+
+<button
+  [disabled]="uploadedFile == undefined ? true : false"
+  (click)="uploadFile()"
+>
+  Upload
+</button>
