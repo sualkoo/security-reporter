@@ -1,19 +1,81 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tests
 {
     [TestFixture()]
     public class StringListValidationAttributeTests
     {
-        [Test()]
-        public void IsValidTest()
+    
+        [Test]
+        public void ValidStringList_WithNonEmptyStrings()
         {
-            Assert.Fail();
+            // Arrange
+            var stringList = new List<string> { "Test", "Example" };
+            var attribute = new StringListValidationAttribute();
+
+            // Act
+            var isValid = attribute.IsValid(stringList);
+
+            // Assert
+            Assert.IsTrue(isValid);
         }
+
+        [Test]
+        public void InvalidStringList_WithEmptyList()
+        {
+            // Arrange
+            var stringList = new List<string>();
+            var attribute = new StringListValidationAttribute();
+
+            // Act
+            var isValid = attribute.IsValid(stringList);
+
+            // Assert
+            Assert.IsFalse(isValid);
+        }
+
+        [Test]
+        public void InvalidStringList_WithEmptyStrings()
+        {
+            // Arrange
+            var stringList = new List<string> { "", "   ", "Test" };
+            var attribute = new StringListValidationAttribute();
+
+            // Act
+            var isValid = attribute.IsValid(stringList);
+
+            // Assert
+            Assert.IsFalse(isValid);
+        }
+
+        [Test]
+        public void ValidStringList_WithNullValues()
+        {
+            // Arrange
+            var stringList = new List<string> { "Test", null, "Example" };
+            var attribute = new StringListValidationAttribute();
+
+            // Act
+            var isValid = attribute.IsValid(stringList);
+
+            // Assert
+            Assert.IsFalse(isValid);
+        }
+
+
+        [Test]
+        public void ValidStringList_Null()
+        {
+            // Arrange
+            List<string> stringList = null;
+            var attribute = new StringListValidationAttribute();
+
+            // Act
+            var isValid = attribute.IsValid(stringList);
+
+            // Assert
+            Assert.IsTrue(isValid);
+        }
+
     }
 }
