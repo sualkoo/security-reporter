@@ -1,9 +1,11 @@
-﻿using webapi.Models.ProjectReport;
+﻿using Newtonsoft.Json;
+using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Models
 {
     public class ProjectReportData
     {
+        [JsonProperty("id")]
         public Guid Id { get; set; }
         public DocumentInformation? DocumentInfo { get; set; }
         public string? ExecutiveSummary { get; set; }
