@@ -17,6 +17,7 @@ import { SelectComponentComponent } from './project-management/components/select
 import { InputComponentComponent } from './project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 import { AppRoutingModule } from './app-routing.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { AppRoutingModule } from './app-routing.module';
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
