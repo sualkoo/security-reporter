@@ -28,18 +28,4 @@ public class ProjectController : ControllerBase
 
         return StatusCode(201, project);
     }
-
-    [HttpPost("addProjectReport")]
-    public async Task<IActionResult> InsertProjectReport(ProjectReportData project)
-    {
-        
-        bool result = await CosmosService.AddProjectReport(project);
-
-        if (!result)
-        {
-            return StatusCode(400, "Error: Can't insert Project Report into the database");
-        }
-
-        return StatusCode(201, project);
-    }
 }
