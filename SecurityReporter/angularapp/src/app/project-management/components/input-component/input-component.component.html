@@ -13,8 +13,21 @@
       matInput
       placeholder=""
       [(ngModel)]="inputValue"
+      [formControl]="emailFormControl"
+      [errorStateMatcher]="matcher"
       (input)="onInputChange()"
     />
+    <mat-error *ngIf="emailFormControl.hasError('minlength')">
+      Minimal Project name lenght is <strong>3 characters</strong> and maximum
+      <strong>50 characters</strong>
+    </mat-error>
+    <mat-error *ngIf="emailFormControl.hasError('required')">
+      Minimal Project name lenght is <strong>3 characters</strong> and maximum
+      <strong>50 characters</strong>
+    </mat-error>
+    <mat-error *ngIf="emailFormControl.hasError('pattern')">
+      Project should start with <strong>Capital letter</strong>
+    </mat-error>
   </mat-form-field>
 </div>
 <div *ngIf="title != 'Project name'">

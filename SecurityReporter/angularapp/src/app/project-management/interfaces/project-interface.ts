@@ -1,14 +1,14 @@
 export interface ProjectInterface {
   id: string;
-  ProjectName?: string;
-  StartDate?: Date;
-  EndDate?: Date;
+  ProjectName: string;
+  StartDate: Date;
+  EndDate: Date;
   ProjectStatus?: ProjectStatus;
   ProjectScope?: ProjectScope;
   ProjectQuestionare?: ProjectQuestionare;
   PentestAspects?: string;
   PentestDuration?: number;
-  ReportDueDate?: Date;
+  ReportDueDate: Date;
   IKO?: Date;
   TKO?: Date;
   RequestCreated?: string;

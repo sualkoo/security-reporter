@@ -12,7 +12,7 @@ import { InputComponentComponent } from '../../components/input-component/input-
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectInterface } from '../../interfaces/project-interface';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -33,6 +33,7 @@ import { v4 as uuidv4 } from 'uuid';
     InputComponentComponent,
     RadioButtonComponentComponent,
     MatButtonModule,
+    NgIf,
   ],
 })
 export class AddProjectComponent {
@@ -87,16 +88,16 @@ export class AddProjectComponent {
   projectClass: ProjectInterface = {
     id: uuidv4(),
     ProjectName: '',
-    StartDate: new Date('0000-01-01'),
-    EndDate: new Date('0000-01-01'),
+    StartDate: new Date('0001-01-01'),
+    EndDate: new Date('0001-01-01'),
     ProjectStatus: 'TBS',
     ProjectScope: 'TBS',
     ProjectQuestionare: 'TBS',
     PentestAspects: '',
     PentestDuration: 0,
-    ReportDueDate: new Date('0000-01-01'),
-    IKO: new Date('0000-01-01'),
-    TKO: new Date('0000-01-01'),
+    ReportDueDate: new Date('0001-01-01'),
+    IKO: new Date('0001-01-01'),
+    TKO: new Date('0001-01-01'),
     RequestCreated: '',
     Commments: '',
     CatsNumber: '',
@@ -109,6 +110,7 @@ export class AddProjectComponent {
 
   wtField = '';
   cfcField = '';
+  errorValue = false;
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
@@ -224,6 +226,25 @@ export class AddProjectComponent {
   getValueFromTextarea() {
     if (this.commentInput) {
       this.projectClass.Commments = this.commentInput.nativeElement.value;
+    }
+  }
+
+  validationFunction() {
+    if (this.projectClass.StartDate > this.projectClass.EndDate) {
+      this.errorValue = true;
+    }
+
+    if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
+      this.errorValue = true;
+    }
+
+    if (
+      this.projectClass.StartDate <= this.projectClass.EndDate &&
+      this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
+      this.projectClass.ProjectName?.length > 3 &&
+      this.projectClass.ProjectName?.length < 50
+    ) {
+      this.sendRequest();
     }
   }
 }

@@ -23,6 +23,7 @@
               (valueChanged)="onChildDateValueChanged($event, 'STR')"
             ></datepicker-component>
             <datepicker-component
+              #endDate
               [title]="'End Date'"
               (valueChanged)="onChildDateValueChanged($event, 'END')"
             ></datepicker-component>
@@ -134,10 +135,13 @@
         mat-flat-button
         color="warn"
         class="create-button"
-        (click)="sendRequest()"
+        (click)="validationFunction()"
       >
         Create
       </button>
+      <div *ngIf="errorValue">
+        <h5 style="color: red">Bad input</h5>
+      </div>
     </div>
   </div>
 </div>
