@@ -2,10 +2,10 @@
 {
     public enum Category
     {
-        ACCESSCONTROL,
-        APPLICATIONDESIGN,
-        INFORMATIONDISCLOSURE,
-        OUTDATEDSOFTWARE,
-        SECURITYCONFIGURATION,
+        AccessControl,
+        ApplicationDesign,
+        InformationDisclosure,
+        OutdatedSoftware,
+        SecurityConfiguration,
     }
 }
