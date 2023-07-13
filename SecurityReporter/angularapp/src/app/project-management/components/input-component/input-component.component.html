@@ -1,0 +1,20 @@
+<div *ngIf="title == 'Project name'">
+  <mat-form-field
+    class="project-name"
+    style="
+      width: 450px;
+      .mat-mdc-text-field-wrapper {
+        background-color: rgb(255, 255, 255);
+      }
+    "
+  >
+    <mat-label>{{ title }}</mat-label>
+    <input matInput placeholder="" />
+  </mat-form-field>
+</div>
+<div *ngIf="title != 'Project name'">
+  <mat-form-field class="project-name">
+    <mat-label>{{ title }}</mat-label>
+    <input matInput placeholder="" />
+  </mat-form-field>
+</div>
