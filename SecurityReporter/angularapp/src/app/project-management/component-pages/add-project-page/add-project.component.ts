@@ -15,7 +15,6 @@ import { ProjectInterface } from '../../interfaces/project-interface';
 import { CommonModule } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { AddProjectService } from '../../services/add-project.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-management',
@@ -90,16 +89,16 @@ export class AddProjectComponent {
   projectClass: ProjectInterface = {
     id: uuidv4(),
     ProjectName: '',
-    StartDate: new Date('0000-01-01'),
-    EndDate: new Date('0000-01-01'),
+    StartDate: new Date('0001-01-01'),
+    EndDate: new Date('0001-01-01'),
     ProjectStatus: 'TBS',
     ProjectScope: 'TBS',
     ProjectQuestionare: 'TBS',
     PentestAspects: '',
-    PentestDuration: 0,
-    ReportDueDate: new Date('0000-01-01'),
-    IKO: new Date('0000-01-01'),
-    TKO: new Date('0000-01-01'),
+    PentestDuration: -1,
+    ReportDueDate: new Date('0001-01-01'),
+    IKO: new Date('0001-01-01'),
+    TKO: new Date('0001-01-01'),
     RequestCreated: '',
     Commments: '',
     CatsNumber: '',
@@ -181,7 +180,9 @@ export class AddProjectComponent {
           // @ts-ignore
           this.projectClass[key] === '' ||
           // @ts-ignore
-          this.projectClass[key] === 'TBS'
+          this.projectClass[key] === 'TBS' ||
+          // @ts-ignore
+          this.projectClass[key] === -1
         ) {
           // @ts-ignore
           this.projectClass[key] = null;
@@ -223,7 +224,7 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass);    
+    this.addProjectService.submitPMProject(this.projectClass);
   }
 
   getValueFromTextarea() {
