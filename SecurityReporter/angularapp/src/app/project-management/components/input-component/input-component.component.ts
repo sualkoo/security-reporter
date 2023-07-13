@@ -11,6 +11,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { FormGroup, FormBuilder, AsyncValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-input-component',
@@ -26,43 +27,28 @@ import { ErrorStateMatcher } from '@angular/material/core';
   ],
 })
 export class InputComponentComponent {
+  form: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
+      projectName: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Z].*$/),
+        ]),
+      ],
+    });
+    this.form.markAllAsTouched();
+  }
+
   @Input() title: string = '';
   @Input() inputValue: string = '';
   @Output() valueChanged = new EventEmitter<string>();
 
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(50),
-    Validators.pattern(/^[A-Z].*$/),
-  ]);
-
-  matcher = new MyErrorStateMatcher();
-
   onInputChange() {
     this.valueChanged.emit(this.inputValue);
   }
-}
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
-
-export class InputErrorStateMatcherExample {
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-  matcher = new MyErrorStateMatcher();
 }

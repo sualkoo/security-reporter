@@ -19,11 +19,13 @@
         <div class="left-column">
           <div class="two-in-row">
             <datepicker-component
+              #startDate
               [title]="'Start Date'"
               (valueChanged)="onChildDateValueChanged($event, 'STR')"
             ></datepicker-component>
             <datepicker-component
               #endDate
+              [minDate]="this.projectClass.StartDate"
               [title]="'End Date'"
               (valueChanged)="onChildDateValueChanged($event, 'END')"
             ></datepicker-component>
@@ -70,6 +72,12 @@
         <div class="left-column">
           <div class="two-in-row">
             <datepicker-component
+              #reportDueDate
+              [minDate]="
+                projectClass.EndDate > projectClass.StartDate
+                  ? projectClass.EndDate
+                  : projectClass.StartDate
+              "
               (valueChanged)="onChildDateValueChanged($event, 'REP')"
               [title]="'Report Due Date'"
             ></datepicker-component>
@@ -92,11 +100,23 @@
           <button
             mat-flat-button
             color="warn"
+            style="--mdc-filled-button-container-color: #009999"
             (click)="onChildButtonValueChanged('WT')"
           >
             Add
           </button>
-
+          <mat-list role="list">
+            <mat-list-item *ngFor="let item of projectClass.WorkingTeam"
+              >{{ item }}
+              <button
+                mat-icon-button
+                (click)="deleteItem(item, 'WT')"
+                matListItemMeta
+              >
+                <mat-icon>remove</mat-icon>
+              </button></mat-list-item
+            >
+          </mat-list>
           <app-input-component
             (valueChanged)="onChildInputValueChanged($event, 'RS')"
             [title]="'Report status'"
@@ -113,11 +133,23 @@
           <button
             mat-flat-button
             color="warn"
+            style="--mdc-filled-button-container-color: #009999"
             (click)="onChildButtonValueChanged('CFC')"
           >
             Add
           </button>
-
+          <mat-list role="list">
+            <mat-list-item *ngFor="let item of projectClass.ContactForClients"
+              >{{ item }}
+              <button
+                mat-icon-button
+                (click)="deleteItem(item, 'CFC')"
+                matListItemMeta
+              >
+                <mat-icon>remove</mat-icon>
+              </button></mat-list-item
+            >
+          </mat-list>
           <div>
             <h5>Add comment:</h5>
 
@@ -139,9 +171,6 @@
       >
         Create
       </button>
-      <div *ngIf="errorValue">
-        <h5 style="color: red">Bad input</h5>
-      </div>
     </div>
   </div>
 </div>

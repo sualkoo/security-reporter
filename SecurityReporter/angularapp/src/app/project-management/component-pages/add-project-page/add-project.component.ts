@@ -10,10 +10,13 @@ import { SelectInterface } from '../../interfaces/select-interface';
 import { SelectComponentComponent } from '../../components/select-component/select-component.component';
 import { InputComponentComponent } from '../../components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
+import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { ProjectInterface } from '../../interfaces/project-interface';
 import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { MatIconModule } from '@angular/material/icon';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-project-management',
@@ -34,6 +37,8 @@ import { v4 as uuidv4 } from 'uuid';
     RadioButtonComponentComponent,
     MatButtonModule,
     NgIf,
+    MatListModule,
+    MatIconModule,
   ],
 })
 export class AddProjectComponent {
@@ -131,6 +136,9 @@ export class AddProjectComponent {
       case 'WT':
         this.wtField = value;
         break;
+      case 'CFC':
+        this.cfcField = value;
+        break;
       case 'RS':
         this.projectClass.ReportStatus = value;
         break;
@@ -165,10 +173,14 @@ export class AddProjectComponent {
 
   onChildButtonValueChanged(id: string) {
     if (id == 'WT') {
-      this.projectClass.WorkingTeam.push(this.wtField);
+      if (this.wtField != '') {
+        this.projectClass.WorkingTeam.push(this.wtField);
+      }
       this.wtField = '';
     } else {
-      this.projectClass.ContactForClients.push(this.cfcField);
+      if (this.cfcField != '') {
+        this.projectClass.ContactForClients.push(this.cfcField);
+      }
       this.cfcField = '';
     }
   }
@@ -244,7 +256,32 @@ export class AddProjectComponent {
       this.projectClass.ProjectName?.length > 3 &&
       this.projectClass.ProjectName?.length < 50
     ) {
-      this.sendRequest();
+      if (
+        this.projectClass.ProjectName[0].toUpperCase() ==
+        this.projectClass.ProjectName[0]
+      ) {
+        this.sendRequest();
+        return;
+      }
     }
+    this.errorValue = true;
+  }
+
+  deleteItem(item: string, id: string) {
+    if (id == 'WT') {
+      this.projectClass.WorkingTeam.splice(
+        this.projectClass.WorkingTeam.indexOf(item),
+        1
+      );
+    } else {
+      this.projectClass.ContactForClients.splice(
+        this.projectClass.ContactForClients.indexOf(item),
+        1
+      );
+    }
+  }
+
+  checkDateValidity() {
+    //here will be code to make datepicker red
   }
 }

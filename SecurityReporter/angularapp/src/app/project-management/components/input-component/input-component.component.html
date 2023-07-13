@@ -1,34 +1,35 @@
 <div *ngIf="title == 'Project name'">
-  <mat-form-field
-    class="project-name"
-    style="
-      width: 450px;
-      .mat-mdc-text-field-wrapper {
-        background-color: rgb(255, 255, 255);
-      }
-    "
-  >
-    <mat-label>{{ title }}</mat-label>
-    <input
-      matInput
-      placeholder=""
-      [(ngModel)]="inputValue"
-      [formControl]="emailFormControl"
-      [errorStateMatcher]="matcher"
-      (input)="onInputChange()"
-    />
-    <mat-error *ngIf="emailFormControl.hasError('minlength')">
-      Minimal Project name lenght is <strong>3 characters</strong> and maximum
-      <strong>50 characters</strong>
-    </mat-error>
-    <mat-error *ngIf="emailFormControl.hasError('required')">
-      Minimal Project name lenght is <strong>3 characters</strong> and maximum
-      <strong>50 characters</strong>
-    </mat-error>
-    <mat-error *ngIf="emailFormControl.hasError('pattern')">
-      Project should start with <strong>Capital letter</strong>
-    </mat-error>
-  </mat-form-field>
+  <form [formGroup]="form">
+    <mat-form-field
+      class="project-name"
+      style="
+        width: 450px;
+        .mat-mdc-text-field-wrapper {
+          background-color: rgb(255, 255, 255);
+        }
+      "
+    >
+      <mat-label>{{ title }}</mat-label>
+      <input
+        formControlName="projectName"
+        matInput
+        placeholder=""
+        [(ngModel)]="inputValue"
+        (input)="onInputChange()"
+      />
+
+      <mat-error *ngIf="form.get('projectName')?.errors?.['minlength']">
+        Minimal Project name lenght is <strong>3 characters</strong> and maximum
+        <strong>50 characters</strong>
+      </mat-error>
+      <mat-error *ngIf="form.get('projectName')?.errors?.['required']">
+        Project name is required
+      </mat-error>
+      <mat-error *ngIf="form.get('projectName')?.hasError('pattern')">
+        Project should start with <strong>Capital letter</strong>
+      </mat-error>
+    </mat-form-field>
+  </form>
 </div>
 <div *ngIf="title != 'Project name'">
   <mat-form-field class="project-name">
