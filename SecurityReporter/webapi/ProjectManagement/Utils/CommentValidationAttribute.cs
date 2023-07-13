@@ -13,6 +13,11 @@ namespace webapi.Utils
                 {
                     return false; // Empty list is considered invalid
                 }
+
+                if (commentList.Any(comment => comment == null)) 
+                { 
+                    return false;
+                }
             }
 
             return true; // Non-list values are considered valid
