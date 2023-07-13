@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using webapi.Models;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
 {
@@ -29,6 +30,11 @@ namespace webapi.Service
             {
                 return false;
             }
+        }
+
+        public Task<bool> AddProjectReport(ProjectReportData data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
