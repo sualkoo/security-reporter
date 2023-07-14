@@ -150,6 +150,14 @@ export class AddProjectComponent {
       case 'RS':
         this.projectClass.ReportStatus = value;
         break;
+
+      case 'CN':
+        this.projectClass.CatsNumber = value;
+        break;
+      case 'OS':
+        // @ts-ignore
+        this.projectClass.ProjectOfferStatus = projectOfferStatusIndex[value];
+        break;
       case 'PST':
         // @ts-ignore
         this.projectClass.ProjectStatus = projectStatusIndex[value];
