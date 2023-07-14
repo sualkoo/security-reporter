@@ -41,6 +41,7 @@ namespace webapi.Service
         {
             try
             {
+                data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
                 return true;
             }
