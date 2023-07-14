@@ -224,7 +224,24 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass);
+    this.addProjectService.submitPMProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+
+        console.log('Error Structure:', error);
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+
+        console.log('Errors:', errors);
+      }
+    );
+    
   }
 
   getValueFromTextarea() {
