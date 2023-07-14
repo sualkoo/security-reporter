@@ -20,7 +20,7 @@ namespace webapi.ProjectSearch.Controllers
         {
             // Process or save the uploaded file as needed
 
-            return Ok("File uploaded successfully.");
+            return Ok(newReportData);
         }
     }
 }
