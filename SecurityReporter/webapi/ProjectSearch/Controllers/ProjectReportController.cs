@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
-using webapi.Service;
+using webapi.ProjectSearch.Services;
 
 namespace webapi.ProjectSearch.Controllers
 {
@@ -8,17 +8,19 @@ namespace webapi.ProjectSearch.Controllers
     [Route("[controller]")]
     public class ProjectReportController : Controller
     {
-        public ICosmosService CosmosService { get; }
-
-        public ProjectReportController(ICosmosService cosmosService)
+        public IProjectDataParser ProjectDataParser { get; set; }
+        public ProjectReportController(IProjectDataParser parser)
         {
-            CosmosService = cosmosService;
+            ProjectDataParser = parser;
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
+            ProjectReportData newReportData = ProjectDataParser.Extract(file.OpenReadStream());
+
             // Process or save the uploaded file as needed
+
 
             return Ok(newReportData);
         }
