@@ -26,7 +26,7 @@
 
             if (startDate < endDate)
             {
-                return new ValidationResult($"End Date must be greater than or equal to Start Date.");
+                return new ValidationResult($"End Date must be greater than or equal to " + _otherPropertyName + ".");
             }
             return ValidationResult.Success;
         }
