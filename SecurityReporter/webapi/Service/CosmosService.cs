@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Azure.Cosmos;
 using webapi.Models;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -40,6 +41,7 @@ namespace webapi.Service
         {
             try
             {
+                data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
                 return true;
             }
