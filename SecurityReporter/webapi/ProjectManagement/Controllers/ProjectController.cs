@@ -18,13 +18,16 @@ public class ProjectController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
-       bool result = await CosmosService.AddProject(project);
+            Console.WriteLine("Post request Project/add called.");
+            bool result = await CosmosService.AddProject(project);
 
-       if (!result)
-       {
-            return StatusCode(400, "Error: Unable to insert project into DB.");
-       }
+            if (!result)
+            {
+                Console.WriteLine("Error occured in Project/add post request.");
+                return StatusCode(400, "Error: Unable to insert project into DB.");
+            }
 
-        return StatusCode(201, project);
+            Console.WriteLine("Request executed without any errors.");
+            return StatusCode(201, project);
     }
 }

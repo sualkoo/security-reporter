@@ -100,7 +100,7 @@ export class AddProjectComponent {
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
     RequestCreated: '',
-    Commments: '',
+    Commments: [],
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
@@ -182,7 +182,9 @@ export class AddProjectComponent {
           // @ts-ignore
           this.projectClass[key] === 'TBS' ||
           // @ts-ignore
-          this.projectClass[key] === -1
+          this.projectClass[key] === -1 ||
+          // @ts-ignore
+          this.projectClass[key] === []
         ) {
           // @ts-ignore
           this.projectClass[key] = null;
@@ -246,7 +248,7 @@ export class AddProjectComponent {
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Commments = this.commentInput.nativeElement.value;
+      this.projectClass.Commments = [this.commentInput.nativeElement.value];
     }
   }
 }

@@ -22,13 +22,16 @@ namespace webapi.Service
         public async Task<bool> AddProject(ProjectData data)
         {
             data.RequestCreated = DateOnly.FromDateTime(DateTime.Today);
+            Console.WriteLine("Adding data to database.");
             try
             {
                 await Container.CreateItemAsync(data);
+                Console.WriteLine("Added to DB successfully.");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Error occurred: " + ex);
                 return false;
             }
         }

@@ -12,7 +12,7 @@ export interface ProjectInterface {
   IKO?: Date;
   TKO?: Date;
   RequestCreated?: string;
-  Commments: string;
+  Commments: string[];
   CatsNumber?: string;
   ProjectOfferStatus?: number;
   WorkingTeam: string[];
