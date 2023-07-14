@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using webapi.Models;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
 {
@@ -20,6 +21,7 @@ namespace webapi.Service
 
         public async Task<bool> AddProject(ProjectData data)
         {
+            data.RequestCreated = DateOnly.FromDateTime(DateTime.Today);
             try
             {
                 await Container.CreateItemAsync(data);
@@ -29,6 +31,11 @@ namespace webapi.Service
             {
                 return false;
             }
+        }
+
+        public Task<bool> AddProjectReport(ProjectReportData data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

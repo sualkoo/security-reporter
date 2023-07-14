@@ -13,4 +13,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProjectSearch\Models\ProjectReport\" />
+    <Folder Include="ProjectSearch\Enums\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\serviceDependencies.local.json.user" />
+    <None Include="webapi.csproj" />
+  </ItemGroup>
+
 </Project>

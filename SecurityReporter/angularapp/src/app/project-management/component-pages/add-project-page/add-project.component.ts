@@ -12,11 +12,14 @@ import { InputComponentComponent } from '../../components/input-component/input-
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { ProjectInterface, projectOfferStatusIndex, projectQuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-interface';
+import { CommonModule } from '@angular/common';
 import { ProjectInterface } from '../../interfaces/project-interface';
 import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AddProjectService } from '../../services/add-project.service';
 
 @Component({
   selector: 'app-project-management',
@@ -42,6 +45,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   ],
 })
 export class AddProjectComponent {
+  constructor(private addProjectService: AddProjectService) { }
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -95,18 +99,18 @@ export class AddProjectComponent {
     ProjectName: '',
     StartDate: new Date('0001-01-01'),
     EndDate: new Date('0001-01-01'),
-    ProjectStatus: 'TBS',
-    ProjectScope: 'TBS',
-    ProjectQuestionare: 'TBS',
+    ProjectStatus: projectStatusIndex['TBS'],
+    ProjectScope: projectScopeIndex['TBS'],
+    ProjectQuestionare: projectQuestionareIndex['TBS'],
     PentestAspects: '',
-    PentestDuration: 0,
+    PentestDuration: -1,
     ReportDueDate: new Date('0001-01-01'),
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
     RequestCreated: '',
     Commments: '',
     CatsNumber: '',
-    ProjectOfferStatus: 'TBS',
+    ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
     ProjectLead: '',
     ReportStatus: '',
@@ -144,15 +148,15 @@ export class AddProjectComponent {
         break;
       case 'PST':
         // @ts-ignore
-        this.projectClass.ProjectStatus = value;
+        this.projectClass.ProjectStatus = projectStatusIndex[value];
         break;
       case 'PSC':
         // @ts-ignore
-        this.projectClass.ProjectScope = value;
+        this.projectClass.ProjectScope = projectScopeIndex[value];
         break;
       case 'QUE':
         // @ts-ignore
-        this.projectClass.ProjectQuestionare = value;
+        this.projectClass.ProjectQuestionare = projectQuestionareIndex[value];
         break;
     }
   }
@@ -192,7 +196,9 @@ export class AddProjectComponent {
           // @ts-ignore
           this.projectClass[key] === '' ||
           // @ts-ignore
-          this.projectClass[key] === 'TBS'
+          this.projectClass[key] === 'TBS' ||
+          // @ts-ignore
+          this.projectClass[key] === -1
         ) {
           // @ts-ignore
           this.projectClass[key] = null;
@@ -215,12 +221,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-          .toString()
-          // @ts-ignore
-          .padStart(2, '0')}-${this.projectClass[key]
-          .getUTCDate()
-          .toString()
-          .padStart(2, '0')}`;
+            .toString()
+            // @ts-ignore
+            .padStart(2, '0')}-${this.projectClass[key]
+              .getUTCDate()
+              .toString()
+              .padStart(2, '0')}`;
       }
     }
 
@@ -233,6 +239,8 @@ export class AddProjectComponent {
         console.log('Bad date');
       }
     }
+
+    this.addProjectService.submitPMProject(this.projectClass);
   }
 
   getValueFromTextarea() {
