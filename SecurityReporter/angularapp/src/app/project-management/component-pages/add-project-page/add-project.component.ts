@@ -234,10 +234,8 @@ export class AddProjectComponent {
         const { title, status, errors } = error;
 
 
-        console.log('Error Structure:', error);
         console.log('Title:', title);
         console.log('Status Code:', status);
-
         console.log('Errors:', errors);
       }
     );
