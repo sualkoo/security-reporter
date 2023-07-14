@@ -11,7 +11,6 @@ export interface ProjectInterface {
   ReportDueDate: Date;
   IKO?: Date;
   TKO?: Date;
-  RequestCreated?: string;
   Commments: string;
   CatsNumber?: string;
   ProjectOfferStatus?: number;

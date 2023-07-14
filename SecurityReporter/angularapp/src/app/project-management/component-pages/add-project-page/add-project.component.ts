@@ -111,7 +111,6 @@ export class AddProjectComponent {
     ReportDueDate: new Date('0001-01-01'),
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
-    RequestCreated: '',
     Commments: '',
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
