@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,13 +9,13 @@ import * as JSZip from 'jszip';
 export class ProjectDataService {
   private postZipFileUrl: string;
 
-  constructor(private http: HttpClient, private notificationService: NotificationSer) {
+  constructor(private http: HttpClient) {
     this.postZipFileUrl = 'https://localhost:7075/ProjectReport/add';
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.postZipFileUrl, file).pipe(res => {
-      // error handling 
+    return this.http.post(this.postZipFileUrl, file).pipe((res) => {
+      // error handling
       return res;
     });
   }

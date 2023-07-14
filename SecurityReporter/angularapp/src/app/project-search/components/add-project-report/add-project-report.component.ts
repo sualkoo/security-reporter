@@ -8,7 +8,10 @@ import { ProjectDataService } from '../../providers/project-data-service';
   styleUrls: ['./add-project-report.component.css'],
 })
 export class AddProjectReportComponent {
-  constructor(private projectDataService: ProjectDataService, private notificationService: NotificationService) { }
+  constructor(
+    private projectDataService: ProjectDataService,
+    private notificationService: NotificationService
+  ) {}
 
   uploadedFile?: Blob;
 
@@ -35,13 +38,15 @@ export class AddProjectReportComponent {
               },
               (error) => {
                 console.log(error);
-                this.notificationService.displayMessage("Shit happened on server side");
+                this.notificationService.displayMessage(
+                  'Something went wrong on server side'
+                );
               }
             );
           } else {
             // Incorrect zip file
             // Display eror message that says the zip is invalid
-            this.notificationService.displayMessage("Zip file is incorrect");
+            this.notificationService.displayMessage('Zip file is incorrect');
           }
         });
     }
