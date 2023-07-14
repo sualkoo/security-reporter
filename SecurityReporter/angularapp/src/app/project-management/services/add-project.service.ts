@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ProjectInterface } from '../interfaces/project-interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AddProjectService {
   private addEndPointURL: string;
@@ -13,6 +13,7 @@ export class AddProjectService {
   }
 
   public submitPMProject(data: ProjectInterface) {
+    console.log(this.http.post(this.addEndPointURL, data));
     return this.http.post(this.addEndPointURL, data);
   }
 }

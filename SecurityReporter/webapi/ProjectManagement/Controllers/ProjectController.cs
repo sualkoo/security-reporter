@@ -8,6 +8,7 @@ namespace webapi.ProjectManagement.Controllers;
 [Route("[controller]")]
 public class ProjectController : ControllerBase
 {
+
     public ICosmosService CosmosService { get; }
 
     public ProjectController(ICosmosService cosmosService)
@@ -18,6 +19,7 @@ public class ProjectController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
+
        bool result = await CosmosService.AddProject(project);
 
        if (!result)

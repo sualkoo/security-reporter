@@ -10,10 +10,19 @@ import { SelectInterface } from '../../interfaces/select-interface';
 import { SelectComponentComponent } from '../../components/select-component/select-component.component';
 import { InputComponentComponent } from '../../components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
+import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { ProjectInterface, projectOfferStatusIndex, projectQuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-interface';
-import { CommonModule } from '@angular/common';
+import {
+  ProjectInterface,
+  projectOfferStatusIndex,
+  projectQuestionareIndex,
+  projectScopeIndex,
+  projectStatusIndex,
+} from '../../interfaces/project-interface';
+import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { MatIconModule } from '@angular/material/icon';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
 
 @Component({
@@ -34,10 +43,13 @@ import { AddProjectService } from '../../services/add-project.service';
     InputComponentComponent,
     RadioButtonComponentComponent,
     MatButtonModule,
+    NgIf,
+    MatListModule,
+    MatIconModule,
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService) { }
+  constructor(private addProjectService: AddProjectService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -99,7 +111,6 @@ export class AddProjectComponent {
     ReportDueDate: new Date('0001-01-01'),
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
-    RequestCreated: '',
     Commments: '',
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
@@ -111,6 +122,7 @@ export class AddProjectComponent {
 
   wtField = '';
   cfcField = '';
+  errorValue = false;
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
@@ -131,8 +143,19 @@ export class AddProjectComponent {
       case 'WT':
         this.wtField = value;
         break;
+      case 'CFC':
+        this.cfcField = value;
+        break;
       case 'RS':
         this.projectClass.ReportStatus = value;
+        break;
+
+      case 'CN':
+        this.projectClass.CatsNumber = value;
+        break;
+      case 'OS':
+        // @ts-ignore
+        this.projectClass.ProjectOfferStatus = projectOfferStatusIndex[value];
         break;
       case 'PST':
         // @ts-ignore
@@ -165,10 +188,14 @@ export class AddProjectComponent {
 
   onChildButtonValueChanged(id: string) {
     if (id == 'WT') {
-      this.projectClass.WorkingTeam.push(this.wtField);
+      if (this.wtField != '') {
+        this.projectClass.WorkingTeam.push(this.wtField);
+      }
       this.wtField = '';
     } else {
-      this.projectClass.ContactForClients.push(this.cfcField);
+      if (this.cfcField != '') {
+        this.projectClass.ContactForClients.push(this.cfcField);
+      }
       this.cfcField = '';
     }
   }
@@ -205,12 +232,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-            .toString()
-            // @ts-ignore
-            .padStart(2, '0')}-${this.projectClass[key]
-              .getUTCDate()
-              .toString()
-              .padStart(2, '0')}`;
+          .toString()
+          // @ts-ignore
+          .padStart(2, '0')}-${this.projectClass[key]
+          .getUTCDate()
+          .toString()
+          .padStart(2, '0')}`;
       }
     }
 
@@ -231,5 +258,63 @@ export class AddProjectComponent {
     if (this.commentInput) {
       this.projectClass.Commments = this.commentInput.nativeElement.value;
     }
+  }
+
+  validationFunction() {
+    // @ts-ignore
+    if (this.projectClass.StartDate > this.projectClass.EndDate) {
+      this.errorValue = true;
+    }
+    // @ts-ignore
+
+    if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
+      this.errorValue = true;
+    }
+
+    if (
+      // @ts-ignore
+
+      this.projectClass.StartDate <= this.projectClass.EndDate &&
+      // @ts-ignore
+
+      this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
+      // @ts-ignore
+
+      this.projectClass.ProjectName?.length > 3 &&
+      // @ts-ignore
+
+      this.projectClass.ProjectName?.length < 50
+    ) {
+      if (
+        // @ts-ignore
+
+        this.projectClass.ProjectName[0].toUpperCase() ==
+        // @ts-ignore
+
+        this.projectClass.ProjectName[0]
+      ) {
+        this.sendRequest();
+        return;
+      }
+    }
+    this.errorValue = true;
+  }
+
+  deleteItem(item: string, id: string) {
+    if (id == 'WT') {
+      this.projectClass.WorkingTeam.splice(
+        this.projectClass.WorkingTeam.indexOf(item),
+        1
+      );
+    } else {
+      this.projectClass.ContactForClients.splice(
+        this.projectClass.ContactForClients.indexOf(item),
+        1
+      );
+    }
+  }
+
+  checkDateValidity() {
+    //here will be code to make datepicker red
   }
 }
