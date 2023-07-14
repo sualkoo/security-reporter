@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,10 @@ export class ProjectDataService {
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.postZipFileUrl, file);
+    return this.http.post(this.postZipFileUrl, file).pipe((res) => {
+      // error handling
+      return res;
+    });
   }
 
   async validateZipFile(file: File): Promise<boolean> {
