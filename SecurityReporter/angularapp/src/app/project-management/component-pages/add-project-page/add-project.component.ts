@@ -111,7 +111,8 @@ export class AddProjectComponent {
     ReportDueDate: new Date('0001-01-01'),
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
-    Commments: '',
+    RequestCreated: '',
+    Commments: [],
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
@@ -209,7 +210,9 @@ export class AddProjectComponent {
           // @ts-ignore
           this.projectClass[key] === 'TBS' ||
           // @ts-ignore
-          this.projectClass[key] === -1
+          this.projectClass[key] === -1 ||
+          // @ts-ignore
+          this.projectClass[key] === []
         ) {
           // @ts-ignore
           this.projectClass[key] = null;
@@ -251,12 +254,27 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass);
+    this.addProjectService.submitPMProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+        console.log('Errors:', errors);
+      }
+    );
+    
   }
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Commments = this.commentInput.nativeElement.value;
+      this.projectClass.Commments = [this.commentInput.nativeElement.value];
     }
   }
 
