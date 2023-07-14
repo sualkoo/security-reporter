@@ -1,6 +1,8 @@
-﻿namespace webapi.Models.ProjectReport
+﻿using webapi.ProjectSearch.Models;
+
+namespace webapi.Models.ProjectReport
 {
-    public class ScopeAndProcedures
+    public class ScopeAndProcedures : IEntity
     {
         public List<ScopeProcedure>? InScope { get; set; }
         public List<ScopeProcedure>? OutOfScope { get; set; }

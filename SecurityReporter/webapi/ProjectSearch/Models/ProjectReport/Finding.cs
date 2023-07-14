@@ -1,9 +1,12 @@
-﻿using webapi.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using webapi.Enums;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.Models.ProjectReport
 {
-    public class Finding
+    public class Finding : IEntity
     {
+        [Required(ErrorMessage = "Component is required.")]
         public string? FindingAuthor { get; set; }
         public string? FindingName { get; set; }
         public List<string>? Location { get; set; }
