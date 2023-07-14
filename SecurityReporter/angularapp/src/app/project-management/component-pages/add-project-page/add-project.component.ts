@@ -12,9 +12,13 @@ import { InputComponentComponent } from '../../components/input-component/input-
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { ProjectInterface, projectOfferStatusIndex, projectQuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-interface';
-import { CommonModule } from '@angular/common';
-import { ProjectInterface } from '../../interfaces/project-interface';
+import {
+  ProjectInterface,
+  projectOfferStatusIndex,
+  projectQuestionareIndex,
+  projectScopeIndex,
+  projectStatusIndex,
+} from '../../interfaces/project-interface';
 import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
@@ -45,7 +49,7 @@ import { AddProjectService } from '../../services/add-project.service';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService) { }
+  constructor(private addProjectService: AddProjectService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -221,12 +225,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-            .toString()
-            // @ts-ignore
-            .padStart(2, '0')}-${this.projectClass[key]
-              .getUTCDate()
-              .toString()
-              .padStart(2, '0')}`;
+          .toString()
+          // @ts-ignore
+          .padStart(2, '0')}-${this.projectClass[key]
+          .getUTCDate()
+          .toString()
+          .padStart(2, '0')}`;
       }
     }
 
@@ -250,22 +254,36 @@ export class AddProjectComponent {
   }
 
   validationFunction() {
+    // @ts-ignore
     if (this.projectClass.StartDate > this.projectClass.EndDate) {
       this.errorValue = true;
     }
+    // @ts-ignore
 
     if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
       this.errorValue = true;
     }
 
     if (
+      // @ts-ignore
+
       this.projectClass.StartDate <= this.projectClass.EndDate &&
+      // @ts-ignore
+
       this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
+      // @ts-ignore
+
       this.projectClass.ProjectName?.length > 3 &&
+      // @ts-ignore
+
       this.projectClass.ProjectName?.length < 50
     ) {
       if (
+        // @ts-ignore
+
         this.projectClass.ProjectName[0].toUpperCase() ==
+        // @ts-ignore
+
         this.projectClass.ProjectName[0]
       ) {
         this.sendRequest();
