@@ -3,6 +3,8 @@
   <mat-label>Date</mat-label>
   <input
     matInput
+    [min]="minDate"
+    [max]="maxDate"
     [matDatepicker]="picker"
     [(ngModel)]="inputValue"
     (dateChange)="onDateChange()"
