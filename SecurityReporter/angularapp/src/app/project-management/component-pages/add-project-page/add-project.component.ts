@@ -12,6 +12,8 @@ import { InputComponentComponent } from '../../components/input-component/input-
 import { RadioButtonComponentComponent } from '../../components/radio-button-component/radio-button-component.component';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { CommentInterface } from '../../interfaces/comment-interface';
+
 import {
   ProjectInterface,
   projectOfferStatusIndex,
@@ -269,12 +271,14 @@ export class AddProjectComponent {
         console.log('Errors:', errors);
       }
     );
-    
+
   }
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Commments = [this.commentInput.nativeElement.value];
+      this.projectClass.Commments = [{
+        text: this.commentInput.nativeElement.value
+      }];
     }
   }
 
