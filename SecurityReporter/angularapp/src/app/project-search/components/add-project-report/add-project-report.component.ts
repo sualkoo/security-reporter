@@ -29,8 +29,8 @@ export class AddProjectReportComponent {
 
       this.projectDataService
         .validateZipFile(new File([this.uploadedFile], this.uploadFile.name))
-        .then((val) => {
-          if (val === true) {
+        .then((isValid) => {
+          if (isValid) {
             // Correct zip file
             this.projectDataService.postZipFile(formData).subscribe(
               (response) => {
@@ -48,6 +48,10 @@ export class AddProjectReportComponent {
             // Display eror message that says the zip is invalid
             this.notificationService.displayMessage('Zip file is incorrect');
           }
+        })
+        .catch((err) => {
+          console.error(err.message);
+          this.notificationService.displayMessage('Zip file is incorrect');
         });
     }
   }
