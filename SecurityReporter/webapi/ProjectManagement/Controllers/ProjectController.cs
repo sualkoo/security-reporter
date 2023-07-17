@@ -45,14 +45,12 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
-    public async Task<IActionResult> GetItems()
+    public async Task<IActionResult> GetItems(int pageSize, int pageNumber)
     {
-        var query = "SELECT * FROM c";
         var items = new List<ProjectData>();
 
-        items = await CosmosService.GetItems();
+        items = await CosmosService.GetItems(pageSize, pageNumber);
 
-        //TODO add status codes
         return Ok(items);
     }
 }

@@ -65,9 +65,14 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems()
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber)
         {
-            QueryDefinition query = new QueryDefinition("SELECT * FROM c");
+            int skipCount = pageSize * (pageNumber - 1);
+            int itemCount = pageSize;
+
+            QueryDefinition query = new QueryDefinition("SELECT * FROM c OFFSET @skipCount LIMIT @itemCount")
+                .WithParameter("@skipCount", skipCount)
+                .WithParameter("@itemCount", itemCount);
 
             List<ProjectData> items = new List<ProjectData>();
             FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
@@ -77,9 +82,7 @@ namespace webapi.Service
                 FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
                 items.AddRange(response.Resource);
             }
-
             return items;
-
         }
     }
 }
