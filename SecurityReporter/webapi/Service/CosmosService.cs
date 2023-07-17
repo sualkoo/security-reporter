@@ -1,7 +1,11 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq.Expressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
@@ -65,25 +69,37 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectReportData>> GetProjectReportDatasFiltered(int type, string value)
+        public async Task<ProjectReportData> GetProjectReport(string projectId)
         {
-            string query = "SELECT * FROM c WHERE";
-            List<ProjectReportData> results = new List<ProjectReportData>();
-            switch (type)
-            {
-                case 0:
-                    query = query + " c.DocumentInfo.ProjectReportName = '" + value + "'";
-                    break;
-                    case 1:
-
-                    break;
-                default:
-                    throw new Exception("Error aquiring Filter");
-                    break;
-
-            }
+            Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
             try
             {
+                Console.WriteLine("Searching for Report based on Id");
+                ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
+                return data;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Report with searched Id not found" + exception);
+            }
+        }
+        public async Task<List<ProjectReportData>> GetProjectReports(string subcategory, string keyword, string value)
+        {
+            List<ProjectReportData> results = new List<ProjectReportData>();
+            string query = "SELECT * FROM c WHERE";
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                query = $"{query} c.{subcategory}.{keyword} = '{value}'";
+            } else
+            {
+                query = $"{query} c.{keyword} = '{value}'";
+            }
+
+
+            try
+            {
+                Console.WriteLine("Fetching reports from database");
                 QueryDefinition queryDefinition = new QueryDefinition(query);
                 FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(query);
                 while (queryResultSetIterator.HasMoreResults)
@@ -91,13 +107,13 @@ namespace webapi.Service
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                     results.AddRange(currentResultSet.ToList());
                 }
+                Console.WriteLine("Returning found reports");
                 return results;
             }
-            catch (Exception) 
+            catch (Exception exception) 
             {
-                throw new Exception("Error getting report data from Project Report Database");
+                throw new Exception("Error getting reports data from Project Report Database" + exception);
             }
-            return results;
         }
     }
 }
