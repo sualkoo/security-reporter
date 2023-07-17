@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.IO.Pipes;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Services;
 
 namespace webapi.ProjectSearch.Services
 {
@@ -17,6 +18,12 @@ namespace webapi.ProjectSearch.Services
                 if(zipStream != null) {
                     ZipArchiveEntry currentEntry = archive.GetEntry("Config/Document_Information.tex");
                     newProjectReportData.DocumentInfo = ExtractDocumentInformation(currentEntry);
+                    currentEntry = archive.GetEntry("Config/Executive_Summary.tex");
+                    newProjectReportData.ExecutiveSummary = ExtractExecutiveSummary(currentEntry);
+                    currentEntry = archive.GetEntry("Config/Project_Information.tex");
+                    ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry);
+                    newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+
                 }
                 else
                 {
@@ -72,6 +79,49 @@ namespace webapi.ProjectSearch.Services
             }
         }
 
+        private string ExtractExecutiveSummary(ZipArchiveEntry execSumEntry)
+        {
+            DocumentInformation newDocumentInfo = new DocumentInformation();
+            newDocumentInfo.ReportDocumentHistory = new List<ReportVersionEntry>();
+            string line;
+            bool readingExecSum = false;
+            string resultString = "";
+
+            if (execSumEntry == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                using (StreamReader reader = new StreamReader(execSumEntry.Open()))
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            if (line == "%-<ExecSum>")
+                            {
+                                readingExecSum = false;
+                            }
+
+                            if (readingExecSum)
+                            {
+                                resultString += line;
+                            }
+
+                            if (line == "%-<ExecSum>->")
+                            {
+                                readingExecSum = true;
+                            }
+                            
+                        }
+
+                    }
+                }
+                return resultString;
+            }
+        }
+
         /*Parameter is a string with data in it, so it's the part of a string, that is in second curly braces.
          It takes whole line inside the braces with data, then splits it according to commas and trims the whitespaces. */
         private List<string> ReadInlineContents(string extractedLine)
@@ -88,14 +138,6 @@ namespace webapi.ProjectSearch.Services
             return contents;
         }
 
-        /*private ReportVersionEntry ReadReportDocumentHistory(string line)
-        {
-            char[] delimiters = { '{', '}' };
-            string[] cutString = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            
-
-            return newReport;
-        }*/
 
         private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
         {
