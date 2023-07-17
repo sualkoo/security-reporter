@@ -24,8 +24,7 @@ export class ProjectDataService {
   public getProjectReport(id: string) {
     console.log("Fetching project report, id=" + id);
     // Todo: Add type to get request
-    return this.http.get(`${this.apiUrl}?id=${id}`);
-
+    return this.http.get(this.apiUrl, { params: { id: id } });
   }
 
   async validateZipFile(file: File): Promise<boolean> {
