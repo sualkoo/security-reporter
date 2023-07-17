@@ -33,8 +33,8 @@ public class ProjectData
 
     [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
     public DateOnly ReportDueDate { get; set; }
-    public DateOnly? RequestCreated { get; set; } 
-    public List<string>? Commments { get; set; }
+    public DateTime? RequestCreated { get; set; } 
+    public List<Comment>? Commments { get; set; }
 
     [StringValidation(ErrorMessage = "The Cats Number field must not be empty or contain only whitespace.")]
     public string? CatsNumber { get; set; }

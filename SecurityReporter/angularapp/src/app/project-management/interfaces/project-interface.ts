@@ -1,3 +1,5 @@
+import { CommentInterface } from "./comment-interface"
+
 export interface ProjectInterface {
   id: string;
   ProjectName?: string;
@@ -12,7 +14,7 @@ export interface ProjectInterface {
   IKO?: Date;
   TKO?: Date;
   RequestCreated?: string;
-  Commments: string[];
+  Commments: CommentInterface[];
   CatsNumber?: string;
   ProjectOfferStatus?: number;
   WorkingTeam: string[];
