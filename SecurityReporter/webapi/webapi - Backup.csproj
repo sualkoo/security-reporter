@@ -18,9 +18,4 @@
     <Folder Include="ProjectSearch\Enums\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Properties\serviceDependencies.local.json.user" />
-    <None Include="webapi.csproj" />
-  </ItemGroup>
-
 </Project>
