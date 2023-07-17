@@ -23,7 +23,6 @@ import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
 import { MatTableModule } from '@angular/material/table';
-import { PaginatorComponentComponent } from './project-listing/components/paginator-component/paginator-component.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +52,6 @@ import { PaginatorComponentComponent } from './project-listing/components/pagina
     AppRoutingModule,
     CommonModule,
     DataGridComponentComponent,
-    PaginatorComponentComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
