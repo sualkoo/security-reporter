@@ -1,0 +1,114 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+    </ng-container>
+
+    <!-- Project Name Column -->
+    <ng-container matColumnDef="projectName">
+      <th mat-header-cell *matHeaderCellDef> Project Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.projectName }} </td>
+    </ng-container>
+
+    <!-- Project Status Column -->
+    <ng-container matColumnDef="projectStatus">
+      <th mat-header-cell *matHeaderCellDef> Project Status </th>
+      <td mat-cell *matCellDef="let element"> {{ element.projectStatus }} </td>
+    </ng-container>
+
+    <!-- Questionare Column -->
+    <ng-container matColumnDef="questionare">
+      <th mat-header-cell *matHeaderCellDef> Questionare </th>
+      <td mat-cell *matCellDef="let element"> {{ element.questionare }} </td>
+    </ng-container>
+
+    <!-- Project Scope Column -->
+    <ng-container matColumnDef="projectScope">
+      <th mat-header-cell *matHeaderCellDef> Project Scope </th>
+      <td mat-cell *matCellDef="let element"> {{ element.projectScope }} </td>
+    </ng-container>
+
+    <!-- Start Column -->
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef> Start </th>
+      <td mat-cell *matCellDef="let element"> {{ element.start }} </td>
+    </ng-container>
+
+    <!-- End Column -->
+    <ng-container matColumnDef="end">
+      <th mat-header-cell *matHeaderCellDef> End </th>
+      <td mat-cell *matCellDef="let element"> {{ element.end }} </td>
+    </ng-container>
+
+    <!-- Report Due Column -->
+    <ng-container matColumnDef="reportDue">
+      <th mat-header-cell *matHeaderCellDef> Report Due </th>
+      <td mat-cell *matCellDef="let element"> {{ element.reportDue }} </td>
+    </ng-container>
+
+    <!-- Pentest Duration Column -->
+    <ng-container matColumnDef="pentestDuration">
+      <th mat-header-cell *matHeaderCellDef> Pentest Duration </th>
+      <td mat-cell *matCellDef="let element"> {{ element.pentestDuration }} </td>
+    </ng-container>
+
+    <!-- IKO Column -->
+    <ng-container matColumnDef="iko">
+      <th mat-header-cell *matHeaderCellDef> IKO </th>
+      <td mat-cell *matCellDef="let element"> {{ element.iko }} </td>
+    </ng-container>
+
+    <!-- TKO Column -->
+    <ng-container matColumnDef="tko">
+      <th mat-header-cell *matHeaderCellDef> TKO </th>
+      <td mat-cell *matCellDef="let element"> {{ element.tko }} </td>
+    </ng-container>
+
+    <!-- Last Comment Column -->
+    <ng-container matColumnDef="lastComment">
+      <th mat-header-cell *matHeaderCellDef> Last Comment </th>
+      <td mat-cell *matCellDef="let element"> {{ element.lastComment }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        (click)="selection.toggle(row)">
+    </tr>
+
+    <!-- Placeholder row when dataSource is empty -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        No data available
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator [length]="length"
+                 [pageSize]="15"
+                 [pageSizeOptions]="[15, 25, 50]"
+                 (page)="handlePageChange()"
+                 (pageSize)="handlePageChange()"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>

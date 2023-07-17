@@ -21,7 +21,8 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
-import { MultiLineListComponent } from './project-listing/components/multi-line-list/multi-line-list.component';
+import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
+import { MatTableModule } from '@angular/material/table';
 import { ButtonComponent } from './project-listing/components/button/button.component';
 import { CheckboxComponent } from './project-listing/components/checkbox/checkbox.component';
 
@@ -31,11 +32,12 @@ import { CheckboxComponent } from './project-listing/components/checkbox/checkbo
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    ListProjectsPageComponent,
     
-    MultiLineListComponent,
     
     CheckboxComponent,
   ],
+
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -57,6 +59,7 @@ import { CheckboxComponent } from './project-listing/components/checkbox/checkbo
     ButtonComponent,
     CommonModule,
     ListProjectsPageComponent
+    DataGridComponentComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,6 +1,9 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -10,7 +13,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -43,6 +46,43 @@ namespace webapi.Service
         public Task<bool> AddProjectReport(ProjectReportData data)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> GetNumberOfProjects()
+        {
+            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+            FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
+
+            if (queryResultIterator.HasMoreResults)
+            {
+                FeedResponse<int> response = await queryResultIterator.ReadNextAsync();
+                int count = response.FirstOrDefault();
+                return count;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber)
+        {
+            int skipCount = pageSize * (pageNumber - 1);
+            int itemCount = pageSize;
+
+            QueryDefinition query = new QueryDefinition("SELECT * FROM c OFFSET @skipCount LIMIT @itemCount")
+                .WithParameter("@skipCount", skipCount)
+                .WithParameter("@itemCount", itemCount);
+
+            List<ProjectData> items = new List<ProjectData>();
+            FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
+
+            while (resultSetIterator.HasMoreResults)
+            {
+                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                items.AddRange(response.Resource);
+            }
+            return items;
         }
     }
 }
