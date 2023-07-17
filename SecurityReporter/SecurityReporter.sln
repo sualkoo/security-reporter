@@ -9,23 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "webapi\webapi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapiTests", "webapiTests\webapiTests.csproj", "{AC24C884-2040-4EA8-9529-EDFE5A32CE56}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cosmosTools", "cosmosTools", "{804F8AC3-C676-4433-ADA4-29FD725F231B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6FD71E46-87D0-4D76-8CB9-2A2C8BDF0634}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{A4B804C6-B48E-4A65-91F1-7C0A4D779F3C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{4B53D8A1-9605-48DD-9086-E21535E18DF6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{CB861E04-5CDA-4E7C-9D8D-2B147D407676}"
-	ProjectSection(SolutionItems) = preProject
-		CommonExtensions.cs = CommonExtensions.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".template.config", ".template.config", "{9843D7DE-7CB7-4087-813B-3AD840140E47}"
-	ProjectSection(SolutionItems) = preProject
-		template.json = template.json
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmosTools", "cosmosTools\cosmosTools.csproj", "{6D41F52B-45BC-4EA5-AF14-040E79BD6517}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,16 +31,13 @@ Global
 		{AC24C884-2040-4EA8-9529-EDFE5A32CE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC24C884-2040-4EA8-9529-EDFE5A32CE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC24C884-2040-4EA8-9529-EDFE5A32CE56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D41F52B-45BC-4EA5-AF14-040E79BD6517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D41F52B-45BC-4EA5-AF14-040E79BD6517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D41F52B-45BC-4EA5-AF14-040E79BD6517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D41F52B-45BC-4EA5-AF14-040E79BD6517}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6FD71E46-87D0-4D76-8CB9-2A2C8BDF0634} = {804F8AC3-C676-4433-ADA4-29FD725F231B}
-		{A4B804C6-B48E-4A65-91F1-7C0A4D779F3C} = {804F8AC3-C676-4433-ADA4-29FD725F231B}
-		{4B53D8A1-9605-48DD-9086-E21535E18DF6} = {A4B804C6-B48E-4A65-91F1-7C0A4D779F3C}
-		{CB861E04-5CDA-4E7C-9D8D-2B147D407676} = {4B53D8A1-9605-48DD-9086-E21535E18DF6}
-		{9843D7DE-7CB7-4087-813B-3AD840140E47} = {CB861E04-5CDA-4E7C-9D8D-2B147D407676}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9423C39E-93BD-435F-A00D-69D1FDF00A73}
