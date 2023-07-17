@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +16,15 @@ export class ProjectDataService {
 
   public postZipFile(file: any) {
     return this.http.post(this.apiUrl, file).pipe((res) => {
-      // error handling
+      // Todo: error handling
       return res;
     });
+  }
+
+  public getProjectReport(id: string) {
+    console.log("Fetching project report, id=" + id);
+    // Todo: Add type to get request
+    return this.http.get(this.apiUrl, { params: { id: id } });
   }
 
   async validateZipFile(file: File): Promise<boolean> {
