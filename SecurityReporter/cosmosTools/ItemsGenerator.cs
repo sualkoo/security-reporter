@@ -21,7 +21,7 @@ namespace cosmosTools
 
             if (consoleInput != null)
             {
-                command = getCommandFromInput(consoleInput);
+                command = CommandFromInput(consoleInput);
                 if (command == "add")
                 {
                     Console.WriteLine("add command");
