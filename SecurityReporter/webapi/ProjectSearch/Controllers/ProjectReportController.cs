@@ -52,6 +52,7 @@ namespace webapi.ProjectSearch.Controllers
             return StatusCode(201, newReportData);
         }
 
+        // Todo: Implement query parameters like we did with CosmosService getProjectReports so we can flexibly filter data at frontend
         [HttpGet]
         public async Task<IActionResult> getProjectReports(string? id, string? projectReportName)
         {
@@ -59,16 +60,17 @@ namespace webapi.ProjectSearch.Controllers
             if (!string.IsNullOrEmpty(id))
             {
                 // Fetch project report by ID (should return only 1 item)
-                Console.WriteLine("Fetching project report, id=" + id);
+                Console.WriteLine($"Fetching project report with ID: {id}");
 
                 try
                 {
                     ProjectReportData data = await CosmosService.GetProjectReport(id);
+                    Console.WriteLine("Successfully fetched the Project Report.");
                     return Ok(data);
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("An exception occured while fetching Project Report");
+                    Console.WriteLine("An exception occurred while fetching the Project Report.");
                     return NotFound("Project Report not found.");
                 }
             }
@@ -76,12 +78,13 @@ namespace webapi.ProjectSearch.Controllers
             if (!string.IsNullOrEmpty(projectReportName))
             {
                 // Fetch project reports by 'projectReportName'
-                Console.WriteLine("Fetching by project report name");
+                Console.WriteLine($"Fetching project reports by name: {projectReportName}");
                 List<ProjectReportData> projectReports = await CosmosService.GetProjectReports("DocumentInfo", "ProjectReportName", projectReportName);
                 // Todo: This should return paginated result - For performance reasons
                 return Ok(projectReports);
             }
 
+            Console.WriteLine("Invalid request. Either ID or ProjectReportName must be specified.");
             return BadRequest("Either ID or ProjectReportName must be specified.");
         }
     }
