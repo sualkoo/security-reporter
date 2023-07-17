@@ -7,14 +7,14 @@ import { NotificationService } from './notification.service';
   providedIn: 'root',
 })
 export class ProjectDataService {
-  private postZipFileUrl: string;
+  private apiUrl: string;
 
   constructor(private http: HttpClient) {
-    this.postZipFileUrl = 'https://localhost:7075/ProjectReport/add';
+    this.apiUrl = 'https://localhost:7075/ProjectReports';
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.postZipFileUrl, file).pipe((res) => {
+    return this.http.post(this.apiUrl, file).pipe((res) => {
       // error handling
       return res;
     });
