@@ -23,6 +23,7 @@ namespace webapi.ProjectSearch.Services
                     throw new ArgumentNullException(nameof(zipStream));
                 }
             }
+            Console.WriteLine("Successfully extracted data from zip file");
             return newProjectReportData;
         }
 

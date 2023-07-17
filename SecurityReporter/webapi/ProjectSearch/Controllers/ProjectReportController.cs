@@ -9,25 +9,46 @@ namespace webapi.ProjectSearch.Controllers
     [Route("ProjectReports")]
     public class ProjectReportController : Controller
     {
-        private IProjectDataParser _ProjectDataParser { get; set; }
-        private ICosmosService _CosmosService { get; set; }
+        public ProjectDataValidator Validator { get; set; }
+        public ProjectDataParser Parser { get; set; }
+        public CosmosService CosmosService { get; set; }
 
-        public ProjectReportController(IProjectDataParser parser, ICosmosService cosmosService)
+        public ProjectReportController(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
-            _ProjectDataParser = parser;
-            _CosmosService = cosmosService;
+            Validator = (ProjectDataValidator)validator;
+            Parser = (ProjectDataParser)parser;
+            CosmosService = (CosmosService)cosmosService;
         }
 
         [HttpPost]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
             Console.WriteLine("Received POST request for adding new Project Report");
-            ProjectReportData newReportData = _ProjectDataParser.Extract(file.OpenReadStream());
-            bool result = await _CosmosService.AddProjectReport(newReportData);
+            ProjectReportData newReportData = null;
+            try
+            {
+                newReportData = Parser.Extract(file.OpenReadStream());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("An error occurred while extracting data from zip file.");
+                return BadRequest("Zip file has some missing files. Make sure you use the most recent version of the LaTeX template");
+            };
+
+            bool isValid = Validator.Validate(newReportData);
+
+            if (isValid == false)
+            {
+                return BadRequest("ProjectReport has missing information");
+            }
+
+            bool result = await CosmosService.AddProjectReport(newReportData);
+
             if (!result)
             {
-                return StatusCode(500, "An error occured while saving Project Report to database");
+                return BadRequest("Failed to save ProjectReport to database.");
             }
+            Console.WriteLine("New ProjectReport was successfully created and saved to database.");
             return StatusCode(201, newReportData);
         }
 
