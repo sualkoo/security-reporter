@@ -7,12 +7,7 @@ import { GetProjectsCountService } from '../../services/get-projects-count.servi
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
+
 
 @Component({
   selector: 'app-data-grid-component',
@@ -24,7 +19,21 @@ export interface PeriodicElement {
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
 
-  displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = [
+    'select',
+    'id',
+    'projectName',
+    'projectStatus',
+    'questionare',
+    'projectScope',
+    'start',
+    'end',
+    'reportDue',
+    'pentestDuration',
+    'iko',
+    'tko',
+    'lastComment',
+  ];
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
@@ -76,7 +85,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getInitItems() {
-    this.projects = await this.getProjectsService.getProjects(0, 1);
+    this.projects = await this.getProjectsService.getProjects(15, 1);
+    console.log(this.projects);
   }
 
   async handlePageChange() {
