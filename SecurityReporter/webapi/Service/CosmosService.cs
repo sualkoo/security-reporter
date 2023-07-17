@@ -101,36 +101,5 @@ namespace webapi.Service
 
             return failed_to_delete;
         }
-
-
-        public async Task<bool> DeleteAllProjects()
-        {
-            Console.WriteLine("Deleting all data from database.");
-
-            var query = new QueryDefinition("SELECT * FROM c");
-
-            // Iterate over the query results and delete each item
-            using (FeedIterator<dynamic> resultSetIterator = Container.GetItemQueryIterator<dynamic>(query))
-            {
-                while (resultSetIterator.HasMoreResults)
-                {
-                    FeedResponse<dynamic> response = await resultSetIterator.ReadNextAsync();
-
-                    foreach (dynamic item in response)
-                    {
-                        string itemId = item.id;
-
-                        // Delete the item from the container
-                        ItemResponse<dynamic> deleteResponse = await Container.DeleteItemAsync<dynamic>(itemId, new PartitionKey(itemId));
-
-                        Console.WriteLine($"{itemId},Deleted from DB successfully.");
-
-                    }
-                }
-            }
-
-            Console.WriteLine("All items in the container have been deleted.");
-            return true;
-        }
     }
 }
