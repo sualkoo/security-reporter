@@ -86,9 +86,11 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   async getInitItems() {
     this.projects = await this.getProjectsService.getProjects(15, 1);
+    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   }
 
   async handlePageChange() {
     this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   }
 }
