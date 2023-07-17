@@ -11,6 +11,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\angularapp</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\project-listing\interfaces\" />
+    <Folder Include="src\app\project-listing\components\" />
+    <Folder Include="src\app\project-listing\services\" />
     <Folder Include="src\app\project-search\components\" />
     <Folder Include="src\app\project-search\interfaces\" />
   </ItemGroup>
