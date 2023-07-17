@@ -6,7 +6,7 @@ class CosmosTools
     static void Main(string[] args) 
     {
         Console.WriteLine("Cosmos Tools");
-        new ItemsGenerator();
+        new ItemsGenerator(args);
     }
 }
 

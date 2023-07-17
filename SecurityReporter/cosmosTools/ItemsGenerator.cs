@@ -8,20 +8,20 @@ namespace cosmosTools
 {
     internal class ItemsGenerator
     {
-        private string? consoleInput;
+        private string[]? consoleInput;
         private string? command;
         
-        public ItemsGenerator()
+        public ItemsGenerator(string[] args)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine("DB Generator");
             Console.WriteLine("-------------------");
 
-            consoleInput = Console.ReadLine();
+            this.consoleInput = args;
 
-            if (consoleInput != null)
+            if (this.consoleInput != null)
             {
-                command = CommandFromInput(consoleInput);
+                command = CommandFromInput(this.consoleInput);
                 if (command == "add")
                 {
                     Console.WriteLine("add command");
@@ -40,17 +40,20 @@ namespace cosmosTools
 
         }
 
-        private string CommandFromInput(string input) {
-            
-            int firstWhitespaceIndex = input.IndexOfAny(new[] { ' ', '\t' });
+        private string CommandFromInput(string[] input) {
+
+            string inputString = string.Join(" ", input);
+
+            int firstWhitespaceIndex = inputString.IndexOfAny(new[] { ' ', '\t' });
 
             if (firstWhitespaceIndex == -1)
             {
-                return string.Empty;
+                return inputString;
             }
-            string truncatedInput = input.Substring(0, firstWhitespaceIndex);
 
-            return truncatedInput;
+            string firstWord = inputString.Substring(0, firstWhitespaceIndex);
+
+            return firstWord;
         }
     }
     
