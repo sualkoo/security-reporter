@@ -43,4 +43,16 @@ public class ProjectController : ControllerBase
 
         return StatusCode(200, count);
     }
+
+    [HttpGet("retrieve")]
+    public async Task<IActionResult> GetItems()
+    {
+        var query = "SELECT * FROM c";
+        var items = new List<ProjectData>();
+
+        items = await CosmosService.GetItems();
+
+        //TODO add status codes
+        return Ok(items);
+    }
 }

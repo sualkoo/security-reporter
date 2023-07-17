@@ -1,7 +1,9 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -11,7 +13,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -61,6 +63,23 @@ namespace webapi.Service
             {
                 return -1;
             }
+        }
+
+        public async Task<List<ProjectData>> GetItems()
+        {
+            QueryDefinition query = new QueryDefinition("SELECT * FROM c");
+
+            List<ProjectData> items = new List<ProjectData>();
+            FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
+
+            while (resultSetIterator.HasMoreResults)
+            {
+                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                items.AddRange(response.Resource);
+            }
+
+            return items;
+
         }
     }
 }
