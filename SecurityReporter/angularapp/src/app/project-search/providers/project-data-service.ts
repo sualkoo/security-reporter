@@ -27,6 +27,13 @@ export class ProjectDataService {
     return this.http.get(this.apiUrl, { params: { id: id } });
   }
 
+  public getProjectReports(projectReportName: string) {
+
+    console.log("Fetching project report, projectReportName=" + projectReportName);
+    return this.http.get(this.apiUrl, { params: { projectReportName: projectReportName } });
+  }
+
+
   async validateZipFile(file: File): Promise<boolean> {
     const zip = new JSZip();
     let isValid: boolean = true;
