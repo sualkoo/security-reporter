@@ -6,13 +6,19 @@ namespace webapi.Models.ProjectReport
 {
     public class ProjectInformation : IEntity
     {
-        //[Required(ErrorMessage = "ApplicationManager is required.")]
+        [Required(ErrorMessage = "ApplicationManager is required!")]
         public ProjectInformationParticipant? ApplicationManager { get; set; }
+        [Required(ErrorMessage = "BusinessOwner is required!")]
         public ProjectInformationParticipant? BusinessOwner { get; set; }
+        [Required(ErrorMessage = "BusinessRepresentative is required!")]
         public ProjectInformationParticipant? BusinessRepresentative { get; set; }
+        [MinLength(1, ErrorMessage = "TechnicalContacts must have at least one participant.")]
         public List<ProjectInformationParticipant>? TechnicalContacts { get; set; }
+        [Required(ErrorMessage = "PentestLead is required!")]
         public ProjectInformationParticipant? PentestLead { get; set; }
+        [Required(ErrorMessage = "PentestCoordinator is required!")]
         public ProjectInformationParticipant? PentestCoordinator { get; set; }
+        [MinLength(1, ErrorMessage = "PentestTeam must have at least one participant.")]
         public List<ProjectInformationParticipant>? PentestTeam { get; set; }
         //ProjectReportName in DocumentInformation
         [StringLength(50, ErrorMessage = "TargetInfoVersion cannot exceed 50 characters.")]

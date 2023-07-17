@@ -10,7 +10,9 @@ namespace webapi.ProjectSearch.Models
         public DocumentInformation? DocumentInfo { get; set; }
         [Required(ErrorMessage = "Executive Summary is required!")]
         public string? ExecutiveSummary { get; set; }
+        [Required(ErrorMessage = "ProjectInfo is required!")]
         public ProjectInformation? ProjectInfo { get; set; }
+        [MinLength(1, ErrorMessage = "Findings must have at least one item.")]
         public List<Finding>? Findings { get; set; }
         [Required(ErrorMessage = "ScopeAndProcedures is required!")]
         public ScopeAndProcedures? ScopeAndProcedures { get; set; }
