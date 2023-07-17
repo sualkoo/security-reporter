@@ -8,5 +8,15 @@ namespace cosmosTools
 {
     internal class ItemsGenerator
     {
+        
+        public ItemsGenerator()
+        {
+            
+            Console.WriteLine("DB Generator");
+            Console.WriteLine("-------------------");
+            
+
+        }
     }
+    
 }
