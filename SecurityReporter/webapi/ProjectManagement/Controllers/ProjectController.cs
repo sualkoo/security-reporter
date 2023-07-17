@@ -19,7 +19,11 @@ public class ProjectController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
-        Console.WriteLine("Post request Project/add called.");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("POST");
+        Console.ResetColor();
+        Console.WriteLine("\t request Project/add called.");
+
         bool result = await CosmosService.AddProject(project);
 
 
@@ -31,5 +35,43 @@ public class ProjectController : ControllerBase
 
         Console.WriteLine("Request executed without any errors.");
         return StatusCode(201, project);
+    }
+
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> DeleteProject(List<string> ids)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("POST");
+        Console.ResetColor();
+        Console.WriteLine("\t request Project/delete called.");
+
+
+        var result = await CosmosService.DeleteProjects(ids);
+
+        if (result.Count > 0)
+        {
+            return StatusCode(400, result);
+        }
+
+        return StatusCode(201, "Ok");
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteProject(string id)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("DELETE");
+        Console.ResetColor();
+        Console.WriteLine("\t request Project/delete called.");
+
+        var result = await CosmosService.DeleteProject(id);
+
+        if (!result)
+        {
+            return StatusCode(400, $"{id}, Not found.");
+        }
+
+        return StatusCode(201, "Ok");
     }
 }
