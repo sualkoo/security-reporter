@@ -53,27 +53,36 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet]
-        public IActionResult getProjectReports(string? id, string? projectReportName)
+        public async Task<IActionResult> getProjectReports(string? id, string? projectReportName)
         {
-            Console.WriteLine("Id: " + id);
             Console.WriteLine($"Received GET request for fetching Project Reports, params=(id={id},projectReportname={projectReportName})");
             if (!string.IsNullOrEmpty(id))
             {
                 // Fetch project report by ID (should return only 1 item)
-                Console.WriteLine("Fetching by id");
-                return StatusCode(501, "We are currently working on this feature.");
+                Console.WriteLine("Fetching project report, id=" + id);
+
+                try
+                {
+                    ProjectReportData data = await CosmosService.GetProjectReport(id);
+                    return Ok(data);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("An exception occured while fetching Project Report");
+                    return NotFound("Project Report not found.");
+                }
             }
 
             if (!string.IsNullOrEmpty(projectReportName))
             {
                 // Fetch project reports by 'projectReportName'
                 Console.WriteLine("Fetching by project report name");
-                return StatusCode(501, "We are currently working on this feature.");
+                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports("DocumentInfo", "ProjectReportName", projectReportName);
+                // Todo: This should return paginated result - For performance reasons
+                return Ok(projectReports);
             }
 
-            return StatusCode(501, "We are currently working on this feature.");
+            return BadRequest("Either ID or ProjectReportName must be specified.");
         }
-
-
     }
 }

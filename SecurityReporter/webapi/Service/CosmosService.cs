@@ -80,28 +80,29 @@ namespace webapi.Service
             }
             catch (Exception exception)
             {
-                throw new Exception("Report with searched Id not found" + exception);
+                Console.WriteLine("Report with searched ID not found");
+                throw new Exception(exception.Message);
             }
         }
         public async Task<List<ProjectReportData>> GetProjectReports(string subcategory, string keyword, string value)
         {
             List<ProjectReportData> results = new List<ProjectReportData>();
-            string query = "SELECT * FROM c WHERE";
+            string query = "SELECT * FROM c WHERE ";
 
             if (!string.IsNullOrEmpty(subcategory))
             {
-                query = $"{query} c.{subcategory}.{keyword} = '{value}'";
-            } else
-            {
-                query = $"{query} c.{keyword} = '{value}'";
+                query = $"{query} c.{subcategory}.{keyword} LIKE @value";
             }
-
+            else
+            {
+                query = $"{query} c.{keyword} LIKE @value";
+            }
 
             try
             {
-                Console.WriteLine("Fetching reports from database");
-                QueryDefinition queryDefinition = new QueryDefinition(query);
-                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(query);
+                Console.WriteLine("Fetching reports from the database");
+                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%");
+                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
                 while (queryResultSetIterator.HasMoreResults)
                 {
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
@@ -110,9 +111,9 @@ namespace webapi.Service
                 Console.WriteLine("Returning found reports");
                 return results;
             }
-            catch (Exception exception) 
+            catch (Exception exception)
             {
-                throw new Exception("Error getting reports data from Project Report Database" + exception);
+                throw new Exception("Error getting reports data from the Project Report Database" + exception);
             }
         }
     }
