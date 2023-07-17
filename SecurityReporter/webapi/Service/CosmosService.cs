@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.Reflection.Metadata.Ecma335;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 
@@ -43,6 +44,23 @@ namespace webapi.Service
         public Task<bool> AddProjectReport(ProjectReportData data)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> GetNumberOfProjects()
+        {
+            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+            FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
+
+            if (queryResultIterator.HasMoreResults)
+            {
+                FeedResponse<int> response = await queryResultIterator.ReadNextAsync();
+                int count = response.FirstOrDefault();
+                return count;
+            }
+            else
+            {
+                return -1;
+            }
         }
     }
 }

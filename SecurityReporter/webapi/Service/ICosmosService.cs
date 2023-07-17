@@ -7,5 +7,6 @@ namespace webapi.Service
     {
         Task<bool> AddProject(ProjectData data);
         Task<bool> AddProjectReport(ProjectReportData data);
+        Task<int> GetNumberOfProjects();
     }
 }

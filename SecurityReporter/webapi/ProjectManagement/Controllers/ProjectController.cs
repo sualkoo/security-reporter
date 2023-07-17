@@ -31,4 +31,16 @@ public class ProjectController : ControllerBase
             Console.WriteLine("Request executed without any errors.");
             return StatusCode(201, project);
     }
+
+    [HttpGet("count")]
+    public async Task<IActionResult> GetNumberOfProjects()
+    {
+        int count = await CosmosService.GetNumberOfProjects();
+
+        if (count < 0) {
+            return StatusCode(400, count);
+        }
+
+        return StatusCode(200, count);
+    }
 }
