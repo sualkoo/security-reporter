@@ -53,15 +53,6 @@ namespace webapi.ProjectSearch.Controllers
             return StatusCode(501, "We are currently working on this feature.");
         }
 
-        
-        [HttpPost("getFiltered")]
-        public async Task<IActionResult> getFiltered(int type, string value)
-        {
-            List<ProjectReportData> filteredData = await _CosmosService.GetProjectReportDatasFiltered(type, value);
-            int i = 0;
-            return Ok();
-        }
-
 
     }
 }
