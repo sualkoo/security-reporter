@@ -20,12 +20,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
+import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    ListProjectsPageComponent,
   ],
   imports: [
     BrowserModule,
