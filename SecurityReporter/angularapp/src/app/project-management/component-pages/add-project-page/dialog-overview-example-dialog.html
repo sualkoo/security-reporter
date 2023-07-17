@@ -1,0 +1,47 @@
+<div
+  *ngIf="data.message == 'Success'"
+  style="
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <h1 mat-dialog-title>{{data.message}}</h1>
+  <div mat-dialog-content>
+    <mat-icon
+      style="color: green"
+      aria-hidden="false"
+      aria-label="Example home icon"
+      fontIcon="done_all"
+    ></mat-icon>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Ok</button>
+  </div>
+</div>
+
+<div
+  *ngIf="data.message != 'Success'"
+  style="
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <h1 mat-dialog-title>{{data.message}}</h1>
+  <div mat-dialog-content>
+    <mat-icon
+      style="color: red"
+      aria-hidden="false"
+      aria-label="Example home icon"
+      fontIcon="close"
+    ></mat-icon>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Ok</button>
+  </div>
+</div>
