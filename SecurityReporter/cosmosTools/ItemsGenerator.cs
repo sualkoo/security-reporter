@@ -11,7 +11,7 @@ namespace cosmosTools
         
         public ItemsGenerator()
         {
-            
+            Console.WriteLine("-------------------");
             Console.WriteLine("DB Generator");
             Console.WriteLine("-------------------");
             
