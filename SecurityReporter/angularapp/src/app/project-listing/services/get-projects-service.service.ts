@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { ProjectInterface } from '../../project-management/interfaces/project-interface';
 
 @Injectable({
   providedIn: 'root'
