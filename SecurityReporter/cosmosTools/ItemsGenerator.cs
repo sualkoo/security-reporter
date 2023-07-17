@@ -40,7 +40,7 @@ namespace cosmosTools
 
         }
 
-        public string CommandFromInput(string input) {
+        private string CommandFromInput(string input) {
             
             int firstWhitespaceIndex = input.IndexOfAny(new[] { ' ', '\t' });
 
