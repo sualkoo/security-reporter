@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
 
 
 
@@ -28,6 +29,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    ProjectSearchResultsPageComponent,
   ],
   imports: [
     BrowserModule,
