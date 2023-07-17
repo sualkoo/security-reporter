@@ -46,13 +46,17 @@ namespace webapi.Service
 
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
+            Console.WriteLine("Adding project report to database.");
             try
             {
+                data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
+                Console.WriteLine("Project Report was successfuly saved to DB");
                 return true;
             }
             catch (Exception)
             {
+                Console.WriteLine("An error occured while saving new Project Report to DB");
                 return false;
             }
         }
