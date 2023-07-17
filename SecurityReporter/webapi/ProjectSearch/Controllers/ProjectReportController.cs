@@ -14,17 +14,21 @@ namespace webapi.ProjectSearch.Controllers
 
         public ProjectReportController(IProjectDataParser parser, ICosmosService cosmosService)
         {
-            this._ProjectDataParser = parser;
-            this._CosmosService = cosmosService;
+            _ProjectDataParser = parser;
+            _CosmosService = cosmosService;
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
+            Console.WriteLine("Received POST request for adding ProjectReport");
             ProjectReportData newReportData = _ProjectDataParser.Extract(file.OpenReadStream());
-            await _CosmosService.AddProjectReport(newReportData);
-
-            return Ok(newReportData);
+            bool result = await _CosmosService.AddProjectReport(newReportData);
+            if (!result)
+            {
+                return StatusCode(500, "An error occured while saving Project Report to database");
+            }
+            return StatusCode(201, newReportData);
         }
     }
 }
