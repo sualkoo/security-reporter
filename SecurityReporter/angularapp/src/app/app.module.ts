@@ -21,6 +21,7 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
+import { MultiLineListComponent } from './project-listing/components/multi-line-list/multi-line-list.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ListProjectsPageComponent } from './project-listing/component-pages/lis
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     ListProjectsPageComponent,
+    MultiLineListComponent,
   ],
   imports: [
     BrowserModule,
