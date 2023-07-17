@@ -1,5 +1,8 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
@@ -13,8 +16,8 @@ namespace webapi.Service
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ProjectReportContainer";
-        private Container Container { get; }
-        private Container ReportContainer { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -57,6 +60,41 @@ namespace webapi.Service
             {
                 return false;
             }
+        }
+
+        public async Task<List<ProjectReportData>> GetProjectReportDatasFiltered(int type, string value)
+        {
+            string query = "SELECT * FROM c WHERE";
+            List<ProjectReportData> results = new List<ProjectReportData>();
+            switch (type)
+            {
+                case 0:
+                    query = query + " c.DocumentInfo.ProjectReportName = '" + value + "'";
+                    break;
+                    case 1:
+
+                    break;
+                default:
+                    throw new Exception("Error aquiring Filter");
+                    break;
+
+            }
+            try
+            {
+                QueryDefinition queryDefinition = new QueryDefinition(query);
+                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(query);
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    results.AddRange(currentResultSet.ToList());
+                }
+                return results;
+            }
+            catch (Exception) 
+            {
+                throw new Exception("Error getting report data from Project Report Database");
+            }
+            return results;
         }
     }
 }

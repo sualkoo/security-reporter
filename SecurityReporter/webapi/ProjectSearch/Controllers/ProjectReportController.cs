@@ -26,5 +26,16 @@ namespace webapi.ProjectSearch.Controllers
 
             return Ok(newReportData);
         }
+
+        
+        [HttpPost("getFiltered")]
+        public async Task<IActionResult> getFiltered(int type, string value)
+        {
+            List<ProjectReportData> filteredData = await _CosmosService.GetProjectReportDatasFiltered(type, value);
+            int i = 0;
+            return Ok();
+        }
+
+
     }
 }
