@@ -10,7 +10,7 @@ namespace webapi.Models.ProjectReport
         [Required(ErrorMessage = "AssetType is required!")]
         public string? AssetType { get; set; }
         [Required(ErrorMessage = "Main author is required!")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "MainAuthor cannot contain numbers!")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "MainAuthor cannot contain numbers!")]
         public string? MainAuthor { get; set; }
         [Required]
         [MinLength(1, ErrorMessage = "At least one author must be specified!")]
@@ -25,7 +25,7 @@ namespace webapi.Models.ProjectReport
         [MinLength(1, ErrorMessage = "At least one ReportDocumentHistory must be specified!")]
         public List<ReportVersionEntry>? ReportDocumentHistory { get; set; }
         [Required(ErrorMessage = "The Report Date is required!")]
-        [Range(typeof(DateOnly), "1/1/2015", "12/31/2023", ErrorMessage = "The Report Date must be between {1} and {2}!")]
+        [Range(typeof(DateOnly), "1/1/2015", "31/12/2023", ErrorMessage = "The Report Date must be between {1} and {2}!")]
         public DateOnly ReportDate { get; set; }
     }
 }
