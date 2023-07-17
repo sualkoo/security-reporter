@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cosmosTools.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,10 @@ namespace cosmosTools
         private string[]? consoleInput;
         private string? command;
         private int amount;
-        
+
+        public ICosmosToolsService CosmosService { get; }
+
+       
         public ItemsGenerator(string[] args)
         {
             Console.WriteLine("-------------------");
@@ -89,8 +93,9 @@ namespace cosmosTools
             Console.WriteLine();
         }
 
-        private void ClearDatabase() 
+        private async void ClearDatabase() 
         {
+            bool result = await CosmosService.DeleteAllProjects();
             Console.WriteLine("Database has been cleared.");
             Console.WriteLine();
         }
