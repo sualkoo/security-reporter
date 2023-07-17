@@ -1,6 +1,6 @@
 <mat-form-field class="select">
   <mat-label>{{ title }}</mat-label>
-  <mat-select>
+  <mat-select [(ngModel)]="inputValue" (selectionChange)="onSelectChange()">
     <mat-option *ngFor="let item of option" [value]="item.value">
       {{ item.viewValue }}
     </mat-option>
