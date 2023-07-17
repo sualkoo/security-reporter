@@ -16,11 +16,14 @@ namespace cosmosTools
             Console.WriteLine("-------------------");
             Console.WriteLine("DB Generator");
             Console.WriteLine("-------------------");
-            consoleInput = Console.ReadLine();           
-            if(consoleInput != null)
+
+            consoleInput = Console.ReadLine();
+
+            if (consoleInput != null)
             {
                 command = getCommandFromInput(consoleInput);
-                if (command == "add") {
+                if (command == "add")
+                {
                     Console.WriteLine("add command");
                 }
                 if (command == "clear")
@@ -31,13 +34,13 @@ namespace cosmosTools
                 {
                     Console.WriteLine("help command");
                 }
-
             }
+            else { }
 
 
         }
 
-        public string getCommandFromInput(string input) {
+        public string CommandFromInput(string input) {
             
             int firstWhitespaceIndex = input.IndexOfAny(new[] { ' ', '\t' });
 
@@ -46,7 +49,7 @@ namespace cosmosTools
                 return string.Empty;
             }
             string truncatedInput = input.Substring(0, firstWhitespaceIndex);
-            Console.Write(truncatedInput);
+
             return truncatedInput;
         }
     }
