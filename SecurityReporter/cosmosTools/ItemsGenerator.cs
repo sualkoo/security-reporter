@@ -23,10 +23,10 @@ namespace cosmosTools
             if (this.consoleInput != null)
             {
                 command = CommandFromInput(this.consoleInput);
-                amount = SecondArgumentAsInteger(this.consoleInput);
 
                 if (command == "add")
                 {
+                    amount = SecondArgumentAsInteger(this.consoleInput);
                     AddItemsToDatabase(amount);
                 }
                 if (command == "clear")
