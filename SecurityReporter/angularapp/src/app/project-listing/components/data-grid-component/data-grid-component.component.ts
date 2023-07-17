@@ -76,7 +76,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getInitItems() {
-    this.projects = await this.getProjectsService.getProjects(0, 1);
+    this.projects = await this.getProjectsService.getProjects(15, 1);
   }
 
   async handlePageChange() {
