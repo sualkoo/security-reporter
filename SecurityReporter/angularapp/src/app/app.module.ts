@@ -21,6 +21,7 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
+import { MultiLineListComponent } from './project-listing/components/multi-line-list/multi-line-list.component';
 import { PaginatorComponentComponent } from './project-listing/components/paginator-component/paginator-component.component';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { PaginatorComponentComponent } from './project-listing/components/pagina
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     ListProjectsPageComponent,
+    MultiLineListComponent,
   ],
   imports: [
     BrowserModule,
