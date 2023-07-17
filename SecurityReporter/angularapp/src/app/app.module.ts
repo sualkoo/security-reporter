@@ -23,12 +23,6 @@ import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
 import { MatTableModule } from '@angular/material/table';
-
-
-
-
-
-import { MultiLineListComponent } from './project-listing/components/multi-line-list/multi-line-list.component';
 import { PaginatorComponentComponent } from './project-listing/components/paginator-component/paginator-component.component';
 
 @NgModule({
@@ -38,6 +32,7 @@ import { PaginatorComponentComponent } from './project-listing/components/pagina
     AddProjectReportComponent,
     ListProjectsPageComponent,
   ],
+
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -57,6 +52,7 @@ import { PaginatorComponentComponent } from './project-listing/components/pagina
     RadioButtonComponentComponent,
     AppRoutingModule,
     CommonModule,
+    DataGridComponentComponent,
     PaginatorComponentComponent,
   ],
   providers: [],
