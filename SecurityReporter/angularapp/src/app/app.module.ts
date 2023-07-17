@@ -22,14 +22,19 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { MultiLineListComponent } from './project-listing/components/multi-line-list/multi-line-list.component';
+import { ButtonComponent } from './project-listing/components/button/button.component';
+import { CheckboxComponent } from './project-listing/components/checkbox/checkbox.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    ListProjectsPageComponent,
+    
     MultiLineListComponent,
+    
+    CheckboxComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,9 @@ import { MultiLineListComponent } from './project-listing/components/multi-line-
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
+    ButtonComponent,
     CommonModule,
+    ListProjectsPageComponent
   ],
   providers: [],
   bootstrap: [AppComponent],
