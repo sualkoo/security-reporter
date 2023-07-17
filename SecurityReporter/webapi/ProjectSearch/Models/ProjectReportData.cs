@@ -5,6 +5,7 @@ namespace webapi.ProjectSearch.Models
 {
     public class ProjectReportData : IEntity
     {
+        [JsonProperty("id")]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "Document info is required!")]
         public DocumentInformation? DocumentInfo { get; set; }

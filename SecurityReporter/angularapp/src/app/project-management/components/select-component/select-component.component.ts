@@ -1,17 +1,24 @@
-import { Component, Input } from '@angular/core';
-import {NgFor} from '@angular/common';
-import {MatSelectModule} from '@angular/material/select';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
 import { SelectInterface } from '../../interfaces/select-interface';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-select-component',
   templateUrl: './select-component.component.html',
   styleUrls: ['./select-component.component.css'],
   standalone: true,
-  imports: [NgFor, MatSelectModule,]
+  imports: [NgFor, MatSelectModule, FormsModule],
 })
+export class SelectComponentComponent {
+  @Input() option: SelectInterface[] = [];
+  @Input() title: string = '';
+  @Input() inputValue: string = '';
 
-export class SelectComponentComponent {  
-  @Input() option : SelectInterface[] = [];
-  @Input() title : string = "";
+  @Output() valueChanged = new EventEmitter<string>();
+
+  onSelectChange() {
+    this.valueChanged.emit(this.inputValue);
+  }
 }

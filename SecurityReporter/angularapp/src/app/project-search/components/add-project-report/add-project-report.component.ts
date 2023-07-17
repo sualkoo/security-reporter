@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NotificationService } from '../../providers/notification.service';
 import { ProjectDataService } from '../../providers/project-data-service';
 
 @Component({
@@ -7,7 +8,10 @@ import { ProjectDataService } from '../../providers/project-data-service';
   styleUrls: ['./add-project-report.component.css'],
 })
 export class AddProjectReportComponent {
-  constructor(private projectDataService: ProjectDataService) {}
+  constructor(
+    private projectDataService: ProjectDataService,
+    private notificationService: NotificationService
+  ) {}
 
   uploadedFile?: Blob;
 
@@ -25,8 +29,8 @@ export class AddProjectReportComponent {
 
       this.projectDataService
         .validateZipFile(new File([this.uploadedFile], this.uploadFile.name))
-        .then((val) => {
-          if (val === true) {
+        .then((isValid) => {
+          if (isValid) {
             // Correct zip file
             this.projectDataService.postZipFile(formData).subscribe(
               (response) => {
@@ -34,13 +38,20 @@ export class AddProjectReportComponent {
               },
               (error) => {
                 console.log(error);
+                this.notificationService.displayMessage(
+                  'Something went wrong on server side'
+                );
               }
             );
           } else {
             // Incorrect zip file
             // Display eror message that says the zip is invalid
-            console.error('Zip file does not meet required format');
+            this.notificationService.displayMessage('Zip file is incorrect');
           }
+        })
+        .catch((err) => {
+          console.error(err.message);
+          this.notificationService.displayMessage('Zip file is incorrect');
         });
     }
   }

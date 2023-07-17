@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
 
 namespace webapi.ProjectSearch.Controllers
 {

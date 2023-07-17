@@ -19,12 +19,17 @@ import { RadioButtonComponentComponent } from './project-management/components/r
 import { AppRoutingModule } from './app-routing.module';
 import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    ProjectSearchResultsPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +49,8 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
+    MatSnackBarModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent],
