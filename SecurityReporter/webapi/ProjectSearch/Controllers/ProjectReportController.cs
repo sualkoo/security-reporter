@@ -32,11 +32,25 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet]
-        public IActionResult getProjectReports()
+        public IActionResult getProjectReports(string? id, string? projectReportName)
         {
-            Console.WriteLine("Received GET request for fetching Project Reports");
-            return StatusCode(501, "We are currently working on this feature.");
+            Console.WriteLine("Id: " + id);
+            Console.WriteLine($"Received GET request for fetching Project Reports, params=(id={id},projectReportname={projectReportName})");
+            if (!string.IsNullOrEmpty(id))
+            {
+                // Fetch project report by ID (should return only 1 item)
+                Console.WriteLine("Fetching by id");
+                return StatusCode(501, "We are currently working on this feature.");
+            }
 
+            if (!string.IsNullOrEmpty(projectReportName))
+            {
+                // Fetch project reports by 'projectReportName'
+                Console.WriteLine("Fetching by project report name");
+                return StatusCode(501, "We are currently working on this feature.");
+            }
+
+            return StatusCode(501, "We are currently working on this feature.");
         }
     }
 }
