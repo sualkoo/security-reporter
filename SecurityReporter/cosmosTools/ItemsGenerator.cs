@@ -86,16 +86,19 @@ namespace cosmosTools
             Console.WriteLine("Available commands:");
             Console.WriteLine("add [number] --> add [number] of random items to database");
             Console.WriteLine("clear --> deletes all items from database");
+            Console.WriteLine();
         }
 
         private void ClearDatabase() 
         {
             Console.WriteLine("Database has been cleared.");
+            Console.WriteLine();
         }
 
         private void AddItemsToDatabase(int amount)
         { 
             Console.WriteLine("Added " + amount + " items.");
+            Console.WriteLine();
         }
     }    
 }
