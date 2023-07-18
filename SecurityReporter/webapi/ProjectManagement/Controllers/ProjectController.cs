@@ -8,7 +8,6 @@ namespace webapi.ProjectManagement.Controllers;
 [Route("[controller]")]
 public class ProjectController : ControllerBase
 {
-
     public ICosmosService CosmosService { get; }
 
     public ProjectController(ICosmosService cosmosService)
@@ -22,21 +21,18 @@ public class ProjectController : ControllerBase
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("POST");
         Console.ResetColor();
-        Console.WriteLine("\t request Project/add called.");
+        Console.WriteLine("\t /Project/add");
 
         bool result = await CosmosService.AddProject(project);
-
 
         if (!result)
         {
             Console.WriteLine("Error occured in Project/add post request.");
             return StatusCode(400, "Error: Unable to insert project into DB.");
         }
-
         Console.WriteLine("Request executed without any errors.");
         return StatusCode(201, project);
     }
-
 
     [HttpPost("delete")]
     public async Task<IActionResult> DeleteProject(List<string> ids)
@@ -44,16 +40,14 @@ public class ProjectController : ControllerBase
         Console.ForegroundColor = ConsoleColor.Red;
         Console.Write("POST");
         Console.ResetColor();
-        Console.WriteLine("\t request Project/delete called.");
-
+        Console.WriteLine("\t /Project/delete");
 
         var result = await CosmosService.DeleteProjects(ids);
 
         if (result.Count > 0)
         {
-            return StatusCode(400, result);
+            return StatusCode(404, result);
         }
-
         return StatusCode(201, "Ok");
     }
 
@@ -63,15 +57,14 @@ public class ProjectController : ControllerBase
         Console.ForegroundColor = ConsoleColor.Red;
         Console.Write("DELETE");
         Console.ResetColor();
-        Console.WriteLine("\t request Project/delete called.");
+        Console.WriteLine("\t /Project/delete");
 
         var result = await CosmosService.DeleteProject(id);
 
         if (!result)
         {
-            return StatusCode(400, $"{id}, Not found.");
+            return StatusCode(404, $"{id}, Not found.");
         }
-
         return StatusCode(201, "Ok");
     }
 }

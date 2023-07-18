@@ -58,7 +58,7 @@ namespace webapi.Service
 
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    Console.WriteLine("Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
                     return true;
                 }
                 else
@@ -69,6 +69,7 @@ namespace webapi.Service
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"{id}, Not found.");
                 return false;
             }
         }
@@ -88,7 +89,7 @@ namespace webapi.Service
                     ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
 
 
-                    Console.WriteLine($"{id},Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
 
                 }
                 catch (Exception ex)
