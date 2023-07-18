@@ -67,4 +67,26 @@ public class ProjectController : ControllerBase
         }
         return StatusCode(201, "Ok");
     }
+
+    [HttpGet("count")]
+    public async Task<IActionResult> GetNumberOfProjects()
+    {
+        int count = await CosmosService.GetNumberOfProjects();
+
+        if (count < 0) {
+            return StatusCode(400, count);
+        }
+
+        return StatusCode(200, count);
+    }
+
+    [HttpGet("retrieve")]
+    public async Task<IActionResult> GetItems(int pageSize, int pageNumber)
+    {
+        var items = new List<ProjectData>();
+
+        items = await CosmosService.GetItems(pageSize, pageNumber);
+
+        return Ok(items);
+    }
 }

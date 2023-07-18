@@ -101,5 +101,42 @@ namespace webapi.Service
 
             return failed_to_delete;
         }
+
+        public async Task<int> GetNumberOfProjects()
+        {
+            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+            FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
+
+            if (queryResultIterator.HasMoreResults)
+            {
+                FeedResponse<int> response = await queryResultIterator.ReadNextAsync();
+                int count = response.FirstOrDefault();
+                return count;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber)
+        {
+            int skipCount = pageSize * (pageNumber - 1);
+            int itemCount = pageSize;
+
+            QueryDefinition query = new QueryDefinition("SELECT * FROM c OFFSET @skipCount LIMIT @itemCount")
+                .WithParameter("@skipCount", skipCount)
+                .WithParameter("@itemCount", itemCount);
+
+            List<ProjectData> items = new List<ProjectData>();
+            FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
+
+            while (resultSetIterator.HasMoreResults)
+            {
+                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                items.AddRange(response.Resource);
+            }
+            return items;
+        }
     }
 }
