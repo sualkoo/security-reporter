@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
+using Newtonsoft.Json.Linq;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using webapi.Service;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
-    [Route("ProjectReports")]
+    [Route("project-reports")]
     public class ProjectReportController : Controller
     {
         public ProjectDataValidator Validator { get; set; }
@@ -24,7 +27,7 @@ namespace webapi.ProjectSearch.Controllers
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
             Console.WriteLine("Received POST request for adding new Project Report");
-            ProjectReportData newReportData = null;
+            ProjectReportData newReportData;
             try
             {
                 newReportData = Parser.Extract(file.OpenReadStream());
@@ -52,40 +55,41 @@ namespace webapi.ProjectSearch.Controllers
             return StatusCode(201, newReportData);
         }
 
-        // Todo: Implement query parameters like we did with CosmosService getProjectReports so we can flexibly filter data at frontend
-        [HttpGet]
-        public async Task<IActionResult> getProjectReports(string? id, string? projectReportName)
+        [HttpGet] // Todo: This should return paginated result - For performance reasons
+        public async Task<IActionResult> getProjectReports(string? subcategory, string keyword, string value)
         {
-            Console.WriteLine($"Received GET request for fetching Project Reports, params=(id={id},projectReportname={projectReportName})");
-            if (!string.IsNullOrEmpty(id))
-            {
-                // Fetch project report by ID (should return only 1 item)
-                Console.WriteLine($"Fetching project report with ID: {id}");
+            Console.WriteLine($"Fetching project reports by keyword, params=(keyword={keyword}, value={value})");
 
-                try
-                {
-                    ProjectReportData data = await CosmosService.GetProjectReport(id);
-                    Console.WriteLine("Successfully fetched the Project Report.");
-                    return Ok(data);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("An exception occurred while fetching the Project Report.");
-                    return NotFound("Project Report not found.");
-                }
+            if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
+            {
+                return BadRequest("Missing required parameters.");
             }
 
-            if (!string.IsNullOrEmpty(projectReportName))
+            if (!string.IsNullOrEmpty(subcategory)) 
             {
-                // Fetch project reports by 'projectReportName'
-                Console.WriteLine($"Fetching project reports by name: {projectReportName}");
-                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports("DocumentInfo", "ProjectReportName", projectReportName);
-                // Todo: This should return paginated result - For performance reasons
+                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports(subcategory, keyword, value);
+                return Ok(projectReports);
+            } else {
+                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports(null, keyword, value);
                 return Ok(projectReports);
             }
+        }
 
-            Console.WriteLine("Invalid request. Either ID or ProjectReportName must be specified.");
-            return BadRequest("Either ID or ProjectReportName must be specified.");
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getProjectReportById(Guid id) {
+            Console.WriteLine($"Fetching project report by ID: {id}");
+            try
+            {
+                ProjectReportData data = await CosmosService.GetProjectReport(id.ToString());
+                Console.WriteLine("Successfully fetched the Project Report.");
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An exception occurred while fetching the Project Report.");
+                Console.WriteLine(ex);
+                return NotFound("Project Report not found.");
+            }
         }
     }
 }

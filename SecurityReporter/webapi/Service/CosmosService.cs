@@ -84,7 +84,7 @@ namespace webapi.Service
                 throw new Exception(exception.Message);
             }
         }
-        public async Task<List<ProjectReportData>> GetProjectReports(string subcategory, string keyword, string value)
+        public async Task<List<ProjectReportData>> GetProjectReports(string? subcategory, string keyword, string value)
         {
             List<ProjectReportData> results = new List<ProjectReportData>();
             string query = "SELECT * FROM c WHERE ";
