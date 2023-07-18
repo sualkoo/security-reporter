@@ -22,6 +22,7 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
 
 
@@ -54,6 +55,7 @@ import { SearchbarComponent } from './project-search/components/searchbar/search
     AppRoutingModule,
     MatSnackBarModule,
     MatIconModule,
+    FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent],

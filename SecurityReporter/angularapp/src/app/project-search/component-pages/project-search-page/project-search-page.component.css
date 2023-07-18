@@ -26,7 +26,10 @@ label {
   margin-right: 30px;
 }
 
-
-.error.mat-snack-bar-container {
-    background: #ff0000;
+.search-field {
+  padding-top: 5%;
+  align-content: center;
+  vertical-align: central;
 }
+
+
