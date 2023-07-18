@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Services;
 
 namespace webapi.Service
 {
@@ -22,6 +23,7 @@ namespace webapi.Service
         private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
+        private readonly ILogger Logger;
 
         public CosmosService(IConfiguration configuration)
         {
@@ -29,6 +31,8 @@ namespace webapi.Service
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<CosmosService>();
         }
 
         public async Task<bool> AddProject(ProjectData data)
@@ -54,17 +58,17 @@ namespace webapi.Service
 
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
-            Console.WriteLine("Adding project report to database.");
+            Logger.LogInformation("Adding project report to database.");
             try
             {
                 data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
-                Console.WriteLine("Project Report was successfuly saved to DB");
+                Logger.LogInformation("Project Report was successfuly saved to DB");
                 return true;
             }
             catch (Exception)
             {
-                Console.WriteLine("An error occured while saving new Project Report to DB");
+                Logger.LogError("An error occured while saving new Project Report to DB");
                 return false;
             }
         }
@@ -74,13 +78,13 @@ namespace webapi.Service
             Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
             try
             {
-                Console.WriteLine("Searching for Report based on Id");
+                Logger.LogInformation("Searching for Report based on Id");
                 ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
                 return data;
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Report with searched ID not found");
+                Logger.LogError("Report with searched ID not found");
                 throw new Exception(exception.Message);
             }
         }
@@ -100,7 +104,7 @@ namespace webapi.Service
 
             try
             {
-                Console.WriteLine("Fetching reports from the database");
+                Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%");
                 FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
                 while (queryResultSetIterator.HasMoreResults)
@@ -108,7 +112,7 @@ namespace webapi.Service
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                     results.AddRange(currentResultSet.ToList());
                 }
-                Console.WriteLine("Returning found reports");
+                Logger.LogInformation("Returning found reports");
                 return results;
             }
             catch (Exception exception)
