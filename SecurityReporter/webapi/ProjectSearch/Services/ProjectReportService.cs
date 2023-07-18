@@ -3,31 +3,35 @@ using webapi.ProjectSearch.Models;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 using webapi.Service;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 
 namespace webapi.ProjectSearch.Services
 {
     public class ProjectReportService : IProjectReportService
     {
-        public IProjectDataValidator Validator { get; set; }
-        public IProjectDataParser Parser { get; set; }
-        public ICosmosService CosmosService { get; set; }
+        public ProjectDataValidator Validator { get; set; }
+        public ProjectDataParser Parser { get; set; }
+        public CosmosService CosmosService { get; set; }
+        private readonly ILogger Logger;
 
         public ProjectReportService(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
-            Parser = parser;
-            Validator = validator;
-            CosmosService = cosmosService;
+            Validator = (ProjectDataValidator)validator;
+            Parser = (ProjectDataParser)parser;
+            CosmosService = (CosmosService)cosmosService;
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
         public async Task<ProjectReportData> GetReportByIdAsync(Guid id)
         {
-            Console.WriteLine($"Fetching project report by ID");
+            Logger.LogInformation($"Fetching project report by ID");
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
         public async Task<List<ProjectReportData>> GetReportsAsync(string? subcategory, string keyword, string value)
         {
-            Console.WriteLine($"Fetching project reports by keywords");
+            Logger.LogInformation($"Fetching project reports by keywords");
 
             if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
             {
@@ -46,6 +50,7 @@ namespace webapi.ProjectSearch.Services
 
         public async Task<ProjectReportData> SaveReportFromZip(IFormFile file)
         {
+            Logger.LogInformation($"Saving new project report");
             ProjectReportData newReportData;
             try
             {
