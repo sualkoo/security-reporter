@@ -82,6 +82,55 @@ export class DataGridComponentComponent implements AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.projects.indexOf(row) + 2}`;
   }
 
+  getStatusString(status: number): string {
+    switch (status) {
+      case 0:
+        return 'TBS';
+      case 1:
+        return 'Requested';
+      case 2:
+        return 'Planned';
+      case 3:
+        return 'In progress';
+      case 4:
+        return 'Finished';
+      case 5:
+        return 'Cancelled';
+      case 6:
+        return 'On hold';
+      default:
+        return '-';
+    }
+  }
+
+  getQuestionareString(questionare: number): string {
+    switch (questionare) {
+      case 0:
+        return 'TBS';
+      case 1:
+        return 'Sent';
+      case 2:
+        return 'Received';
+      default:
+        return '';
+    }
+  }
+
+  getScopeString(scope: number): string {
+    switch (scope) {
+      case 0:
+        return 'TBS';
+      case 1:
+        return 'Sent';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Signed';
+      default:
+        return '';
+    }
+  }
+
   async getInitItems() {
     this.projects = await this.getProjectsService.getProjects(15, 1);
     this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
