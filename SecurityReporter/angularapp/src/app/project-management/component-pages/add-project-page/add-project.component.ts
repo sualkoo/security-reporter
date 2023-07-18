@@ -114,7 +114,7 @@ export class AddProjectComponent {
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
     RequestCreated: '',
-    Commments: [],
+    Comments: [],
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
@@ -276,7 +276,7 @@ export class AddProjectComponent {
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Commments = [{
+      this.projectClass.Comments = [{
         text: this.commentInput.nativeElement.value
       }];
     }

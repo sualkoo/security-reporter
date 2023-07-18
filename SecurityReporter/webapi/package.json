@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "newtonsoft.json": "^1.0.1"
+  }
+}

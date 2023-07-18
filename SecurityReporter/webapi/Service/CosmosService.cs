@@ -1,7 +1,10 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 using System.Net;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -11,7 +14,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -25,9 +28,9 @@ namespace webapi.Service
         {
 
             data.RequestCreated = DateTime.Now;
-            if (data.Commments != null)
+            if (data.Comments != null)
             {
-                data.Commments[0].CreatedAt = DateTime.Now;
+                data.Comments[0].CreatedAt = DateTime.Now;
             }
             Console.WriteLine("Adding data to database.");
             try
