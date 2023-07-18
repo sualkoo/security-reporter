@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ListProjectsPageComponent } from './list-projects-page.component';
 
 describe('ListProjectsPageComponent', () => {

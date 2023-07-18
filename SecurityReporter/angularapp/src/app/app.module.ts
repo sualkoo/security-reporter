@@ -22,16 +22,14 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
-import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,
-    ListProjectsPageComponent,
+    AddProjectReportComponent
   ],
-
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -51,9 +49,11 @@ import { MatTableModule } from '@angular/material/table';
     RadioButtonComponentComponent,
     AppRoutingModule,
     CommonModule,
+    ListProjectsPageComponent,
     DataGridComponentComponent,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
