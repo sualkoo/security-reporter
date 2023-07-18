@@ -91,17 +91,18 @@ namespace webapi.Service
 
             if (!string.IsNullOrEmpty(subcategory))
             {
-                query = $"{query} c.{subcategory}.{keyword} LIKE @value";
+                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
             }
             else
             {
-                query = $"{query} c.{keyword} LIKE @value";
+                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value)";
             }
-
             try
             {
                 Console.WriteLine("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%");
+                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
+                                                                            .WithParameter("@value", $"%{value}%")
+                                                                            .WithParameter("@keyword", $"{keyword}");
                 FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
                 while (queryResultSetIterator.HasMoreResults)
                 {
