@@ -14,7 +14,7 @@ export interface ProjectInterface {
   IKO?: Date;
   TKO?: Date;
   RequestCreated?: string;
-  Commments: CommentInterface[];
+  Comments: CommentInterface[];
   CatsNumber?: string;
   ProjectOfferStatus?: number;
   WorkingTeam: string[];
