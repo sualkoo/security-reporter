@@ -47,20 +47,6 @@ namespace webapi.ProjectSearch.Services
             return newProjectInfo;
         }
 
-        private List<string> ReadInlineContents(string extractedLine)
-        {
-            char[] delimiters = { '}', '\\' };
-            string[] cutString = extractedLine.Split(delimiters);
-            string[] actualData = cutString[0].Split(',', StringSplitOptions.RemoveEmptyEntries);
-            List<string> contents = new List<string>();
-            foreach (string data in actualData)
-            {
-                contents.Add(data.Trim());
-            }
-
-            return contents;
-        }
-
         private string extractDepartment(string data)
         {
             string result = "";

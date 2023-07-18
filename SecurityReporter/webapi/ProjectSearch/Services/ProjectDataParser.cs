@@ -23,6 +23,9 @@ namespace webapi.ProjectSearch.Services
                     currentEntry = archive.GetEntry("Config/Project_Information.tex");
                     ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry);
                     newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+                    currentEntry = archive.GetEntry("Config/Testing_Methodology.tex");
+                    TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);
+                    newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
 
                 }
                 else
