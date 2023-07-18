@@ -25,9 +25,9 @@ namespace webapi.Service
         public async Task<bool> AddProject(ProjectData data)
         {
             data.RequestCreated = DateTime.Now;
-            if (data.Commments != null)
+            if (data.Comments != null)
             {
-                data.Commments[0].CreatedAt = DateTime.Now;
+                data.Comments[0].CreatedAt = DateTime.Now;
             }
             Console.WriteLine("Adding data to database.");
             try
