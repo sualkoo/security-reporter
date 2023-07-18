@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow;
 using Newtonsoft.Json.Linq;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -12,84 +13,47 @@ namespace webapi.ProjectSearch.Controllers
     [Route("project-reports")]
     public class ProjectReportController : Controller
     {
-        public ProjectDataValidator Validator { get; set; }
-        public ProjectDataParser Parser { get; set; }
-        public CosmosService CosmosService { get; set; }
-        private readonly ILogger Logger;
+        private ProjectReportService ProjectReportService { get; }
 
-        public ProjectReportController(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
+        public ProjectReportController(IProjectReportService projectReportService)
         {
-            Validator = (ProjectDataValidator)validator;
-            Parser = (ProjectDataParser)parser;
-            CosmosService = (CosmosService)cosmosService;
-            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
-            Logger = loggerFactory.CreateLogger<ProjectReportController>();
+            ProjectReportService = (ProjectReportService)projectReportService;
         }
 
         [HttpPost]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
-            Logger.LogInformation("Received POST request for adding new Project Report");
-            ProjectReportData newReportData;
+            Console.WriteLine("Received POST request for adding new Project Report");
             try
             {
-                newReportData = Parser.Extract(file.OpenReadStream());
+                ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
+                return Ok(savedReport);
+            } catch (CustomException ex) {
+                return StatusCode(ex.StatusCode, ex.Message);
             }
-            catch (Exception)
-            {
-                Logger.LogError("An error occurred while extracting data from zip file.");
-                return BadRequest("Zip file has some missing files. Make sure you use the most recent version of the LaTeX template");
-            };
-
-            bool isValid = Validator.Validate(newReportData);
-
-            if (isValid == false)
-            {
-                return BadRequest("ProjectReport has missing information");
-            }
-
-            bool result = await CosmosService.AddProjectReport(newReportData);
-
-            if (!result)
-            {
-                return BadRequest("Failed to save ProjectReport to database.");
-            }
-            Logger.LogError("New ProjectReport was successfully created and saved to database.");
-            return StatusCode(201, newReportData);
         }
 
-        [HttpGet] // Todo: This should return paginated result - For performance reasons
-        public async Task<IActionResult> getProjectReports(string? subcategory, string keyword, string value)
+        [HttpGet]
+        public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value)
         {
-            Logger.LogInformation($"Fetching project reports by keyword, params=(keyword={keyword}, value={value})");
-            if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
-            {
-                return BadRequest("Missing required parameters.");
-            }
-
-            if (!string.IsNullOrEmpty(subcategory)) 
-            {
-                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports(subcategory, keyword, value);
-                return Ok(projectReports);
-            } else {
-                List<ProjectReportData> projectReports = await CosmosService.GetProjectReports(null, keyword, value);
-                return Ok(projectReports);
-            }
+            Console.WriteLine($"Received GET request for fetching reports by keywords, params=(subcategory={subcategory},keyword={keyword}, value={value}))");
+            List <ProjectReportData> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value);
+            // Todo: This should return paginated result - For performance reasons
+            return Ok(fetchedReports);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getProjectReportById(Guid id) {
-            Logger.LogInformation($"Fetching project report by ID: {id}");
+        public async Task<IActionResult> getProjectReportById(Guid id)
+        {
+            Console.WriteLine("Received GET request for fetching reports by ID=" + id);
             try
             {
-                ProjectReportData data = await CosmosService.GetProjectReport(id.ToString());
-                Logger.LogInformation("Successfully fetched the Project Report.");
-                return Ok(data);
+                ProjectReportData fetchedReport = await ProjectReportService.GetReportByIdAsync(id);
+                return Ok(fetchedReport);
             }
-            catch (Exception ex)
+            catch (CustomException ex)
             {
-                Logger.LogError("An exception occurred while fetching the Project Report." + ex);
-                return NotFound("Project Report not found.");
+                return StatusCode(ex.StatusCode, ex.Message);
             }
         }
     }

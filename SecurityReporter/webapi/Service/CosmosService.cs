@@ -10,7 +10,6 @@ using System.Linq.Expressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
 
 namespace webapi.Service
 {
@@ -23,7 +22,6 @@ namespace webapi.Service
         private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
-        private readonly ILogger Logger;
 
         public CosmosService(IConfiguration configuration)
         {
@@ -31,8 +29,6 @@ namespace webapi.Service
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
-            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
-            Logger = loggerFactory.CreateLogger<CosmosService>();
         }
 
         public async Task<bool> AddProject(ProjectData data)
@@ -58,18 +54,19 @@ namespace webapi.Service
 
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
-            Logger.LogInformation("Adding project report to database.");
+            Console.WriteLine("Adding project report to database.");
             try
             {
                 data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
-                Logger.LogInformation("Project Report was successfuly saved to DB");
+                Console.WriteLine("Project Report was successfuly saved to DB");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Logger.LogError("An error occured while saving new Project Report to DB");
-                return false;
+                Console.WriteLine("An error occured while saving new Project Report to DB");
+                Console.WriteLine(ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "An error occured while saving new Project Report to DB");
             }
         }
 
@@ -78,14 +75,20 @@ namespace webapi.Service
             Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
             try
             {
-                Logger.LogInformation("Searching for Report based on Id");
+                Console.WriteLine("Searching for Report based on Id");
                 ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
                 return data;
             }
-            catch (Exception exception)
+            catch (Microsoft.Azure.Cosmos.CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Logger.LogError("Report with searched ID not found");
-                throw new Exception(exception.Message);
+                Console.WriteLine("Report with searched ID not found");
+                throw new CustomException(StatusCodes.Status404NotFound, "Report with searched ID not found");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred during report fetching by ID");
+                Console.WriteLine(ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
         public async Task<List<ProjectReportData>> GetProjectReports(string? subcategory, string keyword, string value)
@@ -95,29 +98,32 @@ namespace webapi.Service
 
             if (!string.IsNullOrEmpty(subcategory))
             {
-                query = $"{query} c.{subcategory}.{keyword} LIKE @value";
+                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
             }
             else
             {
-                query = $"{query} c.{keyword} LIKE @value";
+                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value)";
             }
-
             try
             {
-                Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%");
+                Console.WriteLine("Fetching reports from the database");
+                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
+                                                                            .WithParameter("@value", $"%{value}%")
+                                                                            .WithParameter("@keyword", $"{keyword}");
                 FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
                 while (queryResultSetIterator.HasMoreResults)
                 {
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                     results.AddRange(currentResultSet.ToList());
                 }
-                Logger.LogInformation("Returning found reports");
+                Console.WriteLine("Returning found reports");
                 return results;
             }
             catch (Exception exception)
             {
-                throw new Exception("Error getting reports data from the Project Report Database" + exception);
+                Console.WriteLine("Unexpected error occurred during report fetching by keywords");
+                Console.WriteLine(exception);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
     }
