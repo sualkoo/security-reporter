@@ -62,10 +62,11 @@ namespace webapi.Service
                 Console.WriteLine("Project Report was successfuly saved to DB");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Console.WriteLine("An error occured while saving new Project Report to DB");
-                return false;
+                Console.WriteLine(ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "An error occured while saving new Project Report to DB");
             }
         }
 
@@ -78,10 +79,16 @@ namespace webapi.Service
                 ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
                 return data;
             }
-            catch (Exception exception)
+            catch (Microsoft.Azure.Cosmos.CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 Console.WriteLine("Report with searched ID not found");
-                throw new Exception(exception.Message);
+                throw new CustomException(StatusCodes.Status404NotFound, "Report with searched ID not found");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected error occurred during report fetching by ID");
+                Console.WriteLine(ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
         public async Task<List<ProjectReportData>> GetProjectReports(string? subcategory, string keyword, string value)
@@ -113,7 +120,9 @@ namespace webapi.Service
             }
             catch (Exception exception)
             {
-                throw new Exception("Error getting reports data from the Project Report Database" + exception);
+                Console.WriteLine("Unexpected error occurred during report fetching by keywords");
+                Console.WriteLine(exception);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
     }
