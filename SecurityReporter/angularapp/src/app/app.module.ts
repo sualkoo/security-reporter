@@ -21,7 +21,9 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
-
+import { FormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -49,8 +51,10 @@ import { ProjectSearchResultsPageComponent } from './project-search/component-pa
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    MatSnackBarModule
-    
+    MatSnackBarModule,
+    FormsModule,
+    MatSidenavModule,
+    ScrollingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
