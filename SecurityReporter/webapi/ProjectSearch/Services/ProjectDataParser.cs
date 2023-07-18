@@ -24,7 +24,7 @@ namespace webapi.ProjectSearch.Services
                     currentEntry = archive.GetEntry("Config/Executive_Summary.tex");
                     newProjectReportData.ExecutiveSummary = ExtractExecutiveSummary(currentEntry);
                     currentEntry = archive.GetEntry("Config/Project_Information.tex");
-                    ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry);
+                    ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry, pentestTeamDict);
                     newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
                     currentEntry = archive.GetEntry("Config/Testing_Methodology.tex");
                     TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);

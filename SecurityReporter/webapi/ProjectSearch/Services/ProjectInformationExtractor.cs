@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webapi.Models.ProjectReport;
@@ -11,6 +12,8 @@ namespace webapi.ProjectSearch.Services
         Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary;
         ProjectInformation newProjectInfo = new ProjectInformation();
         DateTime newReportDate;
+        bool technicalContacts = false;
+        bool pentestTeamMember = false;
         public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry, 
             Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary) {
             this.projectInfoEntry = projectInfoEntry;
@@ -20,6 +23,8 @@ namespace webapi.ProjectSearch.Services
         public ProjectInformation ExtractProjectInformation()
         {
             string line;
+            newProjectInfo.PentestTeam = new List<ProjectInformationParticipant>();
+            newProjectInfo.TechnicalContacts = new List<ProjectInformationParticipant>();
             if(projectInfoEntry == null)
             {
                 throw new ArgumentNullException();
@@ -27,21 +32,43 @@ namespace webapi.ProjectSearch.Services
             {
                 using (StreamReader reader = new StreamReader(projectInfoEntry.Open()))
                 {
-                    char[] delimiters = { '{', '}'};
-                    while((line = reader.ReadLine()) != null)
+                    char[] delimiters = { '{', '}' };
+                    string[] listsDelimiter = { "\\\\" };
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if(!string.IsNullOrEmpty(line) && (line[0] == '\\' /*|| line[0] == '\t'*/))
+                        if (!string.IsNullOrEmpty(line) && (line[0] == '\\' || line[0] == '\t'))
                         {
-                            string[] inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            List<string> result;
-                            if(inBracketContents.Length == 3 || inBracketContents.Length == 4)
+                            string[] pentestTeamMemberContents = line.Split(listsDelimiter, StringSplitOptions.None);
+                            if ((pentestTeamMemberContents.Length == 2))
                             {
-                                AssignNewData(inBracketContents[1], inBracketContents[2]);
-                                
-                            } else if(inBracketContents.Length > 4)
+                                if (technicalContacts)
+                                {
+                                    AssignNewData("\\TechnicalContacts", pentestTeamMemberContents[0].Trim());
+                                }
+                                else if (pentestTeamMember)
+                                {
+                                    AssignNewData("\\PentestTeamMember", pentestTeamMemberContents[0].Trim());
+                                }
+                            } else
                             {
-                                AssignNewData(inBracketContents[1], inBracketContents[3]);
+                                string[] inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+                                if(inBracketContents.Length == 2)
+                                {
+                                    pentestTeamMember = (inBracketContents[1] == "\\PentestTeamMember") ? true : false;
+                                    technicalContacts = (inBracketContents[1] == "\\TechnicalContacts") ? true : false;
+                                }
+                                else if (inBracketContents.Length == 3 || inBracketContents.Length == 4)
+                                {
+                                    AssignNewData(inBracketContents[1], inBracketContents[2]);
+
+                                }
+                                else if (inBracketContents.Length > 4)
+                                {
+                                    AssignNewData(inBracketContents[1], inBracketContents[3]);
+                                }
                             }
+                            
                         }
                     }
                 }
@@ -76,6 +103,7 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
                     newProjectInfo.ApplicationManager.Name = data;
                     newProjectInfo.ApplicationManager.Role = Enums.ProjectParticipantRole.ApplicationManager;
+                    pentestTeamDictionary.Add(command, newProjectInfo.ApplicationManager);
                     break;
                 case "\\ApplicationManagerDepartment":
                     newProjectInfo.ApplicationManager.Department = extractDepartment(data);
@@ -87,6 +115,7 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.BusinessOwner = new ProjectInformationParticipant();
                     newProjectInfo.BusinessOwner.Name = data;
                     newProjectInfo.BusinessOwner.Role = Enums.ProjectParticipantRole.BusinessOwner;
+                    pentestTeamDictionary.Add(command, newProjectInfo.BusinessOwner);
                     break;
                 case "\\BusinessOwnerDepartment":
                     newProjectInfo.BusinessOwner.Department = extractDepartment(data);
@@ -98,6 +127,7 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.BusinessRepresentative = new ProjectInformationParticipant();
                     newProjectInfo.BusinessRepresentative.Name = data;
                     newProjectInfo.BusinessRepresentative.Role = Enums.ProjectParticipantRole.BusinessRepresentative;
+                    pentestTeamDictionary.Add(command, newProjectInfo.BusinessRepresentative);
                     break;
                 case "\\BusinessRepresentativeDepartment":
                     newProjectInfo.BusinessRepresentative.Department = extractDepartment(data);
@@ -105,10 +135,30 @@ namespace webapi.ProjectSearch.Services
                 case "\\BusinessRepresentativeContact":
                     newProjectInfo.BusinessRepresentative.Contact = extractContact(data);
                     break;
+                case "\\TechnicalContacts":
+                    if (data[0] == '\\')
+                    {
+                        newProjectInfo.TechnicalContacts.Add(pentestTeamDictionary[data]);
+                    } else
+                    {
+                        char[] delimiters = { '{', '}' };
+                        string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
+                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                        ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
+                        newPerson.Name = splitByAmpersand[0].Trim();
+                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\&", "");
+                        newPerson.Contact = extractContact(
+                            splitByAmpersand[2].Trim()
+                            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        newProjectInfo.TechnicalContacts.Add(newPerson);
+                    }
+                    
+                    break;
                 case "\\PentestLeadName":
                     newProjectInfo.PentestLead = new ProjectInformationParticipant();
                     newProjectInfo.PentestLead.Name = data;
                     newProjectInfo.PentestLead.Role = Enums.ProjectParticipantRole.PentestLead;
+                    pentestTeamDictionary.Add(command, newProjectInfo.PentestLead);
                     break;
                 case "\\PentestLeadDepartment":
                     newProjectInfo.PentestLead.Department = extractDepartment(data);
@@ -120,12 +170,32 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.PentestCoordinator = new ProjectInformationParticipant();
                     newProjectInfo.PentestCoordinator.Name = data;
                     newProjectInfo.PentestCoordinator.Role = Enums.ProjectParticipantRole.PentestCoordinator;
+                    pentestTeamDictionary.Add(command, newProjectInfo.PentestCoordinator);
                     break;
                 case "\\PentestCoordinatorDepartment":
                     newProjectInfo.PentestCoordinator.Department = extractDepartment(data);
                     break;
                 case "\\PentestCoordinatorContact":
                     newProjectInfo.PentestCoordinator.Contact = extractContact(data);
+                    break;
+                case "\\PentestTeamMember":
+                    if (data[0] == '\\')
+                    {
+                        newProjectInfo.PentestTeam.Add(pentestTeamDictionary[data]);
+                    } else
+                    {
+                        char[] delimiters = { '{', '}' };
+                        string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
+                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                        ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
+                        newPerson.Name = splitByAmpersand[0].Trim();
+                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\&", "");
+                        newPerson.Contact = extractContact(
+                            splitByAmpersand[2].Trim()
+                            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        newProjectInfo.PentestTeam.Add(newPerson);
+                    }
+                    
                     break;
                 case "\\TargetInfoVersion":
                     newProjectInfo.TargetInfoVersion = data;
