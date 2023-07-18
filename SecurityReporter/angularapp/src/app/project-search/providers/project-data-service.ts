@@ -10,13 +10,13 @@ import { Observable, tap } from 'rxjs';
 export class ProjectDataService {
   private apiUrl: string;
 
-  constructor(private http: HttpClient) {
-    this.apiUrl = 'https://localhost:7075/ProjectReports';
+  constructor(private http: HttpClient, private notificationService: NotificationService) {
+    this.apiUrl = 'https://localhost:7075/project-reports';
   }
 
   public postZipFile(file: any) {
     return this.http.post(this.apiUrl, file).pipe((res) => {
-      // Todo: error handling
+      this.notificationService.displayMessage("Report successfully saved to DB.", "success");
       return res;
     });
   }
@@ -24,7 +24,7 @@ export class ProjectDataService {
   public getProjectReport(id: string) {
     console.log("Fetching project report, id=" + id);
     // Todo: Add type to get request
-    return this.http.get(this.apiUrl, { params: { id: id } });
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 
   async validateZipFile(file: File): Promise<boolean> {
