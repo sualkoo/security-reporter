@@ -74,12 +74,23 @@ namespace webapi.Service
             List<ProjectData> items = new List<ProjectData>();
             FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
 
-            while (resultSetIterator.HasMoreResults)
+            try
             {
-                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
-                items.AddRange(response.Resource);
+                while (resultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
             return items;
+
         }
     }
 }
