@@ -10,6 +10,7 @@ namespace cosmosTools
     {
         private string[]? consoleInput;
         private string? command;
+        private int amount;
         
         public ItemsGenerator(string[] args)
         {
@@ -22,26 +23,29 @@ namespace cosmosTools
             if (this.consoleInput != null)
             {
                 command = CommandFromInput(this.consoleInput);
+
                 if (command == "add")
                 {
-                    Console.WriteLine("add command");
+                    amount = SecondArgumentAsInteger(this.consoleInput);
+                    AddItemsToDatabase(amount);
                 }
                 if (command == "clear")
                 {
-                    Console.WriteLine("clear command");
+                    ClearDatabase();
                 }
                 if (command == "help")
                 {
-                    Console.WriteLine("help command");
+                    Help();
                 }
             }
-            else { }
-
-
+            else 
+            {
+                Console.WriteLine("Ivalid input");
+            }
         }
 
-        private string CommandFromInput(string[] input) {
-
+        private string CommandFromInput(string[] input) 
+        {
             string inputString = string.Join(" ", input);
 
             int firstWhitespaceIndex = inputString.IndexOfAny(new[] { ' ', '\t' });
@@ -55,6 +59,46 @@ namespace cosmosTools
 
             return firstWord;
         }
-    }
-    
+
+        private int SecondArgumentAsInteger(string[] input)
+        {
+            string inputString = string.Join(" ", input);
+
+            int firstWhitespaceIndex = inputString.IndexOfAny(new[] { ' ', '\t' });
+
+            if (firstWhitespaceIndex == -1)
+            {
+                throw new ArgumentException("Input must contain at least two elements separated by whitespace.");
+            }
+
+            string secondArgumentString = inputString.Substring(firstWhitespaceIndex + 1);
+
+            if (!int.TryParse(secondArgumentString, out int secondArgument))
+            {
+                throw new ArgumentException("Second argument is not a valid number.");
+            }
+
+            return secondArgument;
+        }
+
+        private void Help() 
+        {
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("add [number] --> add [number] of random items to database");
+            Console.WriteLine("clear --> deletes all items from database");
+            Console.WriteLine();
+        }
+
+        private void ClearDatabase() 
+        {
+            Console.WriteLine("Database has been cleared.");
+            Console.WriteLine();
+        }
+
+        private void AddItemsToDatabase(int amount)
+        { 
+            Console.WriteLine("Added " + amount + " items.");
+            Console.WriteLine();
+        }
+    }    
 }
