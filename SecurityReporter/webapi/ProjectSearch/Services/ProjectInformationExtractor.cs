@@ -8,10 +8,13 @@ namespace webapi.ProjectSearch.Services
     public class ProjectInformationExtractor
     {
         ZipArchiveEntry projectInfoEntry;
+        Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary;
         ProjectInformation newProjectInfo = new ProjectInformation();
         DateTime newReportDate;
-        public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry) {
+        public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry, 
+            Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary) {
             this.projectInfoEntry = projectInfoEntry;
+            this.pentestTeamDictionary = pentestTeamDictionary;
         }
 
         public ProjectInformation ExtractProjectInformation()

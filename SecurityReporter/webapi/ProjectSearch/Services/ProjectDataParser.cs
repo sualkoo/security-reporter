@@ -16,7 +16,10 @@ namespace webapi.ProjectSearch.Services
             
             using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read)) {
                 if(zipStream != null) {
-                    ZipArchiveEntry currentEntry = archive.GetEntry("Config/Document_Information.tex");
+                    ZipArchiveEntry currentEntry = archive.GetEntry("Static/PentestTeam.tex");
+                    PentestTeamExtractor pte = new PentestTeamExtractor(currentEntry);
+                    Dictionary<string, ProjectInformationParticipant> pentestTeamDict = pte.extractPentestTeam();
+                    currentEntry = archive.GetEntry("Config/Document_Information.tex");
                     newProjectReportData.DocumentInfo = ExtractDocumentInformation(currentEntry);
                     currentEntry = archive.GetEntry("Config/Executive_Summary.tex");
                     newProjectReportData.ExecutiveSummary = ExtractExecutiveSummary(currentEntry);
@@ -28,9 +31,12 @@ namespace webapi.ProjectSearch.Services
                     newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
 
                 }
-                else
+                else if(zipStream == null)
                 {
                     throw new ArgumentNullException(nameof(zipStream));
+                } else if(archive == null)
+                {
+                    throw new ArgumentNullException(nameof(archive));
                 }
             }
             return newProjectReportData;
