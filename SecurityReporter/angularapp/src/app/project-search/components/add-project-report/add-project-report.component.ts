@@ -38,6 +38,7 @@ export class AddProjectReportComponent {
           this.projectDataService.postZipFile(formData).subscribe(
             (response) => {
               console.log(response);
+              this.notificationService.displayMessage("Report successfully saved to DB.", "success");
             },
             (error) => {
               console.log(error);
