@@ -7,8 +7,6 @@ import { GetProjectsCountService } from '../../services/get-projects-count.servi
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
 
-
-
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
