@@ -29,7 +29,6 @@ namespace webapi.ProjectSearch.Controllers
                 ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
                 return Ok(savedReport);
             } catch (CustomException ex) {
-                Console.WriteLine(ex.Message);
                 return StatusCode(ex.StatusCode, ex.Message);
             }
         }
@@ -52,9 +51,9 @@ namespace webapi.ProjectSearch.Controllers
                 ProjectReportData fetchedReport = await ProjectReportService.GetReportByIdAsync(id);
                 return Ok(fetchedReport);
             }
-            catch (Exception)
+            catch (CustomException ex)
             {
-                return NotFound("Project Report not found.");
+                return StatusCode(ex.StatusCode, ex.Message);
             }
         }
     }
