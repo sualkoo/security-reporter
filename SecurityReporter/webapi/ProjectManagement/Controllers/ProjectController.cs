@@ -8,7 +8,6 @@ namespace webapi.ProjectManagement.Controllers;
 [Route("[controller]")]
 public class ProjectController : ControllerBase
 {
-
     public ICosmosService CosmosService { get; }
 
     public ProjectController(ICosmosService cosmosService)
@@ -19,18 +18,54 @@ public class ProjectController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
-        Console.WriteLine("Post request Project/add called.");
-        bool result = await CosmosService.AddProject(project);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("POST");
+        Console.ResetColor();
+        Console.WriteLine("\t /Project/add");
 
+        bool result = await CosmosService.AddProject(project);
 
         if (!result)
         {
             Console.WriteLine("Error occured in Project/add post request.");
             return StatusCode(400, "Error: Unable to insert project into DB.");
         }
-
         Console.WriteLine("Request executed without any errors.");
         return StatusCode(201, project);
+    }
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> DeleteProject(List<string> ids)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("POST");
+        Console.ResetColor();
+        Console.WriteLine("\t /Project/delete");
+
+        var result = await CosmosService.DeleteProjects(ids);
+
+        if (result.Count > 0)
+        {
+            return StatusCode(404, result);
+        }
+        return StatusCode(201, "Ok");
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteProject(string id)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("DELETE");
+        Console.ResetColor();
+        Console.WriteLine("\t /Project/delete");
+
+        var result = await CosmosService.DeleteProject(id);
+
+        if (!result)
+        {
+            return StatusCode(404, $"{id}, Not found.");
+        }
+        return StatusCode(201, "Ok");
     }
 
     [HttpGet("count")]

@@ -49,27 +49,27 @@ namespace webapi.Service
         }
 
 
-        public async Task<bool> DeleteProject(string projectId)
+        public async Task<bool> DeleteProject(string id)
         {
             Console.WriteLine("Deleting data from database.");
             try
             {
-                ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(projectId, new PartitionKey(projectId));
+                ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
 
                 if (response.StatusCode == HttpStatusCode.NoContent)
                 {
-                    Console.WriteLine("Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Failed to delete from DB.");
+                    Console.WriteLine($"{id}, Not found.");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occurred: " + ex);
+                Console.WriteLine($"{id}, Not found.");
                 return false;
             }
         }
@@ -89,13 +89,13 @@ namespace webapi.Service
                     ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
 
 
-                    Console.WriteLine($"{id},Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
 
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"{id}, Failed to delete from DB.");
-                    failed_to_delete.Add(id);
+                    Console.WriteLine($"{id}, Not found.");
+                    failed_to_delete.Add($"{id}, Not found.");
                 }
             }
 
