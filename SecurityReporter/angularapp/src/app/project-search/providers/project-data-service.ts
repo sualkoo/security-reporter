@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
 import { Observable, tap } from 'rxjs';
+import { ProjectDataReport } from '../interfaces/project-data-report.models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,10 +16,7 @@ export class ProjectDataService {
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.apiUrl, file).pipe((res) => {
-      this.notificationService.displayMessage("Report successfully saved to DB.", "success");
-      return res;
-    });
+    return this.http.post<ProjectDataReport>(this.apiUrl, file)
   }
 
   public getProjectReport(id: string) {
