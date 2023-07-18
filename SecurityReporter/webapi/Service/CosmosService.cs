@@ -97,7 +97,6 @@ namespace webapi.Service
             {
                 query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value)";
             }
-
             try
             {
                 Console.WriteLine("Fetching reports from the database");
