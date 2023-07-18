@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO.Compression;
 using System.IO.Pipes;
@@ -29,6 +30,8 @@ namespace webapi.ProjectSearch.Services
                     currentEntry = archive.GetEntry("Config/Testing_Methodology.tex");
                     TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);
                     newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
+                    //currentEntry = archive.GetEntry("Config/Findings_Database/");
+                    newProjectReportData.Findings = extractFindings(archive);
 
                 }
                 else if(zipStream == null)
@@ -40,6 +43,28 @@ namespace webapi.ProjectSearch.Services
                 }
             }
             return newProjectReportData;
+        }
+
+        private List<Finding> extractFindings(ZipArchive archive)
+        {
+            FindingsExtractor fe = new FindingsExtractor();
+            List<Finding> findingsList = new List<Finding> ();
+            if (archive == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                foreach (var fileEntry in archive.Entries)
+                {
+                    if (fileEntry.Name.EndsWith("main.tex", StringComparison.OrdinalIgnoreCase))
+                    {
+                        findingsList.Add(fe.extractFinding(fileEntry));
+                    }
+                }
+            }
+
+            return findingsList;
         }
 
         private DocumentInformation ExtractDocumentInformation(ZipArchiveEntry documentEntry)
