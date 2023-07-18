@@ -5,7 +5,7 @@
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? toggleAllRows() : null"
+          <mat-checkbox color=primary (change)="$event ? toggleAllRows() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()"
                         [aria-label]="checkboxLabel()">
@@ -35,19 +35,19 @@
       <!-- Project Status Column -->
       <ng-container matColumnDef="projectStatus">
         <th mat-header-cell *matHeaderCellDef> Project Status </th>
-        <td mat-cell *matCellDef="let element"> {{ element.projectStatus || '-'  }} </td>
+        <td mat-cell *matCellDef="let element"> {{  getStatusString(element.projectStatus) || '-'}} </td>
       </ng-container>
 
       <!-- Questionare Column -->
       <ng-container matColumnDef="questionare">
         <th mat-header-cell *matHeaderCellDef> Questionare </th>
-        <td mat-cell *matCellDef="let element"> {{ element.questionare || '-'  }} </td>
+        <td mat-cell *matCellDef="let element"> {{ getQuestionareString(element.questionare) || '-' }} </td>
       </ng-container>
 
       <!-- Project Scope Column -->
       <ng-container matColumnDef="projectScope">
         <th mat-header-cell *matHeaderCellDef> Project Scope </th>
-        <td mat-cell *matCellDef="let element"> {{ element.projectScope || '-' }} </td>
+        <td mat-cell *matCellDef="let element"> {{ getScopeString(element.projectScope) || '-' }} </td>
       </ng-container>
 
       <!-- Start Column -->
