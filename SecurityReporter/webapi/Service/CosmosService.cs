@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
+using System.Net;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -20,10 +21,12 @@ namespace webapi.Service
             PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
+
         }
 
         public async Task<bool> AddProject(ProjectData data)
         {
+
             data.RequestCreated = DateTime.Now;
             if (data.Comments != null)
             {
@@ -46,6 +49,72 @@ namespace webapi.Service
         public Task<bool> AddProjectReport(ProjectReportData data)
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task<bool> DeleteProject(string id)
+        {
+            try
+            {
+                ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
+
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"{id}, Not found.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{id}, Not found.");
+                return false;
+            }
+        }
+
+
+        public async Task<List<string>> DeleteProjects(List<string> projectIds)
+        {
+            Console.WriteLine("Deleting data from database.");
+
+            var failed_to_delete = new List<string>();
+
+
+            foreach (var id in projectIds)
+            {
+                try
+                {
+                    ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
+
+
+                    Console.WriteLine($"{id}, Found in DB successfully.");
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{id}, Not found.");
+                    failed_to_delete.Add($"{id}, Not found.");
+                }
+            }
+
+            if (failed_to_delete.Count > 0)
+            {
+                Console.WriteLine("Deletion of Projects will not be completed.");
+                return failed_to_delete;
+            }
+
+            foreach (var id in projectIds)
+            {
+                await DeleteProject(id);
+            }
+            Console.WriteLine("Deletion of Projects completed successfully.");
+
+            return new List<string> { };
+
         }
 
         public async Task<int> GetNumberOfProjects()
@@ -77,12 +146,23 @@ namespace webapi.Service
             List<ProjectData> items = new List<ProjectData>();
             FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
 
-            while (resultSetIterator.HasMoreResults)
+            try
             {
-                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
-                items.AddRange(response.Resource);
+                while (resultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
             return items;
+
         }
     }
 }
