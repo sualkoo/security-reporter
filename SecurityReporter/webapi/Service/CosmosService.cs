@@ -2,6 +2,7 @@
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Linq.Expressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Services;
 
 namespace webapi.Service
 {
@@ -22,6 +24,7 @@ namespace webapi.Service
         private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
+        private readonly ILogger Logger;
 
         public CosmosService(IConfiguration configuration)
         {
@@ -29,6 +32,8 @@ namespace webapi.Service
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
         public async Task<bool> AddProject(ProjectData data)
@@ -54,18 +59,17 @@ namespace webapi.Service
 
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
-            Console.WriteLine("Adding project report to database.");
+            Logger.LogInformation("Adding project report to database.");
             try
             {
                 data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
-                Console.WriteLine("Project Report was successfuly saved to DB");
+                Logger.LogInformation("Project Report was successfuly saved to DB");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occured while saving new Project Report to DB");
-                Console.WriteLine(ex);
+                Logger.LogError("An error occured while saving new Project Report to DB: " + ex);
                 throw new CustomException(StatusCodes.Status500InternalServerError, "An error occured while saving new Project Report to DB");
             }
         }
@@ -75,19 +79,18 @@ namespace webapi.Service
             Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
             try
             {
-                Console.WriteLine("Searching for Report based on Id");
+                Logger.LogInformation("Searching for Report based on Id");
                 ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
                 return data;
             }
             catch (Microsoft.Azure.Cosmos.CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                Console.WriteLine("Report with searched ID not found");
+                Logger.LogWarning("Report with searched ID not found");
                 throw new CustomException(StatusCodes.Status404NotFound, "Report with searched ID not found");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unexpected error occurred during report fetching by ID");
-                Console.WriteLine(ex);
+                Logger.LogError("Unexpected error occurred during report fetching by ID: " + ex);
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
@@ -106,7 +109,7 @@ namespace webapi.Service
             }
             try
             {
-                Console.WriteLine("Fetching reports from the database");
+                Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
                                                                             .WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@keyword", $"{keyword}");
@@ -116,13 +119,12 @@ namespace webapi.Service
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                     results.AddRange(currentResultSet.ToList());
                 }
-                Console.WriteLine("Returning found reports");
+                Logger.LogInformation("Returning found reports");
                 return results;
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Unexpected error occurred during report fetching by keywords");
-                Console.WriteLine(exception);
+                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
