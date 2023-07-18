@@ -1,15 +1,8 @@
 ﻿using NUnit.Framework;
-using webapi.ProjectSearch.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using webapi.Service;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using webapi.ProjectSearch.Models;
-using System.Configuration;
+using Microsoft.Azure.Cosmos;
 
 namespace webapi.ProjectSearch.Services.Tests
 {
@@ -29,12 +22,6 @@ namespace webapi.ProjectSearch.Services.Tests
             mockParser = new Mock<ProjectDataParser>();
             mockValidator = new Mock<ProjectDataValidator>();
             projectReportService = new ProjectReportService(mockParser.Object, mockValidator.Object, mockCosmosService.Object);
-        }
-
-        [Test()]
-        public void ProjectReportServiceTest()
-        {
-            Assert.Fail();
         }
 
         [Test]
@@ -57,10 +44,17 @@ namespace webapi.ProjectSearch.Services.Tests
             Assert.AreEqual(result.Id, expectedId);
         }
 
-        [Test()]
-        public void GetReportByIdAsyncTest()
+        [Test]
+        public void GetReportByIdAsync_InvalidId_ThrowsException()
         {
-            Assert.Fail();
+            // Arrange
+            var id = Guid.NewGuid();
+
+            // Mock the CosmosService's behavior to return the expected project report
+            mockCosmosService.Setup((cosmos) => cosmos.GetProjectReport(id.ToString())).ThrowsAsync(new Microsoft.Azure.Cosmos.CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));
+
+            // Act & Assert
+            Assert.ThrowsAsync<CosmosException>(async () => await projectReportService.GetReportByIdAsync(id));
         }
 
         [Test()]

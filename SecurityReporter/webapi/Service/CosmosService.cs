@@ -1,15 +1,7 @@
 ﻿
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
-using System.Linq.Expressions;
 using webapi.Models;
-using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
