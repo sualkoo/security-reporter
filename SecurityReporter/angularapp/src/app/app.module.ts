@@ -22,22 +22,14 @@ import { ProjectSearchPageComponent } from './project-search/component-pages/pro
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
-import { MatTableModule } from '@angular/material/table';
-import { ButtonComponent } from './project-listing/components/button/button.component';
-import { CheckboxComponent } from './project-listing/components/checkbox/checkbox.component';
-
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,
-    ListProjectsPageComponent,
-    
-    
-    CheckboxComponent,
+    AddProjectReportComponent
   ],
-
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -56,12 +48,12 @@ import { CheckboxComponent } from './project-listing/components/checkbox/checkbo
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    ButtonComponent,
     CommonModule,
-    ListProjectsPageComponent
+    ListProjectsPageComponent,
     DataGridComponentComponent,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
