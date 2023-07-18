@@ -86,10 +86,10 @@ namespace webapi.Service
             {
                 try
                 {
-                    ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
+                    ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
 
 
-                    Console.WriteLine($"{id}, Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Found in DB successfully.");
 
                 }
                 catch (Exception ex)
@@ -99,7 +99,31 @@ namespace webapi.Service
                 }
             }
 
-            return failed_to_delete;
+            if (failed_to_delete.Count > 0)
+            {
+                Console.WriteLine("Deletion of Projects will not be completed.");
+                return failed_to_delete;
+            }
+
+            foreach (var id in projectIds)
+            {
+                try
+                {
+                    ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
+
+
+                    Console.WriteLine($"{id}, Deleted from DB successfully.");
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{id}, Not found.");
+                }
+            }
+            Console.WriteLine("Deletion of Projects completed successfully.");
+
+            return new List<string> { };
+
         }
 
         public async Task<int> GetNumberOfProjects()
