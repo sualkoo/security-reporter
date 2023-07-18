@@ -51,7 +51,6 @@ namespace webapi.Service
 
         public async Task<bool> DeleteProject(string id)
         {
-            Console.WriteLine("Deleting data from database.");
             try
             {
                 ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
@@ -107,18 +106,7 @@ namespace webapi.Service
 
             foreach (var id in projectIds)
             {
-                try
-                {
-                    ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
-
-
-                    Console.WriteLine($"{id}, Deleted from DB successfully.");
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"{id}, Not found.");
-                }
+                await DeleteProject(id);
             }
             Console.WriteLine("Deletion of Projects completed successfully.");
 
