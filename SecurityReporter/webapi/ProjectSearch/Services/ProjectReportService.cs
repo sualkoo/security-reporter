@@ -8,15 +8,15 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectReportService : IProjectReportService
     {
-        public ProjectDataValidator Validator { get; set; }
-        public ProjectDataParser Parser { get; set; }
-        public CosmosService CosmosService { get; set; }
+        public IProjectDataValidator Validator { get; set; }
+        public IProjectDataParser Parser { get; set; }
+        public ICosmosService CosmosService { get; set; }
 
         public ProjectReportService(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
-            Validator = (ProjectDataValidator)validator;
-            Parser = (ProjectDataParser)parser;
-            CosmosService = (CosmosService)cosmosService;
+            Parser = parser;
+            Validator = validator;
+            CosmosService = cosmosService;
         }
 
         public async Task<ProjectReportData> GetReportByIdAsync(Guid id)
