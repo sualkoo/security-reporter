@@ -14,7 +14,7 @@ export class GetProjectsServiceService {
   }
 
   public getProjects(pageSize: number, pageNumber: number): Promise<any> {
-    this.getProjectEndPointURL = this.getProjectEndPointURL + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber;
+    this.getProjectEndPointURL = 'https://localhost:7075/Project/retrieve' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber;
     return new Promise((resolve, reject) => {
       this.http.get(this.getProjectEndPointURL).subscribe(
         (response) => {
