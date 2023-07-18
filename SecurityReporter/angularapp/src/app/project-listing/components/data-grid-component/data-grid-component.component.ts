@@ -140,4 +140,25 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
     this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   }
+
+  getStatusColor(projectStatus: number): string {
+    switch (projectStatus) {
+      case 0:
+        return 'white';
+      case 1:
+        return '#E9D1D4';
+      case 2:
+        return '#CAC8E0';
+      case 3: 
+        return '#FFF3BF';
+      case 4:
+        return '#BFE6CD';
+      case 5:
+        return '#F9BFC7';
+      case 6:
+        return '#CEEFFB';
+      default:
+        return '';
+    }
+  }
 }
