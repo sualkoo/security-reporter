@@ -5,13 +5,14 @@
 
 
 .alert-message {
+  position: relative;
   color: #393939;
-  left: 50%;
+  left: 10%;
 }
 
 
 button {
-  color: #fff;
+  color: black;
   line-height: inherit;
   cursor: pointer;
   border: 0;
@@ -25,3 +26,25 @@ button {
 }
 
 
+.heading {
+    color: #351a1a;
+    font-family: 'Siemens sans';
+}
+
+.title {
+    position: absolute;
+    font-family: 'Siemens sans';
+    font-size: large;
+    top: 23%;
+    left: 15%;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 3px;
+    margin-right: 3px;
+    text-decoration: none;
+}

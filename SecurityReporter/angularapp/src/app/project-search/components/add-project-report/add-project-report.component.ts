@@ -39,19 +39,19 @@ export class AddProjectReportComponent {
               (error) => {
                 console.log(error);
                 this.notificationService.displayMessage(
-                  'Something went wrong on server side'
+                  'Something went wrong on server side', 'error'
                 );
               }
             );
           } else {
             // Incorrect zip file
             // Display eror message that says the zip is invalid
-            this.notificationService.displayMessage('Zip file is incorrect');
+            this.notificationService.displayMessage('Zip file is incorrect', 'warning');
           }
         })
         .catch((err) => {
           console.error(err.message);
-          this.notificationService.displayMessage('Zip file is incorrect');
+          this.notificationService.displayMessage('Zip file is incorrect', 'warning');
         });
     }
   }

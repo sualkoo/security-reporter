@@ -15,7 +15,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .mat-mdc-snack-bar-container {
   &.custom-snackbar
-  {
-  --mdc-snackbar-container-color: #efefef;
-  }
+{
+  --mdc-snackbar-container-color: #ededed;
+}
 }
