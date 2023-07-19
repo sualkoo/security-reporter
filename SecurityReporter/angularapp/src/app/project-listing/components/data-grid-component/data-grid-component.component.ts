@@ -172,16 +172,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async handlePageChange() {
-    this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
-    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
-
-    this.selection.clear();
-    for (const item of this.selectedItems) {
-      const foundItem = this.projects.find(project => project.id === item.id);
-      if (foundItem) {
-        this.selection.select(foundItem);
-      }
-    }
     this.isLoading = true;
     this.databaseError = false;
 
@@ -192,6 +182,14 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.databaseError = true;
     } finally {
       this.isLoading = false;
+    }
+
+    this.selection.clear();
+    for (const item of this.selectedItems) {
+      const foundItem = this.projects.find(project => project.id === item.id);
+      if (foundItem) {
+        this.selection.select(foundItem);
+      }
     }
   }
 
