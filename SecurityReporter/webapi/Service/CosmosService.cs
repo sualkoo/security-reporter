@@ -1,7 +1,10 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 using System.Net;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -11,7 +14,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -25,9 +28,9 @@ namespace webapi.Service
         {
 
             data.RequestCreated = DateTime.Now;
-            if (data.Commments != null)
+            if (data.Comments != null)
             {
-                data.Commments[0].CreatedAt = DateTime.Now;
+                data.Comments[0].CreatedAt = DateTime.Now;
             }
             Console.WriteLine("Adding data to database.");
             try
@@ -51,7 +54,6 @@ namespace webapi.Service
 
         public async Task<bool> DeleteProject(string id)
         {
-            Console.WriteLine("Deleting data from database.");
             try
             {
                 ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
@@ -86,10 +88,10 @@ namespace webapi.Service
             {
                 try
                 {
-                    ItemResponse<ProjectData> response = await Container.DeleteItemAsync<ProjectData>(id, new PartitionKey(id));
+                    ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
 
 
-                    Console.WriteLine($"{id}, Deleted from DB successfully.");
+                    Console.WriteLine($"{id}, Found in DB successfully.");
 
                 }
                 catch (Exception ex)
@@ -99,7 +101,20 @@ namespace webapi.Service
                 }
             }
 
-            return failed_to_delete;
+            if (failed_to_delete.Count > 0)
+            {
+                Console.WriteLine("Deletion of Projects will not be completed.");
+                return failed_to_delete;
+            }
+
+            foreach (var id in projectIds)
+            {
+                await DeleteProject(id);
+            }
+            Console.WriteLine("Deletion of Projects completed successfully.");
+
+            return new List<string> { };
+
         }
 
         public async Task<int> GetNumberOfProjects()
@@ -131,12 +146,23 @@ namespace webapi.Service
             List<ProjectData> items = new List<ProjectData>();
             FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
 
-            while (resultSetIterator.HasMoreResults)
+            try
             {
-                FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
-                items.AddRange(response.Resource);
+                while (resultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
             return items;
+
         }
     }
 }

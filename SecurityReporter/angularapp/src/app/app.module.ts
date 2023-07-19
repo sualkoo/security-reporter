@@ -21,13 +21,14 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
+import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,
-    ListProjectsPageComponent,
+    AddProjectReportComponent
   ],
   imports: [
     BrowserModule,
@@ -48,8 +49,11 @@ import { ListProjectsPageComponent } from './project-listing/component-pages/lis
     RadioButtonComponentComponent,
     AppRoutingModule,
     CommonModule,
+    ListProjectsPageComponent,
+    DataGridComponentComponent,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

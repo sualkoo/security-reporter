@@ -48,7 +48,7 @@ public class ProjectController : ControllerBase
         {
             return StatusCode(404, result);
         }
-        return StatusCode(201, "Ok");
+        return StatusCode(200, "Ok");
     }
 
     [HttpDelete("delete")]
@@ -65,7 +65,7 @@ public class ProjectController : ControllerBase
         {
             return StatusCode(404, $"{id}, Not found.");
         }
-        return StatusCode(201, "Ok");
+        return StatusCode(200, "Ok");
     }
 
     [HttpGet("count")]
@@ -73,7 +73,8 @@ public class ProjectController : ControllerBase
     {
         int count = await CosmosService.GetNumberOfProjects();
 
-        if (count < 0) {
+        if (count < 0)
+        {
             return StatusCode(400, count);
         }
 
