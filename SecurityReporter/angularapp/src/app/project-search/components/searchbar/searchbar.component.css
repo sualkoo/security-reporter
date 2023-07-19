@@ -32,10 +32,34 @@ button {
   line-height: inherit;
   cursor: pointer;
   border: 0;
-  padding: 9px 15px;
+  padding: 1% 3% 1% 3%;
   text-decoration: none;
   display: inline-block;
-  border-radius: 20px;
+  border-radius: 27px;
   flex: none;
-  margin-left: 45%;
+  margin: 2% 0% 5% 43%;
+  font-size: large;
+}
+
+  button:disabled {
+      background-color: #808080;
+      cursor: default;
+      margin-left: 41%;
+      color: white;
+  }
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  position: center;
+  color: white;
+}
+
+.loading {
+    margin-left: 5%;
+    padding-left: 5%;
+}
+
+button:hover {
+  background-color: #b94300;
 }

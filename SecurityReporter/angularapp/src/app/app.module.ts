@@ -24,6 +24,7 @@ import { ProjectSearchResultsPageComponent } from './project-search/component-pa
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -55,7 +56,8 @@ import { SearchbarComponent } from './project-search/components/searchbar/search
     AppRoutingModule,
     MatSnackBarModule,
     MatIconModule,
-    FormsModule 
+    FormsModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent],
