@@ -57,7 +57,8 @@ namespace webapi.ProjectSearch.Services
             {
                 foreach (var fileEntry in archive.Entries)
                 {
-                    if (fileEntry.Name.EndsWith("main.tex", StringComparison.OrdinalIgnoreCase))
+                    if (fileEntry.Name.EndsWith("main.tex", StringComparison.OrdinalIgnoreCase)
+                        && !fileEntry.FullName.Equals("Config/Findings_Database/DR_Template/main.tex"))
                     {
                         findingsList.Add(fe.extractFinding(fileEntry));
                     }

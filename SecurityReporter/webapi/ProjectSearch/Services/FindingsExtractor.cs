@@ -24,7 +24,17 @@ namespace webapi.ProjectSearch.Services
                             assignNewData(splitString[1], splitString[2], newFinding);
                         } else if (splitString.Length == 2)
                         {
-                            assignNewData(splitString[1], extractSubsection(splitString[1]), newFinding);
+                            if (splitString[0] == "\\subsection*")
+                            {
+                                if (splitString[1] == "References")
+                                {
+                                    newFinding.SubsectionReferences = extractReferences(splitString[1], reader, newFinding);
+                                }
+                                else
+                                {
+                                    extractSubsection(splitString[1], reader, newFinding);
+                                }
+                            }
                         }
                     }
                 }
@@ -65,51 +75,188 @@ namespace webapi.ProjectSearch.Services
                     newFinding.CWE = data;
                     break;
                 case "\\Criticality":
-                    newFinding.Criticality = 0;
+                    switch(data)
+                    {
+                        case "High":
+                            newFinding.Criticality = Enums.Criticality.High;
+                            break;
+                        case "Medium":
+                            newFinding.Criticality = Enums.Criticality.Medium;
+                            break;
+                        case "Low":
+                            newFinding.Criticality = Enums.Criticality.Low;
+                            break;
+                        case "Info":
+                            newFinding.Criticality = Enums.Criticality.Info;
+                            break;
+                        case "To Be Rated":
+                            newFinding.Criticality = Enums.Criticality.TBR;
+                            break;
+                    }
                     break;
                 case "\\Exploitability":
-                    newFinding.Exploitability = 0;
+                    switch (data)
+                    {
+                        case "Easy":
+                            newFinding.Exploitability = Enums.Exploitability.Easy;
+                            break;
+                        case "Average":
+                            newFinding.Exploitability = Enums.Exploitability.Average;
+                            break;
+                        case "Hard":
+                            newFinding.Exploitability = Enums.Exploitability.Hard;
+                            break;
+                        case "To Be Rated":
+                            newFinding.Exploitability = Enums.Exploitability.TBR;
+                            break;
+                    }
                     break;
                 case "\\Category":
-                    newFinding.Category = 0;
+                    switch (data)
+                    {
+                        case "Access Control":
+                            newFinding.Category = Enums.Category.AccessControl;
+                            break;
+                        case "Application Design":
+                            newFinding.Category = Enums.Category.ApplicationDesign;
+                            break;
+                        case "Information Disclosure":
+                            newFinding.Category = Enums.Category.InformationDisclosure;
+                            break;
+                        case "Outdated Software":
+                            newFinding.Category = Enums.Category.OutdatedSoftware;
+                            break;
+                        case "Security Configuration":
+                            newFinding.Category = Enums.Category.SecurityConfiguration;
+                            break;
+                    }
                     break;
                 case "\\Detectability":
-                    newFinding.Detectability = 0;
+                    switch (data)
+                    {
+                        case "Easy":
+                            newFinding.Detectability = Enums.Detectability.Easy;
+                            break;
+                        case "Average":
+                            newFinding.Detectability = Enums.Detectability.Average;
+                            break;
+                        case "Difficult":
+                            newFinding.Detectability = Enums.Detectability.Difficult;
+                            break;
+                        case "To Be Rated":
+                            newFinding.Detectability = Enums.Detectability.TBR;
+                            break;
+                    }
                     break;
-                case "\\Details":
+                case "Details":
                     newFinding.SubsectionDetails = data;
                     break;
-                case "\\Imapct":
+                case "Impact":
                     newFinding.SubsectionImpact = data;
                     break;
-                case "\\Repeatability":
+                case "Repeatability":
                     newFinding.SubsectionRepeatability = data;
                     break;
-                case "\\Countermeasures":
+                case "Countermeasures":
                     newFinding.SubsectionCountermeasures = data;
                     break;
-                case "\\References":
-                    newFinding.SubsectionReferences = extractReferences(data);
+                case "References":
                     break;
             }
         }
 
         private List<string> extractLocation(string data)
         {
-            return data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-        }
+            List<string> result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+            for(int i = 0; i < result.Count; i++)
+            {
+                result[i] = result[i].Trim();  
+            }
 
-        private List<string> extractReferences(string data)
-        {
-            return new List<string> {  data };
-
-        }
-
-        private string extractSubsection(string command)
-        {
-            string result = "";
             return result;
+        }
 
+        private void extractSubsection(string command, StreamReader reader, Finding newFinding)
+        {
+            string line;
+            bool reading = true;
+            string result = "";
+            while((line = reader.ReadLine()) != null && reading)
+            {
+                
+                string trimmedLine = line.Trim();
+                reading = (trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin") ? false : true;
+                reading = (trimmedLine.Length >= 11 && trimmedLine.Substring(0, 11) == "\\subsection") ? false : true;
+
+                if(reading)
+                {
+                    if(!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && 
+                        (trimmedLine[0] != '\\' && trimmedLine[0] != '%'))
+                    {
+                        result += trimmedLine;
+                    }
+                } else
+                {
+                    assignNewData(command, result, newFinding);
+                    if(trimmedLine.Substring(0,11) == "\\subsection")
+                    {
+                        char[] delimiters = { '{', '}' };
+                        string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                        if(splitString.Length == 2)
+                        {
+                            if (splitString[1] == "References")
+                            {
+                                newFinding.SubsectionReferences = extractReferences(splitString[1], reader, newFinding);
+                            }
+                            else
+                            {
+                                extractSubsection(splitString[1], reader, newFinding);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
+        {
+            string line;
+            List<string> resultList = new List<string>();
+            string currentItem = "";
+            bool firstItem = true;
+            
+            while((line = reader.ReadLine()) != null)
+            {
+                string trimmedLine = line.Trim();
+                if(trimmedLine.Length >= 13)
+                {
+                    if(trimmedLine.Substring(0, 13) == "\\end{itemize}")
+                    {
+                        if(currentItem != "")
+                        {
+                            resultList.Add(currentItem);
+                        }
+                        return resultList;
+                    }
+                }
+
+                if(trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
+                {
+                    if(!firstItem)
+                    {
+                        resultList.Add(currentItem);
+                        currentItem = "";
+                    }
+
+                    currentItem += trimmedLine.Substring(5);
+                    firstItem = false;
+                } 
+                else if(!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem) {
+                    currentItem += trimmedLine;
+                }
+            }
+
+            return resultList;
         }
     }
 }
