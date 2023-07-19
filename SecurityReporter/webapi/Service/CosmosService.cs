@@ -1,6 +1,14 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Linq.Expressions;
 using webapi.Models;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -12,8 +20,8 @@ namespace webapi.Service
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ProjectReportContainer";
-        private Container Container { get; }
-        private Container ReportContainer { get; }
+        private Microsoft.Azure.Cosmos.Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
 
         public CosmosService(IConfiguration configuration)
         {
@@ -46,14 +54,66 @@ namespace webapi.Service
 
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
+            Console.WriteLine("Adding project report to database.");
             try
             {
+                data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
+                Console.WriteLine("Project Report was successfuly saved to DB");
                 return true;
             }
             catch (Exception)
             {
+                Console.WriteLine("An error occured while saving new Project Report to DB");
                 return false;
+            }
+        }
+
+        public async Task<ProjectReportData> GetProjectReport(string projectId)
+        {
+            Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
+            try
+            {
+                Console.WriteLine("Searching for Report based on Id");
+                ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
+                return data;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Report with searched ID not found");
+                throw new Exception(exception.Message);
+            }
+        }
+        public async Task<List<ProjectReportData>> GetProjectReports(string subcategory, string keyword, string value)
+        {
+            List<ProjectReportData> results = new List<ProjectReportData>();
+            string query = "SELECT * FROM c WHERE ";
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                query = $"{query} c.{subcategory}.{keyword} LIKE @value";
+            }
+            else
+            {
+                query = $"{query} c.{keyword} LIKE @value";
+            }
+
+            try
+            {
+                Console.WriteLine("Fetching reports from the database");
+                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%");
+                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    results.AddRange(currentResultSet.ToList());
+                }
+                Console.WriteLine("Returning found reports");
+                return results;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Error getting reports data from the Project Report Database" + exception);
             }
         }
     }

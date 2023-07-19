@@ -24,6 +24,7 @@ import { ProjectSearchResultsPageComponent } from './project-search/component-pa
 import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -55,6 +56,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     FormsModule,
     MatSidenavModule,
     ScrollingModule,
+    MatSnackBarModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent],

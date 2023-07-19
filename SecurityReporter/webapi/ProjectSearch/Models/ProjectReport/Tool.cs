@@ -1,6 +1,8 @@
-﻿namespace webapi.Models.ProjectReport
+﻿using webapi.ProjectSearch.Models;
+
+namespace webapi.Models.ProjectReport
 {
-    public class Tool
+    public class Tool : IEntity
     {
         public string? ToolName { get; set; }
         public string? Version { get; set; }
