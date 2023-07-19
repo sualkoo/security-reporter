@@ -16,6 +16,7 @@ import { ProjectInterface } from '../../../project-management/interfaces/project
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
+  selectedItems: any[] = [];
 
   displayedColumns: string[] = [
     'select',
@@ -66,11 +67,13 @@ export class DataGridComponentComponent implements AfterViewInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
+      this.selectedItems = [];
       this.selection.clear();
       return;
     }
 
     this.selection.select(...this.dataSource.data);
+    this.getSelectedItems();
   }
 
   /** The label for the checkbox on the passed row */
@@ -81,6 +84,19 @@ export class DataGridComponentComponent implements AfterViewInit {
 
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.projects.indexOf(row) + 2}`;
   }
+
+  handleCheckboxChange(row: ProjectInterface): void {
+    this.selection.toggle(row);
+
+    if (this.selection.isSelected(row)) {
+      this.selectedItems.push(row);
+    } else {
+      const index = this.selectedItems.findIndex(item => item.id === row.id);
+      if (index !== -1) {
+        this.selectedItems.splice(index, 1);
+      }
+    }
+}
 
   getStatusString(status: number): string {
     switch (status) {
@@ -136,9 +152,23 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   }
 
+  getSelectedItems(): void {
+    for (const item of this.selection.selected) {
+      this.selectedItems.push(item);
+    }
+  }
+
   async handlePageChange() {
     this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
     this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+
+    this.selection.clear();
+    for (const item of this.selectedItems) {
+      const foundItem = this.projects.find(project => project.id === item.id);
+      if (foundItem) {
+        this.selection.select(foundItem);
+      }
+    }
   }
 
   getStatusColor(projectStatus: number): string {
