@@ -48,3 +48,9 @@
   height: 200px; /* Adjust the height to match your desired container size */
 }
 
+.mat-cell {
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
