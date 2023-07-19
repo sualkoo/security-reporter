@@ -1,4 +1,5 @@
 ﻿
+using Azure;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Azure.Cosmos.Serialization.HybridRow.Schemas;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq.Expressions;
+using webapi.Enums;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
@@ -117,6 +119,76 @@ namespace webapi.Service
                     results.AddRange(currentResultSet.ToList());
                 }
                 Console.WriteLine("Returning found reports");
+                return results;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Unexpected error occurred during report fetching by keywords");
+                Console.WriteLine(exception);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
+            }
+        }
+
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
+        {
+            int limit = 1; 
+            int offset = limit * (page - 1);
+            int totalResults;
+            List<ProjectReportData> data = new List<ProjectReportData>();
+
+            string queryCount = "SELECT VALUE COUNT(1) FROM c";
+            QueryDefinition queryDefinitioCount = new QueryDefinition(queryCount);
+
+            FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitioCount);
+            FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
+            totalResults = response.FirstOrDefault();
+
+            string query = "SELECT * FROM c WHERE ";
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            }
+            else
+            {
+                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            }
+            try
+            {
+                Console.WriteLine("Fetching reports from the database");
+                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
+                                                                            .WithParameter("@value", $"%{value}%")
+                                                                            .WithParameter("@keyword", $"{keyword}")
+                                                                            .WithParameter("@offset", offset)
+                                                                            .WithParameter("@limit", limit);
+                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
+                while (queryResultSetIterator.HasMoreResults)
+                {
+                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    data.AddRange(currentResultSet.ToList());
+                }
+                Console.WriteLine("Returning found reports");
+
+                
+
+                PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
+                results.TotalRecords = totalResults;
+                results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
+
+                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports");
+                string queryPage = uriBuilder.Query;
+                if (results.TotalPages > page)
+                {
+                    if (!string.IsNullOrEmpty(subcategory))
+                    {
+                        queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
+                    }
+                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + queryPage + "&page=" + (page + 1);
+
+                    uriBuilder.Query = queryPage.TrimStart('?');
+                    results.NextPage = uriBuilder.Uri;
+                }
+
                 return results;
             }
             catch (Exception exception)
