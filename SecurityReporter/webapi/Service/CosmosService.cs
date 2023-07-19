@@ -148,7 +148,7 @@ namespace webapi.Service
             }
             try
             {
-                Console.WriteLine("Fetching reports from the database");
+                Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
                                                                             .WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@keyword", $"{keyword}")
@@ -160,7 +160,7 @@ namespace webapi.Service
                     FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                     data.AddRange(currentResultSet.ToList());
                 }
-                Console.WriteLine("Returning found reports");
+                Logger.LogInformation("Returning found reports");
 
                 
 
