@@ -16,7 +16,8 @@ import { ProjectInterface } from '../../../project-management/interfaces/project
 })
 export class DeleteDataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
-  selectedItems: any[] = [];
+
+  selectedItems: ProjectInterface[] = [];
 
   displayedColumns: string[] = [
     'select',
@@ -27,7 +28,7 @@ export class DeleteDataGridComponentComponent implements AfterViewInit {
     'end',
   ];
 
-  dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+  dataSource = new MatTableDataSource<ProjectInterface>(this.selectedItems);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
   @ViewChild(MatPaginator)
@@ -54,7 +55,6 @@ export class DeleteDataGridComponentComponent implements AfterViewInit {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
-
   }
 
   toggleAllRows() {

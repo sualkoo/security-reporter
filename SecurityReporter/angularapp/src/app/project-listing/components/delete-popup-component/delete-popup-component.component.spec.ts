@@ -17,10 +17,6 @@ describe('DeletePopupComponentComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  
-
-
 });
 
 

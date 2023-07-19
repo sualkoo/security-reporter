@@ -9,8 +9,6 @@ import { ProjectInterface } from '../../../project-management/interfaces/project
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 
-
-
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',

@@ -10,7 +10,9 @@
 }
 
 .table-container {
-  overflow-x: auto;
+  height:200px;
+  overflow-y: auto;
+  overflow-x:auto;
 }
 
 .list-container th {
