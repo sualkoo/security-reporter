@@ -25,6 +25,12 @@ export class ProjectDataService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
+  public getProjectReports(subcategory: string, keyword: string, value: string) {
+
+    return this.http.get<ProjectDataReport[]>(this.apiUrl, {  params: { subcategory: subcategory, keyword: keyword, value: value } })
+  }
+
+
   async validateZipFile(file: File): Promise<boolean> {
     const zip = new JSZip();
     let isValid: boolean = true;

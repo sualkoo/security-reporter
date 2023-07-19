@@ -1,26 +1,57 @@
 <div class="search-component">
   <mat-form-field class="search-field">
     <mat-icon matPrefix>search</mat-icon>
-    <input matInput placeholder="Search..." [(ngModel)]="searchQuery" >
+    <input matInput placeholder="Search..." [(ngModel)]="value"  (ngModelChange)="checkFormValidity()">
   </mat-form-field>
 
 
   <h2 style="margin-left: 45%">Filters</h2>
   <div class="filters-container">
-   <div class="filters-column">
-      <div *ngFor="let filter of filters.slice(0, 3)" class="custom-check">
-        <input type="checkbox" [(ngModel)]="selectedFilters[filter]">
-        {{ filter }}
-      </div>
-    </div>
-    <div class="filters-column">
-     <div *ngFor="let filter of filters.slice(3, 6)" class="custom-check">
-       <input type="checkbox" [(ngModel)]="selectedFilters[filter]">
-        {{ filter }}
-      </div>
+<!--    <div class="filters-column">-->
+<!--      <div *ngFor="let filter of filters.slice(0, 3)" class="custom-check">-->
+<!--        <input type="checkbox" [(ngModel)]="selectedFilters[filter]">-->
+<!--        {{ filter }}-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="filters-column">-->
+<!--      <div *ngFor="let filter of filters.slice(3, 6)" class="custom-check">-->
+<!--        <input type="checkbox" [(ngModel)]="selectedFilters[filter]">-->
+<!--        {{ filter }}-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div *ngFor="let case of keywords;  let i = index">
+      <input
+        type="radio"
+        [id]="case.id"
+        [name]="'case' + i"
+        [value]="case.value"
+        [(ngModel)]="keyword"
+        (ngModelChange)="checkFormValidity()"
+      >
+      <label [for]="case.id">{{ case.label }}</label><br>
     </div>
   </div>
 
-  <button (click)="search()" class="search-button">Search</button>
+
+  <button (click)="searchProjectReports()" [disabled]="!isFormValid || isLoading" class="search-button">
+    <div class="loading-container">
+      <span *ngIf="!isLoading">Submit</span>
+      <mat-spinner diameter="25" *ngIf="isLoading" class="mat-spinner-custom"></mat-spinner>
+      <span *ngIf="isLoading" class="loading" > Loading...</span>
+    </div>
+  </button>
   <hr />
+
+<!--  <div *ngFor="let item of projectDataReports">-->
+<!--    <p><strong>ID:</strong>  {{ item.id }}</p>-->
+<!--    <p><strong> Project report name:</strong>  {{ item.documentInfo?.projectReportName }}</p>-->
+<!--&lt;!&ndash;    <p><strong> Project report mainAuthor:</strong>  {{ item.documentInfo?.mainAuthor }}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div *ngFor="let history of item.documentInfo?.reportDocumentHistory">&ndash;&gt;-->
+<!--&lt;!&ndash;      <ol><b>Version Date:</b> {{ history.versionDate }}</ol>&ndash;&gt;-->
+<!--&lt;!&ndash;      <ol><b>Version:</b> {{ history.version }}</ol>&ndash;&gt;-->
+<!--&lt;!&ndash;      <ol><b>Whole Name:</b> {{ history.wholeName }}</ol>&ndash;&gt;-->
+<!--&lt;!&ndash;      <ol><b>Report Status:</b> {{ history.reportStatus }}</ol>&ndash;&gt;-->
+<!--&lt;!&ndash;      <br>&ndash;&gt;-->
+<!--    </div>-->
 </div>
