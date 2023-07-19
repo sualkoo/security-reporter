@@ -185,8 +185,7 @@ namespace webapi.Service
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Unexpected error occurred during report fetching by keywords");
-                Console.WriteLine(exception);
+                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
