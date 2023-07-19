@@ -25,7 +25,6 @@
     "bootstrap-icons": "^1.10.5",
     "jest-editor-support": "*",
     "jszip": "^3.10.1",
-    "ngx-bootstrap": "^10.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "uuid": "^9.0.0",

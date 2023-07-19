@@ -27,7 +27,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -40,7 +39,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   imports: [
     BrowserModule,
-    NgbModule,
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,
