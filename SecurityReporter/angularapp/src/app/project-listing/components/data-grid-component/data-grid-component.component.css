@@ -54,3 +54,14 @@
   height: 80px;
 }
 
+.comment-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comment-text:hover {
+  white-space: normal;
+  overflow: visible;
+}
+
