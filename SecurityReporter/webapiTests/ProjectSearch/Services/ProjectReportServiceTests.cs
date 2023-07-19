@@ -2,7 +2,7 @@
 using Microsoft.Azure.Cosmos;
 using Moq;
 using NUnit.Framework;
-using System.Net;
+using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 using webapi.Service;
@@ -62,39 +62,49 @@ namespace webapi.ProjectSearch.Services.Tests
         }
 
         [Test()]
-        public void GetReportsAsyncTest()
+        public async Task SaveReportFromZip_ValidZip_ReturnsProjectReportDataAsync()
         {
-            Assert.Fail();
-        }
-
-        [Test()]
-        public void SaveReportFromZip_ValidZip_ReturnsProjectReportData()
-        {
-            // Arrange
-            var file = new Mock<IFormFile>();
-            var fileStream = new MemoryStream();
-            file.Setup(f => f.OpenReadStream()).Returns(fileStream);
-
             var expectedReportData = new ProjectReportData
             {
-                Id = Guid.NewGuid(),
                 DocumentInfo = new DocumentInformation
                 {
                     ProjectReportName = "Dummy Project 1"
                 }
             };
 
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
             // Mock
-            mockParser.Setup(parser => parser.Extract(file.Object.OpenReadStream())).Returns(expectedReportData);
+            mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(expectedReportData);
             mockValidator.Setup(validator => validator.Validate(expectedReportData)).Returns(true);
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
 
             // Act
-            var result = projectReportService.SaveReportFromZip(file.Object);
+            var result = await projectReportService.SaveReportFromZip(file);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreSame(result.Result, expectedReportData);
+            Assert.AreSame(result, expectedReportData);
         }
 
         [Test()]
@@ -119,12 +129,6 @@ namespace webapi.ProjectSearch.Services.Tests
         [Test()]
         public void SaveReportFromZip_ValidationFail_ThrowsCustomException()
         {
-            // Arrange
-
-            // Load sample zip file
-            var file = new Mock<IFormFile>();
-            var fileStream = new MemoryStream();
-
             var extractedData = new ProjectReportData
             {
                 Id = Guid.NewGuid(),
@@ -134,13 +138,34 @@ namespace webapi.ProjectSearch.Services.Tests
                 }
             };
 
-            // Mock behaviour
-            file.Setup(f => f.OpenReadStream()).Returns(fileStream);
-            mockParser.Setup(parser => parser.Extract(fileStream)).Returns(extractedData);
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            // Mock
+            mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(extractedData);
             mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(false);
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file.Object));
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file));
         }
 
         [Test()]
@@ -148,10 +173,6 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             // Arrange
 
-            // Load sample zip file
-            var file = new Mock<IFormFile>();
-            var fileStream = new MemoryStream();
-
             var extractedData = new ProjectReportData
             {
                 Id = Guid.NewGuid(),
@@ -161,14 +182,38 @@ namespace webapi.ProjectSearch.Services.Tests
                 }
             };
 
-            // Mock behaviour
-            file.Setup(f => f.OpenReadStream()).Returns(fileStream);
-            mockParser.Setup(parser => parser.Extract(fileStream)).Returns(extractedData);
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            // Mock sevices
+            mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(extractedData);
             mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(true);
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database."));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file.Object));
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file));
+
+            // Cleanup
+            File.Delete(fileName);
         }
     }
 }
