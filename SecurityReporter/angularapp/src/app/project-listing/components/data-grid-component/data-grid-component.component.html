@@ -103,7 +103,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"
           [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
-          (click)="selection.toggle(row)">
+          (click)="handleRowClick(row)">
       </tr>
 
 

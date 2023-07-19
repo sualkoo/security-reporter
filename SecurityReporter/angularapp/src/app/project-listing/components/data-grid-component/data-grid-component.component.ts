@@ -80,6 +80,11 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.getSelectedItems();
   }
 
+  handleRowClick(row: ProjectInterface) {
+    this.selection.toggle(row)
+    this.handleSelectedList(row);
+  }
+
   checkboxLabel(row?: ProjectInterface): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -88,9 +93,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.projects.indexOf(row) + 2}`;
   }
 
-  handleCheckboxChange(row: ProjectInterface): void {
-    this.selection.toggle(row);
-
+  handleSelectedList(row: ProjectInterface) {
     if (this.selection.isSelected(row)) {
       this.selectedItems.push(row);
     } else {
@@ -99,6 +102,11 @@ export class DataGridComponentComponent implements AfterViewInit {
         this.selectedItems.splice(index, 1);
       }
     }
+  }
+
+  handleCheckboxChange(row: ProjectInterface): void {
+    this.selection.toggle(row);
+    this.handleSelectedList(row);
 }
 
   getStatusString(status: number): string {
