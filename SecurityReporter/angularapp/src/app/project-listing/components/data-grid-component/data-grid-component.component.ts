@@ -192,10 +192,10 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  getStatusColor(projectStatus: number): string {
-    switch (projectStatus) {
+  getStatusColor(element: any): string {
+    switch (element.projectStatus) {
       case 0:
-        return 'white';
+        return this.selection.isSelected(element) ? '#F2F2F2' : 'white';
       case 1:
         return '#E9D1D4';
       case 2:
