@@ -52,14 +52,22 @@ namespace webapi.ProjectSearch.Services
         {
             Logger.LogInformation($"Saving new project report");
             ProjectReportData newReportData;
-            try
+
+            if (Path.GetExtension(file.FileName)?.ToLower() != ".zip")
             {
-                newReportData = Parser.Extract(file.OpenReadStream());
+                throw new CustomException(StatusCodes.Status406NotAcceptable, "Invalid file type. Only .zip files are allowed.");
             }
-            catch (Exception)
+            else
             {
-                throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files / missing information in the template.");
-            };
+                try
+                {
+                    newReportData = Parser.Extract(file.OpenReadStream());
+                }
+                catch (Exception)
+                {
+                    throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files/missing information in the template.");
+                }
+            }
 
             bool isValid = Validator.Validate(newReportData);
 
