@@ -24,7 +24,7 @@ class CosmosTools
     public async Task Run()
     {
         
-        ItemsGenerator Generator = new ItemsGenerator(PrimaryKeyCheck());
+        ItemsGenerator Generator = new ItemsGenerator();
 
         while (command != "quit")
         {

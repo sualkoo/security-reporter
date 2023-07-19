@@ -1,10 +1,8 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.ComponentModel;
-using System.Reflection.Metadata.Ecma335;
 using System.Net;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -23,6 +21,15 @@ namespace webapi.Service
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
 
         }
+
+        public CosmosService(string primaryKey, string databaseId, string containerId, string cosmosEndpoint)
+        {
+            this.PrimaryKey = primaryKey;
+            this.DatabaseName = databaseId;
+            this.ContainerName = containerId;
+            this.EndpointUri = cosmosEndpoint;
+        }
+
 
         public async Task<bool> AddProject(ProjectData data)
         {

@@ -11,12 +11,15 @@ namespace cosmosTools
         private string CosmosKey { get; set; }
         private string DatabaseId { get; set; }
         private string ContainerId { get; set; }
+        private CosmosService CosmosService { get; }
         public ItemsGenerator(string primaryKey)
         {
             this.CosmosKey = primaryKey;
             this.DatabaseId = "ProjectDatabase";
             this.ContainerId = "ProjectContainer";
             this.CosmosEndpoint = "https://localhost:8081";
+            CosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
+            
         }
 
         public void Help()
@@ -33,15 +36,7 @@ namespace cosmosTools
 
         public async Task AddItemsToDatabaseAsync(int amount)
         {
-            
-            using (CosmosClient cosmosClient = new CosmosClient(CosmosEndpoint, CosmosKey))
-            {
-                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
-                Container container = await database.CreateContainerIfNotExistsAsync(ContainerId, "/id");
-                
-                
 
-            }
 
 
             Console.ForegroundColor = ConsoleColor.Cyan;
