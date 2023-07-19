@@ -1,10 +1,15 @@
 <h5>Pentest duration:</h5>
-<mat-radio-group aria-label="Select an option" class="alignment">
+<mat-radio-group
+  aria-label="Select an option"
+  class="alignment"
+  [(ngModel)]="radioValue"
+  (change)="onRadioChange()"
+>
   <mat-radio-button value="1">Two weeks</mat-radio-button>
   <mat-radio-button value="2">Four weeks</mat-radio-button>
   <div class="radio-input">
     <mat-radio-button value="3"></mat-radio-button>
-    <input type="number" placeholder="1" />
+    <input type="number" min="0" [(ngModel)]="inputValue" />
     <p>weeks</p>
   </div>
 </mat-radio-group>

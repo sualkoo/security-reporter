@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NotificationService } from '../../providers/notification.service';
 import { ProjectDataService } from '../../providers/project-data-service';
 
 @Component({
@@ -7,7 +8,10 @@ import { ProjectDataService } from '../../providers/project-data-service';
   styleUrls: ['./add-project-report.component.css'],
 })
 export class AddProjectReportComponent {
-  constructor(private projectDataService: ProjectDataService) {}
+  constructor(
+    private projectDataService: ProjectDataService,
+    private notificationService: NotificationService
+  ) {}
 
   uploadedFile?: Blob;
 
@@ -18,30 +22,40 @@ export class AddProjectReportComponent {
   }
 
   uploadFile() {
-    if (this.uploadedFile != undefined) {
-      const formData = new FormData();
-
-      formData.append('file', this.uploadedFile!);
-
-      this.projectDataService
-        .validateZipFile(new File([this.uploadedFile], this.uploadFile.name))
-        .then((val) => {
-          if (val === true) {
-            // Correct zip file
-            this.projectDataService.postZipFile(formData).subscribe(
-              (response) => {
-                console.log(response);
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
-          } else {
-            // Incorrect zip file
-            // Display eror message that says the zip is invalid
-            console.error('Zip file does not meet required format');
-          }
-        });
+    if (!this.uploadedFile) {
+      this.notificationService.displayMessage("Please select a file", "info");
+      throw new Error("File not selected.");
     }
+
+    const formData = new FormData();
+    formData.append('file', this.uploadedFile!);
+
+    this.projectDataService
+      .validateZipFile(new File([this.uploadedFile], this.uploadFile.name))
+      .then((isValid) => {
+        if (isValid) {
+          // Correct zip file
+          this.projectDataService.postZipFile(formData).subscribe(
+            (response) => {
+              console.log(response);
+              this.notificationService.displayMessage("Report successfully saved to DB.", "success");
+            },
+            (error) => {
+              console.log(error);
+              this.notificationService.displayMessage(
+                'Something went wrong on server side', 'error'
+              );
+            }
+          );
+        } else {
+          // Incorrect zip file
+          // Display eror message that says the zip is invalid
+          this.notificationService.displayMessage('Zip file is incorrect', 'warning');
+        }
+      })
+      .catch((err) => {
+        console.error(err.message);
+        this.notificationService.displayMessage('Zip file is incorrect', 'warning');
+      });
   }
 }

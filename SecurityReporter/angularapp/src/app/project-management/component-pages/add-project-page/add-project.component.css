@@ -26,7 +26,6 @@ min-width: 500px;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 1000px;
 }
 
 .page {
@@ -83,3 +82,7 @@ min-width: 500px;
 }
 
 
+.mat-form-field-invalid .mat-input-element {
+  border-color: red;
+  box-shadow: 0 0 5px red;
+}
