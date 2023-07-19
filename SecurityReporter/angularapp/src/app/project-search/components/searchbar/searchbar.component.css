@@ -60,6 +60,14 @@ button {
     padding-left: 5%;
 }
 
-button:hover {
-  background-color: #b94300;
+
+.filters-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 stĺpce s rovnakým podielom šírky */
+  grid-gap: 10px; /* Vzdialenosť medzi jednotlivými položkami */
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
 }
