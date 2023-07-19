@@ -9,16 +9,16 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectReportService : IProjectReportService
     {
-        public ProjectDataValidator Validator { get; set; }
-        public ProjectDataParser Parser { get; set; }
-        public CosmosService CosmosService { get; set; }
+        public IProjectDataValidator Validator { get; set; }
+        public IProjectDataParser Parser { get; set; }
+        public ICosmosService CosmosService { get; set; }
         private readonly ILogger Logger;
 
         public ProjectReportService(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
-            Validator = (ProjectDataValidator)validator;
-            Parser = (ProjectDataParser)parser;
-            CosmosService = (CosmosService)cosmosService;
+            Validator = validator;
+            Parser = parser;
+            CosmosService = cosmosService;
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
