@@ -45,3 +45,7 @@
   background-color: #F2F2F2; /* Replace with your desired color */
 }
 
+.checked-row:hover {
+    background-color: #F2F2F2; /* Replace with the same color as above */
+}
+

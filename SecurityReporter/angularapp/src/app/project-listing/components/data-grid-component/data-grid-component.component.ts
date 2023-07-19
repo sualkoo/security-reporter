@@ -166,4 +166,5 @@ export class DataGridComponentComponent implements AfterViewInit {
   isChecked(row: any): boolean {
     return this.selection.isSelected(row);
   }
+
 }
