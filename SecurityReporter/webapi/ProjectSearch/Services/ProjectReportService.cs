@@ -71,11 +71,6 @@ namespace webapi.ProjectSearch.Services
 
             bool isValid = Validator.Validate(newReportData);
 
-            if (isValid == false)
-            {
-                throw new CustomException(StatusCodes.Status400BadRequest, "ProjectReport has missing information.");
-            }
-
             bool result = await CosmosService.AddProjectReport(newReportData);
 
             if (!result)

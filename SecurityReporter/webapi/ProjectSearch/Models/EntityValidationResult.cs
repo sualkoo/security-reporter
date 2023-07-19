@@ -27,6 +27,10 @@ namespace webapi.ProjectSearch.Models
         {
             return new EntityValidator<T>().ValidateList(entities);
         }
+        public static EntityValidationResult ValidateTimeFrames<T>(T entity) where T : IEntity
+        {
+            return new EntityValidator<T>().ValidateTimeFrames(entity);
+        }
     }
     public class EntityValidator<T> where T : IEntity
     {
@@ -50,7 +54,31 @@ namespace webapi.ProjectSearch.Models
 
             return new EntityValidationResult(validationResults);
         }
+        public EntityValidationResult ValidateTimeFrames(T entity)
+        {
+            var validationResults = new List<ValidationResult>();
+            var vc = new ValidationContext(entity, null, null);
+
+            var timeFrameStartProperty = typeof(T).GetProperty("TimeFrameStart");
+            var timeFrameEndProperty = typeof(T).GetProperty("TimeFrameEnd");
+            var timeFrameReportDueProperty = typeof(T).GetProperty("TimeFrameReportDue");
+
+            if (timeFrameStartProperty == null || timeFrameEndProperty == null || timeFrameReportDueProperty == null)
+            {
+                throw new ArgumentException("The entity does not have the required properties for time frames validation.");
+            }
+
+            var timeFrameStartValue = (DateTime)timeFrameStartProperty.GetValue(entity);
+            var timeFrameEndValue = (DateTime)timeFrameEndProperty.GetValue(entity);
+            var timeFrameReportDueValue = (DateTime)timeFrameReportDueProperty.GetValue(entity);
+
+            if (timeFrameStartValue > timeFrameEndValue || timeFrameStartValue > timeFrameReportDueValue)
+            {
+                validationResults.Add(new ValidationResult("Invalid time frames."));
+            }
+
+            return new EntityValidationResult(validationResults);
+        }
+
     }
-
-
 }
