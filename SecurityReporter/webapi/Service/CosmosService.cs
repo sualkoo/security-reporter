@@ -124,7 +124,7 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
         {
-            int limit = 1; 
+            int limit = 5; 
             int offset = limit * (page - 1);
             int totalResults;
             List<ProjectReportData> data = new List<ProjectReportData>();
