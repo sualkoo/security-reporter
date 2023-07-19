@@ -23,7 +23,8 @@ class CosmosTools
 
     public async Task Run()
     {
-        ItemsGenerator Generator = new ItemsGenerator();
+        
+        ItemsGenerator Generator = new ItemsGenerator(PrimaryKeyCheck());
 
         while (command != "quit")
         {
@@ -88,5 +89,40 @@ class CosmosTools
         }
 
         return secondArgument;
+    }
+
+    private string PrimaryKeyCheck() 
+    {
+        this.ConsoleMessage("Do you want to use your own Primary Key [y/n] ? ");        
+
+        while (consoleInput != "y" || consoleInput != "n" || consoleInput != "Y" || consoleInput != "N")
+        {
+            string? consoleInput = Console.ReadLine();
+            string? key;
+
+            if (consoleInput == "y" || consoleInput == "Y")
+            {
+                this.ConsoleMessage("Your primary key: ");
+                key = Console.ReadLine();
+                this.ConsoleMessage("Primary Key set to: " + key);
+                
+                return key;
+            }
+            else if (consoleInput == "n" || consoleInput == "N")
+            {
+                this.ConsoleMessage("Used default Primary Key."); 
+                break;
+            }            
+        }
+        return "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
+    }
+
+    private void ConsoleMessage(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine();
+        Console.WriteLine(message);
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.White;
     }
 }

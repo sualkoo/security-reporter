@@ -15,9 +15,4 @@
     <ProjectReference Include="..\webapi\webapi.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <ProjectReference Include="..\webapi\webapi.csproj" />
-  </ItemGroup>
-
 </Project>

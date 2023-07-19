@@ -1,13 +1,22 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using System.Configuration;
+using webapi.Service;
 
 namespace cosmosTools
 {
     internal class ItemsGenerator
     {
-        public ItemsGenerator()
+        private string CosmosEndpoint { get; set; }
+        private string CosmosKey { get; set; }
+        private string DatabaseId { get; set; }
+        private string ContainerId { get; set; }
+        public ItemsGenerator(string primaryKey)
         {
-
+            this.CosmosKey = primaryKey;
+            this.DatabaseId = "ProjectDatabase";
+            this.ContainerId = "ProjectContainer";
+            this.CosmosEndpoint = "https://localhost:8081";
         }
 
         public void Help()
@@ -24,6 +33,17 @@ namespace cosmosTools
 
         public async Task AddItemsToDatabaseAsync(int amount)
         {
+            
+            using (CosmosClient cosmosClient = new CosmosClient(CosmosEndpoint, CosmosKey))
+            {
+                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
+                Container container = await database.CreateContainerIfNotExistsAsync(ContainerId, "/id");
+                
+                
+
+            }
+
+
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine();
             Console.WriteLine("Added " + amount + " items into database.");
@@ -33,14 +53,11 @@ namespace cosmosTools
 
         public async Task ClearDatabaseAsync()
         {
-            string cosmosEndpoint = "https://localhost:8081";
-            string cosmosKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-            string databaseId = "ProjectDatabase";
-            string containerId = "ProjectContainer";
-            using (CosmosClient cosmosClient = new CosmosClient(cosmosEndpoint, cosmosKey))
+            
+            using (CosmosClient cosmosClient = new CosmosClient(CosmosEndpoint, CosmosKey))
             {
-                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
-                Container container = await database.CreateContainerIfNotExistsAsync(containerId, "/id");
+                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
+                Container container = await database.CreateContainerIfNotExistsAsync(ContainerId, "/id");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine();
                 Console.WriteLine("Deleting all data from database.");
