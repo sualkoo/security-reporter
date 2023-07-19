@@ -129,23 +129,22 @@ namespace webapi.Service
             int totalResults;
             List<ProjectReportData> data = new List<ProjectReportData>();
 
-            string queryCount = "SELECT VALUE COUNT(1) FROM c";
-            QueryDefinition queryDefinitioCount = new QueryDefinition(queryCount);
-
-            FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitioCount);
-            FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
-            totalResults = response.FirstOrDefault();
+            
 
             string query = "SELECT * FROM c WHERE ";
+            string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
 
             if (!string.IsNullOrEmpty(subcategory))
             {
                 query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+                queryCount = $"{queryCount} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
             }
             else
             {
                 query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+                queryCount = $"{queryCount} LOWER(c[@keyword]) LIKE LOWER(@value)";
             }
+
             try
             {
                 Logger.LogInformation("Fetching reports from the database");
@@ -162,7 +161,14 @@ namespace webapi.Service
                 }
                 Logger.LogInformation("Returning found reports");
 
-                
+
+                QueryDefinition queryDefinitioCount = new QueryDefinition(queryCount).WithParameter("@subcategory", $"{subcategory}")
+                                                                                     .WithParameter("@value", $"%{value}%")
+                                                                                     .WithParameter("@keyword", $"{keyword}");
+
+                FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitioCount);
+                FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
+                totalResults = response.FirstOrDefault();
 
                 PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
                 results.TotalRecords = totalResults;
@@ -176,7 +182,7 @@ namespace webapi.Service
                     {
                         queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
                     }
-                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + queryPage + "&page=" + (page + 1);
+                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
 
                     uriBuilder.Query = queryPage.TrimStart('?');
                     results.NextPage = uriBuilder.Uri;
