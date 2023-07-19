@@ -1,33 +1,27 @@
 <body>
   <div class="page">
-
     <mat-sidenav-container>
-
       <mat-sidenav #sidenav mode="side" opened>
         <!-- Sidebar content goes here -->
-        <mat-icon class="icon" fontIcon=arrow_back (click)="toggleSidenav()"></mat-icon>
 
         <div class="container">
-          <h4>Search</h4>
-          <input type="text" [(ngModel)]="searchKeyword" placeholder="Search..." />
-          <div *ngFor="let filter of filters">
-            <input type="checkbox">
-            {{ filter }}
+          <div class="search-field">
+            <app-searchbar></app-searchbar>
           </div>
-          <button class="primary__button" (click)="search()">Search</button>
         </div>
         
         <div class="container">
-          <h4>Upload</h4>
-            <app-add-project-report></app-add-project-report>
+          <app-add-project-report></app-add-project-report>
         </div>
-
       </mat-sidenav>
 
       <mat-sidenav-content>
         <div class="content mat-elevation-z8">
           <cdk-virtual-scroll-viewport itemSize="50">
             <nav class="project-nav">
+              <a routerLink="/project-search">
+                <mat-icon class="icon" fontIcon=arrow_back (click)="toggleSidenav()"></mat-icon>
+              </a>
               <mat-icon class="icon" fontIcon=menu (click)="toggleSidenav()"></mat-icon>
             </nav>
             <div *cdkVirtualFor="let project of projects" class="item">
@@ -45,7 +39,6 @@
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
-
   </div>
 </body>
 
