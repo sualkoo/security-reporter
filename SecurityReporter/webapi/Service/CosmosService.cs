@@ -1,4 +1,5 @@
 ﻿
+using Azure;
 using Microsoft.Azure.Cosmos;
 using System.ComponentModel;
 using webapi.Models;
