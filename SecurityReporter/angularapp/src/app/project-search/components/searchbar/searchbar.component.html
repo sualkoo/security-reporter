@@ -1,0 +1,33 @@
+<div class="search-component">
+  <mat-form-field class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="Search..." [(ngModel)]="searchQuery">
+  </mat-form-field>
+
+
+  <h2 style="margin-left: 45%">Filters</h2>
+  <div class="filters-container">
+    <div class="filters-column">
+      <div *ngFor="let filter of filters.slice(0, 3)" class="custom-check">
+        <input type="checkbox" [(ngModel)]="selectedFilters[filter]">
+        {{ filter }}
+      </div>
+    </div>
+    <div class="filters-column">
+      <div *ngFor="let filter of filters.slice(3, 6)" class="custom-check">
+        <input type="checkbox" [(ngModel)]="selectedFilters[filter]">
+        {{ filter }}
+      </div>
+    </div>
+  </div>
+
+
+  <button (click)="search()" [disabled]="isLoading" class="search-button">
+    <div class="loading-container">
+      <span *ngIf="!isLoading">Submit</span>
+      <mat-spinner diameter="25" *ngIf="isLoading" class="mat-spinner-custom"></mat-spinner>
+      <span *ngIf="isLoading" class="loading" > Loading...</span>
+    </div>
+  </button>
+  <hr />
+</div>

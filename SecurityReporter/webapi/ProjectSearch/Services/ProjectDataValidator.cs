@@ -6,6 +6,14 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectDataValidator : IProjectDataValidator
     {
+        private readonly ILogger Logger;
+
+        public ProjectDataValidator()
+        {
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+        }
+
         public bool Validate(ProjectReportData projectReport)
         {
             bool result = true;
@@ -39,13 +47,13 @@ namespace webapi.ProjectSearch.Services
                     result = false;
                     foreach (var error in validationResult.ValidationErrors)
                     {
-                        Console.WriteLine(error.ErrorMessage);
+                        Logger.LogError(error.ErrorMessage);
                     }
                 }
             }
             if (result )
             {
-                Console.WriteLine("Validation of Project Report successed!");
+                Logger.LogInformation("Validation of Project Report successed!");
             }
             return result;
         }

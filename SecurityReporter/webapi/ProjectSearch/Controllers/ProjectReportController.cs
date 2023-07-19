@@ -36,6 +36,7 @@ namespace webapi.ProjectSearch.Controllers
         [HttpGet]
         public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value)
         {
+            
             Console.WriteLine($"Received GET request for fetching reports by keywords, params=(subcategory={subcategory},keyword={keyword}, value={value}))");
             List <ProjectReportData> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value);
             // Todo: This should return paginated result - For performance reasons
