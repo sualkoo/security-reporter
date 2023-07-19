@@ -9,6 +9,14 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectDataParser : IProjectDataParser
     {
+        private readonly ILogger Logger;
+
+        public ProjectDataParser()
+        {
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<ProjectDataParser>();
+        }
+
         public ProjectReportData Extract(Stream zipStream)
         {
             ProjectReportData newProjectReportData  = new ProjectReportData();
@@ -23,7 +31,7 @@ namespace webapi.ProjectSearch.Services
                     throw new ArgumentNullException(nameof(zipStream));
                 }
             }
-            Console.WriteLine("Successfully extracted data from zip file");
+            Logger.LogInformation("Successfully extracted data from zip file");
             return newProjectReportData;
         }
 

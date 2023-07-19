@@ -25,6 +25,8 @@ import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
+import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -34,6 +36,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     ProjectSearchResultsPageComponent,
+    SearchbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RadioButtonComponentComponent,
     AppRoutingModule,
     MatSnackBarModule,
+    MatIconModule,
     FormsModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
     MatSnackBarModule,
