@@ -37,10 +37,12 @@ namespace webapi.ProjectSearch.Services
                     currentEntry = archive.GetEntry("Config/Project_Information.tex");
                     ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry, pentestTeamDict);
                     newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+                    currentEntry = archive.GetEntry("Config/Scope_and_Procedures.tex");
+                    ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(currentEntry);
+                    newProjectReportData.ScopeAndProcedures = sape.ExtractScopeAndProcedures();
                     currentEntry = archive.GetEntry("Config/Testing_Methodology.tex");
                     TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);
                     newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
-                    //currentEntry = archive.GetEntry("Config/Findings_Database/");
                     newProjectReportData.Findings = extractFindings(archive);
 
                 }

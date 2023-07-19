@@ -17,7 +17,7 @@ namespace webapi.ProjectSearch.Models
         [MinLength(1, ErrorMessage = "Findings must have at least one item.")]
         public List<Finding>? Findings { get; set; }
         //[Required(ErrorMessage = "ScopeAndProcedures is required!")]
-        //public ScopeAndProcedures? ScopeAndProcedures { get; set; }
+        public ScopeAndProcedures? ScopeAndProcedures { get; set; }
         [Required(ErrorMessage = "TestingMethodology is required!")]
         public TestingMethodology? TestingMethodology { get; set; }
     }

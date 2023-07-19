@@ -53,8 +53,6 @@ namespace webapi.ProjectSearch.Services
                                 }
                             }
                         }
-
-                        //Console.WriteLine();
                     }
                 }
                 return newDocumentInfo;
