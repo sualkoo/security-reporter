@@ -258,16 +258,19 @@ namespace webapi.ProjectSearch.Services
 
                 case "\\TimeframeStart":
                     newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameStart = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameStart = newReportDate;
+                    //newProjectInfo.TimeFrameStart = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
                     break;
 
                 case "\\TimeframeEnd":
                     newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameEnd = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameEnd = newReportDate;
+                    //newProjectInfo.TimeFrameEnd = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
                     break;
                 case "\\TimeframeReportDue":
                     newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameReportDue = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameReportDue = newReportDate;
+                    //newProjectInfo.TimeFrameReportDue = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
                     break;
                 case "\\TimeframeComment":
                     newProjectInfo.TimeFrameComment = data;

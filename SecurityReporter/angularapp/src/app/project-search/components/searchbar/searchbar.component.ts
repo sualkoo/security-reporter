@@ -6,7 +6,7 @@ import {NotificationService} from "../../providers/notification.service";
 @Component({
   selector: 'app-searchbar',
   templateUrl: './searchbar.component.html',
-  styleUrls: ['./searchbar.component.css']
+  styleUrls: ['./searchbar.component.css', '../../project-search.css']
 })
 export class SearchbarComponent {
   constructor(private projectDataService: ProjectDataService, private notificationService: NotificationService) {
