@@ -183,4 +183,12 @@ export class DataGridComponentComponent implements AfterViewInit {
         return '';
     }
   }
+
+  truncateComment(comment: string, maxLength: number): string {
+    if (comment.length <= maxLength) {
+      return comment;
+    } else {
+      return comment.substr(0, maxLength) + '...';
+    }
+  }
 }
