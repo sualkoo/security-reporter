@@ -72,10 +72,7 @@ export class SearchbarComponent {
    this.page =1;
    this.projectDataReports = [];
     this.isLoading = true;
-    setTimeout(() => {
-      // After the operation completes, reset isLoading to false
-      this.isLoading = false;
-    }, 2000);
+
     console.log('Performing search for:', this.value);
     this.sendSearchRequest();
     this.notificationService.displayMessage("Search completed", "success");
@@ -91,7 +88,7 @@ export class SearchbarComponent {
         };
 
         this.totalPages = responseData.totalPages;
-
+        this.isLoading = false;
 
         this.projectDataReports = this.projectDataReports.concat(responseData.data);
 
