@@ -97,26 +97,43 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-          (click)="selection.toggle(row)">
-      </tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
 
       <!-- Placeholder row when dataSource is empty -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-          No data available
+          <div class="loading-spinner" *ngIf="isLoading">
+            <mat-progress-spinner color="primary" mode="indeterminate" diameter="44"></mat-progress-spinner>
+          </div>
+          <div class="no-data" *ngIf="!isLoading && dataSource.data.length === 0 && !databaseError">
+            No data available
+          </div>
+          <div class="database-error" *ngIf="databaseError">
+            No data available
+          </div>
         </td>
       </tr>
     </table>
   </div>
 
   <div class="paginator-container mat-elevation-z8">
-    <mat-paginator [length]="length"
-                   [pageSize]="15"
-                   [pageSizeOptions]="[15, 25, 50]"
-                   (page)="handlePageChange()"
-                   (pageSize)="handlePageChange()"
+    <mat-paginator [length]="length" [pageSize]="15" [pageSizeOptions]="[15, 25, 50]"
+                   (page)="handlePageChange()" (pageSize)="handlePageChange()"
                    aria-label="Select page">
     </mat-paginator>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

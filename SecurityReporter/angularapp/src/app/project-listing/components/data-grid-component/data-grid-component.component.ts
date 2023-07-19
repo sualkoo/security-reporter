@@ -6,16 +6,23 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GetProjectsCountService } from '../../services/get-projects-count.service';
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
+  isLoading = false;
+  databaseError = false;
+
 
   displayedColumns: string[] = [
     'select',
@@ -55,7 +62,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -63,7 +69,6 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -73,7 +78,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.selection.select(...this.dataSource.data);
   }
 
-  /** The label for the checkbox on the passed row */
   checkboxLabel(row?: ProjectInterface): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -132,13 +136,31 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getInitItems() {
-    this.projects = await this.getProjectsService.getProjects(15, 1);
-    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    this.isLoading = true;
+    this.databaseError = false;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.databaseError = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   async handlePageChange() {
-    this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
-    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    this.isLoading = true;
+    this.databaseError = false;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.databaseError = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   getStatusColor(projectStatus: number): string {

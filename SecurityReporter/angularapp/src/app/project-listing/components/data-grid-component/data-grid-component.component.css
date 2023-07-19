@@ -41,3 +41,10 @@
   }
 }
 
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Adjust the height to match your desired container size */
+}
+
