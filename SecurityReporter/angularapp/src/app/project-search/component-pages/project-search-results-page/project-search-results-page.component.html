@@ -1,65 +1,50 @@
-
-
-<header>
-  <!-- Navbar content goes here -->
-
-  <div class="navbar">
-
-    <a href="/dashboard" class="navigation-item w-nav-link">DASHBOARD</a>
-    <a href="/projects" class="navigation-item w-nav-link">
-      <strong>PROJECT SEARCH</strong>
-    </a>
-    <a href="/view" class="navigation-item w-nav-link">MANAGE VIEW</a>
-    <a href="/template" class="navigation-item w-nav-link">TEMPLATE</a>
-    <a href="/management" class="navigation-item w-nav-link">PROJECT MANAGEMENT</a>
-    <br />
-    <button mat-button (click)="toggleSidenav()">Toggle Sidenav</button>
-
-  </div>
-</header>
-
 <body>
   <div class="page">
 
     <mat-sidenav-container>
+
       <mat-sidenav #sidenav mode="side" opened>
         <!-- Sidebar content goes here -->
-        <input type="text" [(ngModel)]="searchKeyword" placeholder="Search" />
+        <mat-icon class="icon" fontIcon=arrow_back (click)="toggleSidenav()"></mat-icon>
 
-        <div *ngFor="let filter of filters">
-          <input type="checkbox">
-          {{ filter }}
+        <div class="container">
+          <h4>Search</h4>
+          <input type="text" [(ngModel)]="searchKeyword" placeholder="Search..." />
+          <div *ngFor="let filter of filters">
+            <input type="checkbox">
+            {{ filter }}
+          </div>
+          <button class="primary__button" (click)="search()">Search</button>
         </div>
-        <button (click)="search()">Search</button>
+        
+        <div class="container">
+          <h4>Upload</h4>
+            <app-add-project-report></app-add-project-report>
+        </div>
+
       </mat-sidenav>
 
       <mat-sidenav-content>
-
         <div class="content mat-elevation-z8">
-
-
           <cdk-virtual-scroll-viewport itemSize="50">
-
+            <nav class="project-nav">
+              <mat-icon class="icon" fontIcon=menu (click)="toggleSidenav()"></mat-icon>
+            </nav>
             <div *cdkVirtualFor="let project of projects" class="item">
               <!-- Main content goes here -->
               <p>
                 Project Name:
                 <b>{{project[0]}}</b>
-
               </p>
               <p>
                 {{project[1]}}
               </p>
-              <button class="source-button">Get Source</button>
+              <button class="standard__button source-button" (click)="getSource()">Get Source</button>
             </div>
-
           </cdk-virtual-scroll-viewport>
         </div>
-
-
       </mat-sidenav-content>
     </mat-sidenav-container>
-
 
   </div>
 </body>

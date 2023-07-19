@@ -17,11 +17,22 @@ export class ProjectSearchResultsPageComponent {
   @ViewChild('sidenav')
   sidenav!: MatSidenav;
 
-  toggleSidenav(): void {
+  public toggleSidenav(): void {
     this.sidenav.toggle();
   }
 
   search(): void {
+    // TODO search functionality
+  
+  }
+
+  getSource(): void {
+    // TODO getSource functionality
+
+  }
+
+  addProject(): void {
+    // TODO addProject functionality
 
   }
 
