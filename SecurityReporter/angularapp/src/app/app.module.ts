@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   imports: [
     BrowserModule,
+    NgbModule,
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,

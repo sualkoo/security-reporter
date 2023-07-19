@@ -5,7 +5,7 @@ import { ProjectDataService } from '../../providers/project-data-service';
 @Component({
   selector: 'app-add-project-report',
   templateUrl: './add-project-report.component.html',
-  styleUrls: ['./add-project-report.component.css'],
+  styleUrls: ['./add-project-report.component.css', '../../project-search.css'],
 })
 export class AddProjectReportComponent {
   constructor(

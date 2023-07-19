@@ -4,7 +4,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-project-search-results-page',
   templateUrl: './project-search-results-page.component.html',
-  styleUrls: ['./project-search-results-page.component.css']
+  styleUrls: ['./project-search-results-page.component.css', '../../project-search.css']
 })
 export class ProjectSearchResultsPageComponent {
   searchKeyword: string | undefined;
