@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
+  checkedRows: Set<any> = new Set<any>();
   isLoading = false;
   databaseError = false;
 
@@ -182,6 +183,10 @@ export class DataGridComponentComponent implements AfterViewInit {
       default:
         return '';
     }
+  }
+
+  isChecked(row: any): boolean {
+    return this.selection.isSelected(row);
   }
 
   truncateComment(comment: string, maxLength: number): string {

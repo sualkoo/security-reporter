@@ -1,104 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Azure.Cosmos;
 
 namespace cosmosTools
 {
     internal class ItemsGenerator
-    {
-        private string[]? consoleInput;
-        private string? command;
-        private int amount;
-        
-        public ItemsGenerator(string[] args)
+    {       
+        public ItemsGenerator()
         {
-            Console.WriteLine("-------------------");
-            Console.WriteLine("DB Generator");
-            Console.WriteLine("-------------------");
+            
+        }           
 
-            this.consoleInput = args;
-
-            if (this.consoleInput != null)
-            {
-                command = CommandFromInput(this.consoleInput);
-
-                if (command == "add")
-                {
-                    amount = SecondArgumentAsInteger(this.consoleInput);
-                    AddItemsToDatabase(amount);
-                }
-                if (command == "clear")
-                {
-                    ClearDatabase();
-                }
-                if (command == "help")
-                {
-                    Help();
-                }
-            }
-            else 
-            {
-                Console.WriteLine("Ivalid input");
-            }
-        }
-
-        private string CommandFromInput(string[] input) 
-        {
-            string inputString = string.Join(" ", input);
-
-            int firstWhitespaceIndex = inputString.IndexOfAny(new[] { ' ', '\t' });
-
-            if (firstWhitespaceIndex == -1)
-            {
-                return inputString;
-            }
-
-            string firstWord = inputString.Substring(0, firstWhitespaceIndex);
-
-            return firstWord;
-        }
-
-        private int SecondArgumentAsInteger(string[] input)
-        {
-            string inputString = string.Join(" ", input);
-
-            int firstWhitespaceIndex = inputString.IndexOfAny(new[] { ' ', '\t' });
-
-            if (firstWhitespaceIndex == -1)
-            {
-                throw new ArgumentException("Input must contain at least two elements separated by whitespace.");
-            }
-
-            string secondArgumentString = inputString.Substring(firstWhitespaceIndex + 1);
-
-            if (!int.TryParse(secondArgumentString, out int secondArgument))
-            {
-                throw new ArgumentException("Second argument is not a valid number.");
-            }
-
-            return secondArgument;
-        }
-
-        private void Help() 
+        public void Help()
         {
             Console.WriteLine("Available commands:");
             Console.WriteLine("add [number] --> add [number] of random items to database");
             Console.WriteLine("clear --> deletes all items from database");
             Console.WriteLine();
-        }
+        }        
 
-        private void ClearDatabase() 
+        public async Task AddItemsToDatabaseAsync(int amount)
         {
-            Console.WriteLine("Database has been cleared.");
-            Console.WriteLine();
-        }
-
-        private void AddItemsToDatabase(int amount)
-        { 
             Console.WriteLine("Added " + amount + " items.");
             Console.WriteLine();
         }
-    }    
+
+        public async Task ClearDatabaseAsync()
+        {
+            string cosmosEndpoint = "https://localhost:8081";
+            string cosmosKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
+            string databaseId = "ProjectDatabase";
+            string containerId = "ProjectContainer";
+            using (CosmosClient cosmosClient = new CosmosClient(cosmosEndpoint, cosmosKey))
+            {
+                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
+                Container container = await database.CreateContainerIfNotExistsAsync(containerId, "/id");
+
+                Console.WriteLine("Deleting all data from database.");
+                var query = new QueryDefinition("SELECT * FROM c");
+
+                // Iterate over the query results and delete each item
+                using (FeedIterator<dynamic> resultSetIterator = container.GetItemQueryIterator<dynamic>(query))
+                {
+                    while (resultSetIterator.HasMoreResults)
+                    {
+                        FeedResponse<dynamic> response = await resultSetIterator.ReadNextAsync();
+                        foreach (dynamic item in response)
+                        {
+                            string itemId = item.id;
+                            // Delete the item from the container
+                            ItemResponse<dynamic> deleteResponse = await container.DeleteItemAsync<dynamic>(itemId, new PartitionKey(itemId));
+                            Console.WriteLine($"{itemId},Deleted from DB successfully.");
+                        }
+                    }
+                }
+                Console.WriteLine("All items in the container have been deleted.");
+            }
+        }
+    }
 }

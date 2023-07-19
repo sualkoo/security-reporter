@@ -41,11 +41,15 @@
   }
 }
 
+.checked-row {
+  background-color: #F2F2F2; 
+}
+
 .loading-spinner {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px; /* Adjust the height to match your desired container size */
+  height: 200px; 
 }
 
 .mat-cell {

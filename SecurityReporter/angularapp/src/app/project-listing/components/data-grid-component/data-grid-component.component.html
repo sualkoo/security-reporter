@@ -101,7 +101,11 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [class.checked-row]="isChecked(row)"
+          (click)="selection.toggle(row)">
+      </tr>
+
       <!-- Placeholder row when dataSource is empty -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
