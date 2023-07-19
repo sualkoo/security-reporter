@@ -1,0 +1,23 @@
+<body>
+    <button id="popupButton">Open Pop-up</button>
+    <div id="popupOverlay">
+      <div class="delete-popup">
+        <div class="confirmation-text">
+          <h2>Delete Confirmation</h2>
+          <p>Are you sure you want to delete the following items?</p>
+        </div>
+          
+        <div class="deleted-items">
+        </div>
+
+        <app-delete-data-grid-component>
+        </app-delete-data-grid-component>
+        <div class="popup-buttons">
+          <button mat-flat-button class="cancel-button" (click)="CloseDialogWindow()">Cancel</button>
+          <button mat-flat-button class="delete-button">Delete</button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+
