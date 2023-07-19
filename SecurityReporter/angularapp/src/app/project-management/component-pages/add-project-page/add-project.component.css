@@ -73,14 +73,12 @@ min-width: 500px;
     --mdc-filled-button-label-text-color: #fff;
 }
 
-
 .comment-input {
   background-color: #f2f2f2;
   height: 131px;
   width: 100%;
   border: none;
 }
-
 
 .mat-form-field-invalid .mat-input-element {
   border-color: red;
