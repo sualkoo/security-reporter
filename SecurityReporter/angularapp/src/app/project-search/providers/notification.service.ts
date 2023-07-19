@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackbarComponent } from '../components/custom-snackbar/custom-snackbar.component';
+import { messageTypes } from 'jest-editor-support';
 
 @Injectable({
   providedIn: 'root',
@@ -8,13 +9,14 @@ import { CustomSnackbarComponent } from '../components/custom-snackbar/custom-sn
 export class NotificationService {
   constructor(private snackBar: MatSnackBar) {}
 
-  displayMessage(message: string): void {
+  displayMessage(message: string, messageType: "info"|"success"|"warning"|"error"): void {
     this.snackBar.openFromComponent(
       CustomSnackbarComponent,
       {
         duration: 5000,
         data: {
           message: message,
+          messageType: messageType,
         },
         horizontalPosition: 'center',
         verticalPosition: 'bottom',

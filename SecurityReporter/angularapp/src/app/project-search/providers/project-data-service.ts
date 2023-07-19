@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
 import { Observable, tap } from 'rxjs';
+import { ProjectDataReport } from '../interfaces/project-data-report.models';
 
 @Injectable({
   providedIn: 'root',
@@ -10,21 +11,18 @@ import { Observable, tap } from 'rxjs';
 export class ProjectDataService {
   private apiUrl: string;
 
-  constructor(private http: HttpClient) {
-    this.apiUrl = 'https://localhost:7075/ProjectReports';
+  constructor(private http: HttpClient, private notificationService: NotificationService) {
+    this.apiUrl = 'https://localhost:7075/project-reports';
   }
 
   public postZipFile(file: any) {
-    return this.http.post(this.apiUrl, file).pipe((res) => {
-      // Todo: error handling
-      return res;
-    });
+    return this.http.post<ProjectDataReport>(this.apiUrl, file)
   }
 
   public getProjectReport(id: string) {
     console.log("Fetching project report, id=" + id);
     // Todo: Add type to get request
-    return this.http.get(this.apiUrl, { params: { id: id } });
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 
   public getProjectReports(projectReportName: string) {

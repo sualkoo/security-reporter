@@ -21,6 +21,10 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -30,6 +34,7 @@ import { ProjectSearchResultsPageComponent } from './project-search/component-pa
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     ProjectSearchResultsPageComponent,
+    SearchbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,8 +54,10 @@ import { ProjectSearchResultsPageComponent } from './project-search/component-pa
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    MatSnackBarModule
-    
+    MatSnackBarModule,
+    MatIconModule,
+    FormsModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent],

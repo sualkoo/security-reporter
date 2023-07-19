@@ -1,56 +1,60 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
-using webapi.Service;
 
 namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
-    [Route("ProjectReports")]
+    [Route("project-reports")]
     public class ProjectReportController : Controller
     {
-        private IProjectDataParser _ProjectDataParser { get; set; }
-        private ICosmosService _CosmosService { get; set; }
+        private ProjectReportService ProjectReportService { get; }
+        private readonly ILogger Logger;
 
-        public ProjectReportController(IProjectDataParser parser, ICosmosService cosmosService)
+        public ProjectReportController(IProjectReportService projectReportService)
         {
-            _ProjectDataParser = parser;
-            _CosmosService = cosmosService;
+            ProjectReportService = (ProjectReportService)projectReportService;
+            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
+            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
         [HttpPost]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
-            Console.WriteLine("Received POST request for adding new Project Report");
-            ProjectReportData newReportData = _ProjectDataParser.Extract(file.OpenReadStream());
-            bool result = await _CosmosService.AddProjectReport(newReportData);
-            if (!result)
+            Logger.LogInformation("Received POST request for adding new Project Report");
+            try
             {
-                return StatusCode(500, "An error occured while saving Project Report to database");
+                ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
+                return Ok(savedReport);
             }
-            return StatusCode(201, newReportData);
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
         }
 
         [HttpGet]
-        public IActionResult getProjectReports(string? id, string? projectReportName)
+        public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value)
         {
-            Console.WriteLine("Id: " + id);
-            Console.WriteLine($"Received GET request for fetching Project Reports, params=(id={id},projectReportname={projectReportName})");
-            if (!string.IsNullOrEmpty(id))
-            {
-                // Fetch project report by ID (should return only 1 item)
-                Console.WriteLine("Fetching by id");
-                return StatusCode(501, "We are currently working on this feature.");
-            }
+            Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(subcategory={subcategory},keyword={keyword}, value={value}))");
+            List<ProjectReportData> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value);
+            // Todo: This should return paginated result - For performance reasons
+            return Ok(fetchedReports);
+        }
 
-            if (!string.IsNullOrEmpty(projectReportName))
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getProjectReportById(Guid id)
+        {
+            Logger.LogInformation("Received GET request for fetching reports by ID=" + id);
+            try
             {
-                // Fetch project reports by 'projectReportName'
-                Console.WriteLine("Fetching by project report name");
-                return StatusCode(501, "We are currently working on this feature.");
+                ProjectReportData fetchedReport = await ProjectReportService.GetReportByIdAsync(id);
+                return Ok(fetchedReport);
             }
-
-            return StatusCode(501, "We are currently working on this feature.");
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
         }
     }
 }

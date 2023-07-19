@@ -1,6 +1,12 @@
+<div class="heading">
+  <mat-icon class="icon" aria-hidden="false" aria-label="Example home icon" fontIcon={{getIcon}}></mat-icon>
+  <button mat-icon-button (click)="snackBarRef.dismiss()">
+    <mat-icon class="cancel" aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
+  </button>
+  <div class="title">{{getTitle}}</div>
+</div>
 <div class="custom-snack-bar">
   <div class="alert-message">
     {{data.message}}
   </div>
-
 </div>
