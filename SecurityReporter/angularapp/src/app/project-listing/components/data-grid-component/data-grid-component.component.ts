@@ -16,6 +16,7 @@ import { ProjectInterface } from '../../../project-management/interfaces/project
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
+  checkedRows: Set<any> = new Set<any>();
 
   displayedColumns: string[] = [
     'select',
@@ -160,5 +161,9 @@ export class DataGridComponentComponent implements AfterViewInit {
       default:
         return '';
     }
+  }
+
+  isChecked(row: any): boolean {
+    return this.selection.isSelected(row);
   }
 }
