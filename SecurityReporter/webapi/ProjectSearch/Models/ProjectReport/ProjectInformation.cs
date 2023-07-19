@@ -54,11 +54,11 @@ namespace webapi.Models.ProjectReport
         [Range(0, 1000, ErrorMessage = "TimeFrameTotal must be a non-negative integer not exceeding 1000!")]
         public int TimeFrameTotal { get; set; }
         [DataType(DataType.Date)]
-        public DateTime TimeFrameStart { get; set; }
+        public DateOnly TimeFrameStart { get; set; }
 
         [DataType(DataType.Date)]
         [Compare(nameof(TimeFrameStart), ErrorMessage = "TimeFrameEnd must be a date that is later than or equal to TimeFrameStart!")]
-        public DateTime TimeFrameEnd { get; set; }
+        public DateOnly TimeFrameEnd { get; set; }
         [DataType(DataType.Date)]
         [Compare(nameof(TimeFrameStart), ErrorMessage = "TimeFrameReportDue must be a date that is later than or equal to TimeFrameStart!")]
         public DateOnly TimeFrameReportDue { get; set; }

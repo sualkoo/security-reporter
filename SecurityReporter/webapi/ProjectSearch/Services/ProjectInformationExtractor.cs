@@ -201,7 +201,7 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.TargetInfoVersion = data;
                     break;
                 case "\\TargetInfoEnvironment":
-                    newProjectInfo.TargetInfoEnviroment = data;
+                    newProjectInfo.TargetInfoEnvironment = data;
                     break;
                 case "\\TargetInfoInternetFacing":
                     if(data == "Yes")
@@ -215,11 +215,11 @@ namespace webapi.ProjectSearch.Services
                 case "\\TargetInfoSNXConnectivity":
                     if (data == "Yes")
                     {
-                        newProjectInfo.TargetInfoSNXConectivity = true;
+                        newProjectInfo.TargetInfoSNXConnectivity = true;
                     }
                     else if (data == "No")
                     {
-                        newProjectInfo.TargetInfoSNXConectivity = false;
+                        newProjectInfo.TargetInfoSNXConnectivity = false;
                     }
                     break;
                 case "\\TargetInfoHostingLocation":
@@ -276,19 +276,19 @@ namespace webapi.ProjectSearch.Services
                     newProjectInfo.FindingsCountCritical = int.Parse(data);
                     break;
                 case "\\FindingsCountHigh":
-                    newProjectInfo.FindingsCountCriticalHigh = int.Parse(data);
+                    newProjectInfo.FindingsCountHigh = int.Parse(data);
                     break;
                 case "\\FindingsCountMedium":
-                    newProjectInfo.FindingsCountCriticalMedium = int.Parse(data);
+                    newProjectInfo.FindingsCountMedium = int.Parse(data);
                     break;
                 case "\\FindingsCountLow":
-                    newProjectInfo.FindingsCountCriticalLow = int.Parse(data);
+                    newProjectInfo.FindingsCountLow = int.Parse(data);
                     break;
                 case "\\FindingsCountInfo":
-                    newProjectInfo.FindingsCountCriticalInfo = int.Parse(data);
+                    newProjectInfo.FindingsCountInfo = int.Parse(data);
                     break;
                 case "\\FindingsCountTotal":
-                    newProjectInfo.FindingsCountCriticalTotal = int.Parse(data);
+                    newProjectInfo.FindingsCountTotal = int.Parse(data);
                     break;
                 case "\\FindingsCountTBD":
                     newProjectInfo.FindingsCountCriticalTBD = int.Parse(data);
