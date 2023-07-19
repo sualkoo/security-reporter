@@ -48,7 +48,7 @@ namespace webapi.ProjectSearch.Services
                                 }
                                 else if (splitLine[1] == "\\Environment")
                                 {
-
+                                    extractEnvironment(reader, newScopeAndProcedures);
                                 }
                             }
                         }
@@ -106,20 +106,51 @@ namespace webapi.ProjectSearch.Services
                 }
             }
         }
-
-        private List<string> extractWorstCase()
-        {
-            return null;
-        }
-
         private void extractWorstCaseReport()
         {
 
         }
 
-        private List<string> exportEnvironment()
+        private void extractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
-            return null;
+            string line;
+            bool read = true;
+            bool readItem = false;
+            string[] delimiters = { "\\item", "," };
+            List<string > newEnvironment = new List<string>();
+            
+            while((line = reader.ReadLine()) != null && read) 
+            { 
+                if(!string.IsNullOrEmpty(line) && line.Length > 0)
+                {
+                    string trimmedLine = line.Trim();
+                    if(trimmedLine.Length >= 15 && !readItem) {
+                        readItem = (trimmedLine == "\\begin{itemize}") ? true : false;
+                    } else if(trimmedLine.Length >= 12 && readItem)
+                    {
+                        if(trimmedLine == "\\end{itemize}")
+                        {
+                            readItem = false;
+                            read = false;
+                        }
+                    } 
+                    if(readItem)
+                    {
+                        if(trimmedLine.Substring(0,5) == "\\item")
+                        {
+                            string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                            if(splitString.Length > 0)
+                            {
+                                newEnvironment.Add(splitString[0].Trim());
+                            }
+                        }
+                    }
+                }
+            }
+            if(newEnvironment.Count > 0)
+            {
+                newScopeAndProcedures.Environment = newEnvironment;
+            }
         }
     }
 }
