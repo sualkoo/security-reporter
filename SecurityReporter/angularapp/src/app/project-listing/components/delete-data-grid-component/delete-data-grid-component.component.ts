@@ -6,40 +6,29 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GetProjectsCountService } from '../../services/get-projects-count.service';
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-data-grid-component',
-  templateUrl: './data-grid-component.component.html',
-  styleUrls: ['./data-grid-component.component.css'],
+  selector: 'app-delete-data-grid-component',
+  templateUrl: './delete-data-grid-component.component.html',
+  styleUrls: ['./delete-data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule],
 })
-export class DataGridComponentComponent implements AfterViewInit {
+export class DeleteDataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
-  checkedRows: Set<any> = new Set<any>();
-  isLoading = false;
-  databaseError = false;
-  selectedItems: any[] = [];
 
+  selectedItems: ProjectInterface[] = [];
 
   displayedColumns: string[] = [
     'select',
     'id',
     'projectName',
     'projectStatus',
-    'questionare',
-    'projectScope',
     'start',
     'end',
-    'reportDue',
-    'pentestDuration',
-    'iko',
-    'tko',
-    'lastComment',
   ];
-  dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+
+  dataSource = new MatTableDataSource<ProjectInterface>(this.selectedItems);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
   @ViewChild(MatPaginator)
@@ -50,7 +39,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService) { }
 
   ngOnInit(): void {
-    this.getInitItems();
+    this.getSelectedItems();
     this.getLength();
   }
 
@@ -66,7 +55,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
-
   }
 
   toggleAllRows() {
@@ -99,7 +87,7 @@ export class DataGridComponentComponent implements AfterViewInit {
         this.selectedItems.splice(index, 1);
       }
     }
-}
+  }
 
   getStatusString(status: number): string {
     switch (status) {
@@ -151,17 +139,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getInitItems() {
-    this.isLoading = true;
-    this.databaseError = false;
-
-    try {
-      this.projects = await this.getProjectsService.getProjects(15, 1);
-      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
-    } catch (error) {
-      this.databaseError = true;
-    } finally {
-      this.isLoading = false;
-    }
+    this.projects = await this.getProjectsService.getProjects(15, 1);
+    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   }
 
   getSelectedItems(): void {
@@ -171,17 +150,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async handlePageChange() {
-    this.isLoading = true;
-    this.databaseError = false;
-
-    try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
-      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
-    } catch (error) {
-      this.databaseError = true;
-    } finally {
-      this.isLoading = false;
-    }
+    this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
 
     this.selection.clear();
     for (const item of this.selectedItems) {
@@ -200,7 +170,7 @@ export class DataGridComponentComponent implements AfterViewInit {
         return '#E9D1D4';
       case 2:
         return '#CAC8E0';
-      case 3: 
+      case 3:
         return '#FFF3BF';
       case 4:
         return '#BFE6CD';
@@ -210,18 +180,6 @@ export class DataGridComponentComponent implements AfterViewInit {
         return '#CEEFFB';
       default:
         return '';
-    }
-  }
-
-  isChecked(row: any): boolean {
-    return this.selection.isSelected(row);
-  }
-
-  truncateComment(comment: string, maxLength: number): string {
-    if (comment.length <= maxLength) {
-      return comment;
-    } else {
-      return comment.substr(0, maxLength) + '...';
     }
   }
 }
