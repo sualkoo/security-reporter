@@ -29,7 +29,7 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
-        public async Task<List<ProjectReportData>> GetReportsAsync(string? subcategory, string keyword, string value)
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? subcategory, string keyword, string value, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
 
@@ -40,11 +40,11 @@ namespace webapi.ProjectSearch.Services
 
             if (!string.IsNullOrEmpty(subcategory))
             {
-                return await CosmosService.GetProjectReports(subcategory, keyword, value);
+                return await CosmosService.GetPagedProjectReports(subcategory, keyword, value, page);
             }
             else
             {
-                return await CosmosService.GetProjectReports(null, keyword, value);
+                return await CosmosService.GetPagedProjectReports(null, keyword, value, page);
             }
         }
 
