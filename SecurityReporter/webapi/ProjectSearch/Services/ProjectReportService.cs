@@ -9,16 +9,16 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectReportService : IProjectReportService
     {
-        public ProjectDataValidator Validator { get; set; }
-        public ProjectDataParser Parser { get; set; }
-        public CosmosService CosmosService { get; set; }
+        public IProjectDataValidator Validator { get; set; }
+        public IProjectDataParser Parser { get; set; }
+        public ICosmosService CosmosService { get; set; }
         private readonly ILogger Logger;
 
         public ProjectReportService(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
-            Validator = (ProjectDataValidator)validator;
-            Parser = (ProjectDataParser)parser;
-            CosmosService = (CosmosService)cosmosService;
+            Validator = validator;
+            Parser = parser;
+            CosmosService = cosmosService;
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
@@ -29,7 +29,7 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
-        public async Task<List<ProjectReportData>> GetReportsAsync(string? subcategory, string keyword, string value)
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? subcategory, string keyword, string value, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
 
@@ -40,11 +40,11 @@ namespace webapi.ProjectSearch.Services
 
             if (!string.IsNullOrEmpty(subcategory))
             {
-                return await CosmosService.GetProjectReports(subcategory, keyword, value);
+                return await CosmosService.GetPagedProjectReports(subcategory, keyword, value, page);
             }
             else
             {
-                return await CosmosService.GetProjectReports(null, keyword, value);
+                return await CosmosService.GetPagedProjectReports(null, keyword, value, page);
             }
         }
 
@@ -52,14 +52,22 @@ namespace webapi.ProjectSearch.Services
         {
             Logger.LogInformation($"Saving new project report");
             ProjectReportData newReportData;
-            try
+
+            if (Path.GetExtension(file.FileName)?.ToLower() != ".zip")
             {
-                newReportData = Parser.Extract(file.OpenReadStream());
+                throw new CustomException(StatusCodes.Status406NotAcceptable, "Invalid file type. Only .zip files are allowed.");
             }
-            catch (Exception)
+            else
             {
-                throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files / missing information in the template.");
-            };
+                try
+                {
+                    newReportData = Parser.Extract(file.OpenReadStream());
+                }
+                catch (Exception)
+                {
+                    throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files/missing information in the template.");
+                }
+            }
 
             bool isValid = Validator.Validate(newReportData);
 
