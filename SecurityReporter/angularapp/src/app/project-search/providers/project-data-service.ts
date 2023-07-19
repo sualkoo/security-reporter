@@ -25,9 +25,9 @@ export class ProjectDataService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  public getProjectReports(subcategory: string, keyword: string, value: string) {
+  public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
 
-    return this.http.get<ProjectDataReport[]>(this.apiUrl, {  params: { subcategory: subcategory, keyword: keyword, value: value } })
+    return this.http.get<ProjectDataReport[]>(this.apiUrl, {  params: { subcategory: subcategory, keyword: keyword, value: value, page: page } })
   }
 
 

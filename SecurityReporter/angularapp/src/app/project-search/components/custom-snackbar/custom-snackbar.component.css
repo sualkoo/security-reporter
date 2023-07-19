@@ -3,28 +3,11 @@
   background-color: #ec6602;
 }
 
-
 .alert-message {
   position: relative;
   color: #393939;
   left: 10%;
 }
-
-
-button {
-  color: black;
-  line-height: inherit;
-  cursor: pointer;
-  border: 0;
-  border-radius: 0;
-  padding: 9px 15px;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 10px;
-  flex: none;
-  margin-right: 0px;
-}
-
 
 .heading {
     color: #351a1a;

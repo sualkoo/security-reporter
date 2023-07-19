@@ -29,7 +29,7 @@ namespace webapi.ProjectSearch.Controllers
             }
             catch (CustomException ex)
             {
-                return StatusCode(ex.StatusCode, ex.Message);
+                return StatusCode(ex.StatusCode, new ErrorResponse(ex.Message, ex.Details));
             }
         }
 

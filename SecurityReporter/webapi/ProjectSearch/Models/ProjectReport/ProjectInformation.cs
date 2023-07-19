@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using webapi.Enums;
 using webapi.ProjectSearch.Models;
 
@@ -54,14 +55,15 @@ namespace webapi.Models.ProjectReport
         [Range(0, 1000, ErrorMessage = "TimeFrameTotal must be a non-negative integer not exceeding 1000!")]
         public int TimeFrameTotal { get; set; }
         [DataType(DataType.Date)]
-        public DateOnly TimeFrameStart { get; set; }
+        public DateTime TimeFrameStart { get; set; }
 
         [DataType(DataType.Date)]
-        [Compare(nameof(TimeFrameStart), ErrorMessage = "TimeFrameEnd must be a date that is later than or equal to TimeFrameStart!")]
-        public DateOnly TimeFrameEnd { get; set; }
+        [DateOrderValidation(nameof(TimeFrameStart), ErrorMessage = "TimeFrameEnd must be later than TimeFrameStart.")]
+        public DateTime TimeFrameEnd { get; set; }
+
         [DataType(DataType.Date)]
-        [Compare(nameof(TimeFrameStart), ErrorMessage = "TimeFrameReportDue must be a date that is later than or equal to TimeFrameStart!")]
-        public DateOnly TimeFrameReportDue { get; set; }
+        [DateOrderValidation(nameof(TimeFrameStart), ErrorMessage = "TimeFrameReportDue must be later than TimeFrameStart.")]
+        public DateTime TimeFrameReportDue { get; set; }
         public string? TimeFrameComment { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "FindingsCountCriticalTBD must be greater than or equal to 0!")]
         public int FindingsCountCriticalTBD { get; set; }
@@ -83,6 +85,35 @@ namespace webapi.Models.ProjectReport
 
         [Range(0, int.MaxValue, ErrorMessage = "FindingsCountTotal must be greater than or equal to 0!")]
         public int FindingsCountTotal { get; set; }
+ 
+    }
+    public class DateOrderValidationAttribute : ValidationAttribute
+    {
+        private readonly string _earlierDatePropertyName;
 
+        public DateOrderValidationAttribute(string earlierDatePropertyName)
+        {
+            _earlierDatePropertyName = earlierDatePropertyName;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var earlierDateProperty = validationContext.ObjectType.GetProperty(_earlierDatePropertyName);
+
+            if (earlierDateProperty == null)
+            {
+                throw new ArgumentException($"Property {_earlierDatePropertyName} not found.");
+            }
+
+            var earlierDateValue = (DateTime)earlierDateProperty.GetValue(validationContext.ObjectInstance);
+            var laterDateValue = (DateTime)value;
+
+            if (earlierDateValue > laterDateValue)
+            {
+                return new ValidationResult(ErrorMessage);
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }

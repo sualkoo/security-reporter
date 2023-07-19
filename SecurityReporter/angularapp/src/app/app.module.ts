@@ -21,11 +21,12 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
-import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatIconModule } from '@angular/material/icon';
 import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 
 
 @NgModule({
@@ -57,7 +58,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSnackBarModule,
     MatIconModule,
     FormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    ScrollingModule,
+    MatSnackBarModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent],
