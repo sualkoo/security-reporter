@@ -35,6 +35,7 @@
 
 .table-container {
   overflow-x: auto;
+  overflow-y: auto;
 }
 
 .list-container th {
