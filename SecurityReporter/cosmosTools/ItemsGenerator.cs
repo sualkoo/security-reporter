@@ -1,9 +1,8 @@
-﻿
-using Microsoft.Azure.Cosmos;
-using System.Globalization;
+﻿using Microsoft.Azure.Cosmos;
 using webapi.Enums;
 using webapi.Models;
 using webapi.Service;
+
 
 namespace cosmosTools
 {
@@ -13,14 +12,16 @@ namespace cosmosTools
         private string CosmosKey { get; set; }
         private string DatabaseId { get; set; }
         private string ContainerId { get; set; }
-        private CosmosService cosmosService { get; }
+        private CosmosService CosmosService { get; }
+
+
         public ItemsGenerator(string primaryKey)
         {
             CosmosKey = primaryKey;
             DatabaseId = "ProjectDatabase";
             ContainerId = "ProjectContainer";
             CosmosEndpoint = "https://localhost:8081";
-            cosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
+            CosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
 
         }
 
@@ -81,97 +82,51 @@ namespace cosmosTools
             }
         }
 
-        public Random random = new Random();
 
         public async Task GenerateRandomData(int amount)
         {
             // Generate random data and add it to the list
+
+            var Generators = new Generators();
+            var randomWords = await Generators.GenerateWords();
+
             for (int i = 0; i < amount; i++)
             {
                 ProjectData data = new ProjectData
                 {
                     id = Guid.NewGuid(),
-                    ProjectName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(GenerateRandomString(10)),
-                    ProjectStatus = GetRandomElement(Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().ToArray()),
-                    ProjectQuestionare = GetRandomElement(Enum.GetValues(typeof(ProjectQuestionare)).Cast<ProjectQuestionare>().ToArray()),
-                    ProjectScope = GetRandomElement(Enum.GetValues(typeof(ProjectScope)).Cast<ProjectScope>().ToArray()),
-                    PentestDuration = random.Next(1, 1000),
-                    CatsNumber = GenerateRandomString(10),
-                    ProjectOfferStatus = GetRandomElement(Enum.GetValues(typeof(ProjectOfferStatus)).Cast<ProjectOfferStatus>().ToArray()),
-                    PentestAspects = GenerateRandomString(15),
-                    WorkingTeam = new List<string> { GenerateRandomString(12) },
-                    ProjectLead = GenerateRandomString(10),
-                    ReportStatus = GenerateRandomString(8),
-                    ContactForClients = new List<string> { GenerateRandomEmail() },
+                    ProjectName = Generators.GenerateProjectName(),
+                    ProjectStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().ToArray()),
+                    ProjectQuestionare = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectQuestionare)).Cast<ProjectQuestionare>().ToArray()),
+                    ProjectScope = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectScope)).Cast<ProjectScope>().ToArray()),
+                    PentestDuration = new Random().Next(1, 1000),
+                    CatsNumber = Generators.GenerateRandomString(10),
+                    ProjectOfferStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectOfferStatus)).Cast<ProjectOfferStatus>().ToArray()),
+                    PentestAspects = Generators.GeneratePentest(),
+                    ReportStatus = Generators.GenerateReportStatus(),
+                    ContactForClients = Generators.GenerateContacts(),
+                    WorkingTeam = Generators.GenerateWorkingTeam(),
+                    Comments = Generators.GenerateComment(randomWords),
                 };
 
-                DateTime startDate = GenerateRandomDateData();
+                data.ProjectLead = data.WorkingTeam[new Random().Next(0, data.WorkingTeam.Count())];
+
+                DateTime startDate = Generators.GenerateRandomDateData();
                 data.StartDate = DateOnly.FromDateTime(startDate);
-                DateTime endDate = GenerateRandomDateData(startDate, startDate.AddMonths(random.Next(1, 12)));
+                DateTime endDate = Generators.GenerateRandomDateData(startDate, startDate.AddMonths(new Random().Next(1, 12)));
                 data.EndDate = DateOnly.FromDateTime(endDate);
-                DateTime iko = GenerateRandomDateData(startDate, endDate);
+                DateTime iko = Generators.GenerateRandomDateData(startDate, endDate);
                 data.IKO = DateOnly.FromDateTime(iko);
-                DateTime tko = GenerateRandomDateData(startDate, endDate);
+                DateTime tko = Generators.GenerateRandomDateData(startDate, endDate);
                 data.TKO = DateOnly.FromDateTime(tko);
 
-
-                var comment = new Comment();
-                comment.Text = GenerateRandomString(random.Next(1, 50));
-                var Comments = new List<Comment> { };
-                Comments.Add(comment);
-                data.Comments = Comments;
-
-
-
-
-                DateTime reportDueDate = GenerateRandomDateData(endDate, endDate.AddMonths(random.Next(1, 6)));
+                DateTime reportDueDate = Generators.GenerateRandomDateData(endDate, endDate.AddMonths(new Random().Next(1, 6)));
                 data.ReportDueDate = DateOnly.FromDateTime(reportDueDate);
 
 
-                await cosmosService.AddProject(data);
+                await CosmosService.AddProject(data);
             }
         }
-
-        public string GenerateRandomEmail()
-        {
-            return $"{GenerateRandomString(random.Next(5, 20))}@{GenerateRandomString(random.Next(5, 20))}.{GenerateRandomString(random.Next(2, 4))}";
-        }
-
-        public string GenerateRandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-
-        public DateTime GenerateRandomDateData(DateTime startDate = default, DateTime endDate = default)
-        {
-            if (startDate == default)
-                startDate = DateTime.Now.AddMonths(-12);
-
-            if (endDate == default)
-                endDate = DateTime.Now.AddMonths(12).Date;
-
-            if (endDate <= startDate)
-            {
-                var temp = startDate;
-                startDate = endDate;
-                endDate = temp;
-            }
-
-            int range = (int)(endDate - startDate).TotalDays;
-            var randomDate = startDate.AddDays(random.Next(Math.Max(1, range + 1)));
-
-            return randomDate;
-        }
-
-        public T GetRandomElement<T>(T[] array)
-        {
-            return array[random.Next(array.Length)];
-        }
-
-
     }
 }
 
