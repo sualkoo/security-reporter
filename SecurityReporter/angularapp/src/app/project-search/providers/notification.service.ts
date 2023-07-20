@@ -13,7 +13,6 @@ export class NotificationService {
     this.snackBar.openFromComponent(
       CustomSnackbarComponent,
       {
-        duration: 5000,
         data: {
           message: message,
           messageType: messageType,
