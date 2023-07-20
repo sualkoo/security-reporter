@@ -29,7 +29,6 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
     'select',
-    'id',
     'projectName',
     'projectStatus',
     'questionare',
