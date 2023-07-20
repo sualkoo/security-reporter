@@ -79,5 +79,9 @@ export class DeletePopupComponentComponent {
         return '-';
     }
   }
+
+  onBackClick(): void {
+    this.dialog.close();
+  }
 }
 

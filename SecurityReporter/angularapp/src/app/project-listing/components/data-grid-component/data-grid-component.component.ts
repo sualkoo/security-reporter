@@ -12,13 +12,17 @@ import { DeletePopupComponentComponent } from '../../components/delete-popup-com
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+
+
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule, MatTooltipModule, MatIconModule],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -250,5 +254,9 @@ export class DataGridComponentComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
     });
+  }
+
+  areNoBoxesChecked(): boolean {
+    return this.selectedItems.length === 0;
   }
 }
