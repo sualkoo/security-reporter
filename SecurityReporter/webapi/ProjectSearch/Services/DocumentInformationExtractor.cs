@@ -78,7 +78,10 @@ namespace webapi.ProjectSearch.Services
             switch (command)
             {
                 case "ReportProjectName":
-                    newDocumentInfo.ProjectReportName = data[0];
+                    if (data[0][0] != '\\')
+                    {
+                        newDocumentInfo.ProjectReportName = data[0];
+                    }
                     break;
                 case "AssetType":
                     newDocumentInfo.AssetType = data[0];

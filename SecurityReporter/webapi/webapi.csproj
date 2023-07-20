@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ProjectSearch\Models\ProjectReport\" />
     <Folder Include="ProjectSearch\Enums\" />
   </ItemGroup>
 

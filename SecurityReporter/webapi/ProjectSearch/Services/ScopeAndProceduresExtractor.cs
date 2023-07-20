@@ -41,6 +41,7 @@ namespace webapi.ProjectSearch.Services
                                 }
                                 else if (splitLine[1] == "\\WorstCaseScenariosReport")
                                 {
+                                    extractWorstCaseReport(reader, newScopeAndProcedures);
                                 }
                                 else if (splitLine[1] == "\\WorstCaseScenariosScope")
                                 {
@@ -106,9 +107,58 @@ namespace webapi.ProjectSearch.Services
                 }
             }
         }
-        private void extractWorstCaseReport()
+        private void extractWorstCaseReport(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
+            string line;
+            bool read = true;
+            string[] delimiters = { "&", "\\Huge", "\\\\"};
+            WorstCaseScenarioReport newReport = new WorstCaseScenarioReport();
 
+            while ((line = reader.ReadLine()) != null && read)
+            {
+                if(!string.IsNullOrEmpty(line) && line.Length > 0) 
+                { 
+                    string trimmedLine = line.Trim();
+                    if(trimmedLine.Length >= 15) 
+                    {
+                        read = (trimmedLine == "\\end{xltabular}") ? false : true;
+                    }
+
+                    string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                    splitString = splitString.Where(item => !string.IsNullOrWhiteSpace(item)).ToArray();
+                    
+                    if(splitString.Length == 6 && splitString[0][0] != '\\') 
+                    {
+                        List<bool> newBoolList = new List<bool>();
+
+                        for (int i = 0; i < splitString.Length; i++)
+                        {
+
+                            switch(i)
+                            {
+                                case 1:
+                                    newReport.findingDescription = splitString[i].Trim();
+                                    break;
+                                case 2:
+                                case 3:
+                                case 4:
+                                case 5:
+                                    string trimSplitString = splitString[i].Trim();
+                                    if(trimSplitString == "$\\cdotp$")
+                                    {
+                                        newBoolList.Add(true);
+                                    } else if(trimSplitString == "\\phantom{}")
+                                    {
+                                        newBoolList.Add(false);
+                                    }
+                                    break;
+                            }
+                        }
+                        newReport.worstCaseReport.Add(newBoolList);
+                        newScopeAndProcedures.WorstCaseScenariosReport = newReport;
+                    }
+                }
+            }
         }
 
         private void extractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)

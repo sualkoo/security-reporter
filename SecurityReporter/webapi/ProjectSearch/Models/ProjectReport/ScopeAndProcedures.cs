@@ -16,6 +16,8 @@ namespace webapi.Models.ProjectReport
 
         [MinLength(1, ErrorMessage = "Environment must have at least one item.")]
         public List<string>? Environment { get; set; }
+
+        public WorstCaseScenarioReport WorstCaseScenariosReport { get; set; }
         //Boolean pole na Findings case scenarios
     }
 }
