@@ -31,25 +31,30 @@ export class ProjectSearchPageComponent {
   }
 
   loadReports() {
-    this.isLoading = true;
-    this.projectReportService.getProjectReports(
-      this.form.controls['subcategory'].value as string,
-      this.form.controls['keyword'].value as string,
-      this.form.controls['value'].value as string,
-      1
-    ).pipe(delay(500)).subscribe(
-      (response) => {
-        console.log(response)
-        if (response.data.length == 0) {
-          this.notificationService.displayMessage("No reports found.", "info");
-        } else {
-          this.loadedReports = response.data as ProjectDataReport[];
-          this.nextPage = response.nextPage;
-          this.lastLoadedPage = response.pageNumber;
+    if (this.form.controls['value'].value?.length !== 0) {
+
+      this.isLoading = true;
+      this.projectReportService.getProjectReports(
+        this.form.controls['subcategory'].value as string,
+        this.form.controls['keyword'].value as string,
+        this.form.controls['value'].value as string,
+        1
+      ).pipe(delay(500)).subscribe(
+        (response) => {
+          console.log(response)
+          if (response.data.length == 0) {
+            this.notificationService.displayMessage("No reports found.", "info");
+          } else {
+            this.loadedReports = response.data as ProjectDataReport[];
+            this.nextPage = response.nextPage;
+            this.lastLoadedPage = response.pageNumber;
+          }
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      }
-    )
+      )
+    } else {
+      this.notificationService.displayMessage("Value not specified.", "info")
+    }
   }
 
   // Scrollable window
