@@ -24,6 +24,7 @@ namespace webapi.ProjectSearch.Services
                 DataAnnotation.ValidateEntity<DocumentInformation>(projectReport.DocumentInfo),
                 DataAnnotation.ValidateList<ReportVersionEntry>(projectReport.DocumentInfo.ReportDocumentHistory),
                 DataAnnotation.ValidateEntity<ProjectInformation>(projectReport.ProjectInfo),
+                DataAnnotation.ValidateTimeFrames(projectReport.ProjectInfo),
                 DataAnnotation.ValidateEntity(projectReport.ProjectInfo.ApplicationManager),
                 DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessOwner),
                 DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessRepresentative),
@@ -38,7 +39,8 @@ namespace webapi.ProjectSearch.Services
                 DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
                 DataAnnotation.ValidateList<Tool>(projectReport.TestingMethodology.ToolsUsed),
             };
-            
+
+            var errors = new List<string>();
 
             foreach ( var validationResult in validationResults )
             {
@@ -48,13 +50,19 @@ namespace webapi.ProjectSearch.Services
                     foreach (var error in validationResult.ValidationErrors)
                     {
                         Logger.LogError(error.ErrorMessage);
+                        errors.Add(error.ErrorMessage);
                     }
                 }
             }
-            if (result )
+
+            if (result)
             {
                 Logger.LogInformation("Validation of Project Report successed!");
+            } else
+            {
+                throw new CustomException(StatusCodes.Status400BadRequest, "Validation fail", errors);
             }
+
             return result;
         }
     }

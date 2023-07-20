@@ -1,4 +1,6 @@
-﻿namespace webapi.ProjectSearch.Models
+﻿using System.Text.Json;
+
+namespace webapi.ProjectSearch.Models
 {
     public class CustomException : Exception
     {
@@ -7,6 +9,13 @@
             StatusCode = statusCode;
         }
 
+        public CustomException(int statusCode, string message, List<string>? details) : base(message)
+        {
+            StatusCode = statusCode;
+            Details = details;
+        }
+
         public int StatusCode { get; }
+        public List<string> Details { get; }
     }
 }
