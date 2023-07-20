@@ -124,12 +124,15 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
         {
-            int limit = 24; 
+            int limit = 24;
+            if (page < 1)
+            {
+                page = 1;
+            }
             int offset = limit * (page - 1);
             int totalResults;
             List<ProjectReportData> data = new List<ProjectReportData>();
 
-            
 
             string query = "SELECT * FROM c WHERE ";
             string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
