@@ -1,4 +1,4 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, EventEmitter, HostListener, Output} from '@angular/core';
 import {ProjectDataReport} from "../../interfaces/project-data-report.models";
 import {ProjectDataService} from "../../providers/project-data-service";
 import {NotificationService} from "../../providers/notification.service";
@@ -66,68 +66,43 @@ export class SearchbarComponent {
   page: number = 1;
 
   projectDataReports: ProjectDataReport[] = [];
+  @Output() reports = new EventEmitter<ProjectDataReport[]>()
   totalPages: number = 0;
-  results = true;
 
   searchProjectReports() {
-    this.page = 1;
-    this.projectDataReports = [];
+   this.page =1;
+   this.projectDataReports = [];
     this.isLoading = true;
 
-    const performSearch = async () => {
-      try {
-        console.log('Performing search for:', this.value);
-        this.results = await this.sendSearchRequest();
-
-        if (this.results) {
-          this.notificationService.displayMessage("Search completed", "success");
-          console.log("success");
-        } else {
-          this.notificationService.displayMessage("No Records were found", "warning");
-          console.log("warning");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-        this.notificationService.displayMessage("An error occurred during search", "error");
-      }
-    };
-    performSearch();
+    console.log('Performing search for:', this.value);
+    this.sendSearchRequest();
+    this.notificationService.displayMessage("Search completed", "success");
   }
 
-  sendSearchRequest(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.projectDataService.getProjectReports(this.subcategory, this.keyword, this.value, this.page).subscribe(
-        (response: any) => {
-          const responseData = response as {
-            pageNumber: number;
-            totalPages: number;
-            data: ProjectDataReport[];
-          };
+  sendSearchRequest() {
+    this.projectDataService.getProjectReports(this.subcategory, this.keyword, this.value, this.page).subscribe(
+      (response: any) => {
+        const responseData = response as {
+          pageNumber: number;
+          totalPages: number;
+          data: ProjectDataReport[];
+        };
 
-          this.totalPages = responseData.totalPages;
-          this.isLoading = false;
+        this.totalPages = responseData.totalPages;
+        this.isLoading = false;
 
-          this.projectDataReports = this.projectDataReports.concat(responseData.data);
+        this.projectDataReports = this.projectDataReports.concat(responseData.data);
+        this.reports.emit(this.projectDataReports);
 
-          console.log(this.projectDataReports);
+        //console.log(this.projectDataReports);
 
-          if (this.page < this.totalPages) {
-            console.log(this.page)
-            console.log(this.totalPages)
-          }
-
-          if (this.projectDataReports.length == 0) {
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        },
-        (error) => {
-          this.notificationService.displayMessage("Unexpected error", "error");
-          reject(error);
+        if (this.page < this.totalPages) {
+          console.log(this.page)
+          console.log(this.totalPages)
         }
-      );
-    });
+
+      }
+    )
   }
 
 
