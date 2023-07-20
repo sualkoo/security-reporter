@@ -24,16 +24,17 @@ namespace webapi.Service
 
         public CosmosService(string primaryKey, string databaseId, string containerId, string cosmosEndpoint)
         {
-            this.PrimaryKey = primaryKey;
-            this.DatabaseName = databaseId;
-            this.ContainerName = containerId;
-            this.EndpointUri = cosmosEndpoint;
+            PrimaryKey = primaryKey;
+            DatabaseName = databaseId;
+            ContainerName = containerId;
+            EndpointUri = cosmosEndpoint;
+            CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
+            Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
         }
 
 
         public async Task<bool> AddProject(ProjectData data)
         {
-
             data.RequestCreated = DateTime.Now;
             if (data.Comments != null)
             {
