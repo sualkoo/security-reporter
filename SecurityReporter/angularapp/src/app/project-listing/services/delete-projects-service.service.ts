@@ -19,7 +19,6 @@ export class DeleteProjectsServiceService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           const errorResponse = error.error;
-
           const title = errorResponse.title;
           const status = error.status;
           const errors = errorResponse.errors;
@@ -35,7 +34,6 @@ export class DeleteProjectsServiceService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           const errorResponse = error.error;
-
           const title = errorResponse.title;
           const status = error.status;
           const errors = errorResponse.errors;

@@ -43,9 +43,16 @@ export class DeletePopupComponentComponent {
     console.log(this.dataSource.data);
   }
 
-  DeleteItems() {
+  async DeleteItems() {
     const idList = this.dataSource.data.map(item => item.id);
-    this.service.deletePMProjects(idList);
+    this.service.deletePMProjects(idList).subscribe(
+      (response) => {
+        console.log('Items deleted successfully.');
+      },
+      (error) => {
+        console.error('Error deleting items:', error);
+      }
+    );
   }
 
   getStatusString(status: number): string {
