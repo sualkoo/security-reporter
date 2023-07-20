@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { ProjectInterface } from 'src/app/project-management/interfaces/project-interface';
+import { DeleteProjectsServiceService } from '../../services/delete-projects-service.service';
 
 @Component({
   selector: 'app-delete-popup-component',
@@ -21,7 +22,7 @@ import { ProjectInterface } from 'src/app/project-management/interfaces/project-
     MatButtonModule,
     NgIf,
     MatDialogModule,
-    MatTableModule
+    MatTableModule,
   ],
 })
 
@@ -32,6 +33,7 @@ export class DeletePopupComponentComponent {
   constructor(
     public dialog: MatDialogRef<DeletePopupComponentComponent>,
     private router: Router,
+    private service: DeleteProjectsServiceService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.dataSource.data = data;
@@ -39,6 +41,11 @@ export class DeletePopupComponentComponent {
 
   ngOnInit() {
     console.log(this.dataSource.data);
+  }
+
+  DeleteItems() {
+    const idList = this.dataSource.data.map(item => item.id);
+    this.service.deletePMProjects(idList);
   }
 
   getStatusString(status: number): string {
