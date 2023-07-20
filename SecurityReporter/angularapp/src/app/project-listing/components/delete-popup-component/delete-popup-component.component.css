@@ -1,8 +1,8 @@
 body {
-    padding-top: 100px;
-    align-items: center;
-    font-family: 'FontName', sans-serif;
-    /* In the future we need to change the font */
+  padding-top: 100px;
+  align-items: center;
+  font-family: 'FontName', sans-serif;
+  /* in the future we need to change font family*/
 }
 .cancel-button {
     background-color: #009999;
@@ -20,19 +20,19 @@ body {
     text-transform: uppercase;
   }
 .delete-popup {
-    height: auto;
-    background-color: #EDEDED;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 25px;
-    border: 2px solid black;
-    margin: auto;
-    padding: 20px;
-    text-align: center;
-    min-width: 800px;
-    max-width: max-content;
+  height: auto;
+  background-color: #EDEDED;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  min-width: 800px;
+  max-width: max-content;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0);
+  border-radius: 8px;
 }
 .popup-buttons {
     padding-top: 100px;
@@ -52,18 +52,18 @@ body {
     margin-bottom: 20px;
 }
 #popupOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(116, 111, 111, 0.5);
-    backdrop-filter: blur(2px);
-    display: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow:  2px 10px rgba(253, 239, 239, 0.3);
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(116, 111, 111, 0.5);
+  backdrop-filter: blur(2px);
+  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 10px rgba(253, 239, 239, 0.3);
+}
   .delete-popup {
   }
