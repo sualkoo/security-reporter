@@ -46,7 +46,6 @@ export class ProjectDataService {
     }
 
     const requiredFiles = {
-      main: zipData.file('Main.tex'),
       configDocumentInformation: zipData.file(
         'Config/Document_Information.tex'
       ),
@@ -56,19 +55,10 @@ export class ProjectDataService {
       ),
       configScopeAndProcedures: zipData.file('Config/Scope_and_Procedures.tex'),
       configTestingMethodology: zipData.file('Config/Testing_Methodology.tex'),
-      configFindingsDatabase: zipData.file(
-        'Config/Findings_Database/Findings_Database.tex'
-      ),
       configFindingsDatabaseDRTemplate: zipData.file(
         'Config/Findings_Database/DR_Template/main.tex'
       ),
-      configTestProtocolHowTo: zipData.file('Config/Test_Protocol/HowTo.txt'),
-      configTestProtocolOwaspCSV: zipData.file(
-        'Config/Test_Protocol/owasp.csv'
-      ),
-      configTestProtocolOwaspXLSX: zipData.file(
-        'Config/Test_Protocol/owasp.xlsx'
-      ),
+      staticPentestTeam: zipData.file('Static/PentestTeam.tex')
     };
 
     for (let val of Object.values(requiredFiles)) {
