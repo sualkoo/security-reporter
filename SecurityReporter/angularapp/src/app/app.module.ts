@@ -23,6 +23,8 @@ import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
 import { MatButtonModule } from '@angular/material/button';
+import { DeletePopupComponentComponent } from './project-listing/components/delete-popup-component/delete-popup-component.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     ListProjectsPageComponent,
     DataGridComponentComponent,
-    MatButtonModule
+    MatButtonModule,
+    DeletePopupComponentComponent,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent],
