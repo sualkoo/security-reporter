@@ -25,7 +25,6 @@ import { DataGridComponentComponent } from './project-listing/components/data-gr
 import { MatButtonModule } from '@angular/material/button';
 import { DeletePopupComponentComponent } from './project-listing/components/delete-popup-component/delete-popup-component.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DeleteDataGridComponentComponent } from './project-listing/components/delete-data-grid-component/delete-data-grid-component.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import { DeleteDataGridComponentComponent } from './project-listing/components/d
     MatDatepickerModule,
     MatNativeDateModule,
     NgFor,
-    DeleteDataGridComponentComponent,
     MatSelectModule,
     MatRadioModule,
     AddProjectComponent,

@@ -8,13 +8,17 @@ import { GetProjectsServiceService } from '../../services/get-projects-service.s
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { DeletePopupComponentComponent } from '../../components/delete-popup-component/delete-popup-component.component';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -22,7 +26,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   isLoading = false;
   databaseError = false;
   selectedItems: any[] = [];
-
 
   displayedColumns: string[] = [
     'select',
@@ -47,7 +50,7 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   length: number | undefined;
 
-  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService) { }
+  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getInitItems();
@@ -231,5 +234,22 @@ export class DataGridComponentComponent implements AfterViewInit {
     } else {
       return comment.substr(0, maxLength) + '...';
     }
+  }
+
+  // ADD BUTTON
+
+  navigateToPage(): void {
+    this.router.navigate(['/project-management'])
+  }
+
+  // POP UP PART
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DeletePopupComponentComponent, {
+      data: this.selectedItems,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+    });
   }
 }

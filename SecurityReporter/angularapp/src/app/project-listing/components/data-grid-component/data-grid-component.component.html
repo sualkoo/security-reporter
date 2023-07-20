@@ -1,3 +1,13 @@
+<div class="button-container">
+  <button mat-flat-button color="warn" (click)="openDialog()" class="delete-button">
+    Delete
+  </button>
+
+  <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
+    Add project
+  </button>
+</div>
+
 <div class="list-container">
   <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
