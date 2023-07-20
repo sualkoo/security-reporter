@@ -1,13 +1,55 @@
-<body>
-  <div class="container w-clearfix">
-    <h1>PROJECT SEARCH</h1>
-    <div class="section">
-      <div class="search-field">
-        <app-searchbar></app-searchbar>
-      </div>
-      <div class="container w-clearfix">
-        <app-add-project-report></app-add-project-report>
+<div class="container-fluid bg-light">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-3 bg-white position-fixed" style="height: 100vh;">
+      <div>
+        <form [formGroup]="form" (ngSubmit)="loadReports()" (keyup.enter)="loadReports()">
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="subcategory">Subcategory</label>
+              <input id="subcategory" type="text" class="form-control" formControlName="subcategory">
+            </div>
+            <div class="form-group col">
+              <label for="keyword">Keyword</label>
+              <input id="keyword" type="text" class="form-control" formControlName="keyword">
+            </div>
+            <div class="form-group col">
+              <label for="input-value">Value</label>
+              <input id="input-value" type="text" class="form-control" formControlName="value">
+            </div>
+          </div>
+          <div class="form-row mt-3">
+            <div class="col">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Search</span>
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+              </button>
+
+
+            </div>
+          </div>
+        </form>
+
+
       </div>
     </div>
-  </div>
-</body>
+    <!-- Project Reports -->
+    <div class="col offset-3">
+      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox (scroll)="onScroll()">
+        <div>
+
+          <div class="card m-3" *ngFor="let report of loadedReports">
+            <div class="card-body">
+              <h5 class="card-title">{{report.documentInfo?.projectReportName}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+              <p class="card-text">{{report.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
+              <button class="btn btn-secondary">Get Source</button>
+            </div>
+            </div>
+            <div class="text-center pagination-centered">
+
+              <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
