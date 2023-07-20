@@ -1,7 +1,8 @@
-﻿
-using Microsoft.Azure.Cosmos;
-using System.Configuration;
+﻿using Microsoft.Azure.Cosmos;
+using webapi.Enums;
+using webapi.Models;
 using webapi.Service;
+
 
 namespace cosmosTools
 {
@@ -11,12 +12,17 @@ namespace cosmosTools
         private string CosmosKey { get; set; }
         private string DatabaseId { get; set; }
         private string ContainerId { get; set; }
+        private CosmosService CosmosService { get; }
+
+
         public ItemsGenerator(string primaryKey)
         {
-            this.CosmosKey = primaryKey;
-            this.DatabaseId = "ProjectDatabase";
-            this.ContainerId = "ProjectContainer";
-            this.CosmosEndpoint = "https://localhost:8081";
+            CosmosKey = primaryKey;
+            DatabaseId = "ProjectDatabase";
+            ContainerId = "ProjectContainer";
+            CosmosEndpoint = "https://localhost:8081";
+            CosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
+
         }
 
         public void Help()
@@ -33,16 +39,8 @@ namespace cosmosTools
 
         public async Task AddItemsToDatabaseAsync(int amount)
         {
-            
-            using (CosmosClient cosmosClient = new CosmosClient(CosmosEndpoint, CosmosKey))
-            {
-                Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
-                Container container = await database.CreateContainerIfNotExistsAsync(ContainerId, "/id");
-                
-                
 
-            }
-
+            await GenerateRandomData(amount);
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine();
@@ -53,7 +51,7 @@ namespace cosmosTools
 
         public async Task ClearDatabaseAsync()
         {
-            
+
             using (CosmosClient cosmosClient = new CosmosClient(CosmosEndpoint, CosmosKey))
             {
                 Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync(DatabaseId);
@@ -83,5 +81,52 @@ namespace cosmosTools
                 Console.WriteLine();
             }
         }
+
+
+        public async Task GenerateRandomData(int amount)
+        {
+            // Generate random data and add it to the list
+
+            var Generators = new Generators();
+            var randomWords = await Generators.GenerateWords();
+
+            for (int i = 0; i < amount; i++)
+            {
+                ProjectData data = new ProjectData
+                {
+                    id = Guid.NewGuid(),
+                    ProjectName = Generators.GenerateProjectName(),
+                    ProjectStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().ToArray()),
+                    ProjectQuestionare = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectQuestionare)).Cast<ProjectQuestionare>().ToArray()),
+                    ProjectScope = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectScope)).Cast<ProjectScope>().ToArray()),
+                    PentestDuration = new Random().Next(1, 1000),
+                    CatsNumber = Generators.GenerateRandomString(10),
+                    ProjectOfferStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectOfferStatus)).Cast<ProjectOfferStatus>().ToArray()),
+                    PentestAspects = Generators.GeneratePentest(),
+                    ReportStatus = Generators.GenerateReportStatus(),
+                    ContactForClients = Generators.GenerateContacts(),
+                    WorkingTeam = Generators.GenerateWorkingTeam(),
+                    Comments = Generators.GenerateComment(randomWords),
+                };
+
+                data.ProjectLead = data.WorkingTeam[new Random().Next(0, data.WorkingTeam.Count())];
+
+                DateTime startDate = Generators.GenerateRandomDateData();
+                data.StartDate = DateOnly.FromDateTime(startDate);
+                DateTime endDate = Generators.GenerateRandomDateData(startDate, startDate.AddMonths(new Random().Next(1, 12)));
+                data.EndDate = DateOnly.FromDateTime(endDate);
+                DateTime iko = Generators.GenerateRandomDateData(startDate, endDate);
+                data.IKO = DateOnly.FromDateTime(iko);
+                DateTime tko = Generators.GenerateRandomDateData(startDate, endDate);
+                data.TKO = DateOnly.FromDateTime(tko);
+
+                DateTime reportDueDate = Generators.GenerateRandomDateData(endDate, endDate.AddMonths(new Random().Next(1, 6)));
+                data.ReportDueDate = DateOnly.FromDateTime(reportDueDate);
+
+
+                await CosmosService.AddProject(data);
+            }
+        }
     }
 }
+

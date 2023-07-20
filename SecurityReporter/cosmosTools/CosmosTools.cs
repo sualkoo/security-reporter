@@ -14,7 +14,7 @@ class CosmosTools
 
     public CosmosTools()
     {
-        Console.ForegroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("-------------------------------");
         Console.WriteLine("| Cosmos Tools - DB Generator |");
         Console.WriteLine("-------------------------------");
@@ -23,7 +23,7 @@ class CosmosTools
 
     public async Task Run()
     {
-        
+
         ItemsGenerator Generator = new ItemsGenerator(PrimaryKeyCheck());
 
         while (command != "quit")
@@ -45,7 +45,7 @@ class CosmosTools
             }
             else if (command == "quit")
             {
-               break;
+                break;
             }
             else
             {
@@ -91,9 +91,9 @@ class CosmosTools
         return secondArgument;
     }
 
-    private string PrimaryKeyCheck() 
+    private string PrimaryKeyCheck()
     {
-        this.ConsoleMessage("Do you want to use your own Primary Key [y/n] ? ");        
+        this.ConsoleMessage("Do you want to use your own Primary Key [y/n] ? ");
 
         while (consoleInput != "y" || consoleInput != "n" || consoleInput != "Y" || consoleInput != "N")
         {
@@ -105,14 +105,14 @@ class CosmosTools
                 this.ConsoleMessage("Your primary key: ");
                 key = Console.ReadLine();
                 this.ConsoleMessage("Primary Key set to: " + key);
-                
+
                 return key;
             }
             else if (consoleInput == "n" || consoleInput == "N")
             {
-                this.ConsoleMessage("Used default Primary Key."); 
+                this.ConsoleMessage("Used default Primary Key.");
                 break;
-            }            
+            }
         }
         return "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
     }
