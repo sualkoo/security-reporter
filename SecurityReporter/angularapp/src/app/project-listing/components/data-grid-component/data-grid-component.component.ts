@@ -6,16 +6,26 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GetProjectsCountService } from '../../services/get-projects-count.service';
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
+import { DeletePopupComponentComponent } from '../../components/delete-popup-component/delete-popup-component.component';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
+  checkedRows: Set<any> = new Set<any>();
+  isLoading = false;
+  databaseError = false;
+  selectedItems: any[] = [];
 
   displayedColumns: string[] = [
     'select',
@@ -39,7 +49,7 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   length: number | undefined;
 
-  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService) { }
+  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getInitItems();
@@ -54,7 +64,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -62,17 +71,22 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     if (this.isAllSelected()) {
+      this.selectedItems = [];
       this.selection.clear();
       return;
     }
 
     this.selection.select(...this.dataSource.data);
+    this.getSelectedItems();
   }
 
-  /** The label for the checkbox on the passed row */
+  handleRowClick(row: ProjectInterface) {
+    this.selection.toggle(row)
+    this.handleSelectedList(row);
+  }
+
   checkboxLabel(row?: ProjectInterface): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -80,6 +94,22 @@ export class DataGridComponentComponent implements AfterViewInit {
 
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.projects.indexOf(row) + 2}`;
   }
+
+  handleSelectedList(row: ProjectInterface) {
+    if (this.selection.isSelected(row)) {
+      this.selectedItems.push(row);
+    } else {
+      const index = this.selectedItems.findIndex(item => item.id === row.id);
+      if (index !== -1) {
+        this.selectedItems.splice(index, 1);
+      }
+    }
+  }
+
+  handleCheckboxChange(row: ProjectInterface): void {
+    this.selection.toggle(row);
+    this.handleSelectedList(row);
+}
 
   getStatusString(status: number): string {
     switch (status) {
@@ -131,19 +161,51 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getInitItems() {
-    this.projects = await this.getProjectsService.getProjects(15, 1);
-    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    this.isLoading = true;
+    this.databaseError = false;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.databaseError = true;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  getSelectedItems(): void {
+    for (const item of this.selection.selected) {
+      this.selectedItems.push(item);
+    }
   }
 
   async handlePageChange() {
-    this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
-    this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    this.isLoading = true;
+    this.databaseError = false;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.databaseError = true;
+    } finally {
+      this.isLoading = false;
+    }
+
+    this.selection.clear();
+    for (const item of this.selectedItems) {
+      const foundItem = this.projects.find(project => project.id === item.id);
+      if (foundItem) {
+        this.selection.select(foundItem);
+      }
+    }
   }
 
-  getStatusColor(projectStatus: number): string {
-    switch (projectStatus) {
+  getStatusColor(element: any): string {
+    switch (element.projectStatus) {
       case 0:
-        return 'white';
+        return this.selection.isSelected(element) ? '#F2F2F2' : 'white';
       case 1:
         return '#E9D1D4';
       case 2:
@@ -159,5 +221,34 @@ export class DataGridComponentComponent implements AfterViewInit {
       default:
         return '';
     }
+  }
+
+  isChecked(row: any): boolean {
+    return this.selection.isSelected(row);
+  }
+
+  truncateComment(comment: string, maxLength: number): string {
+    if (comment.length <= maxLength) {
+      return comment;
+    } else {
+      return comment.substr(0, maxLength) + '...';
+    }
+  }
+
+  // ADD BUTTON
+
+  navigateToPage(): void {
+    this.router.navigate(['/project-management'])
+  }
+
+  // POP UP PART
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DeletePopupComponentComponent, {
+      data: this.selectedItems,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+    });
   }
 }
