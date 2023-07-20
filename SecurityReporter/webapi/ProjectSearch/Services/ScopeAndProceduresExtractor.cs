@@ -137,7 +137,7 @@ namespace webapi.ProjectSearch.Services
                             switch(i)
                             {
                                 case 1:
-                                    newReport.findingDescription = splitString[i].Trim();
+                                    newReport.FindingDescription = splitString[i].Trim();
                                     break;
                                 case 2:
                                 case 3:
@@ -154,7 +154,7 @@ namespace webapi.ProjectSearch.Services
                                     break;
                             }
                         }
-                        newReport.worstCaseReport.Add(newBoolList);
+                        newReport.WorstCaseReport.Add(newBoolList);
                         newScopeAndProcedures.WorstCaseScenariosReport = newReport;
                     }
                 }
