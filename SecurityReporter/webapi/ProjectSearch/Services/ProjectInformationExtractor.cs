@@ -102,7 +102,6 @@ namespace webapi.ProjectSearch.Services
                 case "\\ApplicationManager":
                     newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
                     newProjectInfo.ApplicationManager.Name = data;
-                    newProjectInfo.ApplicationManager.Role = Enums.ProjectParticipantRole.ApplicationManager;
                     pentestTeamDictionary.Add(command, newProjectInfo.ApplicationManager);
                     break;
                 case "\\ApplicationManagerDepartment":
@@ -114,7 +113,6 @@ namespace webapi.ProjectSearch.Services
                 case "\\BusinessOwnerName":
                     newProjectInfo.BusinessOwner = new ProjectInformationParticipant();
                     newProjectInfo.BusinessOwner.Name = data;
-                    newProjectInfo.BusinessOwner.Role = Enums.ProjectParticipantRole.BusinessOwner;
                     pentestTeamDictionary.Add(command, newProjectInfo.BusinessOwner);
                     break;
                 case "\\BusinessOwnerDepartment":
@@ -126,7 +124,6 @@ namespace webapi.ProjectSearch.Services
                 case "\\BusinessRepresentativeName":
                     newProjectInfo.BusinessRepresentative = new ProjectInformationParticipant();
                     newProjectInfo.BusinessRepresentative.Name = data;
-                    newProjectInfo.BusinessRepresentative.Role = Enums.ProjectParticipantRole.BusinessRepresentative;
                     pentestTeamDictionary.Add(command, newProjectInfo.BusinessRepresentative);
                     break;
                 case "\\BusinessRepresentativeDepartment":
@@ -146,7 +143,7 @@ namespace webapi.ProjectSearch.Services
                             .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
                         ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
                         newPerson.Name = splitByAmpersand[0].Trim();
-                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\&", "");
+                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
                         newPerson.Contact = extractContact(
                             splitByAmpersand[2].Trim()
                             .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
@@ -157,7 +154,6 @@ namespace webapi.ProjectSearch.Services
                 case "\\PentestLeadName":
                     newProjectInfo.PentestLead = new ProjectInformationParticipant();
                     newProjectInfo.PentestLead.Name = data;
-                    newProjectInfo.PentestLead.Role = Enums.ProjectParticipantRole.PentestLead;
                     pentestTeamDictionary.Add(command, newProjectInfo.PentestLead);
                     break;
                 case "\\PentestLeadDepartment":
@@ -169,7 +165,6 @@ namespace webapi.ProjectSearch.Services
                 case "\\PentestCoordinatorName":
                     newProjectInfo.PentestCoordinator = new ProjectInformationParticipant();
                     newProjectInfo.PentestCoordinator.Name = data;
-                    newProjectInfo.PentestCoordinator.Role = Enums.ProjectParticipantRole.PentestCoordinator;
                     pentestTeamDictionary.Add(command, newProjectInfo.PentestCoordinator);
                     break;
                 case "\\PentestCoordinatorDepartment":
@@ -189,7 +184,7 @@ namespace webapi.ProjectSearch.Services
                             .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
                         ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
                         newPerson.Name = splitByAmpersand[0].Trim();
-                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\&", "");
+                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
                         newPerson.Contact = extractContact(
                             splitByAmpersand[2].Trim()
                             .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
@@ -257,20 +252,14 @@ namespace webapi.ProjectSearch.Services
                     break;
 
                 case "\\TimeframeStart":
-                    newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameStart = newReportDate;
-                    //newProjectInfo.TimeFrameStart = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameStart = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
                     break;
 
                 case "\\TimeframeEnd":
-                    newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameEnd = newReportDate;
-                    //newProjectInfo.TimeFrameEnd = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameEnd = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
                     break;
                 case "\\TimeframeReportDue":
-                    newReportDate = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    newProjectInfo.TimeFrameReportDue = newReportDate;
-                    //newProjectInfo.TimeFrameReportDue = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                    newProjectInfo.TimeFrameReportDue = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture); ;
                     break;
                 case "\\TimeframeComment":
                     newProjectInfo.TimeFrameComment = data;

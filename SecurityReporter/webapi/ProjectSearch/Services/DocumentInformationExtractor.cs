@@ -40,8 +40,7 @@ namespace webapi.ProjectSearch.Services
                                 if (inBracketContents[0] == "\\ReportVersionEntry")
                                 {
                                     ReportVersionEntry newReport = new ReportVersionEntry();
-                                    DateTime newReportVersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture); ;
-                                    newReport.VersionDate = new DateOnly(newReportVersionDate.Year, newReportVersionDate.Month, newReportVersionDate.Day);
+                                    newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                     newReport.Version = inBracketContents[2];
                                     newReport.WholeName = inBracketContents[3];
                                     newReport.ReportStatus = inBracketContents[4];
@@ -119,9 +118,7 @@ namespace webapi.ProjectSearch.Services
                         break;
                     case "\\ReportDate":
                         //ZMENIT ATRIBUT NA STRING
-                        DateTime newReportDate;
-                        newReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
-                        newDocumentInfo.ReportDate = new DateOnly(newReportDate.Year, newReportDate.Month, newReportDate.Day);
+                        newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
                         break;
                 }
             }
