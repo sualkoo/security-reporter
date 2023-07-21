@@ -30,6 +30,7 @@ export class ProjectSearchPageComponent implements OnInit {
     return atBottom;
   }
 
+  totalRecords?: number;
   newReport?: ProjectDataReport;
   loadedReports: ProjectDataReport[] = []
   nextPage: string | undefined | null;
@@ -52,6 +53,7 @@ export class ProjectSearchPageComponent implements OnInit {
   resetSearch() {
    
     this.loadedReports = [];
+    this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
     this.newReport = undefined;
@@ -73,10 +75,12 @@ export class ProjectSearchPageComponent implements OnInit {
         1
       ).subscribe(
         (response) => {
+          console.log(response)
           if (response.data.length == 0) {
             this.notificationService.displayMessage("No reports found.", "info");
           } else {
             this.loadedReports = response.data as ProjectDataReport[];
+            this.totalRecords = response.totalRecords;
             this.nextPage = response.nextPage;
             this.lastLoadedPage = response.pageNumber;
           }
