@@ -7,7 +7,7 @@ namespace webapi.Models.ProjectReport
     {
         [Required(ErrorMessage = "VersionDate is required!")]
         [DataType(DataType.Date)]
-        public DateOnly VersionDate { get; set; }
+        public DateTime VersionDate { get; set; }
 
         [Required(ErrorMessage = "Version is required!")]
         [RegularExpression(@"^[0-9.]*$", ErrorMessage = "Version can only contain numbers and the dot character!")]
