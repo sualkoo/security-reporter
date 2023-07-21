@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppComponent } from './app.component';
-import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,12 +23,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
+    AddProjectReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +44,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     NgFor,
     MatSelectModule,
     MatRadioModule,
-    AddProjectComponent,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
