@@ -25,7 +25,7 @@ namespace webapi.Models.ProjectReport
         [MinLength(1, ErrorMessage = "At least one ReportDocumentHistory must be specified!")]
         public List<ReportVersionEntry>? ReportDocumentHistory { get; set; }
         [Required(ErrorMessage = "The Report Date is required!")]
-        [Range(typeof(DateOnly), "1/1/2015", "31/12/2023", ErrorMessage = "The Report Date must be between {1} and {2}!")]
-        public DateOnly ReportDate { get; set; }
+        [Range(typeof(DateTime), "1/1/2015", "31/12/2023", ErrorMessage = "The Report Date must be between {1} and {2}!")]
+        public DateTime ReportDate { get; set; }
     }
 }
