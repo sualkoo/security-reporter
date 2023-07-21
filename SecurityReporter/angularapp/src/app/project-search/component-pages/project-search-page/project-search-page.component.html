@@ -1,9 +1,9 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-3 bg-white position-fixed" style="height: 100vh;">
+    <div class="col-2 bg-white position-fixed" style="height: 100vh;">
       <div>
-        <form [formGroup]="form" (ngSubmit)="loadReports()" (keyup.enter)="loadReports()">
+        <form [formGroup]="form" (ngSubmit)="onSearch()" (keyup.enter)="onSearch()">
           <div class="form-row">
             <div class="form-group col">
               <label for="subcategory">Keyword</label>
@@ -34,8 +34,8 @@
       </div>
     </div>
     <!-- Project Reports -->
-    <div class="col offset-3">
-      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox (scroll)="onScroll()">
+    <div class="col offset-2">
+      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
 
           <div class="card m-3" *ngFor="let report of loadedReports">
