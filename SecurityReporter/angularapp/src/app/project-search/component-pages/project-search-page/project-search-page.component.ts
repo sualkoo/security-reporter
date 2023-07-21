@@ -31,12 +31,6 @@ export class ProjectSearchPageComponent implements OnInit {
     return atBottom;
   }
 
-  form = new FormGroup({
-    subcategory: new FormControl("DocumentInfo", Validators.required),
-    keyword: new FormControl("ProjectReportName", Validators.required),
-    value: new FormControl("Du", Validators.required)
-  })
-
   loadedReports: ProjectDataReport[] = []
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
@@ -56,6 +50,8 @@ export class ProjectSearchPageComponent implements OnInit {
     this.nextPage = null;
     this.lastLoadedPage = 1;
   }
+
+  displayNewReport(event: Event) { }
 
   loadReports() {
 

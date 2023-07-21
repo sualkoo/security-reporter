@@ -33,7 +33,9 @@
             <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
           </button>
         </div>
-
+        <div>
+          <app-add-project-report (savedReportFromBackend)="displayNewReport($event)"></app-add-project-report>
+        </div>
       </div>
     </div>
     <!-- Project Reports -->
