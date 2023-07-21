@@ -31,6 +31,7 @@ export class ProjectSearchPageComponent implements OnInit {
     return atBottom;
   }
 
+  newReport?: ProjectDataReport;
   loadedReports: ProjectDataReport[] = []
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
@@ -49,11 +50,12 @@ export class ProjectSearchPageComponent implements OnInit {
     this.loadedReports = [];
     this.nextPage = null;
     this.lastLoadedPage = 1;
+    this.newReport = undefined;
   }
 
   displayNewReport(newReport: ProjectDataReport) {
     console.log("Displaying new report");
-    this.loadedReports.push(newReport);
+    this.newReport = newReport;
   }
 
   loadReports() {

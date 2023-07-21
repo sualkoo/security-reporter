@@ -1,7 +1,7 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-3 col-sm-6 col-lg-4 bg-white position-fixed" style="height: 100vh;">
+    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh;">
       <div class="mt-2 pt-2">
 
         <div class="search-container">
@@ -42,10 +42,31 @@
       </div>
     </div>
     <!-- Project Reports -->
-    <div class="col offset-sm-6 offset-lg-4">
+    <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
 
+          <div *ngIf="newReport">
+
+            <div class="card m-3">
+              <div class="card-body">
+                <h5 class="card-title">{{newReport.documentInfo?.projectReportName}} - <span class="text-danger">NEW</span></h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">{{newReport.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
+                <button class="btn btn-light">Get Source</button>
+              </div>
+            </div>
+            <hr />
+
+          </div>
+          <div class="text-center pagination-centered">
+
+            <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+          </div>
+
+          <div class="container-fluid mt-3">
+            <h4>Found reports:</h4>
+          </div>
           <div class="card m-3" *ngFor="let report of loadedReports">
             <div class="card-body">
               <h5 class="card-title">{{report.documentInfo?.projectReportName}}</h5>
@@ -53,10 +74,10 @@
               <p class="card-text">{{report.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
               <button class="btn btn-light">Get Source</button>
             </div>
-            </div>
-            <div class="text-center pagination-centered">
+          </div>
+          <div class="text-center pagination-centered">
 
-              <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+            <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
           </div>
         </div>
       </div>
