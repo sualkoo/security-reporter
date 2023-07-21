@@ -14,8 +14,9 @@ namespace webapi.Models.ProjectReport
         [MinLength(1, ErrorMessage = "WorstCaseScenarios must have at least one item.")]
         public List<string>? WorstCaseScenarios { get; set; }
 
-        [MinLength(1, ErrorMessage = "Description must have at least one item.")]
-        public List<string>? Description { get; set; }
-        //Boolean pole na Findings case scenarios
+        [MinLength(1, ErrorMessage = "Environment must have at least one item.")]
+        public List<string>? Environment { get; set; }
+        [Required(ErrorMessage = "WorstCaseScenariosReport is required!")]
+        public WorstCaseScenarioReport? WorstCaseScenariosReport { get; set; }
     }
 }

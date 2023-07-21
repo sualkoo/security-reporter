@@ -1,10 +1,12 @@
-<div class="heading">
-  <mat-icon class="icon" aria-hidden="false" aria-label="Example home icon" fontIcon={{getIcon}}></mat-icon>
-    <mat-icon class="cancel" aria-hidden="false" aria-label="Example home icon" fontIcon="close" (click)="snackBarRef.dismiss()"></mat-icon>
-  <div class="title">{{getTitle}}</div>
-</div>
-<div class="custom-snack-bar">
-  <div class="alert-message">
-    {{data.message}}
+<div class="container">
+  <div class="header">
+    <mat-icon class="icon">{{getIcon}}</mat-icon>
+    <div class="title">{{getTitle}}</div>
+    <mat-icon class="cancel" (click)="snackBarRef.dismiss()">close</mat-icon>
+  </div>
+  <div class="custom-snack-bar">
+    <div class="alert-message">
+      {{data.message}}
+    </div>
   </div>
 </div>

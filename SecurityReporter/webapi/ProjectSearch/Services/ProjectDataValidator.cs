@@ -33,9 +33,9 @@ namespace webapi.ProjectSearch.Services
                 DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestCoordinator),
                 DataAnnotation.ValidateList<ProjectInformationParticipant>(projectReport.ProjectInfo.PentestTeam),
                 DataAnnotation.ValidateList<Finding>(projectReport.Findings),
-                //DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
-                //DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.InScope),
-                //DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.OutOfScope),
+                DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
+                DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.InScope),
+                DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.OutOfScope),
                 DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
                 DataAnnotation.ValidateList<Tool>(projectReport.TestingMethodology.ToolsUsed),
             };

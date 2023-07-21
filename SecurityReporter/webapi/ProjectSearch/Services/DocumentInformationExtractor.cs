@@ -27,34 +27,35 @@ namespace webapi.ProjectSearch.Services
                 {
 
                     string line;
-                    char[] delimiters = { '{', '}', '\\' };
+                    char[] delimiters = { '{', '}'};
                     while ((line = reader.ReadLine()) != null)
                     {
 
-                        if (!string.IsNullOrEmpty(line) && (line[0] == '\\' || line[0] == '\t'))
+                        if (!string.IsNullOrEmpty(line) && line.Length > 0)
                         {
-                            string[] inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            if (inBracketContents[1] == "ReportVersionEntry")
+                            string trimmedLine = line.Trim();
+                            if(trimmedLine[0] == '\\')
                             {
-                                ReportVersionEntry newReport = new ReportVersionEntry();
-                                DateTime newReportVersionDate = DateTime.ParseExact(inBracketContents[2].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture); ;
-                                newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                newReport.Version = inBracketContents[3];
-                                newReport.WholeName = inBracketContents[4];
-                                newReport.ReportStatus = inBracketContents[5];
-                                newDocumentInfo.ReportDocumentHistory.Add(newReport);
-                            }
-                            else
-                            {
-                                if (inBracketContents.Length > 2)
+                                string[] inBracketContents = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                                if (inBracketContents[0] == "\\ReportVersionEntry")
                                 {
-                                    List<string> result = ReadInlineContents(inBracketContents[2]);
-                                    assignNewData(inBracketContents[1], result, newDocumentInfo);
+                                    ReportVersionEntry newReport = new ReportVersionEntry();
+                                    newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                    newReport.Version = inBracketContents[2];
+                                    newReport.WholeName = inBracketContents[3];
+                                    newReport.ReportStatus = inBracketContents[4];
+                                    newDocumentInfo.ReportDocumentHistory.Add(newReport);
                                 }
-                            }
+                                else
+                                {
+                                    if (inBracketContents.Length > 2)
+                                    {
+                                        List<string> result = ReadInlineContents(inBracketContents[2]);
+                                        assignNewData(inBracketContents[1], result, newDocumentInfo);
+                                    }
+                                }
+                            } 
                         }
-
-                        //Console.WriteLine();
                     }
                 }
                 return newDocumentInfo;
@@ -63,13 +64,17 @@ namespace webapi.ProjectSearch.Services
 
         private List<string> ReadInlineContents(string extractedLine)
         {
-            char[] delimiters = { '}', '\\' };
-            string[] cutString = extractedLine.Split(delimiters);
-            string[] actualData = cutString[0].Split(',', StringSplitOptions.RemoveEmptyEntries);
-            List<string> contents = new List<string>();
-            foreach (string data in actualData)
+            List<string> contents = null;
+            char delimiter = '\\';
+            string[] cutString = extractedLine.Split(delimiter);
+            if(cutString.Length > 0 && (cutString[0].Trim() != "xspace")) 
             {
-                contents.Add(data.Trim());
+                contents = new List<string>();
+                string[] actualData = cutString[0].Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (string data in actualData)
+                {
+                    contents.Add(data.Trim());
+                }
             }
 
             return contents;
@@ -77,42 +82,45 @@ namespace webapi.ProjectSearch.Services
 
         private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
         {
-            switch (command)
+            if(data != null)
             {
-                case "ReportProjectName":
-                    newDocumentInfo.ProjectReportName = data[0];
-                    break;
-                case "AssetType":
-                    newDocumentInfo.AssetType = data[0];
-                    break;
-                case "ReportDocumentMainAuthor":
-                    newDocumentInfo.MainAuthor = data[0];
-                    break;
-                case "ReportDocumentAuthor":
-                    newDocumentInfo.Authors = new List<string>();
-                    foreach (string author in data)
-                    {
-                        newDocumentInfo.Authors.Add(author);
-                    }
-                    break;
-                case "ReportDocumentReviewer":
-                    newDocumentInfo.Reviewiers = new List<string>();
-                    foreach (string reviewer in data)
-                    {
-                        newDocumentInfo.Reviewiers.Add(reviewer);
-                    }
-                    break;
-                case "ReportDocumentApprover":
-                    newDocumentInfo.Approvers = new List<string>();
-                    foreach (string approver in data)
-                    {
-                        newDocumentInfo.Approvers.Add(approver);
-                    }
-                    break;
-                case "\\ReportDate":
-                    //ZMENIT ATRIBUT NA STRING
-                    newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
-                    break;
+                switch (command)
+                {
+                    case "\\ReportProjectName":
+                        newDocumentInfo.ProjectReportName = data[0];
+                        break;
+                    case "\\AssetType":
+                        newDocumentInfo.AssetType = data[0];
+                        break;
+                    case "\\ReportDocumentMainAuthor":
+                        newDocumentInfo.MainAuthor = data[0];
+                        break;
+                    case "\\ReportDocumentAuthor":
+                        newDocumentInfo.Authors = new List<string>();
+                        foreach (string author in data)
+                        {
+                            newDocumentInfo.Authors.Add(author);
+                        }
+                        break;
+                    case "\\ReportDocumentReviewer":
+                        newDocumentInfo.Reviewiers = new List<string>();
+                        foreach (string reviewer in data)
+                        {
+                            newDocumentInfo.Reviewiers.Add(reviewer);
+                        }
+                        break;
+                    case "\\ReportDocumentApprover":
+                        newDocumentInfo.Approvers = new List<string>();
+                        foreach (string approver in data)
+                        {
+                            newDocumentInfo.Approvers.Add(approver);
+                        }
+                        break;
+                    case "\\ReportDate":
+                        //ZMENIT ATRIBUT NA STRING
+                        newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
+                        break;
+                }
             }
         }
     }
