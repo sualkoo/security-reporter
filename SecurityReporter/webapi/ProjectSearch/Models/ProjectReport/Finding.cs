@@ -7,6 +7,7 @@ namespace webapi.Models.ProjectReport
     public class Finding : IEntity
     {
         [Required(ErrorMessage = "FindingAuthor is required.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "FindingAuthor cannot contain numbers or special characters!")]
         public string? FindingAuthor { get; set; }
         [Required(ErrorMessage = "FindingName is required.")]
         public string? FindingName { get; set; }

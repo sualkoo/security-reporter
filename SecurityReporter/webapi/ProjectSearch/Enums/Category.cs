@@ -2,6 +2,7 @@
 {
     public enum Category
     {
+        Undefined,
         AccessControl,
         ApplicationDesign,
         InformationDisclosure,
