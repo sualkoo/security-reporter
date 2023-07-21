@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, delay, tap } from 'rxjs';
 import { ProjectDataReport } from '../interfaces/project-data-report.model';
 import { PagedResponse } from '../interfaces/paged-response.model';
 
@@ -28,7 +28,7 @@ export class ProjectReportService {
 
   public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
 
-    return this.http.get<PagedResponse>(this.apiUrl, {  params: { subcategory: subcategory, keyword: keyword, value: value, page: page } })
+    return this.http.get<PagedResponse>(this.apiUrl, { params: { subcategory: subcategory, keyword: keyword, value: value, page: page } });
   }
 
 
