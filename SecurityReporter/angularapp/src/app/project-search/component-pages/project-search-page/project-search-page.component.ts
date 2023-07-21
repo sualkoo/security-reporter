@@ -40,13 +40,18 @@ export class ProjectSearchPageComponent implements OnInit {
 
 
   onSearch() {
+    this.resetView();
     this.resetSearch();
     this.loadReports();
   }
 
-  resetSearch() {
+  resetView() {
     const container = this.reportsScrollableBox.nativeElement;
     container.scrollTop = 0;
+  }
+
+  resetSearch() {
+   
     this.loadedReports = [];
     this.nextPage = null;
     this.lastLoadedPage = 1;
@@ -54,6 +59,7 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   displayNewReport(newReport: ProjectDataReport) {
+    this.resetView();
     console.log("Displaying new report");
     this.newReport = newReport;
   }
