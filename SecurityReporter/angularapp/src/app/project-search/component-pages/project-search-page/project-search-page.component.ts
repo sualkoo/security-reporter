@@ -86,9 +86,9 @@ export class ProjectSearchPageComponent implements OnInit {
     console.log("Loading next page")
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReports(
-      this.form.controls['subcategory'].value as string,
-      this.form.controls['keyword'].value as string,
-      this.form.controls['value'].value as string,
+      this.subcategory,
+      this.keyword,
+      this.value,
       (this.lastLoadedPage + 1)
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
