@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppComponent } from './app.component';
-import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -45,7 +44,6 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
     NgFor,
     MatSelectModule,
     MatRadioModule,
-    AddProjectComponent,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
