@@ -21,3 +21,25 @@
 .search-field {
   width: 100%;
 }
+
+@media screen and (max-width: 1090px) {
+  .filters-container {
+    grid-template-columns: 1fr; /* 1 stĺpec */
+  }
+
+  .filter-item {
+    padding: 5px 30px; /* Add padding around each filter item */
+
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .filters-container {
+    width: 100%;
+  }
+
+  .filter-item {
+    padding: 0; /* Add padding around each filter item */
+
+  }
+}
