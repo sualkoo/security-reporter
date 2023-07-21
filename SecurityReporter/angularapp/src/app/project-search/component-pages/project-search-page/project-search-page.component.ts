@@ -51,7 +51,10 @@ export class ProjectSearchPageComponent implements OnInit {
     this.lastLoadedPage = 1;
   }
 
-  displayNewReport(event: Event) { }
+  displayNewReport(newReport: ProjectDataReport) {
+    console.log("Displaying new report");
+    this.loadedReports.push(newReport);
+  }
 
   loadReports() {
 

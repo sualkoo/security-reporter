@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NotificationService } from '../../providers/notification.service';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProjectDataReport } from '../../interfaces/project-data-report.model';
 
 
 @Component({
@@ -14,9 +15,9 @@ export class AddProjectReportComponent implements OnInit{
     private projectDataService: ProjectReportService,
     private notificationService: NotificationService) {
   }
-    
-
   uploadedFile?: Blob;
+
+  @Output() savedReportFromBackend = new EventEmitter<ProjectDataReport>();
 
   ngOnInit(): void {
   }
@@ -42,6 +43,7 @@ export class AddProjectReportComponent implements OnInit{
             (response) => {
               console.log(response);
               this.notificationService.displayMessage("Report successfully saved to DB.", "success");
+              this.savedReportFromBackend.emit(response);
             },
             (errorResponse: HttpErrorResponse) => {
               this.notificationService.displayMessage(errorResponse.error.details, 'error');
