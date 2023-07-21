@@ -2,8 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild }
 import { ProjectReportService } from '../../providers/project-report-service';
 import { ProjectDataReport } from '../../interfaces/project-data-report.model';
 import { NotificationService } from '../../providers/notification.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { delay, fromEvent, throttle, throttleTime } from 'rxjs';
+import {fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-project-search',
