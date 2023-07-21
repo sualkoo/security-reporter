@@ -1,0 +1,13 @@
+.filters-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 stĺpce s rovnakým podielom šírky */
+  grid-gap: 10px; /* Vzdialenosť medzi jednotlivými položkami */
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px; /* Add padding around each filter item */
+  background-color: #f0f0f0; /* Set a light gray background color */
+  border-radius: 5px; /* Add rounded corners for a more pleasant look */
+}

@@ -13,11 +13,11 @@ import { delay } from 'rxjs';
 export class ProjectSearchPageComponent {
   constructor(private projectReportService: ProjectReportService, private notificationService: NotificationService) { }
 
-  form = new FormGroup({
-    subcategory: new FormControl("DocumentInfo", Validators.required),
-    keyword: new FormControl("ProjectReportName", Validators.required),
-    value: new FormControl("Du", Validators.required)
-  })
+  // form = new FormGroup({
+  //   subcategory: new FormControl("DocumentInfo", Validators.required),
+  //   keyword: new FormControl("ProjectReportName", Validators.required),
+  //   value: new FormControl("Du", Validators.required)
+  // })
 
   loadedReports: ProjectDataReport[] = []
   nextPage: string | undefined | null;
@@ -31,13 +31,12 @@ export class ProjectSearchPageComponent {
   }
 
   loadReports() {
-    if (this.form.controls['value'].value?.length !== 0) {
 
       this.isLoading = true;
       this.projectReportService.getProjectReports(
-        this.form.controls['subcategory'].value as string,
-        this.form.controls['keyword'].value as string,
-        this.form.controls['value'].value as string,
+        this.subcategory,
+        this.keyword,
+        this.value,
         1
       ).pipe(delay(500)).subscribe(
         (response) => {
@@ -52,9 +51,6 @@ export class ProjectSearchPageComponent {
           this.isLoading = false;
         }
       )
-    } else {
-      this.notificationService.displayMessage("Value not specified.", "info")
-    }
   }
 
   // Scrollable window
@@ -76,9 +72,9 @@ export class ProjectSearchPageComponent {
       console.log("Loading next page")
       this.isLoadingNextPage = true;
       this.projectReportService.getProjectReports(
-        this.form.controls['subcategory'].value as string,
-        this.form.controls['keyword'].value as string,
-        this.form.controls['value'].value as string,
+        this.subcategory,
+        this.keyword,
+        this.value,
         (this.lastLoadedPage + 1)
       ).subscribe(res => {
         this.lastLoadedPage = res.pageNumber;
@@ -93,4 +89,49 @@ export class ProjectSearchPageComponent {
       console.log("Last page loaded")
     }
   }
+
+  value: string = '';
+  keyword: string = '';
+  subcategory: string = '';
+
+
+  keywords = [
+    { id: 'case1', value: 'ProjectReportName', label: 'Project Name' },
+    { id: 'case2', value: 'SubsectionDetails', label: 'Details' },
+    { id: 'case3', value: 'SubsectionImpact', label: 'Impact' },
+    { id: 'case4', value: 'SubsectionRepeatability', label: 'Repeatability' },
+    { id: 'case5', value: 'SubsectionReferences', label: 'References' },
+    { id: 'case6', value: 'CWE', label: 'CWE' }
+  ];
+
+
+  isFormValid: boolean = false;
+
+  checkFormValidity(): void {
+    switch (this.keyword) {
+      case 'ProjectReportName':
+        this.subcategory = 'DocumentInfo';
+        break;
+      case 'SubsectionDetails':
+        this.subcategory = 'Finding';
+        break;
+      case 'SubsectionImpact':
+        this.subcategory = 'Finding';
+        break;
+      case 'SubsectionRepeatability':
+        this.subcategory = 'Finding';
+        break;
+      case 'SubsectionReferences':
+        this.subcategory = 'Finding';
+        break;
+      case 'CWE':
+        this.subcategory = 'Finding';
+        break;
+      default: this.subcategory = '';
+    }
+
+    this.isFormValid = this.value.trim() !== '' && this.subcategory !== '' && this.keyword !== '';
+
+  }
+
 }
