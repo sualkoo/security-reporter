@@ -1,45 +1,48 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-4 bg-white position-fixed" style="height: 100vh;">
-      <div>
+    <div class="col-3 col-sm-6 col-lg-4 bg-white position-fixed" style="height: 100vh;">
+      <div class="mt-2 pt-2">
 
         <div class="search-container">
-          <h4 class="center">Search items</h4>
-        <mat-form-field class="search-field">
-        <input matInput placeholder="Search..." [(ngModel)]="value"  (ngModelChange)="checkFormValidity()" (keyup.enter)="onSearch()">
-        </mat-form-field>
+          <h1 class="center pb-2">Search items</h1>
+          <mat-form-field class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()" (keyup.enter)="onSearch()">
+          </mat-form-field>
 
-        <h4 class="center">Filters</h4>
-        <div class="center">
-          <div class="filters-container">
-            <div class="filter-item" *ngFor="let case of keywords;  let i = index">
-              <input class="checkbox"
-                     type="radio"
-                     [id]="case.id"
-                     [name]="'case' + i"
-                     [value]="case.value"
-                     [(ngModel)]="keyword"
-                     (ngModelChange)="checkFormValidity()"
-              >
-              <label [for]="case.id">{{ case.label }}</label><br>
+          <h4 class="center pt-2 pb-2">Filters</h4>
+          <div class="center">
+            <div class="filters-container">
+              <div class="filter-item" *ngFor="let case of keywords;  let i = index">
+                <input class="checkbox"
+                       type="radio"
+                       [id]="case.id"
+                       [name]="'case' + i"
+                       [value]="case.value"
+                       [(ngModel)]="keyword"
+                       (ngModelChange)="checkFormValidity()">
+                <label class="p-2" [for]="case.id">{{ case.label }}</label><br>
+              </div>
             </div>
           </div>
+
+          <div class="center submit-button pt-4">
+            <button class="btn btn-primary" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+              <span *ngIf="!isLoading">Search</span>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            </button>
+          </div>
         </div>
-        </div>
-        <div class="center submit-button">
-          <button class="primary__button"   [disabled]="!isFormValid || isLoading" (click)="onSearch()">
-            <span *ngIf="!isLoading">Search</span>
-            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-          </button>
-        </div>
-        <div>
+        <div class="pt-4">
+          <hr />
+          <!-- Upload -->
           <app-add-project-report (savedReportFromBackend)="displayNewReport($event)"></app-add-project-report>
         </div>
       </div>
     </div>
     <!-- Project Reports -->
-    <div class="col offset-4">
+    <div class="col offset-sm-6 offset-lg-4">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
 
@@ -48,7 +51,7 @@
               <h5 class="card-title">{{report.documentInfo?.projectReportName}}</h5>
               <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
               <p class="card-text">{{report.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
-              <button class="btn btn-secondary">Get Source</button>
+              <button class="btn btn-light">Get Source</button>
             </div>
             </div>
             <div class="text-center pagination-centered">

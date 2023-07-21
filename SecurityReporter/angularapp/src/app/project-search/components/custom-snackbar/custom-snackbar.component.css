@@ -6,7 +6,7 @@
 .alert-message {
   position: relative;
   color: #393939;
-  left: 10%;
+  left: 13%;
   width: 75%;
 }
 
@@ -19,7 +19,7 @@
     position: absolute;
     font-family: 'Siemens sans';
     font-size: large;
-    top: 23%;
+    top: 13%;
     left: 15%;
     font-weight: bold;
 }
