@@ -47,7 +47,7 @@ namespace webapi.ProjectSearch.Services
                 }
             }
 
-            bool isValid = Validator.Validate(newReportData);
+            Validator.Validate(newReportData);
 
             bool result = await CosmosService.AddProjectReport(newReportData);
 
