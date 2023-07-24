@@ -1,16 +1,22 @@
 .filters {
     display:flex;
     justify-content : space-between;
-    margin-left: 100px;
     margin-right: 100px;
-    margin-top: 20px;
+    align-items: end;
     gap: 20px;
 }
 
-.select {
-    width: 140px;
+.filter-component {
+  display: flex;
+  flex-direction: column;
+  margin-left: 100px;
+  margin-top: 50px;
 }
 
-.date {
-  width: 150px;
+.select-wide {
+    width: 150px;
+}
+
+.select-thin {
+  width: 90px;
 }
