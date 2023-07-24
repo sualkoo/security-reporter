@@ -105,7 +105,7 @@ export class AddProjectComponent {
     ProjectName: '',
     StartDate: new Date('0001-01-01'),
     EndDate: new Date('0001-01-01'),
-    ProjectStatus: projectStatusIndex['TBS'],
+    ProjectStatus: projectStatusIndex['Requested'],
     ProjectScope: projectScopeIndex['TBS'],
     ProjectQuestionare: projectQuestionareIndex['TBS'],
     PentestAspects: '',

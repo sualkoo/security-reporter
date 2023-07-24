@@ -118,21 +118,21 @@ export class DataGridComponentComponent implements AfterViewInit {
   getStatusString(status: number): string {
     switch (status) {
       case 0:
-        return 'TBS';
-      case 1:
         return 'Requested';
-      case 2:
+      case 1:
         return 'Planned';
-      case 3:
+      case 2:
         return 'In progress';
-      case 4:
+      case 3:
         return 'Finished';
+      case 4:
+        return 'Cancelled';
       case 5:
         return 'Cancelled';
       case 6:
         return 'On hold';
       default:
-        return '-';
+        return 'Requested';
     }
   }
 
@@ -212,18 +212,18 @@ export class DataGridComponentComponent implements AfterViewInit {
         return this.selection.isSelected(element) ? '#F2F2F2' : 'white';
       case 1:
         return '#E9D1D4';
-      case 2:
+      case 1:
         return '#CAC8E0';
-      case 3: 
+      case 2: 
         return '#FFF3BF';
-      case 4:
+      case 3:
         return '#BFE6CD';
-      case 5:
+      case 4:
         return '#F9BFC7';
-      case 6:
+      case 5:
         return '#CEEFFB';
       default:
-        return '';
+        return '#E9D1D4';
     }
   }
 

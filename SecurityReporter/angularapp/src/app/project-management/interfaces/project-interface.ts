@@ -32,14 +32,13 @@ type ProjectStatus =
   | 'Cancelled'
   | 'On hold';
 
-export const projectStatusIndex: { [key in ProjectStatus]: number } = {
-  TBS: 0,
-  Requested: 1,
-  Planned: 2,
-  'In progress': 3,
-  Finished: 4,
-  Cancelled: 5,
-  'On hold': 6,
+export const projectStatusIndex: { [key in ProjectStatus]: number} = { 
+  Requested: 0,
+  Planned: 1,
+  'In progress': 2,
+  Finished: 3,
+  Cancelled: 4,
+  'On hold': 5
 };
 
 type ProjectQuestionare = 'TBS' | 'Sent' | 'Received';
