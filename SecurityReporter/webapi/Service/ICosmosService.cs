@@ -10,6 +10,7 @@ namespace webapi.Service
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
         Task<List<ProjectData>> GetItems(int pageSize, int pageNumber);
+        Task<List<ProjectData>> FilterProjects(FilterData filter);
         Task<int> GetNumberOfProjects();
     }
 }

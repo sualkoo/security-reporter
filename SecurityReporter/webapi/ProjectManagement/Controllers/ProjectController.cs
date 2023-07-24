@@ -90,4 +90,12 @@ public class ProjectController : ControllerBase
 
         return Ok(items);
     }
+
+    [HttpGet("filter")]
+    public async Task<IActionResult> FilterProjects([FromQuery] FilterData filter)
+    {
+        var filteredProjects = await CosmosService.FilterProjects(filter);
+
+        return Ok(filteredProjects);
+    }
 }
