@@ -135,85 +135,72 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, string projectName = null, string projectStatus = null,
-                                              string questionnaire = null, string projectScope = null, DateTime? startDate = null,
-                                              DateTime? endDate = null, int? pentestDurationMin = null, int? pentestDurationMax = null,
-                                              string ikoAndTKO = null)
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter)
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
             // Build the base query
             var queryString = "SELECT * FROM c";
-            var queryParameters = new Dictionary<string, object>
-    {
-
-    };
+            var queryParameters = new Dictionary<string, object>();
 
             // Create a list to hold the filter conditions
             var filterConditions = new List<string>();
 
             // Filter based on Project Name
-            if (!string.IsNullOrEmpty(projectName))
+            if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
                 filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
-                queryParameters["@projectName"] = projectName.ToLower();
+                queryParameters["@projectName"] = filter.FilteredProjectName.ToLower();
             }
 
             // Filter based on Project Status
-            if (!string.IsNullOrEmpty(projectStatus))
+            if (filter.FilteredProjectStatus.HasValue)
             {
                 filterConditions.Add("c.ProjectStatus = @projectStatus");
-                queryParameters["@projectStatus"] = projectStatus;
+                queryParameters["@projectStatus"] = (int)filter.FilteredProjectStatus.Value;
             }
 
-            // Filter based on Questionnaire
-            if (!string.IsNullOrEmpty(questionnaire))
+            // Filter based on Project Questionnaire
+            if (filter.FilteredProjectQuestionare.HasValue)
             {
-                filterConditions.Add("c.Questionnaire = @questionnaire");
-                queryParameters["@questionnaire"] = questionnaire;
+                filterConditions.Add("c.ProjectQuestionare = @questionnaire");
+                queryParameters["@questionnaire"] = (int)filter.FilteredProjectQuestionare.Value;
             }
 
             // Filter based on Project Scope
-            if (!string.IsNullOrEmpty(projectScope))
+            if (filter.FilteredProjectScope.HasValue)
             {
                 filterConditions.Add("c.ProjectScope = @projectScope");
-                queryParameters["@projectScope"] = projectScope;
+                queryParameters["@projectScope"] = (int)filter.FilteredProjectScope.Value;
             }
 
             // Filter based on Start Date
-            if (startDate.HasValue)
+            if (filter.FilteredStartDate.HasValue)
             {
                 filterConditions.Add("c.StartDate >= @startDate");
-                queryParameters["@startDate"] = startDate.Value;
+                queryParameters["@startDate"] = filter.FilteredStartDate.Value.ToString("yyyy-MM-dd");
             }
 
             // Filter based on End Date
-            if (endDate.HasValue)
+            if (filter.FilteredEndDate.HasValue)
             {
                 filterConditions.Add("c.EndDate <= @endDate");
-                queryParameters["@endDate"] = endDate.Value;
+                queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
             }
 
             // Filter based on Pentest Duration (within a range)
-            if (pentestDurationMin.HasValue && pentestDurationMax.HasValue)
+            if (filter.FilteredPentestDuration.HasValue)
             {
                 filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
-                queryParameters["@pentestDurationMin"] = pentestDurationMin.Value;
-                queryParameters["@pentestDurationMax"] = pentestDurationMax.Value;
-            }
-
-            // Filter based on IKO & TKO
-            if (!string.IsNullOrEmpty(ikoAndTKO))
-            {
-                filterConditions.Add("c.IKO_TKO = @ikoAndTKO");
-                queryParameters["@ikoAndTKO"] = ikoAndTKO;
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDuration.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDuration.Value;
             }
 
             // Combine the filter conditions into the final query
             if (filterConditions.Count > 0)
             {
-                queryString += " AND " + string.Join(" AND ", filterConditions);
+                queryString += " WHERE " + string.Join(" AND ", filterConditions);
             }
 
             // Add OFFSET and LIMIT parameters
@@ -247,5 +234,6 @@ namespace webapi.Service
 
             return items;
         }
+
     }
 }
