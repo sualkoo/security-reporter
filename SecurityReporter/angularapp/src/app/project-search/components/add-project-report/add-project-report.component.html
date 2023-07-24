@@ -1,18 +1,18 @@
+<div class="pt-2">
+  <h2 class="center">Upload</h2>
+  <div>
+    <div class="center pt-2">
+      <input type="file" (change)="upload({event: $event})" accept=".zip" />
+    </div>
 
-       <div>
-              <h2 class="center">Upload</h2>
-              <div>
-                     <div class="center">
-                            <input type="file" (change)="upload({event: $event})" accept=".zip" />
-                     </div>
-                     
-                     <div class="center">
-                            <button class="primary__button" [disabled]="uploadedFile == undefined ? true : false" (click)="uploadFile()">
-                                   Upload
-                            </button>
-                     </div>
-                     
-              </div>
-       </div>
+    <div class="center pt-4" >
+      <button class="btn btn-secondary" [disabled]="uploadedFile == undefined ? true : false" (click)="uploadFile()">
+        Upload
+      </button>
+    </div>
+
+  </div>
+</div>
+
 
 

@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using webapi.ProjectSearch.Models;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+﻿using webapi.ProjectSearch.Models;
 using webapi.Service;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Logging;
+
 
 namespace webapi.ProjectSearch.Services
 {
@@ -78,6 +75,18 @@ namespace webapi.ProjectSearch.Services
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
             }
             return newReportData;
+        }
+
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        {
+            Logger.LogInformation($"Fetching project reports by keywords");
+
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
+            }
+
+            return await CosmosService.GetPagedProjectReports(projectName, details, impact, repeatability, references, cWE, value, page);
         }
     }
 }

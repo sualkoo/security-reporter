@@ -10,7 +10,7 @@ namespace webapi.Models.ProjectReport
         [Required(ErrorMessage = "AssetType is required!")]
         public string? AssetType { get; set; }
         [Required(ErrorMessage = "Main author is required!")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "MainAuthor cannot contain numbers!")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "MainAuthor cannot contain numbers or special characters!")]
         public string? MainAuthor { get; set; }
         [Required]
         [MinLength(1, ErrorMessage = "At least one author must be specified!")]

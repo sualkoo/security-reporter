@@ -2,6 +2,7 @@
 {
     public enum Criticality
     {
+        Undefined,
         High,
         Medium,
         Low,

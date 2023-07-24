@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppComponent } from './app.component';
-import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,16 +16,14 @@ import { SelectComponentComponent } from './project-management/components/select
 import { InputComponentComponent } from './project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ProjectSearchResultsPageComponent } from './project-search/component-pages/project-search-results-page/project-search-results-page.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
-import { SearchbarComponent } from './project-search/components/searchbar/searchbar.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 
 
 @NgModule({
@@ -34,8 +31,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    ProjectSearchResultsPageComponent,
-    SearchbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +44,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     NgFor,
     MatSelectModule,
     MatRadioModule,
-    AddProjectComponent,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
@@ -58,11 +52,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSnackBarModule,
     MatIconModule,
     FormsModule,
+    ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
     MatSnackBarModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

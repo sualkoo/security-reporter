@@ -3,7 +3,7 @@
   justify-content: center;
 }
 
-button {
+.btn {
     height: 40px;
     font-weight : bold;
     padding: 0px 24px 0px 24px;
@@ -18,62 +18,56 @@ button {
     cursor: pointer;
   }
   
-  /* standard__button */
-  
-  .standard__button {
-    border: 1px solid #cccccc;
-    color: black;
-    background-color: white;
+  /* btn-secondary */
+
+.btn-secondary {
+  border: 1px solid #009999;
+  color: white;
+  background-color: #009999;
+}
+
+  .btn-secondary:hover {
+    border: 1px solid #009999;
+    color: white;
+    background-color: #009999;
   }
-  
-  .standard__button:hover {
-    border: 1px solid #cccccc;
-    color: black;
-    background-color: #f2f2f2;
+
+  .btn-secondary:focus {
+    border: 2px solid #009999;
+    color: white;
+    background-color: #009999;
   }
-  
-  .standard__button:focus {
-    border: 2px solid #ec6602;
-    color: black;
-    background-color: #f2f2f2;
+
+  .btn-secondary:active {
+    border: 1px solid #009999;
+    color: white;
+    background-color: #009999;
   }
-  
-  .standard__button:active {
-    border: 1px solid #cccccc;
-    color: black;
-    background-color: #e6e6e6;
-  }
-  
-  .standard__button:disabled {
-    border: 2px solid #ec6602;
-    color: black;
-    background-color: white;
+
+  .btn-secondary:disabled {
+    border: 2px solid #009999;
+    color: white;
+    background-color: #009999;
     opacity: 40%;
   }
   
-  /* primary__button */
+  /* btn-primary */
   
-  .primary__button {
+  .btn-primary {
     border: 1px solid #ec6602;
     color: white;
     background-color: #ec6602;
   }
   
-  .primary__button:hover {
+  .btn-primary:hover {
     border: 1px solid #cf4b00;
     color: white;
     background-color: #cf4b00;
   }
-  
-  .primary__button:focus {
+
+  .btn-primary:disabled {
     border: 2px solid #f9b591;
-    color: white;
-    background-color: #ec6602;
-  }
-  
-  .primary__button:disabled {
-    border: 2px solid #f9b591;
-    color:  #fdddcb;
+    color: #fdddcb;
     background-color: #f9b591;
     opacity: 40%;
   }

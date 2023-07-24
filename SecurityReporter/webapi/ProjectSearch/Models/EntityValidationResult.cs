@@ -45,13 +45,18 @@ namespace webapi.ProjectSearch.Models
         public EntityValidationResult ValidateList(IEnumerable<T> entities)
         {
             var validationResults = new List<ValidationResult>();
-
-            foreach (var entity in entities)
+            if (entities == null)
             {
-                var entityValidationResult = Validate(entity);
-                validationResults.AddRange(entityValidationResult.ValidationErrors);
-            }
 
+            }
+            else
+            {
+                foreach (var entity in entities)
+                {
+                    var entityValidationResult = Validate(entity);
+                    validationResults.AddRange(entityValidationResult.ValidationErrors);
+                }
+            }
             return new EntityValidationResult(validationResults);
         }
         public EntityValidationResult ValidateTimeFrames(T entity)

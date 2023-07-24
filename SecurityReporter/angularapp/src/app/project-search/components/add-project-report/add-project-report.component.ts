@@ -1,22 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NotificationService } from '../../providers/notification.service';
-import { ProjectDataService } from '../../providers/project-data-service';
+import { ProjectReportService } from '../../providers/project-report-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProjectDataReport } from '../../interfaces/project-data-report.model';
+
 
 @Component({
   selector: 'app-add-project-report',
   templateUrl: './add-project-report.component.html',
-  styleUrls: ['./add-project-report.component.css', '../../project-search.css'],
+  styleUrls: ['./add-project-report.component.css', '../../project-search.css']
 })
-export class AddProjectReportComponent {
+export class AddProjectReportComponent implements OnInit{
   constructor(
-    private projectDataService: ProjectDataService,
-    private notificationService: NotificationService
-  ) {}
-
+    private projectDataService: ProjectReportService,
+    private notificationService: NotificationService) {
+  }
   uploadedFile?: Blob;
 
-  ngOnInit(): void {}
+  @Output() savedReportFromBackend = new EventEmitter<ProjectDataReport>();
+
+  ngOnInit(): void {
+  }
 
   upload({ event }: { event: any }) {
     this.uploadedFile = event.target.files[0];
@@ -27,7 +31,6 @@ export class AddProjectReportComponent {
       this.notificationService.displayMessage("Please select a file", "info");
       throw new Error("File not selected.");
     }
-
     const formData = new FormData();
     formData.append('file', this.uploadedFile!);
 
@@ -40,10 +43,11 @@ export class AddProjectReportComponent {
             (response) => {
               console.log(response);
               this.notificationService.displayMessage("Report successfully saved to DB.", "success");
+              this.savedReportFromBackend.emit(response);
             },
             (errorResponse: HttpErrorResponse) => {
               this.notificationService.displayMessage(errorResponse.error.details, 'error');
-      })
+            })
         } else {
           // Incorrect zip file
           // Display eror message that says the zip is invalid
