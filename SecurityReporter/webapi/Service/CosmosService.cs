@@ -62,12 +62,6 @@ namespace webapi.Service
             }
         }
 
-        public Task<bool> AddProjectReport(ProjectReportData data)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public async Task<bool> DeleteProject(string id)
         {
             try
@@ -230,7 +224,7 @@ namespace webapi.Service
             }
 
             return items;
-        }
+        
         }
 
 
@@ -389,9 +383,5 @@ namespace webapi.Service
         {
             throw new NotImplementedException();
         }
-
-
-
     }
-}
 }
