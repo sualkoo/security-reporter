@@ -82,7 +82,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
-    public async Task<IActionResult> GetItems(int pageSize, int pageNumber, FilterData filter)
+    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
         var items = new List<ProjectData>();
 
@@ -91,11 +91,4 @@ public class ProjectController : ControllerBase
         return Ok(items);
     }
 
-    [HttpGet("filter")]
-    public async Task<IActionResult> FilterProjects([FromQuery] FilterData filter)
-    {
-        var filteredProjects = await CosmosService.FilterProjects(filter);
-
-        return Ok(filteredProjects);
-    }
 }
