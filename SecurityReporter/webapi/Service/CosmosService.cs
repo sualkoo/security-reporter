@@ -172,5 +172,10 @@ namespace webapi.Service
             return items;
 
         }
+
+        public Task<List<ProjectData>> FilterProjects(FilterData filter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
