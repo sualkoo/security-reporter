@@ -199,5 +199,10 @@ namespace webapi.Service
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
             }
         }
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
