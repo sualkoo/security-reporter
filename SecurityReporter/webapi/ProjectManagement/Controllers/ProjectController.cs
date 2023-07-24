@@ -86,9 +86,42 @@ public class ProjectController : ControllerBase
     {
         var items = new List<ProjectData>();
 
-        items = await CosmosService.GetItems(pageSize, pageNumber, filter);
+        try
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("GET");
+            Console.ResetColor();
+            Console.WriteLine("\t /Project/retrieve");
 
-        return Ok(items);
+            items = await CosmosService.GetItems(pageSize, pageNumber, filter);
+
+            if (items.Count > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Success: Data retrieved successfully.");
+                Console.ResetColor();
+
+                return StatusCode(200, items);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Info: No data found matching the filter criteria.");
+                Console.ResetColor();
+
+                return StatusCode(404, "No data found matching the filter criteria.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.ResetColor();
+
+            return StatusCode(400, $"Error retrieving data: {ex.Message}");
+        }
     }
+
+
 
 }
