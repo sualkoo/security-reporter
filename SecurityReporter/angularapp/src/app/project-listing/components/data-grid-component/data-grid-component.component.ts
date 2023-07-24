@@ -15,16 +15,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
-
-
-
+import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
