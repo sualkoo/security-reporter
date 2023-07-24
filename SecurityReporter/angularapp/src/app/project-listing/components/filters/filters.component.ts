@@ -4,6 +4,8 @@ import { SelectComponentComponent } from '../../../project-management/components
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
+import { ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-filters',
@@ -45,4 +47,42 @@ export class FiltersComponent {
     { value: 'TBS', viewValue: 'TBS' },
     { value: 'TKO', viewValue: 'TKO' },
   ];
+
+  filteredClass: ProjectData = {}
+
+  onChildInputValueChanged(value: string, id: string) {
+    switch (id) {
+      case 'PST':
+        //@ts-ignore
+        this.filteredClass.ProjectStatus = projectStatusIndex[value];
+        break;
+      case 'QUE':
+        //@ts-ignore
+        this.filteredClass.Questionare = QuestionareIndex[value];
+        break;
+      case 'PSC':
+        //@ts-ignore
+        this.filteredClass.ProjectScope = projectScopeIndex[value];
+        break;
+      case 'PNS':
+        this.filteredClass.PentestStart = value;
+        break;
+      case 'PNE':
+        this.filteredClass.PentestEnd = value;
+        break;
+      case 'PN':
+        this.filteredClass.ProjectName = value;
+        break;
+    }
+    console.log(this.filteredClass)
+  }
+
+  onChildDateValueChanged(value: Date, id: string) {
+    if (id == 'STR') {
+      this.filteredClass.StartDate = value;
+    } else if (id == 'END') {
+      this.filteredClass.EndDate = value;
+    }
+    console.log(this.filteredClass)
+  }
 }

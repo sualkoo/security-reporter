@@ -1,14 +1,14 @@
 export interface ProjectData {
   ProjectName?: string;
   ProjectStatus?: number;
-  ProjectQuestionare?: number;
+  Questionare?: number;
   ProjectScope?: number;
-  PentestStart?: number;
-  PentestEnd?: number;
+  PentestStart?: string;
+  PentestEnd?: string;
   StartDate?: Date;
   EndDate?: Date;
   IKO?: Date;
-  TKO?: number;
+  TKO?: Date;
 }
 
 type ProjectStatus =
@@ -28,9 +28,9 @@ export const projectStatusIndex: { [key in ProjectStatus]: number } = {
   'On hold': 5,
 };
 
-type ProjectQuestionare = 'TBS' | 'Sent' | 'Received';
+type Questionare = 'TBS' | 'Sent' | 'Received';
 
-export const projectQuestionareIndex: { [key in ProjectQuestionare]: number } =
+export const QuestionareIndex: { [key in Questionare]: number } =
 {
   TBS: 0,
   Sent: 1,
