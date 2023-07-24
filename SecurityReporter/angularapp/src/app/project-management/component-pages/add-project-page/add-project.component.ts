@@ -13,7 +13,6 @@ import { RadioButtonComponentComponent } from '../../components/radio-button-com
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentInterface } from '../../interfaces/comment-interface';
-
 import {
   ProjectInterface,
   projectOfferStatusIndex,
