@@ -30,15 +30,17 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
+import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent
+    AddProjectReportComponent,
   ],
   imports: [
+    AddProjectComponent,
     BrowserModule,
     HttpClientModule,
     MatSlideToggleModule,
