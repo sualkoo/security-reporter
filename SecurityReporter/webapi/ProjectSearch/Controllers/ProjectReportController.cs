@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.Xml;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -54,6 +55,15 @@ namespace webapi.ProjectSearch.Controllers
             {
                 return StatusCode(ex.StatusCode, ex.Message);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> getProjectReportsAsync(string? ProjectName,string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string keyword, string value, int page)
+        {
+            Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
+                $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, value={value}))");
+            PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(ProjectName, Details, Impact, Repeatability, References, CWE, value, page);
+            return Ok(fetchedReports);
         }
     }
 }
