@@ -144,10 +144,10 @@ namespace webapi.Service
             int itemCount = pageSize;
 
             // Build the base query
-            var queryString = "SELECT * FROM c WHERE c.PartitionKey = @partitionKey";
+            var queryString = "SELECT * FROM c";
             var queryParameters = new Dictionary<string, object>
     {
-        { "@partitionKey", "your_partition_key" } // Change "your_partition_key" to your actual partition key
+
     };
 
             // Create a list to hold the filter conditions
