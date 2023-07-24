@@ -15,8 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
-
-
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
