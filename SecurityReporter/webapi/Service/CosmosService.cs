@@ -1,4 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using webapi.Models;
@@ -19,7 +21,6 @@ namespace webapi.Service
             PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
-
         }
 
         public CosmosService(string primaryKey, string databaseId, string containerId, string cosmosEndpoint)
@@ -31,7 +32,6 @@ namespace webapi.Service
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
         }
-
 
         public async Task<bool> AddProject(ProjectData data)
         {
@@ -59,7 +59,6 @@ namespace webapi.Service
             throw new NotImplementedException();
         }
 
-
         public async Task<bool> DeleteProject(string id)
         {
             try
@@ -84,23 +83,18 @@ namespace webapi.Service
             }
         }
 
-
         public async Task<List<string>> DeleteProjects(List<string> projectIds)
         {
             Console.WriteLine("Deleting data from database.");
 
             var failed_to_delete = new List<string>();
 
-
             foreach (var id in projectIds)
             {
                 try
                 {
                     ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
-
-
                     Console.WriteLine($"{id}, Found in DB successfully.");
-
                 }
                 catch (Exception ex)
                 {
@@ -122,7 +116,6 @@ namespace webapi.Service
             Console.WriteLine("Deletion of Projects completed successfully.");
 
             return new List<string> { };
-
         }
 
         public async Task<int> GetNumberOfProjects()
@@ -142,23 +135,93 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber)
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter)
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
-            QueryDefinition query = new QueryDefinition("SELECT * FROM c OFFSET @skipCount LIMIT @itemCount")
-                .WithParameter("@skipCount", skipCount)
-                .WithParameter("@itemCount", itemCount);
+            // Build the base query
+            var queryString = "SELECT * FROM c";
+            var queryParameters = new Dictionary<string, object>();
 
-            List<ProjectData> items = new List<ProjectData>();
-            FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(query);
+            // Create a list to hold the filter conditions
+            var filterConditions = new List<string>();
+
+            // Filter based on Project Name
+            if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
+            {
+                filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
+                queryParameters["@projectName"] = filter.FilteredProjectName.ToLower();
+            }
+
+            // Filter based on Project Status
+            if (filter.FilteredProjectStatus.HasValue)
+            {
+                filterConditions.Add("c.ProjectStatus = @projectStatus");
+                queryParameters["@projectStatus"] = (int)filter.FilteredProjectStatus.Value;
+            }
+
+            // Filter based on Project Questionnaire
+            if (filter.FilteredProjectQuestionare.HasValue)
+            {
+                filterConditions.Add("c.ProjectQuestionare = @questionnaire");
+                queryParameters["@questionnaire"] = (int)filter.FilteredProjectQuestionare.Value;
+            }
+
+            // Filter based on Project Scope
+            if (filter.FilteredProjectScope.HasValue)
+            {
+                filterConditions.Add("c.ProjectScope = @projectScope");
+                queryParameters["@projectScope"] = (int)filter.FilteredProjectScope.Value;
+            }
+
+            // Filter based on Start Date
+            if (filter.FilteredStartDate.HasValue)
+            {
+                filterConditions.Add("c.StartDate >= @startDate");
+                queryParameters["@startDate"] = filter.FilteredStartDate.Value.ToString("yyyy-MM-dd");
+            }
+
+            // Filter based on End Date
+            if (filter.FilteredEndDate.HasValue)
+            {
+                filterConditions.Add("c.EndDate <= @endDate");
+                queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
+            }
+
+            // Filter based on Pentest Duration (within a range)
+            if (filter.FilteredPentestDuration.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDuration.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDuration.Value;
+            }
+
+            // Combine the filter conditions into the final query
+            if (filterConditions.Count > 0)
+            {
+                queryString += " WHERE " + string.Join(" AND ", filterConditions);
+            }
+
+            // Add OFFSET and LIMIT parameters
+            queryString += " OFFSET @skipCount LIMIT @itemCount";
+            queryParameters["@skipCount"] = skipCount;
+            queryParameters["@itemCount"] = itemCount;
+
+            // Execute the query and return the filtered items
+            var items = new List<ProjectData>();
+            var queryDefinition = new QueryDefinition(queryString);
+            foreach (var param in queryParameters)
+            {
+                queryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var resultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
 
             try
             {
                 while (resultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
+                    var response = await resultSetIterator.ReadNextAsync();
                     items.AddRange(response.Resource);
                     Console.WriteLine("Successfully fetched items from DB.");
                 }
@@ -170,12 +233,7 @@ namespace webapi.Service
             }
 
             return items;
-
         }
 
-        public Task<List<ProjectData>> FilterProjects(FilterData filter)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

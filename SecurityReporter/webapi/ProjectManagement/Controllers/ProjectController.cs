@@ -82,20 +82,13 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
-    public async Task<IActionResult> GetItems(int pageSize, int pageNumber)
+    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
         var items = new List<ProjectData>();
 
-        items = await CosmosService.GetItems(pageSize, pageNumber);
+        items = await CosmosService.GetItems(pageSize, pageNumber, filter);
 
         return Ok(items);
     }
 
-    [HttpGet("filter")]
-    public async Task<IActionResult> FilterProjects([FromQuery] FilterData filter)
-    {
-        var filteredProjects = await CosmosService.FilterProjects(filter);
-
-        return Ok(filteredProjects);
-    }
 }
