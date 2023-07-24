@@ -1,0 +1,16 @@
+.filters {
+    display:flex;
+    justify-content : space-between;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.select {
+    width: 140px;
+}
+
+.date {
+  width: 150px;
+}
