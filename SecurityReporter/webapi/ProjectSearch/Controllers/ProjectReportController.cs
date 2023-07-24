@@ -53,7 +53,7 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getProjectReportsAsync(string? ProjectName,string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string keyword, string value, int page)
+        public async Task<IActionResult> getProjectReportsAsync(string? ProjectName,string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string value, int page)
         {
             Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
                 $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, value={value}))");
