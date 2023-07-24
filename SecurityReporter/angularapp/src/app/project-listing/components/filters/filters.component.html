@@ -1,0 +1,42 @@
+
+  <div class="filters">
+
+    <app-input-component title="Project Name"></app-input-component>
+    <div class="select-wide">
+      <app-select-component
+            [option]="ProjectStatus"
+            [title]="'Project status'">
+      </app-select-component>
+    </div>
+    <div class="select-wide">
+        <app-select-component
+            [option]="Questionare"
+            [title]="'Questionare'">
+        </app-select-component>
+    </div>
+    <div class="select-wide">
+      <app-select-component
+            [option]="ProjectScope"
+            [title]="'Project scope'">
+      </app-select-component>
+    </div>
+    <div class="date">
+      <app-datepicker title="Start date"></app-datepicker>
+
+    </div>
+    <div class="date">
+
+      <app-datepicker title="End date"></app-datepicker>
+
+    </div>
+    <app-slider></app-slider>
+    <div class="select-thin">
+      <app-select-component [option]="IKO"
+            [title]="'IKO'"></app-select-component>
+    </div>
+    <div class="select-thin">
+      <app-select-component [option]="TKO"
+            [title]="'TKO'"></app-select-component>
+    </div>
+  </div>
+
