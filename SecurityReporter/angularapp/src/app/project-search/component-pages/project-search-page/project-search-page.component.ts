@@ -75,7 +75,6 @@ export class ProjectSearchPageComponent implements OnInit {
         1
       ).subscribe(
         (response) => {
-          console.log(response)
           if (response.data.length == 0) {
             this.notificationService.displayMessage("No reports found.", "info");
           } else {

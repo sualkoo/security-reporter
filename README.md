@@ -46,6 +46,6 @@ TODO: Enable secret storage on your machine and set Primary Key of your cosmos D
 3. Create comsos DB Emulator Container and Database with name ProjectDatabase and ProjectContainer. Paste following items.
    - In Database id: ProjectDatabase
    - In Container id: ProjectContainer
-   - In Partition Key: anything
+   - In Partition Key: id
 
 - [ASP.NET Safe storage](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows)

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
   <PropertyGroup>
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
@@ -9,8 +9,14 @@
     <ProductionBuildCommand>npm run build</ProductionBuildCommand>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\angularapp</BuildOutputFolder>
+    <UserSecretsId>b748f895-ac0a-4af8-ad6e-779195da7718</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="src\app\project-listing\interfaces\" />
+    <Folder Include="src\app\project-listing\components\" />
+    <Folder Include="src\app\project-listing\components\" />
+    <Folder Include="src\app\project-listing\services\" />
+    <Folder Include="src\app\project-listing\services\" />
     <Folder Include="src\app\project-search\components\" />
     <Folder Include="src\app\project-search\interfaces\Enums\" />
     <Folder Include="src\app\project-search\interfaces\ProjectReport\" />

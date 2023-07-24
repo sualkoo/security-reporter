@@ -1,0 +1,144 @@
+<div class="button-container">
+
+  <div matTooltip="No items selected" [matTooltipDisabled]="!areNoBoxesChecked()" matTooltipPosition="below">
+    <div>
+      <button mat-flat-button color="warn" (click)="openDialog()" class="delete-button" [disabled]="areNoBoxesChecked()" style="margin-right: 5px;">
+        Delete
+      </button>
+    </div>
+  </div>
+
+
+  <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
+    Add project
+  </button>
+</div>
+
+<div class="list-container">
+  <div class="table-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox color=primary (change)="$event ? toggleAllRows() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="handleCheckboxChange(row)"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Project Name Column -->
+      <ng-container matColumnDef="projectName">
+        <th mat-header-cell *matHeaderCellDef> Project Name </th>
+        <td mat-cell *matCellDef="let element"> {{ element.projectName }} </td>
+      </ng-container>
+
+      <!-- Project Status Column -->
+      <ng-container matColumnDef="projectStatus">
+        <th mat-header-cell *matHeaderCellDef> Project Status </th>
+        <td mat-cell *matCellDef="let element" [style.background-color]="getStatusColor(element)">
+          <div [style.background-color]="getStatusColor(element)">
+            {{ getStatusString(element.projectStatus) || '-' }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Questionare Column -->
+      <ng-container matColumnDef="questionare">
+        <th mat-header-cell *matHeaderCellDef> Questionare </th>
+        <td mat-cell *matCellDef="let element"> {{ getQuestionareString(element.projectQuestionare) || '-' }} </td>
+      </ng-container>
+
+      <!-- Project Scope Column -->
+      <ng-container matColumnDef="projectScope">
+        <th mat-header-cell *matHeaderCellDef> Project Scope </th>
+        <td mat-cell *matCellDef="let element"> {{ getScopeString(element.projectScope) || '-' }} </td>
+      </ng-container>
+
+      <!-- Start Column -->
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef> Start </th>
+        <td mat-cell *matCellDef="let element"> {{ element.startDate || '-' }} </td>
+      </ng-container>
+
+      <!-- End Column -->
+      <ng-container matColumnDef="end">
+        <th mat-header-cell *matHeaderCellDef> End </th>
+        <td mat-cell *matCellDef="let element"> {{ element.endDate || '-' }} </td>
+      </ng-container>
+
+      <!-- Report Due Column -->
+      <ng-container matColumnDef="reportDue">
+        <th mat-header-cell *matHeaderCellDef> Report Due </th>
+        <td mat-cell *matCellDef="let element"> {{ element.reportDueDate || '-' }} </td>
+      </ng-container>
+
+      <!-- Pentest Duration Column -->
+      <ng-container matColumnDef="pentestDuration">
+        <th mat-header-cell *matHeaderCellDef> Pentest Duration </th>
+        <td mat-cell *matCellDef="let element"> {{ element.pentestDuration || '-' }} </td>
+      </ng-container>
+
+      <!-- IKO Column -->
+      <ng-container matColumnDef="iko">
+        <th mat-header-cell *matHeaderCellDef> IKO </th>
+        <td mat-cell *matCellDef="let element"> {{ element.iko || '-' }} </td>
+      </ng-container>
+
+      <!-- TKO Column -->
+      <ng-container matColumnDef="tko">
+        <th mat-header-cell *matHeaderCellDef> TKO </th>
+        <td mat-cell *matCellDef="let element"> {{ element.tko || '-' }} </td>
+      </ng-container>
+
+      <!-- Last Comment Column -->
+      <ng-container matColumnDef="lastComment">
+        <th mat-header-cell *matHeaderCellDef> Last Comment </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="comment-text" [title]="element.comments ? element.comments[element.comments.length - 1].text : '-'">
+            {{ truncateComment(element.comments ? element.comments[element.comments.length - 1].text : '-', 20) }}
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
+          (click)="handleRowClick(row)">
+      </tr>
+
+
+      <!-- Placeholder row when dataSource is empty -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="loading-spinner" *ngIf="isLoading">
+            <mat-progress-spinner color="primary" mode="indeterminate" diameter="44"></mat-progress-spinner>
+          </div>
+          <div class="no-data" *ngIf="!isLoading && dataSource.data.length === 0 && !databaseError">
+            No data available
+          </div>
+          <div class="database-error" *ngIf="databaseError">
+            No data available
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="paginator-container mat-elevation-z8">
+    <mat-paginator [length]="length" [pageSize]="15" [pageSizeOptions]="[15, 25, 50]"
+                   (page)="handlePageChange()" (pageSize)="handlePageChange()"
+                   aria-label="Select page">
+    </mat-paginator>
+  </div>
+</div>
+

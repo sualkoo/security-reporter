@@ -26,25 +26,6 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? subcategory, string keyword, string value, int page)
-        {
-            Logger.LogInformation($"Fetching project reports by keywords");
-
-            if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
-            {
-                throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
-            }
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                return await CosmosService.GetPagedProjectReports(subcategory, keyword, value, page);
-            }
-            else
-            {
-                return await CosmosService.GetPagedProjectReports(null, keyword, value, page);
-            }
-        }
-
         public async Task<ProjectReportData> SaveReportFromZip(IFormFile file)
         {
             Logger.LogInformation($"Saving new project report");
@@ -75,6 +56,25 @@ namespace webapi.ProjectSearch.Services
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
             }
             return newReportData;
+        }
+
+        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? subcategory, string keyword, string value, int page)
+        {
+            Logger.LogInformation($"Fetching project reports by keywords");
+
+            if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
+            {
+                throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
+            }
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                return await CosmosService.GetPagedProjectReports(subcategory, keyword, value, page);
+            }
+            else
+            {
+                return await CosmosService.GetPagedProjectReports(null, keyword, value, page);
+            }
         }
 
         public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)

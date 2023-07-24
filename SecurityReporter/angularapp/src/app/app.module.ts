@@ -17,6 +17,12 @@ import { InputComponentComponent } from './project-management/components/input-c
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
+import { CommonModule } from '@angular/common';
+import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
+import { DataGridComponentComponent } from './project-listing/components/data-grid-component/data-grid-component.component';
+import { MatButtonModule } from '@angular/material/button';
+import { DeletePopupComponentComponent } from './project-listing/components/delete-popup-component/delete-popup-component.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -30,7 +36,7 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,
+    AddProjectReportComponent
   ],
   imports: [
     BrowserModule,
@@ -58,8 +64,14 @@ import { AddProjectReportComponent } from './project-search/components/add-proje
     ScrollingModule,
     MatSnackBarModule,
     MatIconModule,
+    CommonModule,
+    ListProjectsPageComponent,
+    DataGridComponentComponent,
+    MatButtonModule,
+    DeletePopupComponentComponent,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.Xml;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -27,19 +26,20 @@ namespace webapi.ProjectSearch.Controllers
                 ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
                 return Ok(savedReport);
             });
-            
+
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value, int page)
-        //{
-        //    Logger.LogInformation("Received GET request for fetching reports");
-        //    return await HandleExceptionAsync(async () => {
-        //        PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value, page);
-        //        return Ok(fetchedReports);
-        //    });
+        [HttpGet]
+        public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value, int page)
+        {
+            Logger.LogInformation("Received GET request for fetching reports");
+            return await HandleExceptionAsync(async () =>
+            {
+                PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value, page);
+                return Ok(fetchedReports);
+            });
 
-        //}
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> getProjectReportById(Guid id)
@@ -53,15 +53,16 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getProjectReportsAsync(string? ProjectName,string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string value, int page)
+        public async Task<IActionResult> getProjectReportsAsyncByParams(string? ProjectName, string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string value, int page)
         {
             Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
                 $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, value={value}))");
-            return await HandleExceptionAsync(async () => {
+            return await HandleExceptionAsync(async () =>
+            {
                 PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(ProjectName, Details, Impact, Repeatability, References, CWE, value, page);
                 return Ok(fetchedReports);
             });
-            
+
         }
     }
 }

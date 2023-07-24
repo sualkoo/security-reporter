@@ -13,7 +13,6 @@ import { RadioButtonComponentComponent } from '../../components/radio-button-com
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { CommentInterface } from '../../interfaces/comment-interface';
-
 import {
   ProjectInterface,
   projectOfferStatusIndex,
@@ -105,7 +104,7 @@ export class AddProjectComponent {
     ProjectName: '',
     StartDate: new Date('0001-01-01'),
     EndDate: new Date('0001-01-01'),
-    ProjectStatus: projectStatusIndex['TBS'],
+    ProjectStatus: projectStatusIndex['Requested'],
     ProjectScope: projectScopeIndex['TBS'],
     ProjectQuestionare: projectQuestionareIndex['TBS'],
     PentestAspects: '',
@@ -114,7 +113,7 @@ export class AddProjectComponent {
     IKO: new Date('0001-01-01'),
     TKO: new Date('0001-01-01'),
     RequestCreated: '',
-    Commments: [],
+    Comments: [],
     CatsNumber: '',
     ProjectOfferStatus: projectOfferStatusIndex['TBS'],
     WorkingTeam: [],
@@ -276,7 +275,7 @@ export class AddProjectComponent {
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Commments = [{
+      this.projectClass.Comments = [{
         text: this.commentInput.nativeElement.value
       }];
     }
