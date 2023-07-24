@@ -31,6 +31,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
+import { FiltersComponent } from './project-listing/components/filters/filters.component';
+import { FiltersDatepickerComponent } from './project-listing/components/datepicker/datepicker.component';
+import { SliderComponent } from './project-listing/components/slider/slider.component';
+import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 
 
 @NgModule({
@@ -71,7 +75,7 @@ import { AddProjectComponent } from './project-management/component-pages/add-pr
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent
   ],
   providers: [],
   bootstrap: [AppComponent],
