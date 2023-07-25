@@ -144,7 +144,7 @@ namespace webapi.Service
             var queryParameters = new Dictionary<string, object>();
             
             var filterConditions = new List<string>();
-            // Filter based on Project Name
+
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
                 filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
