@@ -1,0 +1,46 @@
+%----------------------------------------------------------------------------------------
+%	DOCUMENT TYPE
+%----------------------------------------------------------------------------------------
+
+% Use "\ReportDocument" & "\TitlePageTableReport" when writing Report 
+% Use "\ScopeDocument" & "\TitlePageTableScope" for creating Scope Document
+\newcommand{\DocumentType}{\ReportDocument}
+\renewcommand{\SetTitlePageTable}{\TitlePageTableReport}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportProjectName}{\xspace}
+\newcommand{\ReportProjectType}{\xspace}
+\newcommand{\AssetType}{\xspace}
+
+%----------------------------------------------------------------------------------------
+%	AUTHORS, REVIEWERS, APPROVERS
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportDocumentMainAuthor}{Lukas Nad}
+\newcommand{\ReportDocumentAuthor}{Lukas Nad}
+\newcommand{\ReportDocumentReviewer}{}
+\newcommand{\ReportDocumentApprover}{Filip Mrocek}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT VERSION HISTORY
+%----------------------------------------------------------------------------------------
+% Document version history. Copy the inner line for subsequent version entries.
+% Example: \ReportVersionEntry{DATE}{VERSION}{FIRSTNAME LASTNAME}{draft / review / released}{COMMENT}
+
+% TODO: investigate git version tags (automatic compilation of document history table)
+
+\newcommand{\ReportDocumentHistory}{
+}
+
+
+%----------------------------------------------------------------------------------------
+%	GENERAL DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+\newcommand{\FiscalYear}{}
+\newcommand{\ReportVersion}{Default}
+\newcommand{\ReportDate}{June 12, 2023}
+\newcommand{\ReportDocumentClassification}{CONFIDENTIAL}
+
+\newcommand{\ReportStatus}{} 
+% \newcommand{\ReportStatus}{DRAFT} 

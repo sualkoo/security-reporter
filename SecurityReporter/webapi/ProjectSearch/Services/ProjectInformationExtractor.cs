@@ -79,25 +79,36 @@ namespace webapi.ProjectSearch.Services
 
         private string extractDepartment(string data)
         {
-            string result = "";
-            string delimiter = "\\&";
-            string[] editedString = data.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-            foreach(string str in editedString)
+            if(data != null)
             {
-                result += str;
+                string result = "";
+                string delimiter = "\\&";
+                string[] editedString = data.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string str in editedString)
+                {
+                    result += str;
+                }
+
+                return result;
             }
 
-            return result;
+            return null;
+            
         }
 
         private string extractContact(string data)
         {
-            return data.Substring(9);
+            if(data != null )
+            {
+                return data.Substring(9);
+            }
+
+            return null;
         }
 
         private void AssignNewData(string command, string data)
         {
-            switch(command)
+            if(data != null && command != null)
             {
                 case "\\ApplicationManager":
                     newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
@@ -273,54 +284,50 @@ namespace webapi.ProjectSearch.Services
                     Regex regex = new Regex(@"\d+");
                     MatchCollection matches = regex.Matches(data);
 
-                    foreach(Match match in matches)
-                    {
-                        resultString += match.Value;
-                    }
+                        foreach (Match match in matches)
+                        {
+                            resultString += match.Value;
+                        }
 
-                    newProjectInfo.TimeFrameTotal = int.Parse(resultString);
-                    break;
+                        newProjectInfo.TimeFrameTotal = int.Parse(resultString);
+                        break;
 
-                case "\\TimeframeStart":
-                    newProjectInfo.TimeFrameStart = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    break;
+                    case "\\TimeframeStart":
+                        newProjectInfo.TimeFrameStart = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
+                        break;
 
-                case "\\TimeframeEnd":
-                    newProjectInfo.TimeFrameEnd = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
-                    break;
-                case "\\TimeframeReportDue":
-                    newProjectInfo.TimeFrameReportDue = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture); ;
-                    break;
-                case "\\TimeframeComment":
-                    newProjectInfo.TimeFrameComment = data;
-                    break;
-                case "\\FindingsCountCritical":
-                    newProjectInfo.FindingsCountCritical = int.Parse(data);
-                    break;
-                case "\\FindingsCountHigh":
-                    newProjectInfo.FindingsCountHigh = int.Parse(data);
-                    break;
-                case "\\FindingsCountMedium":
-                    newProjectInfo.FindingsCountMedium = int.Parse(data);
-                    break;
-                case "\\FindingsCountLow":
-                    newProjectInfo.FindingsCountLow = int.Parse(data);
-                    break;
-                case "\\FindingsCountInfo":
-                    newProjectInfo.FindingsCountInfo = int.Parse(data);
-                    break;
-                case "\\FindingsCountTotal":
-                    newProjectInfo.FindingsCountTotal = int.Parse(data);
-                    break;
-                case "\\FindingsCountTBD":
-                    newProjectInfo.FindingsCountCriticalTBD = int.Parse(data);
-                    break;
-
-            }
+                    case "\\TimeframeEnd":
+                        newProjectInfo.TimeFrameEnd = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture);
+                        break;
+                    case "\\TimeframeReportDue":
+                        newProjectInfo.TimeFrameReportDue = DateTime.ParseExact(data, "yyyy-MM-d", CultureInfo.InvariantCulture); ;
+                        break;
+                    case "\\TimeframeComment":
+                        newProjectInfo.TimeFrameComment = data;
+                        break;
+                    case "\\FindingsCountCritical":
+                        newProjectInfo.FindingsCountCritical = int.Parse(data);
+                        break;
+                    case "\\FindingsCountHigh":
+                        newProjectInfo.FindingsCountHigh = int.Parse(data);
+                        break;
+                    case "\\FindingsCountMedium":
+                        newProjectInfo.FindingsCountMedium = int.Parse(data);
+                        break;
+                    case "\\FindingsCountLow":
+                        newProjectInfo.FindingsCountLow = int.Parse(data);
+                        break;
+                    case "\\FindingsCountInfo":
+                        newProjectInfo.FindingsCountInfo = int.Parse(data);
+                        break;
+                    case "\\FindingsCountTotal":
+                        newProjectInfo.FindingsCountTotal = int.Parse(data);
+                        break;
+                    case "\\FindingsCountTBD":
+                        newProjectInfo.FindingsCountCriticalTBD = int.Parse(data);
+                        break;
+                }
+            }   
         }
-
-
     }
-
-    
 }
