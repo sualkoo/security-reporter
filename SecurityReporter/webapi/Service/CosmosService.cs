@@ -166,9 +166,14 @@ namespace webapi.Service
                 queryBuilder.Append($" AND c.ProjectScope = {(int)filter.FilteredProjectScope.Value}");
             }
 
-            if (filter.FilteredPentestDuration.HasValue)
+            if (filter.FilteredPentestDurationStart.HasValue)
             {
-                queryBuilder.Append($" AND c.PentestDuration = {filter.FilteredPentestDuration.Value}");
+                queryBuilder.Append($" AND c.PentestDuration >= {filter.FilteredPentestDurationStart.Value}");
+            }
+
+            if (filter.FilteredPentestDurationEnd.HasValue)
+            {
+                queryBuilder.Append($" AND c.PentestDuration <= {filter.FilteredPentestDurationEnd.Value}");
             }
 
             if (filter.FilteredStartDate.HasValue)
@@ -218,6 +223,5 @@ namespace webapi.Service
 
             return filteredProjects;
         }
-
     }
 }
