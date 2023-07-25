@@ -170,7 +170,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -190,7 +190,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;

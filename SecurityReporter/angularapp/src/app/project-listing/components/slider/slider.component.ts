@@ -1,19 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
+
+
 
 @Component({
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.css'],
   standalone: true,
-  imports: [MatSliderModule],
+  imports: [MatSliderModule, FormsModule],
 })
 export class SliderComponent {
-  formatLabel(value: number): string {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
+  
+  startValue: number = 2;
+  endValue: number = 10;
 
-    return `${value}`;
+  @Output() valuesChanged = new EventEmitter<{ start: number, end: number }>();
+
+  onSliderChange() {
+    this.valuesChanged.emit({ start: this.startValue, end: this.endValue });
   }
+
 }

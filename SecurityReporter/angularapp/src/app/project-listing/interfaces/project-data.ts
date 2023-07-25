@@ -3,12 +3,12 @@ export interface ProjectData {
   ProjectStatus?: number;
   Questionare?: number;
   ProjectScope?: number;
-  PentestStart?: string;
-  PentestEnd?: string;
+  PentestStart?: number;
+  PentestEnd?: number;
   StartDate?: Date;
   EndDate?: Date;
-  IKO?: Date;
-  TKO?: Date;
+  IKO?: number;
+  TKO?: number;
 }
 
 type ProjectStatus =
@@ -45,3 +45,11 @@ export const projectScopeIndex: { [key in ProjectScope]: number } = {
   Confirmed: 2,
   Signed: 3,
 };
+
+type IKO = 'TBD' | 'Date is set';
+
+export const IKOIndex: { [key in IKO]: number } = {
+  TBD: 0,
+  "Date is set": 1,
+};
+
