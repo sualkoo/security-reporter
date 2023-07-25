@@ -59,7 +59,7 @@ namespace webapi.ProjectSearch.Controllers
                 $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, value={value}))");
             return await HandleExceptionAsync(async () =>
             {
-                PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(ProjectName, Details, Impact, Repeatability, References, CWE, value, page);
+                PagedDBResults<List<FindingResponse>> fetchedReports = await ProjectReportService.GetReportsAsync(ProjectName, Details, Impact, Repeatability, References, CWE, value, page);
                 return Ok(fetchedReports);
             });
 

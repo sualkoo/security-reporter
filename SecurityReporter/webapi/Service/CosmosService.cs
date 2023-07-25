@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using webapi.Models;
@@ -377,9 +378,9 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
-            int limit = 5;
+            int limit = 3;
             bool firstFilter = false;
             if (page < 1)
             {
@@ -387,8 +388,8 @@ namespace webapi.Service
             }
             int offset = limit * (page - 1);
             int totalResults;
-            List<ProjectReportData> data = new List<ProjectReportData>();
             List<string> querypath = new List<string>();
+            List<FindingResponse> newData = new List<FindingResponse>();
 
             string query = "SELECT * FROM c WHERE ";
             string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
@@ -432,39 +433,30 @@ namespace webapi.Service
                 }
             }
 
-            //query = $"{query}  OFFSET @offset LIMIT @limit";
-            //query = "SELECT * FROM c WHERE ARRAY_CONTAINS(c.Findings, { \"SubsectionDetails\": @value }, true) OFFSET @offset LIMIT @limit"; //funguje ale musi byt cely nazov zadany
-            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE CONTAINS(f.SubsectionDetails, @value)"; //nefunguje s %
-            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
-            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
-            query = "SELECT VALUE c FROM ( SELECT DISTINCT c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)) OFFSET @offset LIMIT @limit "; //?funguje
-            
-
-
-            query = "SELECT DISTINCT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
-            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value)"; //zle 229 (kartezsky)
-            queryCount = "SELECT VALUE COUNT(1) FROM ( SELECT DISTINCT c.id FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value))"; // dobre 29
+            //query = "SELECT DISTINCT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)"; // dobre 29
 
             Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@offset", offset)
                                                                             .WithParameter("@limit", limit);
-                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
+
+                FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
                 while (queryResultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    data.AddRange(currentResultSet.ToList());
+                    FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                    newData.AddRange(currentResultSet.ToList());
                 }
                 Logger.LogInformation("Returning found reports");
 
-
+            
                 QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%");
 
                 FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
                 FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
                 totalResults = response.FirstOrDefault();
-                PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
+                PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
                 results.TotalRecords = totalResults;
                 results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
             /*

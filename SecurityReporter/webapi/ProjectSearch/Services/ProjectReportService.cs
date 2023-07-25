@@ -78,7 +78,7 @@ namespace webapi.ProjectSearch.Services
             }
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetReportsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
 
