@@ -391,8 +391,8 @@ namespace webapi.Service
             List<string> querypath = new List<string>();
             List<FindingResponse> newData = new List<FindingResponse>();
 
-            string query = "SELECT * FROM c WHERE ";
-            string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
+            string query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE";
+            string queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE";
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -400,23 +400,23 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { SubsectionDetails: (@value) }, true) ");
+                querypath.Add(" LOWER(f.SubsectionDetails) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(impact))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { \"SubsectionImpact\": \"(@value)\" }, true) ");
+                querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { \"SubsectionRepeatability\": \"(@value)\" }, true) ");
+                querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { \"SubsectionReferences\": \"(@value)\" }, true) ");
+                querypath.Add(" LOWER(f.SubsectionReferences) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(cWE))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { \"CWE\": \"(@value)\" }, true) ");
+                querypath.Add(" LOWER(f.CWE) LIKE LOWER(@value) ");
             }
 
             foreach (var path in querypath)
@@ -430,12 +430,12 @@ namespace webapi.Service
                 {
                     query = $"{query} {path}";
                     queryCount = $"{queryCount} {path}";
+                    firstFilter = true;
                 }
             }
 
-            //query = "SELECT DISTINCT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-            query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)"; // dobre 29
+            //query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
 
             Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
