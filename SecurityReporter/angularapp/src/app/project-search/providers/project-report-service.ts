@@ -11,7 +11,7 @@ import { PagedResponse } from '../interfaces/paged-response.model';
 export class ProjectReportService {
   private apiUrl: string;
 
-  constructor(private http: HttpClient, private notificationService: NotificationService) {
+  constructor(private http: HttpClient) {
     this.apiUrl = 'https://localhost:7075/project-reports';
   }
 
