@@ -72,7 +72,7 @@ namespace webapi.ProjectSearch.Services
                     newFinding.CVSSVector = data;
                     break;
                 case "\\CWE":
-                    newFinding.CWE = data;
+                    newFinding.CWE =  int.Parse(data);
                     break;
                 case "\\Criticality":
                     switch(data)
