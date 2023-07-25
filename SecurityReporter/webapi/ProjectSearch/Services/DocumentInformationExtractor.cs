@@ -39,12 +39,15 @@ namespace webapi.ProjectSearch.Services
                                 string[] inBracketContents = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                                 if (inBracketContents[0] == "\\ReportVersionEntry")
                                 {
-                                    ReportVersionEntry newReport = new ReportVersionEntry();
-                                    newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                    newReport.Version = inBracketContents[2];
-                                    newReport.WholeName = inBracketContents[3];
-                                    newReport.ReportStatus = inBracketContents[4];
-                                    newDocumentInfo.ReportDocumentHistory.Add(newReport);
+                                    if(inBracketContents.Length >= 5)
+                                    {
+                                        ReportVersionEntry newReport = new ReportVersionEntry();
+                                        newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                        newReport.Version = inBracketContents[2];
+                                        newReport.WholeName = inBracketContents[3];
+                                        newReport.ReportStatus = inBracketContents[4];
+                                        newDocumentInfo.ReportDocumentHistory.Add(newReport);
+                                    }
                                 }
                                 else
                                 {
