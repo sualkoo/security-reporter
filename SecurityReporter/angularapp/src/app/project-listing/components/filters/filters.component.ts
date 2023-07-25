@@ -1,0 +1,148 @@
+import { Component } from '@angular/core';
+import { InputComponentComponent } from '../../../project-management/components/input-component/input-component.component';
+import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
+import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
+import { SliderComponent } from '../slider/slider.component';
+import { SelectInterface } from '../../../project-management/interfaces/select-interface';
+import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
+import { FormsModule } from '@angular/forms';
+import { GetProjectsServiceService } from '../../services/get-projects-service.service';
+
+
+@Component({
+  selector: 'app-filters',
+  templateUrl: './filters.component.html',
+  styleUrls: ['./filters.component.css'],
+  standalone: true,
+  imports: [InputComponentComponent, SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule]
+})
+export class FiltersComponent {
+
+  constructor(private getProjectsService: GetProjectsServiceService) { }
+
+  ProjectStatus: SelectInterface[] = [
+    { value: 'Requested', viewValue: 'Requested' },
+    { value: 'Planned', viewValue: 'Planned' },
+    { value: 'In progress', viewValue: 'In progress' },
+    { value: 'Finished', viewValue: 'Finished' },
+    { value: 'Cancelled', viewValue: 'Cancelled' },
+    { value: 'On hold', viewValue: 'On hold' },
+  ];
+
+  ProjectScope: SelectInterface[] = [
+    { value: 'TBS', viewValue: 'TBS' },
+    { value: 'Sent', viewValue: 'Sent' },
+    { value: 'Confirmed', viewValue: 'Confirmed' },
+    { value: 'Signed', viewValue: 'Signed' },
+  ];
+
+  Questionare: SelectInterface[] = [
+    { value: 'TBS', viewValue: 'TBS' },
+    { value: 'Sent', viewValue: 'Sent' },
+    { value: 'Received', viewValue: 'Received' },
+  ];
+
+  IKO: SelectInterface[] = [
+    { value: 'TBD', viewValue: 'TBD' },
+    { value: 'Date is set', viewValue: 'Date is set' },
+  ];
+
+  TKO: SelectInterface[] = [
+    { value: 'TBD', viewValue: 'TBD' },
+    { value: 'Date is set', viewValue: 'Date is set' },
+  ];
+
+  filteredClass: ProjectData = {};
+  url: string = '';
+  
+
+  onChildInputValueChanged(value: string, id: string) {
+    switch (id) {
+      case 'PST':
+        //@ts-ignore
+        this.filteredClass.ProjectStatus = projectStatusIndex[value];
+        break;
+      case 'QUE':
+        //@ts-ignore
+        this.filteredClass.Questionare = QuestionareIndex[value];
+        break;
+      case 'PSC':
+        //@ts-ignore
+        this.filteredClass.ProjectScope = projectScopeIndex[value];
+        break;
+      case 'PN':
+        this.filteredClass.ProjectName = value;
+        break;
+      case 'IKO':
+        //@ts-ignore
+        this.filteredClass.IKO = IKOIndex[value];
+        break;
+      case 'TKO':
+        //@ts-ignore
+        this.filteredClass.TKO = IKOIndex[value];
+        break;
+    }
+    this.viewFilters();
+  }
+
+  onChildDateValueChanged(value: Date, id: string) {
+    if (id == 'STR') {
+      this.filteredClass.StartDate = value;
+    } else {
+      this.filteredClass.EndDate = value;
+    }
+    this.viewFilters();
+  }
+
+  onChildSliderValueChanged(event: { start: number, end: number }) {    
+    this.filteredClass.PentestStart = event.start;
+    this.filteredClass.PentestEnd = event.end;
+    this.viewFilters();
+  }
+
+  viewFilters() {
+    this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
+    this.getProjectsService.getProjects(15,1,this.url)
+  }
+
+  convertProjectDataToQueryString(data: ProjectData): string {
+  const queryStringParams: string[] = [];
+
+    const encodeQueryParamValue = (value: string | number | boolean | Date): string => {
+      if (value instanceof Date) {
+        return encodeURIComponent(value.toISOString());
+      }
+      return encodeURIComponent(value.toString());
+    };
+
+    // Append each attribute and its value to the queryStringParams array
+    if (data.ProjectStatus) {
+      queryStringParams.push(`&ProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
+    }
+    if (data.Questionare) {
+      queryStringParams.push(`&Questionare=${encodeQueryParamValue(data.Questionare)}`);
+    }
+    if (data.ProjectScope) {
+      queryStringParams.push(`&ProjectScope=${encodeQueryParamValue(data.ProjectScope)}`);
+    }
+    if (data.ProjectName) {
+      queryStringParams.push(`&ProjectName=${encodeQueryParamValue(data.ProjectName)}`);
+    }
+    if (data.IKO) {
+      queryStringParams.push(`&IKO=${encodeQueryParamValue(data.IKO)}`);
+    }
+    if (data.TKO) {
+      queryStringParams.push(`&TKO=${encodeQueryParamValue(data.TKO)}`);
+    }
+    if (data.StartDate) {
+      queryStringParams.push(`&StartDate=${encodeQueryParamValue(data.StartDate)}`);
+    }
+    if (data.EndDate) {
+      queryStringParams.push(`&EndDate=${encodeQueryParamValue(data.EndDate)}`);
+    }
+    if (data.PentestStart !== undefined && data.PentestEnd !== undefined) {
+      queryStringParams.push(`&PentestStart=${data.PentestStart}&PentestEnd=${data.PentestEnd}`);
+    }
+    return queryStringParams.join('');
+  }
+}

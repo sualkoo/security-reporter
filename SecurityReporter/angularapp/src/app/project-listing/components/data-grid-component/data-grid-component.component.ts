@@ -14,13 +14,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { FiltersComponent } from '../filters/filters.component';
+import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule, MatTooltipModule, MatIconModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -167,7 +170,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -187,7 +190,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -207,21 +210,19 @@ export class DataGridComponentComponent implements AfterViewInit {
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
       case 0:
-        return this.selection.isSelected(element) ? '#F2F2F2' : 'white';
-      case 1:
         return '#E9D1D4';
-      case 2:
+      case 1:
         return '#CAC8E0';
-      case 3: 
+      case 2:
         return '#FFF3BF';
-      case 4:
+      case 3:
         return '#BFE6CD';
-      case 5:
+      case 4:
         return '#F9BFC7';
-      case 6:
+      case 5:
         return '#CEEFFB';
       default:
-        return '';
+        return '#E9D1D4';
     }
   }
 

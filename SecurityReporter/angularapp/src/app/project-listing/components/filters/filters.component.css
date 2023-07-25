@@ -1,0 +1,22 @@
+.filters {
+    display:flex;
+    justify-content : space-between;
+    margin-right: 100px;
+    align-items: end;
+    gap: 20px;
+}
+
+.filter-component {
+  display: flex;
+  flex-direction: column;
+  margin-left: 100px;
+  margin-top: 50px;
+}
+
+.select-wide {
+    width: 150px;
+}
+
+.select-thin {
+  width: 120px;
+}
