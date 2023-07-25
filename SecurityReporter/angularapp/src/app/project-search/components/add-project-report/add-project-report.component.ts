@@ -48,7 +48,10 @@ export class AddProjectReportComponent implements OnInit{
             },
             (errorResponse: HttpErrorResponse) => {
               console.error(errorResponse);
-              this.notificationService.displayMessage((errorResponse.error as ErrorResponse).message, 'error');
+              // If error has details, show first detail, otherwise show common message
+              this.notificationService.displayMessage(
+                errorResponse.error.details ? (errorResponse.error as ErrorResponse).details[0] : (errorResponse.error as ErrorResponse).message,
+                'error')
             })
         } else {
           // Incorrect zip file
