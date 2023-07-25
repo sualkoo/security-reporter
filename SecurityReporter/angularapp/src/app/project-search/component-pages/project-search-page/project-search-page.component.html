@@ -14,14 +14,13 @@
           <h4 class="center pt-2 pb-2">Filters</h4>
           <div class="center">
             <div class="filters-container">
-              <div class="filter-item" *ngFor="let case of keywords;  let i = index">
+              <div class="filter-item" *ngFor="let case of keywords;">
                 <input class="checkbox"
-                       type="radio"
+                       type="checkbox"
                        [id]="case.id"
-                       [name]="'case' + i"
                        [value]="case.value"
-                       [(ngModel)]="keyword"
-                       (ngModelChange)="checkFormValidity()">
+                       [checked]="case.checked"
+                       (change)="toggleCheckbox(case)">
                 <label class="p-2" [for]="case.id">{{ case.label }}</label><br>
               </div>
             </div>
@@ -31,6 +30,9 @@
             <button class="btn btn-primary" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            </button>
+            <button class="btn btn-danger" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+              Delete filters
             </button>
           </div>
         </div>

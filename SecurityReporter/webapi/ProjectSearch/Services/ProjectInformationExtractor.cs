@@ -105,10 +105,16 @@ namespace webapi.ProjectSearch.Services
                     pentestTeamDictionary.Add(command, newProjectInfo.ApplicationManager);
                     break;
                 case "\\ApplicationManagerDepartment":
-                    newProjectInfo.ApplicationManager.Department = extractDepartment(data);
+                    if(newProjectInfo.ApplicationManager != null)
+                    {
+                        newProjectInfo.ApplicationManager.Department = extractDepartment(data);
+                    }
                     break;
                 case "\\ApplicationManagerContact":
-                    newProjectInfo.ApplicationManager.Contact = extractContact(data);
+                    if(newProjectInfo.ApplicationManager != null)
+                    {
+                        newProjectInfo.ApplicationManager.Contact = extractContact(data);
+                    }
                     break;
                 case "\\BusinessOwnerName":
                     newProjectInfo.BusinessOwner = new ProjectInformationParticipant();
@@ -116,10 +122,16 @@ namespace webapi.ProjectSearch.Services
                     pentestTeamDictionary.Add(command, newProjectInfo.BusinessOwner);
                     break;
                 case "\\BusinessOwnerDepartment":
-                    newProjectInfo.BusinessOwner.Department = extractDepartment(data);
+                    if(newProjectInfo.BusinessOwner  != null)
+                    {
+                        newProjectInfo.BusinessOwner.Department = extractDepartment(data);
+                    }
                     break;
                 case "\\BusinessOwnerContact":
-                    newProjectInfo.BusinessOwner.Contact = extractContact(data);
+                    if(newProjectInfo.BusinessOwner != null)
+                    {
+                        newProjectInfo.BusinessOwner.Contact = extractContact(data);
+                    }
                     break;
                 case "\\BusinessRepresentativeName":
                     newProjectInfo.BusinessRepresentative = new ProjectInformationParticipant();
@@ -127,10 +139,16 @@ namespace webapi.ProjectSearch.Services
                     pentestTeamDictionary.Add(command, newProjectInfo.BusinessRepresentative);
                     break;
                 case "\\BusinessRepresentativeDepartment":
-                    newProjectInfo.BusinessRepresentative.Department = extractDepartment(data);
+                    if(newProjectInfo.BusinessRepresentative  != null)
+                    {
+                        newProjectInfo.BusinessRepresentative.Department = extractDepartment(data);
+                    }
                     break;
                 case "\\BusinessRepresentativeContact":
-                    newProjectInfo.BusinessRepresentative.Contact = extractContact(data);
+                    if(newProjectInfo.BusinessRepresentative != null)
+                    {
+                        newProjectInfo.BusinessRepresentative.Contact = extractContact(data);
+                    }
                     break;
                 case "\\TechnicalContacts":
                     if (data[0] == '\\')
@@ -157,10 +175,16 @@ namespace webapi.ProjectSearch.Services
                     pentestTeamDictionary.Add(command, newProjectInfo.PentestLead);
                     break;
                 case "\\PentestLeadDepartment":
-                    newProjectInfo.PentestLead.Department = extractDepartment(data);
+                    if(newProjectInfo.PentestLead != null)
+                    {
+                        newProjectInfo.PentestLead.Department = extractDepartment(data);
+                    }
                     break;
                 case "\\PentestLeadContact":
-                    newProjectInfo.PentestLead.Contact = extractContact(data);
+                    if(newProjectInfo.PentestLead != null)
+                    {
+                        newProjectInfo.PentestLead.Contact = extractContact(data);
+                    }
                     break;
                 case "\\PentestCoordinatorName":
                     newProjectInfo.PentestCoordinator = new ProjectInformationParticipant();
@@ -168,10 +192,16 @@ namespace webapi.ProjectSearch.Services
                     pentestTeamDictionary.Add(command, newProjectInfo.PentestCoordinator);
                     break;
                 case "\\PentestCoordinatorDepartment":
-                    newProjectInfo.PentestCoordinator.Department = extractDepartment(data);
+                    if(newProjectInfo.PentestCoordinator != null)
+                    {
+                        newProjectInfo.PentestCoordinator.Department = extractDepartment(data);
+                    }
                     break;
                 case "\\PentestCoordinatorContact":
-                    newProjectInfo.PentestCoordinator.Contact = extractContact(data);
+                    if(newProjectInfo.PentestCoordinator != null)
+                    {
+                        newProjectInfo.PentestCoordinator.Contact = extractContact(data);
+                    }
                     break;
                 case "\\PentestTeamMember":
                     if (data[0] == '\\')

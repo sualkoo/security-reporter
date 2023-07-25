@@ -1,7 +1,5 @@
 ﻿
 using Microsoft.Azure.Cosmos;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using webapi.Models;
@@ -248,10 +246,9 @@ namespace webapi.Service
 
         public async Task<ProjectReportData> GetProjectReport(string projectId)
         {
-            Microsoft.Azure.Cosmos.PartitionKey partitionKey = new Microsoft.Azure.Cosmos.PartitionKey(projectId);
+            PartitionKey partitionKey = new PartitionKey(projectId);
             try
             {
-                Logger.LogInformation("Searching for Report based on Id");
                 ProjectReportData data = await ReportContainer.ReadItemAsync<ProjectReportData>(projectId, partitionKey);
                 return data;
             }

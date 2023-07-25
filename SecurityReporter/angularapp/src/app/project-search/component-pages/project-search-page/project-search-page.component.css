@@ -22,6 +22,12 @@
   width: 100%;
 }
 
+.checkbox{
+  accent-color: #ec6602;
+  width: 20px;
+  height: 20px;
+}
+
 @media screen and (max-width: 1090px) {
   .filters-container {
     grid-template-columns: 1fr; /* 1 stĺpec */

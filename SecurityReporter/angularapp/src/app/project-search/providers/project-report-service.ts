@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
 import { ProjectDataReport } from '../interfaces/project-data-report.model';
@@ -11,7 +11,7 @@ import { PagedResponse } from '../interfaces/paged-response.model';
 export class ProjectReportService {
   private apiUrl: string;
 
-  constructor(private http: HttpClient, private notificationService: NotificationService) {
+  constructor(private http: HttpClient) {
     this.apiUrl = 'https://localhost:7075/project-reports';
   }
 
@@ -25,10 +25,46 @@ export class ProjectReportService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
+  public getProjectReports(value: string, page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
+    let params = new HttpParams();
+
+    params = params.set('value', value);
+    params = params.set('page', page);
+
+    console.log("Project name: " + projectName);
+
+    if (projectName !== undefined) {
+      params = params.set('projectName', projectName);
+    }
+
+    if (details !== undefined) {
+      params = params.set('details', details);
+    }
+
+    if (impact !== undefined) {
+      params = params.set('impact', impact);
+    }
+
+    if (repeatability !== undefined) {
+      params = params.set('repeatability', repeatability);
+    }
+
+    if (references !== undefined) {
+      params = params.set('references', references);
+    }
+
+    if (cwe !== undefined) {
+      params = params.set('cwe', cwe);
+    }
+
+    console.log(params);
+    return this.http.get<PagedResponse>(this.apiUrl, { params: params });
+  }
+
+  /*public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
 
     return this.http.get<PagedResponse>(this.apiUrl, { params: { subcategory: subcategory, keyword: keyword, value: value, page: page } });
-  }
+  }*/
 
 
   async validateZipFile(file: File): Promise<boolean> {

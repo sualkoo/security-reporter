@@ -8,7 +8,7 @@ namespace webapi.Models.ProjectReport
         [Required(ErrorMessage = "InScope list is required!")]
         [MinLength(1, ErrorMessage = "InScope must have at least one item.")]
         public List<ScopeProcedure>? InScope { get; set; }
-        [Required(ErrorMessage = "InScope list is required!")]
+        [Required(ErrorMessage = "OutOfScope list is required!")]
         [MinLength(1, ErrorMessage = "OutOfScope must have at least one item.")]
         public List<ScopeProcedure>? OutOfScope { get; set; }
         [Required(ErrorMessage = "WorstCaseScenarios is required!")]
