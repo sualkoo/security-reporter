@@ -143,7 +143,6 @@ export class FiltersComponent {
     if (data.PentestStart !== undefined && data.PentestEnd !== undefined) {
       queryStringParams.push(`&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`);
     }
-
-  return queryStringParams.join();
+    return queryStringParams.join('');
   }
 }
