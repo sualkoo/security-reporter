@@ -11,5 +11,5 @@
       </mat-panel-title>
       
     </mat-expansion-panel-header>
-    <app-filters></app-filters>
+    <app-filters (filtersChangedEvent)="filtersChangedHandler($event)"></app-filters>
   </mat-expansion-panel>

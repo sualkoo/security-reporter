@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { InputComponentComponent } from '../../../project-management/components/input-component/input-component.component';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
@@ -6,7 +6,6 @@ import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
 import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
 import { FormsModule } from '@angular/forms';
-import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 
 
 @Component({
@@ -18,7 +17,9 @@ import { GetProjectsServiceService } from '../../services/get-projects-service.s
 })
 export class FiltersComponent {
 
-  constructor(private getProjectsService: GetProjectsServiceService) { }
+  constructor() {
+
+  }
 
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
@@ -88,9 +89,10 @@ export class FiltersComponent {
   onChildDateValueChanged(value: Date, id: string) {
     if (id == 'STR') {
       this.filteredClass.StartDate = value;
-    } else {
+    } else if (id == 'END'){
       this.filteredClass.EndDate = value;
     }
+    console.log(this.filteredClass)
     this.filtersChanged();
   }
 
@@ -100,9 +102,11 @@ export class FiltersComponent {
     this.filtersChanged();
   }
 
+  @Output() filtersChangedEvent = new EventEmitter<string>();
+
   filtersChanged() {
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
-    this.getProjectsService.getProjects(15,1,this.url)
+    this.filtersChangedEvent.emit(this.url);
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
@@ -120,7 +124,7 @@ export class FiltersComponent {
       queryStringParams.push(`&FilteredProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
     }
     if (data.Questionare) {
-      queryStringParams.push(`&FilteredQuestionare=${encodeQueryParamValue(data.Questionare)}`);
+      queryStringParams.push(`&FilteredProjectQuestionare=${encodeQueryParamValue(data.Questionare)}`);
     }
     if (data.ProjectScope) {
       queryStringParams.push(`&FilteredProjectScope=${encodeQueryParamValue(data.ProjectScope)}`);
@@ -135,10 +139,12 @@ export class FiltersComponent {
       queryStringParams.push(`&FilteredTKO=${encodeQueryParamValue(data.TKO)}`);
     }
     if (data.StartDate) {
-      queryStringParams.push(`&FilteredStartDate=${encodeQueryParamValue(data.StartDate)}`);
+      const formattedDate = data.StartDate.toISOString().split('T')[0];
+      queryStringParams.push(`&FilteredStartDate=${formattedDate}`);
     }
     if (data.EndDate) {
-      queryStringParams.push(`&FilteredEndDate=${encodeQueryParamValue(data.EndDate)}`);
+      const formattedDate = data.EndDate.toISOString().split('T')[0];
+      queryStringParams.push(`&FilteredEndDate=${formattedDate}`);
     }
     if (data.PentestStart !== undefined && data.PentestEnd !== undefined) {
       queryStringParams.push(`&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`);

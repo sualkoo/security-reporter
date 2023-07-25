@@ -51,6 +51,8 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  filters: string = '';
+
 
   length: number | undefined;
 
@@ -205,6 +207,18 @@ export class DataGridComponentComponent implements AfterViewInit {
         this.selection.select(foundItem);
       }
     }
+  }
+
+  async filtersChangedHandler(filters: string) {
+    console.log(filters)
+    this.filters = filters; // Assign the filters to the filters property in DataGridComponentComponent
+    this.getProjectsService.getProjects(15, 1, filters).then((projects) => {
+      
+      this.projects = projects;
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    }).catch((error) => {
+      console.error("Error occurred while fetching projects: ", error);
+    });
   }
 
   getStatusColor(element: any): string {

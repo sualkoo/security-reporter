@@ -20,21 +20,21 @@ type ProjectStatus =
   | 'On hold';
 
 export const projectStatusIndex: { [key in ProjectStatus]: number } = {
-  Requested: 0,
-  Planned: 1,
-  'In progress': 2,
-  Finished: 3,
-  Cancelled: 4,
-  'On hold': 5,
+  Requested: 1,
+  Planned: 2,
+  'In progress': 3,
+  Finished: 4,
+  Cancelled: 5,
+  'On hold': 6,
 };
 
 type Questionare = 'TBS' | 'Sent' | 'Received';
 
 export const QuestionareIndex: { [key in Questionare]: number } =
 {
-  TBS: 0,
-  Sent: 1,
-  Received: 2,
+  TBS: 1,
+  Sent: 2,
+  Received: 3,
 };
 
 type ProjectScope = 'TBS' | 'Sent' | 'Confirmed' | 'Signed';
