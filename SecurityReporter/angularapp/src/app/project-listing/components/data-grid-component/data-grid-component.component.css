@@ -112,3 +112,9 @@
   --mdc-filled-button-container-color: #009999;
   --mdc-filled-button-label-text-color: #fff;
 }
+
+.expansion-panel {
+    margin-left: 100px;
+    margin-right: 100px;
+   margin-top: 50px;
+}
