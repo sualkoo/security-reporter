@@ -117,33 +117,33 @@ export class FiltersComponent {
 
     // Append each attribute and its value to the queryStringParams array
     if (data.ProjectStatus) {
-      queryStringParams.push(`&ProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
+      queryStringParams.push(`&FilteredProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
     }
     if (data.Questionare) {
-      queryStringParams.push(`&Questionare=${encodeQueryParamValue(data.Questionare)}`);
+      queryStringParams.push(`&FilteredQuestionare=${encodeQueryParamValue(data.Questionare)}`);
     }
     if (data.ProjectScope) {
-      queryStringParams.push(`&ProjectScope=${encodeQueryParamValue(data.ProjectScope)}`);
+      queryStringParams.push(`&FilteredProjectScope=${encodeQueryParamValue(data.ProjectScope)}`);
     }
     if (data.ProjectName) {
-      queryStringParams.push(`&ProjectName=${encodeQueryParamValue(data.ProjectName)}`);
+      queryStringParams.push(`&FilteredProjectName=${encodeQueryParamValue(data.ProjectName)}`);
     }
     if (data.IKO) {
-      queryStringParams.push(`&IKO=${encodeQueryParamValue(data.IKO)}`);
+      queryStringParams.push(`&FilteredIKO=${encodeQueryParamValue(data.IKO)}`);
     }
     if (data.TKO) {
-      queryStringParams.push(`&TKO=${encodeQueryParamValue(data.TKO)}`);
+      queryStringParams.push(`&FilteredTKO=${encodeQueryParamValue(data.TKO)}`);
     }
     if (data.StartDate) {
-      queryStringParams.push(`&StartDate=${encodeQueryParamValue(data.StartDate)}`);
+      queryStringParams.push(`&FilteredStartDate=${encodeQueryParamValue(data.StartDate)}`);
     }
     if (data.EndDate) {
-      queryStringParams.push(`&EndDate=${encodeQueryParamValue(data.EndDate)}`);
+      queryStringParams.push(`&FilteredEndDate=${encodeQueryParamValue(data.EndDate)}`);
     }
     if (data.PentestStart !== undefined && data.PentestEnd !== undefined) {
-      queryStringParams.push(`&PentestStart=${data.PentestStart}&PentestEnd=${data.PentestEnd}`);
+      queryStringParams.push(`&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`);
     }
 
-  return queryStringParams.join('&');
+  return queryStringParams.join('');
   }
 }
