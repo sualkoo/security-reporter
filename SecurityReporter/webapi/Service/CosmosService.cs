@@ -382,7 +382,7 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
-            int limit = 24;
+            int limit = 12;
             bool firstFilter = false;
             if (page < 1)
             {
@@ -402,7 +402,7 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" ARRAY_CONTAINS(c.Findings, { \"SubsectionDetails\": \"(@value)\" }, true) ");
+                querypath.Add(" ARRAY_CONTAINS(c.Findings, { SubsectionDetails: (@value) }, true) ");
             }
             if (!string.IsNullOrEmpty(impact))
             {
@@ -436,9 +436,11 @@ namespace webapi.Service
             }
 
             query = $"{query}  OFFSET @offset LIMIT @limit";
-
-            try
-            {
+            query = "SELECT * FROM c WHERE ARRAY_CONTAINS(c.Findings, { \"SubsectionDetails\": @value }, true) OFFSET @offset LIMIT @limit"; //funguje ale musi byt cely nazov zadany
+            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE CONTAINS(f.SubsectionDetails, @value)"; //nefunguje s %
+            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
+            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
+            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
                 Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@offset", offset)
@@ -460,11 +462,11 @@ namespace webapi.Service
                 PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
                 results.TotalRecords = totalResults;
                 results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
+            /*
                 UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports");
                 string queryPage = uriBuilder.Query;
                 if (results.TotalPages > page)
-                {/*
+                {
                     if (!string.IsNullOrEmpty(subcategory))
                     {
                         queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
@@ -472,17 +474,14 @@ namespace webapi.Service
                     queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
 
                     uriBuilder.Query = queryPage.TrimStart('?');
-                    results.NextPage = uriBuilder.Uri;*/
+                    results.NextPage = uriBuilder.Uri;
                 }
-
+                */
                 return results;
-            }
-            catch (Exception exception)
-            {
-                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
+               /* Logger.LogError("Unexpected error occurred during report fetching by keywords: ");
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
-            }
-            throw new NotImplementedException();
+            
+            throw new NotImplementedException();*/
         }
     }
 }
