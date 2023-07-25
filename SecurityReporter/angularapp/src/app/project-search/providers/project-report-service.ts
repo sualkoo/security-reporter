@@ -31,6 +31,8 @@ export class ProjectReportService {
     params = params.set('value', value);
     params = params.set('page', page);
 
+    console.log("Project name: " + projectName);
+
     if (projectName !== undefined) {
       params = params.set('projectName', projectName);
     }
@@ -55,6 +57,7 @@ export class ProjectReportService {
       params = params.set('cwe', cwe);
     }
 
+    console.log(params);
     return this.http.get<PagedResponse>(this.apiUrl, { params: params });
   }
 
