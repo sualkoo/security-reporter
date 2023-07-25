@@ -6,16 +6,16 @@ namespace webapi.Models
 {
     public class FilterData
     {
-        public string? FilteredProjectName { get; }
-        public ProjectStatus? FilteredProjectStatus { get; }
-        public ProjectQuestionare? FilteredProjectQuestionare { get; }
-        public ProjectScope? FilteredProjectScope { get; }
-        public int? FilteredPentestDurationStart { get; }
-        public int? FilteredPentestDurationEnd { get; }
-        public DateOnly? FilteredStartDate { get; }
-        public DateOnly? FilteredEndDate { get; }
-        public DateOnly? FilteredIKO { get; }
-        public DateOnly? FilteredTKO { get; }
+        public string? FilteredProjectName { get; set; }
+        public ProjectStatus? FilteredProjectStatus { get; set; }
+        public ProjectQuestionare? FilteredProjectQuestionare { get; set; }
+        public ProjectScope? FilteredProjectScope { get; set; }
+        public int? FilteredPentestDurationStart { get; set; }
+        public int? FilteredPentestDurationEnd { get; set; }
+        public DateOnly? FilteredStartDate { get; set; }
+        public DateOnly? FilteredEndDate { get; set; }
+        public DateOnly? FilteredIKO { get; set; }
+        public DateOnly? FilteredTKO { get; set; }
     }
 }
 

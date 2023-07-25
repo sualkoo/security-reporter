@@ -139,10 +139,10 @@ namespace webapi.Service
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
-            
+
             var queryString = "SELECT * FROM c";
             var queryParameters = new Dictionary<string, object>();
-            
+
             var filterConditions = new List<string>();
 
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
@@ -150,31 +150,31 @@ namespace webapi.Service
                 filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
                 queryParameters["@projectName"] = filter.FilteredProjectName.ToLower();
             }
-            
+
             if (filter.FilteredProjectStatus.HasValue)
             {
                 filterConditions.Add("c.ProjectStatus = @projectStatus");
                 queryParameters["@projectStatus"] = (int)filter.FilteredProjectStatus.Value;
             }
-            
+
             if (filter.FilteredProjectQuestionare.HasValue)
             {
                 filterConditions.Add("c.ProjectQuestionare = @questionnaire");
                 queryParameters["@questionnaire"] = (int)filter.FilteredProjectQuestionare.Value;
             }
-            
+
             if (filter.FilteredProjectScope.HasValue)
             {
                 filterConditions.Add("c.ProjectScope = @projectScope");
                 queryParameters["@projectScope"] = (int)filter.FilteredProjectScope.Value;
             }
-            
+
             if (filter.FilteredStartDate.HasValue)
             {
                 filterConditions.Add("c.StartDate >= @startDate");
                 queryParameters["@startDate"] = filter.FilteredStartDate.Value.ToString("yyyy-MM-dd");
             }
-            
+
             if (filter.FilteredEndDate.HasValue)
             {
                 filterConditions.Add("c.EndDate <= @endDate");
@@ -202,11 +202,11 @@ namespace webapi.Service
             {
                 queryString += " WHERE " + string.Join(" AND ", filterConditions);
             }
-            
+
             queryString += " OFFSET @skipCount LIMIT @itemCount";
             queryParameters["@skipCount"] = skipCount;
             queryParameters["@itemCount"] = itemCount;
-            
+
             var items = new List<ProjectData>();
             var queryDefinition = new QueryDefinition(queryString);
             foreach (var param in queryParameters)
