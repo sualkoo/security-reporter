@@ -382,7 +382,7 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
-            int limit = 12;
+            int limit = 5;
             bool firstFilter = false;
             if (page < 1)
             {
@@ -435,13 +435,21 @@ namespace webapi.Service
                 }
             }
 
-            query = $"{query}  OFFSET @offset LIMIT @limit";
-            query = "SELECT * FROM c WHERE ARRAY_CONTAINS(c.Findings, { \"SubsectionDetails\": @value }, true) OFFSET @offset LIMIT @limit"; //funguje ale musi byt cely nazov zadany
-            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE CONTAINS(f.SubsectionDetails, @value)"; //nefunguje s %
-            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
-            query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
-            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
-                Logger.LogInformation("Fetching reports from the database");
+            //query = $"{query}  OFFSET @offset LIMIT @limit";
+            //query = "SELECT * FROM c WHERE ARRAY_CONTAINS(c.Findings, { \"SubsectionDetails\": @value }, true) OFFSET @offset LIMIT @limit"; //funguje ale musi byt cely nazov zadany
+            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE CONTAINS(f.SubsectionDetails, @value)"; //nefunguje s %
+            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
+            //query = "SELECT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit "; //funguje
+            query = "SELECT VALUE c FROM ( SELECT DISTINCT c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)) OFFSET @offset LIMIT @limit "; //?funguje
+            
+
+
+            query = "SELECT DISTINCT VALUE c FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
+            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
+            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value)"; //zle 229 (kartezsky)
+            queryCount = "SELECT VALUE COUNT(1) FROM ( SELECT DISTINCT c.id FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value))"; // dobre 29
+
+            Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@offset", offset)
                                                                             .WithParameter("@limit", limit);
