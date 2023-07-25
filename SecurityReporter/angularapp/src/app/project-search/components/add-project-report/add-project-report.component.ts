@@ -3,6 +3,7 @@ import { NotificationService } from '../../providers/notification.service';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProjectDataReport } from '../../interfaces/project-data-report.model';
+import { ErrorResponse } from '../../interfaces/error-response';
 
 
 @Component({
@@ -46,7 +47,8 @@ export class AddProjectReportComponent implements OnInit{
               this.savedReportFromBackend.emit(response);
             },
             (errorResponse: HttpErrorResponse) => {
-              this.notificationService.displayMessage(errorResponse.error.details, 'error');
+              console.error(errorResponse);
+              this.notificationService.displayMessage((errorResponse.error as ErrorResponse).message, 'error');
             })
         } else {
           // Incorrect zip file
