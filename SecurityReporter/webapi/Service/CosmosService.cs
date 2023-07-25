@@ -180,14 +180,24 @@ namespace webapi.Service
                 filterConditions.Add("c.EndDate <= @endDate");
                 queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
             }
-            
-            if (filter.FilteredPentestDuration.HasValue)
+
+            if (filter.FilteredPentestDurationStart.HasValue && filter.FilteredPentestDurationEnd.HasValue)
             {
                 filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
-                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDuration.Value;
-                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDuration.Value;
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDurationStart.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDurationEnd.Value;
             }
-            
+            else if (filter.FilteredPentestDurationStart.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDurationStart.Value;
+            }
+            else if (filter.FilteredPentestDurationEnd.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDurationEnd.Value;
+            }
+
             if (filterConditions.Count > 0)
             {
                 queryString += " WHERE " + string.Join(" AND ", filterConditions);
