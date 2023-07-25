@@ -5,14 +5,15 @@ import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
 import { ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
-import { filter } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   standalone: true,
-  imports: [InputComponentComponent, SelectComponentComponent, FiltersDatepickerComponent, SliderComponent]
+  imports: [InputComponentComponent, SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule]
 })
 export class FiltersComponent {
 
@@ -49,6 +50,7 @@ export class FiltersComponent {
   ];
 
   filteredClass: ProjectData = {}
+  sliderValues: number[] = [2,10];
 
   onChildInputValueChanged(value: string, id: string) {
     switch (id) {
@@ -64,25 +66,22 @@ export class FiltersComponent {
         //@ts-ignore
         this.filteredClass.ProjectScope = projectScopeIndex[value];
         break;
-      case 'PNS':
-        this.filteredClass.PentestStart = value;
-        break;
-      case 'PNE':
-        this.filteredClass.PentestEnd = value;
-        break;
       case 'PN':
         this.filteredClass.ProjectName = value;
         break;
     }
-    console.log(this.filteredClass)
   }
 
   onChildDateValueChanged(value: Date, id: string) {
     if (id == 'STR') {
       this.filteredClass.StartDate = value;
-    } else if (id == 'END') {
+    } else {
       this.filteredClass.EndDate = value;
     }
-    console.log(this.filteredClass)
+  }
+
+  onChildSliderValueChanged(event: { start: number, end: number }) {    
+    this.filteredClass.PentestStart = event.start;
+    this.filteredClass.PentestEnd = event.end;
   }
 }

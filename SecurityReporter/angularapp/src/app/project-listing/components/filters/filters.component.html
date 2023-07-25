@@ -32,7 +32,7 @@
       <app-datepicker title="End date" (valueChanged)="onChildDateValueChanged($event, 'END')"></app-datepicker>
 
     </div>
-    <app-slider></app-slider>
+    <app-slider (valuesChanged) ="onChildSliderValueChanged($event)"></app-slider>
     <div class="select-thin">
       <app-select-component [option]="IKO"
             [title]="'IKO'"></app-select-component>

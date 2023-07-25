@@ -3,8 +3,8 @@ export interface ProjectData {
   ProjectStatus?: number;
   Questionare?: number;
   ProjectScope?: number;
-  PentestStart?: string;
-  PentestEnd?: string;
+  PentestStart?: number;
+  PentestEnd?: number;
   StartDate?: Date;
   EndDate?: Date;
   IKO?: Date;
