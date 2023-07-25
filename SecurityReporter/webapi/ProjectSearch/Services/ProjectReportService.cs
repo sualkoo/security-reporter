@@ -41,8 +41,9 @@ namespace webapi.ProjectSearch.Services
                 {
                     newReportData = Parser.Extract(file.OpenReadStream());
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    throw new CustomException(StatusCodes.Status406NotAcceptable, ex.Message);
                     throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files/missing information in the template.");
                 }
             }

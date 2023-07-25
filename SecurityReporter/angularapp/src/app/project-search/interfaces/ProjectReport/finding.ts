@@ -12,7 +12,7 @@ export interface Finding {
   testMethod?: string;
   cvss?: string;
   cvssVector?: string;
-  cwe?: string;
+  cwe?: number;
   criticality: Criticality;
   exploitability: Exploitability;
   category: Category;

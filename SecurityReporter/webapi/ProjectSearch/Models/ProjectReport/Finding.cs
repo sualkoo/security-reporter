@@ -18,7 +18,7 @@ namespace webapi.Models.ProjectReport
         public string? TestMethod { get; set; }
         public string? CVSS { get; set; }
         public string? CVSSVector { get; set; }
-        public string? CWE { get; set; }
+        public int? CWE { get; set; }
         [EnumDataType(typeof(Criticality), ErrorMessage = "Criticality must be a valid value from the Criticality enum.")]
         public Criticality Criticality { get; set; }
 
