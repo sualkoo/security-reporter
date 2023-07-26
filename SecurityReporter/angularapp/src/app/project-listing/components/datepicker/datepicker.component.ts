@@ -35,6 +35,14 @@ export class FiltersDatepickerComponent {
   @Output() valueChanged = new EventEmitter<Date>();
 
   onDateChange() {
+    //const formattedDate = this.formatDate(this.inputValue);
     this.valueChanged.emit(this.inputValue);
   }
+
+  //private formatDate(date: Date): Date {
+  //  const year = date.getFullYear();
+  //  const month = date.getMonth() + 1;
+  //  const day = date.getDate();
+  //  return new Date(year, month - 1, day); // Subtract 1 from month because Date object's month is zero-indexed
+  //}
 }
