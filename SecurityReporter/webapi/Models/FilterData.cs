@@ -10,7 +10,8 @@ namespace webapi.Models
         public ProjectStatus? FilteredProjectStatus { get; set; }
         public ProjectQuestionare? FilteredProjectQuestionare { get; set; }
         public ProjectScope? FilteredProjectScope { get; set; }
-        public int? FilteredPentestDuration { get; set; }
+        public int? FilteredPentestDurationStart { get; set; }
+        public int? FilteredPentestDurationEnd { get; set; }
         public DateOnly? FilteredStartDate { get; set; }
         public DateOnly? FilteredEndDate { get; set; }
         public DateOnly? FilteredIKO { get; set; }
