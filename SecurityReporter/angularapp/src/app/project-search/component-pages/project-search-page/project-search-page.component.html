@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="pt-4">
-          <hr />
+          <hr/>
           <!-- Upload -->
           <app-add-project-report></app-add-project-report>
         </div>
@@ -52,25 +52,50 @@
           </div>
           <div class="card m-3" *ngFor="let findingRes of loadedFindings">
             <div class="card-body">
-              <h5 class="card-title">{{findingRes.projectReportName}} : {{findingRes.finding.findingName}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Author: {{findingRes.finding.findingAuthor}}</h6>
 
-              <div class="card-text">
-                <div class="mb-2">
-                  <h6>General info</h6>
-                  <div>Criticality: {{findingRes.finding.criticality}}</div>
-                  <div>Detectability: {{findingRes.finding.detectability}}</div>
-                  <div>Exploitability: {{findingRes.finding.exploitability}}</div>
-                  <div>CVSS: {{findingRes.finding.cvss}}</div>
-                  <div>CVSS Vector: {{findingRes.finding.cvssVector}}</div>
-                  <div>Component: {{findingRes.finding.component}}</div>
+              <div class="card-title">
+                <h5 *ngIf="!projectNameTest">{{findingRes.projectReportName}} : {{findingRes.finding.findingName}}</h5>
+
+                <h5 *ngIf="projectNameTest">
+                  <span [innerHtml]="findingRes.projectReportName | highlighter:highlightValue:'partial'"></span>
+                  <span> : {{findingRes.finding.findingName}}</span>
+                </h5>
+              </div>
+
+            <h6 class="card-subtitle mb-2 text-muted">Author: {{findingRes.finding.findingAuthor}}</h6>
+
+            <div class="card-text">
+
+              <div class="mb-2">
+
+                <h6>Details</h6>
+                <div *ngIf="!detailsTest" class="mb-2">{{findingRes.finding.subsectionDetails}}</div>
+                <div *ngIf="detailsTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionDetails | highlighter:highlightValue:'partial'">
                 </div>
-                <div class="mb-2">
 
-                  <h6>Details</h6>
-                  <div>{{findingRes.finding.subsectionDetails}}</div>
-                  <h6>Impact</h6>
-                  <div>{{findingRes.finding.subsectionImpact}}</div>
+                <h6>Impact</h6>
+                <div *ngIf="!impactTest" class="mb-2">{{findingRes.finding.subsectionImpact}}</div>
+                <div *ngIf="impactTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionImpact  | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>References</h6>
+                <div *ngIf="!referencesTest" class="mb-2">{{findingRes.finding.subsectionReferences}}</div>
+                <div *ngIf="referencesTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionReferences | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>Repeatability</h6>
+                <div *ngIf="!repeatabilityTest" class="mb-2">{{findingRes.finding.subsectionRepeatability}}</div>
+                <div *ngIf="repeatabilityTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionRepeatability  | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>CWE</h6>
+                <div *ngIf="!cweTest" class="mb-2">{{findingRes.finding.cwe}}</div>
+                <div *ngIf="cweTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.cwe  | highlighter:highlightValue:'partial'">
                 </div>
               </div>
               <button class="btn btn-light">Get Source</button>
@@ -78,6 +103,7 @@
           </div>
           <div class="text-center pagination-centered">
             <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+          </div>
           </div>
         </div>
       </div>
