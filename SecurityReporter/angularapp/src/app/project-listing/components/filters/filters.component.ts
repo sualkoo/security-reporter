@@ -5,8 +5,8 @@ import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
 import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
-import { FormsModule } from '@angular/forms';
-
+import { FormControl, FormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-filters',
@@ -16,10 +16,15 @@ import { FormsModule } from '@angular/forms';
   imports: [InputComponentComponent, SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule]
 })
 export class FiltersComponent {
-
   constructor() {
-
+    this.projectNameControl.valueChanges.pipe(debounceTime(500)).subscribe((inputValue) => {
+      this.filteredClass.ProjectName = inputValue;
+      this.filtersChanged();
+    });
   }
+
+  debounceTimer: any;
+  projectNameControl = new FormControl();
 
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
@@ -55,7 +60,6 @@ export class FiltersComponent {
 
   filteredClass: ProjectData = {};
   url: string = '';
-  
 
   onChildInputValueChanged(value: string, id: string) {
     switch (id) {
@@ -72,7 +76,7 @@ export class FiltersComponent {
         this.filteredClass.ProjectScope = projectScopeIndex[value];
         break;
       case 'PN':
-        this.filteredClass.ProjectName = value;
+        this.projectNameControl.setValue(value);
         break;
       case 'IKO':
         //@ts-ignore
@@ -105,8 +109,10 @@ export class FiltersComponent {
   @Output() filtersChangedEvent = new EventEmitter<string>();
 
   filtersChanged() {
+    //this.filteredClass.ProjectName = this.debouncedProjectName;
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
+    console.log("zavolane");
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
@@ -119,7 +125,6 @@ export class FiltersComponent {
       return encodeURIComponent(value.toString());
     };
 
-    // Append each attribute and its value to the queryStringParams array
     if (data.ProjectStatus) {
       queryStringParams.push(`&FilteredProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
     }
