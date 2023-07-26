@@ -20,7 +20,7 @@ public class ProjectData
     [Range(1, 4, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectScope? ProjectScope { get; set; }
 
-    [Range(0, int.MaxValue, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    [Range(2, 10, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public int? PentestDuration { get; set; }
     public DateOnly? StartDate { get; set; }
 

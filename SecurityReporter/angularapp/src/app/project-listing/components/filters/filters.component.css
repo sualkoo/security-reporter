@@ -1,9 +1,9 @@
 .filters {
-    display:flex;
-    justify-content : space-between;
-    margin-right: 100px;
-    align-items: end;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 100px;
+  align-items: end;
+  gap: 20px;
 }
 
 .filter-component {
@@ -14,8 +14,9 @@
 }
 
 .select-wide {
-    width: 150px;
+  width: 150px;
 }
+
 
 .select-thin {
   width: 120px;
