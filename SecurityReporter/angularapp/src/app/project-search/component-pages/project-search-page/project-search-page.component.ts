@@ -4,6 +4,7 @@ import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-search',
@@ -71,7 +72,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.highlightValue = this.value;
     this.injectionOfTestVariables();
     this.isLoading = true;
-   this.projectReportService.getProjectReportFindings(
+    this.projectReportService.getProjectReportFindings(
       this.value,
       1,
       this.projectName,
@@ -92,6 +93,9 @@ export class ProjectSearchPageComponent implements OnInit {
           this.lastLoadedPage = response.pageNumber;
         }
         this.isLoading = false;
+      }, (HttpErrorResponse) => {
+        this.isLoading = false;
+        this.notificationService.displayMessage("No findings found.", "info");
       }
     )
   }
