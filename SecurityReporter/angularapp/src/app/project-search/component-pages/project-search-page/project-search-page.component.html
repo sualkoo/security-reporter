@@ -39,46 +39,44 @@
         <div class="pt-4">
           <hr />
           <!-- Upload -->
-          <app-add-project-report (savedReportFromBackend)="displayNewReport($event)"></app-add-project-report>
+          <app-add-project-report></app-add-project-report>
         </div>
       </div>
     </div>
-    <!-- Project Reports -->
+    <!-- Project Report Findings -->
     <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
-
-          <div *ngIf="newReport">
-
-            <div class="card m-3">
-              <div class="card-body">
-                <h5 class="card-title">{{newReport.documentInfo?.projectReportName}} - <span class="text-danger">NEW</span></h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{newReport.documentInfo?.mainAuthor}}</h6>
-                <p class="card-text">{{newReport.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
-                <button class="btn btn-light">Get Source</button>
-              </div>
-            </div>
-            <hr />
-
-          </div>
-          <div class="text-center pagination-centered">
-
-            <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
-          </div>
-
           <div class="container-fluid mt-3">
-            <h4>Found reports: {{totalRecords}}</h4>
+            <h4>Found findings: {{totalRecords}}</h4>
           </div>
-          <div class="card m-3" *ngFor="let report of loadedReports">
+          <div class="card m-3" *ngFor="let findingRes of loadedFindings">
             <div class="card-body">
-              <h5 class="card-title">{{report.documentInfo?.projectReportName}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{report.documentInfo?.mainAuthor}}</h6>
-              <p class="card-text">{{report.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
+              <h5 class="card-title">{{findingRes.projectReportName}} : {{findingRes.finding.findingName}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Author: {{findingRes.finding.findingAuthor}}</h6>
+
+              <div class="card-text">
+                <div class="mb-2">
+                  <h6>General info</h6>
+                  <div>Criticality: {{findingRes.finding.criticality}}</div>
+                  <div>Detectability: {{findingRes.finding.detectability}}</div>
+                  <div>Exploitability: {{findingRes.finding.exploitability}}</div>
+                  <div>CVSS: {{findingRes.finding.cvss}}</div>
+                  <div>CVSS Vector: {{findingRes.finding.cvssVector}}</div>
+                  <div>Component: {{findingRes.finding.component}}</div>
+                </div>
+                <div class="mb-2">
+
+                  <h6>Details</h6>
+                  <div>{{findingRes.finding.subsectionDetails}}</div>
+                  <h6>Impact</h6>
+                  <div>{{findingRes.finding.subsectionImpact}}</div>
+                </div>
+              </div>
               <button class="btn btn-light">Get Source</button>
             </div>
           </div>
           <div class="text-center pagination-centered">
-
             <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
           </div>
         </div>

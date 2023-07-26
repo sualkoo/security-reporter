@@ -378,7 +378,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReports(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
             int limit = 3;
             bool firstFilter = false;

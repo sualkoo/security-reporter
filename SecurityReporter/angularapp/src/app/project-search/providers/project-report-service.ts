@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as JSZip from 'jszip';
 import { NotificationService } from './notification.service';
-import { ProjectDataReport } from '../interfaces/project-data-report.model';
+import { ProjectReport } from '../interfaces/project-report.model';
 import { PagedResponse } from '../interfaces/paged-response.model';
+import { FindingResponse } from '../interfaces/finding-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class ProjectReportService {
   }
 
   public postZipFile(file: any) {
-    return this.http.post<ProjectDataReport>(this.apiUrl, file)
+    return this.http.post<ProjectReport>(this.apiUrl, file)
   }
 
   public getProjectReport(id: string) {
@@ -25,7 +26,7 @@ export class ProjectReportService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  public getProjectReports(value: string, page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
+  public getProjectReportFindings(value: string, page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
     let params = new HttpParams();
 
     params = params.set('value', value);
@@ -58,7 +59,7 @@ export class ProjectReportService {
     }
 
     console.log(params);
-    return this.http.get<PagedResponse>(this.apiUrl, { params: params });
+    return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUrl}/findings`, { params: params });
   }
 
   /*public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {

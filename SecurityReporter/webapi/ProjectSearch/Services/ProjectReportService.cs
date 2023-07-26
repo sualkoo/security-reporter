@@ -78,7 +78,7 @@ namespace webapi.ProjectSearch.Services
             }
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetReportsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
 
@@ -87,7 +87,7 @@ namespace webapi.ProjectSearch.Services
                 throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
             }
 
-            return await CosmosService.GetPagedProjectReports(projectName, details, impact, repeatability, references, cWE, value, page);
+            return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability, references, cWE, value, page);
         }
     }
 }

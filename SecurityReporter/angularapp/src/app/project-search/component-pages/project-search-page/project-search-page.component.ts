@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectDataReport } from '../../interfaces/project-data-report.model';
+import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
+import { FindingResponse } from '../../interfaces/finding-response.model';
 
 @Component({
   selector: 'app-project-search',
@@ -31,8 +32,7 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   totalRecords?: number;
-  newReport?: ProjectDataReport;
-  loadedReports: ProjectDataReport[] = []
+  loadedFindings: FindingResponse[] = []
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
   isLoading: boolean = false;
@@ -43,7 +43,7 @@ export class ProjectSearchPageComponent implements OnInit {
     console.log(this.keywordsValues);
     this.resetView();
     this.resetSearch();
-    this.loadReports();
+    this.loadFindings();
   }
 
   resetView() {
@@ -53,23 +53,16 @@ export class ProjectSearchPageComponent implements OnInit {
 
   resetSearch() {
 
-    this.loadedReports = [];
+    this.loadedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
-    this.newReport = undefined;
   }
 
-  displayNewReport(newReport: ProjectDataReport) {
-    this.resetView();
-    console.log("Displaying new report");
-    this.newReport = newReport;
-  }
-
-  loadReports() {
+  loadFindings() {
 
     this.isLoading = true;
-   this.projectReportService.getProjectReports(
+   this.projectReportService.getProjectReportFindings(
       this.value,
       1,
       this.projectName,
@@ -82,9 +75,9 @@ export class ProjectSearchPageComponent implements OnInit {
       (response) => {
         console.log(response)
         if (response.data.length == 0) {
-          this.notificationService.displayMessage("No reports found.", "info");
+          this.notificationService.displayMessage("No findings found.", "info");
         } else {
-          this.loadedReports = response.data as ProjectDataReport[];
+          this.loadedFindings = response.data;
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
@@ -100,7 +93,7 @@ export class ProjectSearchPageComponent implements OnInit {
   loadNextPage() {
     console.log("Loading next page")
     this.isLoadingNextPage = true;
-    this.projectReportService.getProjectReports(
+    this.projectReportService.getProjectReportFindings(
       this.value,
       (this.lastLoadedPage + 1),
       this.projectName,
@@ -113,7 +106,7 @@ export class ProjectSearchPageComponent implements OnInit {
       this.lastLoadedPage = res.pageNumber;
       this.nextPage = res.nextPage;
       for (let report of res.data) {
-        this.loadedReports.push(report);
+        this.loadedFindings.push(report);
       }
       this.isLoadingNextPage = false;
     })
