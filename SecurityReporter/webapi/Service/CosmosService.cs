@@ -391,8 +391,16 @@ namespace webapi.Service
             List<string> querypath = new List<string>();
             List<FindingResponse> newData = new List<FindingResponse>();
 
-            string query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE";
-            string queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE";
+            string query = "SELECT DISTINCT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "JOIN r IN f.SubsectionReferences " +
+                            "WHERE";
+            string queryCount = "SELECT DISTINCT VALUE COUNT(1) " +
+                                "FROM c " +
+                                "JOIN f IN c.Findings " +
+                                "JOIN r IN f.SubsectionReferences " +
+                                "WHERE";
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -412,7 +420,7 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" LOWER(f.SubsectionReferences) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(r) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(cWE))
             {
@@ -433,9 +441,10 @@ namespace webapi.Service
                     firstFilter = true;
                 }
             }
+            query = $"{query}  OFFSET @offset LIMIT @limit";
 
             //query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-            queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
+            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
 
             Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
