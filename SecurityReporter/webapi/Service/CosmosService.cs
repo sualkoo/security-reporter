@@ -142,8 +142,10 @@ namespace webapi.Service
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
+
             var queryString = "SELECT * FROM c";
             var queryParameters = new Dictionary<string, object>();
+
             var filterConditions = new List<string>();
 
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
