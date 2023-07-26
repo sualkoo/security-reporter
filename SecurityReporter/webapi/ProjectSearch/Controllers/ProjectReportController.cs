@@ -9,10 +9,6 @@ namespace webapi.ProjectSearch.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> addProjectReport(IFormFile file)
         {
-
-
-            // Process or save the uploaded file as needed
-
             return Ok("File uploaded successfully.");
         }
     }

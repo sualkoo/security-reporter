@@ -120,8 +120,6 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   getStatusString(status: number): string {
     switch (status) {
-      case 0:
-        return 'TBS';
       case 1:
         return 'Requested';
       case 2:
@@ -135,35 +133,35 @@ export class DataGridComponentComponent implements AfterViewInit {
       case 6:
         return 'On hold';
       default:
-        return '-';
+        return 'TBS';
     }
   }
 
   getQuestionareString(questionare: number): string {
     switch (questionare) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
+        return 'Sent';
+      case 3:
         return 'Received';
       default:
-        return '';
+        return '-';
     }
   }
 
   getScopeString(scope: number): string {
     switch (scope) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
-        return 'Confirmed';
+        return 'Sent';
       case 3:
+        return 'Confirmed';
+      case 4:
         return 'Signed';
       default:
-        return '';
+        return '-';
     }
   }
 
@@ -211,7 +209,7 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   async filtersChangedHandler(filters: string) {
     console.log(filters)
-    this.filters = filters; // Assign the filters to the filters property in DataGridComponentComponent
+    this.filters = filters; 
     this.getProjectsService.getProjects(15, 1, filters).then((projects) => {
       
       this.projects = projects;
@@ -252,13 +250,10 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  // ADD BUTTON
-
   navigateToPage(): void {
     this.router.navigate(['/project-management'])
   }
 
-  // POP UP PART
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeletePopupComponentComponent, {

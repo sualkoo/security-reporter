@@ -1,10 +1,11 @@
-﻿
-
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
+using System.Text;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 
@@ -141,64 +142,72 @@ namespace webapi.Service
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
-            // Build the base query
             var queryString = "SELECT * FROM c";
             var queryParameters = new Dictionary<string, object>();
-            // Create a list to hold the filter conditions
             var filterConditions = new List<string>();
-            // Filter based on Project Name
+
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
                 filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
                 queryParameters["@projectName"] = filter.FilteredProjectName.ToLower();
             }
-            // Filter based on Project Status
+
             if (filter.FilteredProjectStatus.HasValue)
             {
                 filterConditions.Add("c.ProjectStatus = @projectStatus");
                 queryParameters["@projectStatus"] = (int)filter.FilteredProjectStatus.Value;
             }
-            // Filter based on Project Questionnaire
+
             if (filter.FilteredProjectQuestionare.HasValue)
             {
                 filterConditions.Add("c.ProjectQuestionare = @questionnaire");
                 queryParameters["@questionnaire"] = (int)filter.FilteredProjectQuestionare.Value;
             }
-            // Filter based on Project Scope
+
             if (filter.FilteredProjectScope.HasValue)
             {
                 filterConditions.Add("c.ProjectScope = @projectScope");
                 queryParameters["@projectScope"] = (int)filter.FilteredProjectScope.Value;
             }
-            // Filter based on Start Date
+
             if (filter.FilteredStartDate.HasValue)
             {
                 filterConditions.Add("c.StartDate >= @startDate");
                 queryParameters["@startDate"] = filter.FilteredStartDate.Value.ToString("yyyy-MM-dd");
             }
-            // Filter based on End Date
+
             if (filter.FilteredEndDate.HasValue)
             {
                 filterConditions.Add("c.EndDate <= @endDate");
                 queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
             }
-            // Filter based on Pentest Duration (within a range)
-            if (filter.FilteredPentestDuration.HasValue)
+
+            if (filter.FilteredPentestStart.HasValue && filter.FilteredPentestEnd.HasValue)
             {
                 filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
-                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDuration.Value;
-                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDuration.Value;
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
             }
-            // Combine the filter conditions into the final query
+            else if (filter.FilteredPentestStart.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+            }
+            else if (filter.FilteredPentestEnd.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
+            }
+
             if (filterConditions.Count > 0)
             {
                 queryString += " WHERE " + string.Join(" AND ", filterConditions);
             }
-            // Add OFFSET and LIMIT parameters
+
             queryString += " OFFSET @skipCount LIMIT @itemCount";
             queryParameters["@skipCount"] = skipCount;
             queryParameters["@itemCount"] = itemCount;
-            // Execute the query and return the filtered items
+
             var items = new List<ProjectData>();
             var queryDefinition = new QueryDefinition(queryString);
             foreach (var param in queryParameters)
@@ -222,6 +231,5 @@ namespace webapi.Service
             }
             return items;
         }
-
     }
 }

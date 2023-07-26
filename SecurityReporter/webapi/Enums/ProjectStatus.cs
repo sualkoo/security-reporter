@@ -2,11 +2,11 @@
 {
     public enum ProjectStatus
     {
-        Requested, 
-        Planned,
-        InProgress,
-        Finished,
-        Canceled,
-        OnHold
+        Requested = 1,
+        Planned = 2,
+        InProgress = 3,
+        Finished = 4,
+        Canceled = 5,
+        OnHold = 6,
     }
 }

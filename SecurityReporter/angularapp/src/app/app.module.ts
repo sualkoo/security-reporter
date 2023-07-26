@@ -30,6 +30,8 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { InputComponent } from './project-listing/components/input/input.component';
+import { RouterModule } from '@angular/router';
+
 
 @NgModule({
   declarations: [
@@ -61,7 +63,7 @@ import { InputComponent } from './project-listing/components/input/input.compone
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent],
