@@ -97,8 +97,19 @@ export class AddProjectReportComponent implements OnInit{
     // Handle the dropped file here
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      this.uploadedFile = files[0];
-    }
+      const droppedFile = files[0];
+      const fileExtension = droppedFile.name.split('.').pop()?.toLowerCase();
 
+      // Check if the file extension is 'zip'
+      if (fileExtension === 'zip') {
+        // File is a .zip file, handle it here
+        this.uploadedFile = droppedFile;
+      } else {
+        // File is not a .zip file, show an error or ignore the file
+        // For example:
+        console.log("Invalid file type. Only .zip files are allowed.");
+        this.notificationService.displayMessage("Invalid file type. Only .zip files are allowed.", "warning");
+      }
+    }
   }
 }
