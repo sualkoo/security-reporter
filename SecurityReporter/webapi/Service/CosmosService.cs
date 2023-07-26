@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Azure.Cosmos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -396,16 +397,13 @@ namespace webapi.Service
                             "JOIN f IN c.Findings " +
                             "JOIN r IN f.SubsectionReferences " +
                             "WHERE";
-            /*string queryCount = "SELECT DISTINCT VALUE COUNT(1) " +
-                                "FROM c " +
-                                "JOIN f IN c.Findings " +
-                                "JOIN r IN f.SubsectionReferences " +
-                                "WHERE";*/
+
             string queryCount = "SELECT DISTINCT c.id, f.FindingName " +
                                 "FROM c " +
                                 "JOIN f IN c.Findings " +
                                 "JOIN r IN f.SubsectionReferences " +
                                 "WHERE";
+            int valueInt = 0;
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -427,9 +425,13 @@ namespace webapi.Service
             {
                 querypath.Add(" LOWER(r) LIKE LOWER(@value) ");
             }
-            if (!string.IsNullOrEmpty(cWE))
+            if (!string.IsNullOrEmpty(cWE) && int.TryParse(value, out valueInt))
             {
-                querypath.Add(" LOWER(f.CWE) LIKE LOWER(@value) ");
+                querypath.Add(" f.CWE = (@valueInt) ");
+            }
+            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(value, out valueInt))
+            {
+                throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
             }
 
             foreach (var path in querypath)
@@ -448,40 +450,40 @@ namespace webapi.Service
             }
             query = $"{query}  OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
-            //query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-            //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
-
+            
             Logger.LogInformation("Fetching reports from the database");
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@offset", offset)
-                                                                            .WithParameter("@limit", limit);
+                                                                            .WithParameter("@valueInt", valueInt)
+                                                                        .WithParameter("@limit", limit);
 
-                FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
-                while (queryResultSetIterator.HasMoreResults)
+            FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                newData.AddRange(currentResultSet.ToList());
+            }
+            Logger.LogInformation("Returning found reports");
+
+
+            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%")
+                                                                                  .WithParameter("@valueInt", valueInt);
+
+            FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
+            FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
+            totalResults = response.FirstOrDefault();
+            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
+            results.TotalRecords = totalResults;
+            results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
+
+            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
+            string queryPage = uriBuilder.Query;
+            if (results.TotalPages > page)
+            {
+                if (!string.IsNullOrEmpty(projectName))
                 {
-                    FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    newData.AddRange(currentResultSet.ToList());
+                    queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
                 }
-                Logger.LogInformation("Returning found reports");
-
-            
-                QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%");
-
-                FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
-                FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
-                totalResults = response.FirstOrDefault();
-                PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
-                results.TotalRecords = totalResults;
-                results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-            
-                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
-                string queryPage = uriBuilder.Query;
-                if (results.TotalPages > page)
-                {
-                    if (!string.IsNullOrEmpty(projectName))
-                    {
-                        queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
-                    }
                 if (!string.IsNullOrEmpty(details))
                 {
                     queryPage += "&Details=" + Uri.EscapeDataString(details);
@@ -504,15 +506,11 @@ namespace webapi.Service
                 }
                 queryPage += "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
 
-                    uriBuilder.Query = queryPage.TrimStart('?');
-                    results.NextPage = uriBuilder.Uri;
-                }
-                
-                return results;
-               /* Logger.LogError("Unexpected error occurred during report fetching by keywords: ");
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
-            
-            throw new NotImplementedException();*/
+                uriBuilder.Query = queryPage.TrimStart('?');
+                results.NextPage = uriBuilder.Uri;
+            }
+
+            return results;
         }
     }
 }
