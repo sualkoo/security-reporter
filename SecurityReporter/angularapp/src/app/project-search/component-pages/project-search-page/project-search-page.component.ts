@@ -186,6 +186,8 @@ export class ProjectSearchPageComponent implements OnInit {
   checkFormValidity(): void {
 
     this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
+
+
     console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
       if(value == 'ProjectReportName') {
@@ -205,6 +207,8 @@ export class ProjectSearchPageComponent implements OnInit {
       }
       else if(value == 'CWE') {
         this.cwe = value;
+        if(this.value.length > 0)
+        this.onlyNumbers(this.value);
       }
     }
   }
@@ -221,5 +225,31 @@ export class ProjectSearchPageComponent implements OnInit {
     this.isFormValid = false;
     this.clearReportVariables();
   }
+
+
+  onlyNumbers(event: string, ): void {
+    const numberRegex = /^[0-9]+$/;
+    console.log(numberRegex.test(event));
+
+    if (!numberRegex.test(event)) {
+      this.cwe = '';
+      const index = this.keywordsValues.indexOf('CWE');
+      if (index !== -1) {
+        this.keywordsValues.splice(index, 1);
+      }
+      this.keywords.forEach((caseItem) => {
+
+        if (caseItem.value === 'CWE') {
+         //delay 200ms
+          setTimeout(() => {
+          caseItem.checked = false;
+        }, 100);
+        }
+      });
+
+      this.notificationService.displayMessage("If you choose CWE search value has to be a number", "warning");
+    }
+  }
+
 
 }
