@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { InputComponentComponent } from '../../../project-management/components/input-component/input-component.component';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
 import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
 import { FormsModule } from '@angular/forms';
+import { InputComponent } from '../input/input.component';
+
 
 
 @Component({
@@ -13,7 +14,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   standalone: true,
-  imports: [InputComponentComponent, SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule]
+  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent]
 })
 export class FiltersComponent {
 
