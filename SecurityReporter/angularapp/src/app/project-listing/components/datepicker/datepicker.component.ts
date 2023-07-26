@@ -30,29 +30,7 @@ import { NgIf } from '@angular/common';
 export class FiltersDatepickerComponent {
   @ViewChild('picker') picker: any;
   @Input() title: string = '';
-  @Input() minDate: Date;
-  inputValue: Date = new Date('0001-01-01');
-
-  maxDate: Date;
-
-  constructor() {
-    // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
-    const currentYear = new Date().getFullYear();
-    this.minDate = new Date(new Date().setDate(new Date().getDate() - 1));
-    this.maxDate = new Date(currentYear + 1, 11, 31);
-    this.compareDates(this.minDate, this.maxDate);
-  }
-
-  ngOnInit() {
-    if (this.minDate < new Date(new Date().setDate(new Date().getDate() - 1))) {
-      this.minDate = new Date(new Date().setDate(new Date().getDate() - 1));
-    }
-  }
-
-  compareDates(start: Date, end: Date) {
-    if (start > end) {
-    }
-  }
+  @Input() inputValue: Date = new Date(new Date().setDate(new Date().getDate()));
 
   @Output() valueChanged = new EventEmitter<Date>();
 
