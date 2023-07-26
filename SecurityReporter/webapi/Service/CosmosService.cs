@@ -396,7 +396,12 @@ namespace webapi.Service
                             "JOIN f IN c.Findings " +
                             "JOIN r IN f.SubsectionReferences " +
                             "WHERE";
-            string queryCount = "SELECT DISTINCT VALUE COUNT(1) " +
+            /*string queryCount = "SELECT DISTINCT VALUE COUNT(1) " +
+                                "FROM c " +
+                                "JOIN f IN c.Findings " +
+                                "JOIN r IN f.SubsectionReferences " +
+                                "WHERE";*/
+            string queryCount = "SELECT DISTINCT c.id, f.FindingName " +
                                 "FROM c " +
                                 "JOIN f IN c.Findings " +
                                 "JOIN r IN f.SubsectionReferences " +
@@ -442,7 +447,7 @@ namespace webapi.Service
                 }
             }
             query = $"{query}  OFFSET @offset LIMIT @limit";
-
+            queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
             //query = "SELECT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
             //queryCount = "SELECT VALUE COUNT(1) FROM c JOIN f IN c.Findings WHERE LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) OR LOWER(f.SubsectionDetails) LIKE LOWER(@value)";
 
@@ -468,21 +473,41 @@ namespace webapi.Service
                 PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
                 results.TotalRecords = totalResults;
                 results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-            /*
-                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports");
+            
+                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
                 string queryPage = uriBuilder.Query;
                 if (results.TotalPages > page)
                 {
-                    if (!string.IsNullOrEmpty(subcategory))
+                    if (!string.IsNullOrEmpty(projectName))
                     {
-                        queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
+                        queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
                     }
-                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
+                if (!string.IsNullOrEmpty(details))
+                {
+                    queryPage += "&Details=" + Uri.EscapeDataString(details);
+                }
+                if (!string.IsNullOrEmpty(impact))
+                {
+                    queryPage += "&Impact=" + Uri.EscapeDataString(impact);
+                }
+                if (!string.IsNullOrEmpty(repeatability))
+                {
+                    queryPage += "&Repeatability=" + Uri.EscapeDataString(repeatability);
+                }
+                if (!string.IsNullOrEmpty(references))
+                {
+                    queryPage += "&References=" + Uri.EscapeDataString(references);
+                }
+                if (!string.IsNullOrEmpty(cWE))
+                {
+                    queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
+                }
+                queryPage += "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
 
                     uriBuilder.Query = queryPage.TrimStart('?');
                     results.NextPage = uriBuilder.Uri;
                 }
-                */
+                
                 return results;
                /* Logger.LogError("Unexpected error occurred during report fetching by keywords: ");
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
