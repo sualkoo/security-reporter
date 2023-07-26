@@ -30,7 +30,9 @@ export class DataGridComponentComponent implements AfterViewInit {
   checkedRows: Set<any> = new Set<any>();
   isLoading = false;
   databaseError = false;
+  filterError = false;
   selectedItems: any[] = [];
+  noItemsFound = false;
 
   displayedColumns: string[] = [
     'select',
@@ -168,6 +170,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   async getInitItems() {
     this.isLoading = true;
     this.databaseError = false;
+    this.filterError = false;
+
 
     try {
       this.projects = await this.getProjectsService.getProjects(15, 1,'');
@@ -208,16 +212,21 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async filtersChangedHandler(filters: string) {
-    console.log(filters)
-    this.filters = filters; 
-    this.getProjectsService.getProjects(15, 1, filters).then((projects) => {
-      
-      this.projects = projects;
+    this.filters = filters;
+    this.isLoading = true;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
-    }).catch((error) => {
-      console.error("Error occurred while fetching projects: ", error);
-    });
+    } catch (error) {
+      this.filterError = true;
+      this.databaseError = true;
+      this.dataSource.data = [];
+    } finally {
+      this.isLoading = false;
+    }
   }
+
 
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
