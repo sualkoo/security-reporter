@@ -221,17 +221,17 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
-      case 0:
-        return '#E9D1D4';
       case 1:
-        return '#CAC8E0';
+        return '#FDDDCB';
       case 2:
-        return '#FFF3BF';
+        return '#CAC8E0';
       case 3:
-        return '#BFE6CD';
+        return '#FFF3BF';
       case 4:
-        return '#F9BFC7';
+        return '#BFE6CD';
       case 5:
+        return '#F9BFC7';
+      case 6:
         return '#CEEFFB';
       default:
         return '#E9D1D4';
