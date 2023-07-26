@@ -11,13 +11,13 @@ public class ProjectData
     [StringValidation(ErrorMessage = "The Project Name field must not be empty or contain only whitespace.")]
     public string ProjectName { get; set; }
     
-    [Range(0, 5, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    [Range(1, 6, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectStatus? ProjectStatus { get; set; }
 
-    [Range(0, 2, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    [Range(1, 3, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectQuestionare? ProjectQuestionare { get; set; }
 
-    [Range(0, 3, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
+    [Range(1, 4, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectScope? ProjectScope { get; set; }
 
     [Range(0, int.MaxValue, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]

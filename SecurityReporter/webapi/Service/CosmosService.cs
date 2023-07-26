@@ -138,90 +138,98 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, [FromQuery] FilterData filter)
+        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter)
         {
-            // Calculate the number of items to skip based on the pageSize and pageNumber
             int skipCount = pageSize * (pageNumber - 1);
-
-            // Build the Cosmos DB SQL query based on the provided filter and pagination parameters
-            var queryBuilder = new StringBuilder("SELECT * FROM c WHERE 1=1");
+            int itemCount = pageSize;
+            var queryString = "SELECT * FROM c";
+            var queryParameters = new Dictionary<string, object>();
+            var filterConditions = new List<string>();
 
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
-                queryBuilder.Append($" AND c.ProjectName = '{filter.FilteredProjectName}'");
+                filterConditions.Add($"CONTAINS(LOWER(c.ProjectName), @projectName)");
+                queryParameters["@projectName"] = filter.FilteredProjectName.ToLower();
             }
 
             if (filter.FilteredProjectStatus.HasValue)
             {
-                queryBuilder.Append($" AND c.ProjectStatus = {(int)filter.FilteredProjectStatus.Value}");
+                filterConditions.Add("c.ProjectStatus = @projectStatus");
+                queryParameters["@projectStatus"] = (int)filter.FilteredProjectStatus.Value;
             }
 
             if (filter.FilteredProjectQuestionare.HasValue)
             {
-                queryBuilder.Append($" AND c.ProjectQuestionare = {(int)filter.FilteredProjectQuestionare.Value}");
+                filterConditions.Add("c.ProjectQuestionare = @questionnaire");
+                queryParameters["@questionnaire"] = (int)filter.FilteredProjectQuestionare.Value;
             }
 
             if (filter.FilteredProjectScope.HasValue)
             {
-                queryBuilder.Append($" AND c.ProjectScope = {(int)filter.FilteredProjectScope.Value}");
-            }
-
-            if (filter.FilteredPentestDurationStart.HasValue)
-            {
-                queryBuilder.Append($" AND c.PentestDuration >= {filter.FilteredPentestDurationStart.Value}");
-            }
-
-            if (filter.FilteredPentestDurationEnd.HasValue)
-            {
-                queryBuilder.Append($" AND c.PentestDuration <= {filter.FilteredPentestDurationEnd.Value}");
+                filterConditions.Add("c.ProjectScope = @projectScope");
+                queryParameters["@projectScope"] = (int)filter.FilteredProjectScope.Value;
             }
 
             if (filter.FilteredStartDate.HasValue)
             {
-                queryBuilder.Append($" AND c.StartDate >= '{filter.FilteredStartDate.Value.ToString("yyyy-MM-dd")}'");
+                filterConditions.Add("c.StartDate >= @startDate");
+                queryParameters["@startDate"] = filter.FilteredStartDate.Value.ToString("yyyy-MM-dd");
             }
 
             if (filter.FilteredEndDate.HasValue)
             {
-                queryBuilder.Append($" AND c.EndDate <= '{filter.FilteredEndDate.Value.ToString("yyyy-MM-dd")}'");
+                filterConditions.Add("c.EndDate <= @endDate");
+                queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
             }
 
-            if (filter.FilteredIKO.HasValue)
+            if (filter.FilteredPentestStart.HasValue && filter.FilteredPentestEnd.HasValue)
             {
-                queryBuilder.Append($" AND c.IKO = '{filter.FilteredIKO.Value.ToString("yyyy-MM-dd")}'");
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
             }
-
-            if (filter.FilteredTKO.HasValue)
+            else if (filter.FilteredPentestStart.HasValue)
             {
-                queryBuilder.Append($" AND c.TKO = '{filter.FilteredTKO.Value.ToString("yyyy-MM-dd")}'");
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+            }
+            else if (filter.FilteredPentestEnd.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
             }
 
-            // Add OFFSET and LIMIT parameters for pagination
-            queryBuilder.Append($" OFFSET {skipCount} LIMIT {pageSize}");
+            if (filterConditions.Count > 0)
+            {
+                queryString += " WHERE " + string.Join(" AND ", filterConditions);
+            }
 
-            // Print the constructed query for debugging purposes
-            Console.WriteLine("Constructed query: " + queryBuilder.ToString());
+            queryString += " OFFSET @skipCount LIMIT @itemCount";
+            queryParameters["@skipCount"] = skipCount;
+            queryParameters["@itemCount"] = itemCount;
 
-            // Execute the query and retrieve the filtered projects
-            var filteredProjects = new List<ProjectData>();
-
+            var items = new List<ProjectData>();
+            var queryDefinition = new QueryDefinition(queryString);
+            foreach (var param in queryParameters)
+            {
+                queryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var resultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
             try
             {
-                FeedIterator<ProjectData> resultSetIterator = Container.GetItemQueryIterator<ProjectData>(new QueryDefinition(queryBuilder.ToString()));
-
                 while (resultSetIterator.HasMoreResults)
                 {
-                    FeedResponse<ProjectData> response = await resultSetIterator.ReadNextAsync();
-                    filteredProjects.AddRange(response.Resource);
+                    var response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occurred while filtering projects from DB: " + ex);
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
                 throw;
             }
-
-            return filteredProjects;
+            return items;
         }
     }
 }

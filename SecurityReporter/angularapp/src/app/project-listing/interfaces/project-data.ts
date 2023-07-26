@@ -40,10 +40,10 @@ export const QuestionareIndex: { [key in Questionare]: number } =
 type ProjectScope = 'TBS' | 'Sent' | 'Confirmed' | 'Signed';
 
 export const projectScopeIndex: { [key in ProjectScope]: number } = {
-  TBS: 0,
-  Sent: 1,
-  Confirmed: 2,
-  Signed: 3,
+  TBS: 1,
+  Sent: 2,
+  Confirmed: 3,
+  Signed: 4,
 };
 
 type IKO = 'TBD' | 'Date is set';
