@@ -46,7 +46,7 @@
         </div>
         <div class="container  mt-5 ml-1 col-12">
           <div>
-            
+
             <!-- Upload -->
             <app-add-project-report></app-add-project-report>
           </div>
@@ -106,7 +106,7 @@
                 <h6>CWE</h6>
                 <div *ngIf="!cweTest" class="mb-2">{{findingRes.finding.cwe}}</div>
                 <div *ngIf="cweTest" class="mb-2"
-                     [innerHtml]="findingRes.finding.cwe  | highlighter:highlightValue:'partial'">
+                     [innerHtml]="findingRes.finding.cwe?.toString()  | highlighter:highlightValue:'partial'">
                 </div>
               </div>
               <button class="btn btn-light">Get Source</button>
