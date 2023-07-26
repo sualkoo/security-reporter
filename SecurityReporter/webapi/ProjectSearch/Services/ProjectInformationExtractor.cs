@@ -110,179 +110,184 @@ namespace webapi.ProjectSearch.Services
         {
             if(data != null && command != null)
             {
-                case "\\ApplicationManager":
-                    newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
-                    newProjectInfo.ApplicationManager.Name = data;
-                    pentestTeamDictionary.Add(command, newProjectInfo.ApplicationManager);
-                    break;
-                case "\\ApplicationManagerDepartment":
-                    if(newProjectInfo.ApplicationManager != null)
-                    {
-                        newProjectInfo.ApplicationManager.Department = extractDepartment(data);
-                    }
-                    break;
-                case "\\ApplicationManagerContact":
-                    if(newProjectInfo.ApplicationManager != null)
-                    {
-                        newProjectInfo.ApplicationManager.Contact = extractContact(data);
-                    }
-                    break;
-                case "\\BusinessOwnerName":
-                    newProjectInfo.BusinessOwner = new ProjectInformationParticipant();
-                    newProjectInfo.BusinessOwner.Name = data;
-                    pentestTeamDictionary.Add(command, newProjectInfo.BusinessOwner);
-                    break;
-                case "\\BusinessOwnerDepartment":
-                    if(newProjectInfo.BusinessOwner  != null)
-                    {
-                        newProjectInfo.BusinessOwner.Department = extractDepartment(data);
-                    }
-                    break;
-                case "\\BusinessOwnerContact":
-                    if(newProjectInfo.BusinessOwner != null)
-                    {
-                        newProjectInfo.BusinessOwner.Contact = extractContact(data);
-                    }
-                    break;
-                case "\\BusinessRepresentativeName":
-                    newProjectInfo.BusinessRepresentative = new ProjectInformationParticipant();
-                    newProjectInfo.BusinessRepresentative.Name = data;
-                    pentestTeamDictionary.Add(command, newProjectInfo.BusinessRepresentative);
-                    break;
-                case "\\BusinessRepresentativeDepartment":
-                    if(newProjectInfo.BusinessRepresentative  != null)
-                    {
-                        newProjectInfo.BusinessRepresentative.Department = extractDepartment(data);
-                    }
-                    break;
-                case "\\BusinessRepresentativeContact":
-                    if(newProjectInfo.BusinessRepresentative != null)
-                    {
-                        newProjectInfo.BusinessRepresentative.Contact = extractContact(data);
-                    }
-                    break;
-                case "\\TechnicalContacts":
-                    if (data[0] == '\\')
-                    {
-                        newProjectInfo.TechnicalContacts.Add(pentestTeamDictionary[data]);
-                    } else
-                    {
-                        char[] delimiters = { '{', '}' };
-                        string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
-                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                        ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
-                        newPerson.Name = splitByAmpersand[0].Trim();
-                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
-                        newPerson.Contact = extractContact(
-                            splitByAmpersand[2].Trim()
-                            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
-                        newProjectInfo.TechnicalContacts.Add(newPerson);
-                    }
-                    
-                    break;
-                case "\\PentestLeadName":
-                    newProjectInfo.PentestLead = new ProjectInformationParticipant();
-                    newProjectInfo.PentestLead.Name = data;
-                    pentestTeamDictionary.Add(command, newProjectInfo.PentestLead);
-                    break;
-                case "\\PentestLeadDepartment":
-                    if(newProjectInfo.PentestLead != null)
-                    {
-                        newProjectInfo.PentestLead.Department = extractDepartment(data);
-                    }
-                    break;
-                case "\\PentestLeadContact":
-                    if(newProjectInfo.PentestLead != null)
-                    {
-                        newProjectInfo.PentestLead.Contact = extractContact(data);
-                    }
-                    break;
-                case "\\PentestCoordinatorName":
-                    newProjectInfo.PentestCoordinator = new ProjectInformationParticipant();
-                    newProjectInfo.PentestCoordinator.Name = data;
-                    pentestTeamDictionary.Add(command, newProjectInfo.PentestCoordinator);
-                    break;
-                case "\\PentestCoordinatorDepartment":
-                    if(newProjectInfo.PentestCoordinator != null)
-                    {
-                        newProjectInfo.PentestCoordinator.Department = extractDepartment(data);
-                    }
-                    break;
-                case "\\PentestCoordinatorContact":
-                    if(newProjectInfo.PentestCoordinator != null)
-                    {
-                        newProjectInfo.PentestCoordinator.Contact = extractContact(data);
-                    }
-                    break;
-                case "\\PentestTeamMember":
-                    if (data[0] == '\\')
-                    {
-                        newProjectInfo.PentestTeam.Add(pentestTeamDictionary[data]);
-                    } else
-                    {
-                        char[] delimiters = { '{', '}' };
-                        string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
-                            .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                        ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
-                        newPerson.Name = splitByAmpersand[0].Trim();
-                        newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
-                        newPerson.Contact = extractContact(
-                            splitByAmpersand[2].Trim()
-                            .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
-                        newProjectInfo.PentestTeam.Add(newPerson);
-                    }
-                    
-                    break;
-                case "\\TargetInfoVersion":
-                    newProjectInfo.TargetInfoVersion = data;
-                    break;
-                case "\\TargetInfoEnvironment":
-                    newProjectInfo.TargetInfoEnvironment = data;
-                    break;
-                case "\\TargetInfoInternetFacing":
-                    if(data == "Yes")
-                    {
-                        newProjectInfo.TargetInfoInternetFacing = true;
-                    } else if(data == "No")
-                    {
-                        newProjectInfo.TargetInfoInternetFacing = false;
-                    }
-                    break;
-                case "\\TargetInfoSNXConnectivity":
-                    if (data == "Yes")
-                    {
-                        newProjectInfo.TargetInfoSNXConnectivity = true;
-                    }
-                    else if (data == "No")
-                    {
-                        newProjectInfo.TargetInfoSNXConnectivity = false;
-                    }
-                    break;
-                case "\\TargetInfoHostingLocation":
-                    newProjectInfo.TargetInfoHostingConnection = data;
-                    break;
-                case "\\TargetInfoHostingProvider":
-                    newProjectInfo.TargetInfoHostingProvider = data;
-                    break;
-                case "\\TargetInfoLifecyclePhase":
-                    newProjectInfo.TargetInfoLifeCyclePhase = data;
-                    break;
-                case "\\TargetInfoCriticality":
-                    newProjectInfo.TargetInfoCriticality = data;
-                    break;
-                case "\\TargetInfoAssetID":
-                    newProjectInfo.TargetInfoAssetID = data;
-                    break;
-                case "\\TargetInfoSHARPUUID":
-                    newProjectInfo.TargetInfoSHARPUUID = data;
-                    break;
-                case "\\TargetInfoDescription":
-                    newProjectInfo.TargetInfoDescription = data;
-                    break;
-                case "\\TimeframeTotal":
-                    string resultString = "";
-                    Regex regex = new Regex(@"\d+");
-                    MatchCollection matches = regex.Matches(data);
+                switch(command)
+                {
+                    case "\\ApplicationManager":
+                        newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
+                        newProjectInfo.ApplicationManager.Name = data;
+                        pentestTeamDictionary.Add(command, newProjectInfo.ApplicationManager);
+                        break;
+                    case "\\ApplicationManagerDepartment":
+                        if (newProjectInfo.ApplicationManager != null)
+                        {
+                            newProjectInfo.ApplicationManager.Department = extractDepartment(data);
+                        }
+                        break;
+                    case "\\ApplicationManagerContact":
+                        if (newProjectInfo.ApplicationManager != null)
+                        {
+                            newProjectInfo.ApplicationManager.Contact = extractContact(data);
+                        }
+                        break;
+                    case "\\BusinessOwnerName":
+                        newProjectInfo.BusinessOwner = new ProjectInformationParticipant();
+                        newProjectInfo.BusinessOwner.Name = data;
+                        pentestTeamDictionary.Add(command, newProjectInfo.BusinessOwner);
+                        break;
+                    case "\\BusinessOwnerDepartment":
+                        if (newProjectInfo.BusinessOwner != null)
+                        {
+                            newProjectInfo.BusinessOwner.Department = extractDepartment(data);
+                        }
+                        break;
+                    case "\\BusinessOwnerContact":
+                        if (newProjectInfo.BusinessOwner != null)
+                        {
+                            newProjectInfo.BusinessOwner.Contact = extractContact(data);
+                        }
+                        break;
+                    case "\\BusinessRepresentativeName":
+                        newProjectInfo.BusinessRepresentative = new ProjectInformationParticipant();
+                        newProjectInfo.BusinessRepresentative.Name = data;
+                        pentestTeamDictionary.Add(command, newProjectInfo.BusinessRepresentative);
+                        break;
+                    case "\\BusinessRepresentativeDepartment":
+                        if (newProjectInfo.BusinessRepresentative != null)
+                        {
+                            newProjectInfo.BusinessRepresentative.Department = extractDepartment(data);
+                        }
+                        break;
+                    case "\\BusinessRepresentativeContact":
+                        if (newProjectInfo.BusinessRepresentative != null)
+                        {
+                            newProjectInfo.BusinessRepresentative.Contact = extractContact(data);
+                        }
+                        break;
+                    case "\\TechnicalContacts":
+                        if (data[0] == '\\')
+                        {
+                            newProjectInfo.TechnicalContacts.Add(pentestTeamDictionary[data]);
+                        }
+                        else
+                        {
+                            char[] delimiters = { '{', '}' };
+                            string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
+                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                            ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
+                            newPerson.Name = splitByAmpersand[0].Trim();
+                            newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
+                            newPerson.Contact = extractContact(
+                                splitByAmpersand[2].Trim()
+                                .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            newProjectInfo.TechnicalContacts.Add(newPerson);
+                        }
+
+                        break;
+                    case "\\PentestLeadName":
+                        newProjectInfo.PentestLead = new ProjectInformationParticipant();
+                        newProjectInfo.PentestLead.Name = data;
+                        pentestTeamDictionary.Add(command, newProjectInfo.PentestLead);
+                        break;
+                    case "\\PentestLeadDepartment":
+                        if (newProjectInfo.PentestLead != null)
+                        {
+                            newProjectInfo.PentestLead.Department = extractDepartment(data);
+                        }
+                        break;
+                    case "\\PentestLeadContact":
+                        if (newProjectInfo.PentestLead != null)
+                        {
+                            newProjectInfo.PentestLead.Contact = extractContact(data);
+                        }
+                        break;
+                    case "\\PentestCoordinatorName":
+                        newProjectInfo.PentestCoordinator = new ProjectInformationParticipant();
+                        newProjectInfo.PentestCoordinator.Name = data;
+                        pentestTeamDictionary.Add(command, newProjectInfo.PentestCoordinator);
+                        break;
+                    case "\\PentestCoordinatorDepartment":
+                        if (newProjectInfo.PentestCoordinator != null)
+                        {
+                            newProjectInfo.PentestCoordinator.Department = extractDepartment(data);
+                        }
+                        break;
+                    case "\\PentestCoordinatorContact":
+                        if (newProjectInfo.PentestCoordinator != null)
+                        {
+                            newProjectInfo.PentestCoordinator.Contact = extractContact(data);
+                        }
+                        break;
+                    case "\\PentestTeamMember":
+                        if (data[0] == '\\')
+                        {
+                            newProjectInfo.PentestTeam.Add(pentestTeamDictionary[data]);
+                        }
+                        else
+                        {
+                            char[] delimiters = { '{', '}' };
+                            string[] splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
+                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                            ProjectInformationParticipant newPerson = new ProjectInformationParticipant();
+                            newPerson.Name = splitByAmpersand[0].Trim();
+                            newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
+                            newPerson.Contact = extractContact(
+                                splitByAmpersand[2].Trim()
+                                .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            newProjectInfo.PentestTeam.Add(newPerson);
+                        }
+
+                        break;
+                    case "\\TargetInfoVersion":
+                        newProjectInfo.TargetInfoVersion = data;
+                        break;
+                    case "\\TargetInfoEnvironment":
+                        newProjectInfo.TargetInfoEnvironment = data;
+                        break;
+                    case "\\TargetInfoInternetFacing":
+                        if (data == "Yes")
+                        {
+                            newProjectInfo.TargetInfoInternetFacing = true;
+                        }
+                        else if (data == "No")
+                        {
+                            newProjectInfo.TargetInfoInternetFacing = false;
+                        }
+                        break;
+                    case "\\TargetInfoSNXConnectivity":
+                        if (data == "Yes")
+                        {
+                            newProjectInfo.TargetInfoSNXConnectivity = true;
+                        }
+                        else if (data == "No")
+                        {
+                            newProjectInfo.TargetInfoSNXConnectivity = false;
+                        }
+                        break;
+                    case "\\TargetInfoHostingLocation":
+                        newProjectInfo.TargetInfoHostingConnection = data;
+                        break;
+                    case "\\TargetInfoHostingProvider":
+                        newProjectInfo.TargetInfoHostingProvider = data;
+                        break;
+                    case "\\TargetInfoLifecyclePhase":
+                        newProjectInfo.TargetInfoLifeCyclePhase = data;
+                        break;
+                    case "\\TargetInfoCriticality":
+                        newProjectInfo.TargetInfoCriticality = data;
+                        break;
+                    case "\\TargetInfoAssetID":
+                        newProjectInfo.TargetInfoAssetID = data;
+                        break;
+                    case "\\TargetInfoSHARPUUID":
+                        newProjectInfo.TargetInfoSHARPUUID = data;
+                        break;
+                    case "\\TargetInfoDescription":
+                        newProjectInfo.TargetInfoDescription = data;
+                        break;
+                    case "\\TimeframeTotal":
+                        string resultString = "";
+                        Regex regex = new Regex(@"\d+");
+                        MatchCollection matches = regex.Matches(data);
 
                         foreach (Match match in matches)
                         {
