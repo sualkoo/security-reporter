@@ -23,7 +23,6 @@ export class FiltersComponent {
     });
   }
 
-  debounceTimer: any;
   projectNameControl = new FormControl();
 
   ProjectStatus: SelectInterface[] = [
@@ -109,7 +108,6 @@ export class FiltersComponent {
   @Output() filtersChangedEvent = new EventEmitter<string>();
 
   filtersChanged() {
-    //this.filteredClass.ProjectName = this.debouncedProjectName;
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
     console.log("zavolane");
