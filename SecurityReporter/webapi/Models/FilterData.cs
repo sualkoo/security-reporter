@@ -14,8 +14,8 @@ namespace webapi.Models
         public int? FilteredPentestEnd { get; set; }
         public DateOnly? FilteredStartDate { get; set; }
         public DateOnly? FilteredEndDate { get; set; }
-        public DateOnly? FilteredIKO { get; set; }
-        public DateOnly? FilteredTKO { get; set; }
+        public int? FilteredIKO { get; set; }
+        public int? FilteredTKO { get; set; }
     }
 }
 

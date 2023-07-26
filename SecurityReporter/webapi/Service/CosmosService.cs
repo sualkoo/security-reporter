@@ -201,6 +201,30 @@ namespace webapi.Service
                 queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
             }
 
+            if (filter.FilteredIKO.HasValue)
+            {
+                if (filter.FilteredIKO.Value == 1) // FilteredIKO equals 1, return projects where iko attributes are null
+                {
+                    filterConditions.Add("IS_NULL(c.IKO)");
+                }
+                else if (filter.FilteredIKO.Value == 2) // FilteredIKO equals 2, return projects where iko attributes are determined (not null)
+                {
+                    filterConditions.Add("NOT IS_NULL(c.IKO)");
+                }
+            }
+
+            if (filter.FilteredTKO.HasValue)
+            {
+                if (filter.FilteredTKO.Value == 1) // FilteredIKO equals 1, return projects where iko attributes are null
+                {
+                    filterConditions.Add("IS_NULL(c.TKO)");
+                }
+                else if (filter.FilteredTKO.Value == 2) // FilteredIKO equals 2, return projects where iko attributes are determined (not null)
+                {
+                    filterConditions.Add("NOT IS_NULL(c.TKO)");
+                }
+            }
+
             if (filterConditions.Count > 0)
             {
                 queryString += " WHERE " + string.Join(" AND ", filterConditions);

@@ -49,7 +49,14 @@ export const projectScopeIndex: { [key in ProjectScope]: number } = {
 type IKO = 'TBD' | 'Date is set';
 
 export const IKOIndex: { [key in IKO]: number } = {
-  TBD: 0,
-  "Date is set": 1,
+  TBD: 1,
+  "Date is set": 2,
+};
+
+type TKO = 'TBD' | 'Date is set';
+
+export const TKOIndex: { [key in TKO]: number } = {
+  TBD: 1,
+  "Date is set": 2,
 };
 
