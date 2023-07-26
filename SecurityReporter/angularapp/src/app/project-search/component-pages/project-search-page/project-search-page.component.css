@@ -1,14 +1,13 @@
 .filters-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 stĺpce s rovnakým podielom šírky */
-  grid-gap: 10px; /* Vzdialenosť medzi jednotlivými položkami */
+  grid-template-columns: repeat(2, 1fr); /* 2 columns with the same width */
+  grid-gap: 10px; /* Same distance between two columns */
 }
 
 .filter-item {
   display: flex;
   align-items: center;
-  padding: 10px 20px; /* Add padding around each filter item */
-  background-color: #f0f0f0; /* Set a light gray background color */
+  padding: 5px 20px; /* Add padding around each filter item */
   border-radius: 5px; /* Add rounded corners for a more pleasant look */
 }
 
@@ -28,14 +27,43 @@
   height: 20px;
 }
 
+.upload {
+  border:inset;
+}
+
+.custom-width {
+  width: 200px;
+}
+
+
+.container-at-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  padding-top: 170px;
+  width: 100%;
+}
+
+
 @media screen and (max-width: 1090px) {
   .filters-container {
-    grid-template-columns: 1fr; /* 1 stĺpec */
+    grid-template-columns: 1fr; /* 1 column */
+    grid-gap: 5px;
   }
 
   .filter-item {
     padding: 5px 30px; /* Add padding around each filter item */
+  }
 
+  .checkbox {
+      height: 15px;
+      widht: 15px;
+  }
+
+  .container-at-bottom {
+      height: 250px;
+      padding-top: 1px;
   }
 }
 
