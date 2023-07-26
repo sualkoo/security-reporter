@@ -5,13 +5,24 @@
       <div class="mt-2 pt-2">
 
         <div class="search-container">
-          <h1 class="center pb-2">Search items</h1>
+          <h1 class="center pb-2 mt-3">Search items</h1>
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
             <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()">
           </mat-form-field>
-
-          <h4 class="center pt-2 pb-2">Filters</h4>
+          <div class="container-fluid">
+            <div class="row mb-2 mt-2">
+              <div class="col-auto">
+                <h4>Filters</h4>
+              </div>
+              <div class="col text-end">
+                <button class="clear-all-button" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+                  Clear all
+                </button>
+              </div>
+              <hr />
+            </div>
+          </div>
           <div class="center">
             <div class="filters-container">
               <div class="filter-item" *ngFor="let case of keywords;">
@@ -27,20 +38,20 @@
           </div>
 
           <div class="center submit-button pt-4">
-            <button class="btn btn-primary" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+            <button class="btn btn-primary custom-width" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
             </button>
-            <button class="btn btn-danger" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
-              Delete filters
-            </button>
           </div>
         </div>
-        <div class="pt-4">
-          <hr/>
-          <!-- Upload -->
-          <app-add-project-report></app-add-project-report>
+        <div class="container  mt-5 ml-1 col-12">
+          <div>
+            
+            <!-- Upload -->
+            <app-add-project-report></app-add-project-report>
+          </div>
         </div>
+
       </div>
     </div>
     <!-- Project Report Findings -->
