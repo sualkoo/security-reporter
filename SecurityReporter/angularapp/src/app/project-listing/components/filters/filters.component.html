@@ -1,12 +1,11 @@
 
   <div class="filters">
-
-    <app-input-component title="Project Name" (valueChanged)="onChildInputValueChanged($event, 'PN')"></app-input-component>
+    <app-input title="Project Name" (valueChanged)="onChildInputValueChanged($event, 'PN')"></app-input>
     <div class="select-wide">
       <app-select-component
             [option]="ProjectStatus"
             [title]="'Project status'"
-                            (valueChanged)="onChildInputValueChanged($event, 'PST')">        
+            (valueChanged)="onChildInputValueChanged($event, 'PST')">        
       </app-select-component>
     </div>
     <div class="select-wide">
