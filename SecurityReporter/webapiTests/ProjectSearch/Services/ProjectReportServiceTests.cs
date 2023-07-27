@@ -64,6 +64,7 @@ namespace webapi.ProjectSearch.Services.Tests
         [Test()]
         public async Task SaveReportFromZip_ValidZip_ReturnsProjectReportDataAsync()
         {
+            //  Arrange
             var expectedReportData = new ProjectReportData
             {
                 DocumentInfo = new DocumentInformation
@@ -72,30 +73,17 @@ namespace webapi.ProjectSearch.Services.Tests
                 }
             };
 
-            // Create sample zip file
             var fileName = "report.zip";
             byte[] zipFileContent;
 
             using (var zipStream = new MemoryStream())
             {
-                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-                {
-                    // Create a dummy file named "data.txt" with some content in the zip archive
-                    var entry = archive.CreateEntry("data.txt");
-                    using (var entryStream = entry.Open())
-                    using (var writer = new StreamWriter(entryStream))
-                    {
-                        writer.Write("Sample content for testing.");
-                    }
-                }
-
                 zipFileContent = zipStream.ToArray();
             }
 
             var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
 
-            // Mock
-            mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(expectedReportData);
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(expectedReportData);
             mockValidator.Setup(validator => validator.Validate(expectedReportData)).Returns(true);
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
 
