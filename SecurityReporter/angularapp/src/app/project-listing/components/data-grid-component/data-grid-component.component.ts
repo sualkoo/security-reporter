@@ -119,23 +119,23 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.selection.toggle(row);
     this.handleSelectedList(row);
 }
-    getStatusString(status: number): string {
-        switch (status) {
-            case 1:
-                return 'Requested';
-            case 2:
-                return 'Planned';
-            case 3:
-                return 'In progress';
-            case 4:
-                return 'Finished';
-            case 5:
-                return 'Cancelled';
-            case 6:
-                return 'On hold';
-            default:
-                return 'TBS';
-        }
+
+  getStatusString(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Requested';
+      case 2:
+        return 'Planned';
+      case 3:
+        return 'In progress';
+      case 4:
+        return 'Finished';
+      case 5:
+        return 'Cancelled';
+      case 6:
+        return 'On hold';
+      default:
+        return 'TBS';
     }
   }
 
@@ -171,6 +171,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.isLoading = true;
     this.databaseError = false;
     this.filterError = false;
+
 
 
     try {
@@ -227,18 +228,36 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
+  async filtersChangedHandler(filters: string) {
+    this.filters = filters;
+    this.isLoading = true;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.filterError = true;
+      this.databaseError = true;
+      this.dataSource.data = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
+  getStatusColor(element: any): string {
+    switch (element.projectStatus) {
+      case 1:
         return '#FDDDCB';
       case 2:
         return '#CAC8E0';
       case 3:
         return '#FFF3BF';
-      case 3: 
-        return '#FFF3BF';
-      case 3:
-        return '#FFF3BF';
       case 4:
-        return '#F9BFC7';
+        return '#BFE6CD';
       case 5:
+        return '#F9BFC7';
+      case 6:
         return '#CEEFFB';
       default:
         return '#E9D1D4';
