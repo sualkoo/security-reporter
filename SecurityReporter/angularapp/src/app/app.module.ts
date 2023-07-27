@@ -31,13 +31,15 @@ import { SliderComponent } from './project-listing/components/slider/slider.comp
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,   
+    AddProjectReportComponent,
+    LandingPageComponent,   
     
   ],
   imports: [
@@ -63,7 +65,7 @@ import { RouterModule } from '@angular/router';
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
