@@ -12,6 +12,7 @@ using webapi.Models.ProjectReport;
 using Microsoft.Azure.Cosmos.Linq;
 using System.IO.Compression;
 using NUnit.Framework.Constraints;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 // namespace webapi.ProjectSearch.Controllers.Tests
@@ -110,62 +111,60 @@ namespace webapi.ProjectReportControllers.Tests
         public async Task addProjectReport_ValidFile_ReturnsOkResult()
         {
             // Arrange
-            string filePath = @"C:\Users\User\source\repos\projects\2023\SecurityReporter\webapiTests\ProjectSearch\Controllers\dobre.zip";
+            IFormFile formFile = new FormFile(Stream.Null, 0, 0, "file", "jpg");
+            ProjectReportData data = new ProjectReportData();
+            data.Id = Guid.NewGuid();
 
-            // Open the ZIP archive
-            ZipArchive zipArchive = ZipFile.OpenRead(filePath);
 
-            // Get the absolute path to the ZIP file
-            string zipFilePath = @"C:\Users\User\source\repos\projects\2023\SecurityReporter\webapiTests\ProjectSearch\Controllers\dobre.zip";
-
-            // Read the ZIP file's content into a byte array
-            byte[] zipFileContent = File.ReadAllBytes(zipFilePath);
-            var stream = new MemoryStream(zipFileContent);
-            IFormFile zipFile;
-
-            // Create a MemoryStream from the ZIP file content
-            using (MemoryStream memoryStream = new MemoryStream(zipFileContent))
-            {
-                // Create an IFormFile instance using the MemoryStream
-                /*zipFile = new FormFile(memoryStream, 0, zipFileContent.Length, zipFilePath, "dobre.zip");*/
-                zipFile = new FormFile(memoryStream, 0, memoryStream.Length, null, "dobre.zip");
-
-                // Now you can use the 'zipFile' instance as needed, such as passing it to your method for testing or further processing.
-            }
+            //mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ReturnsAsync(data);
+            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ReturnsAsync(data);
 
             // Act
-            var result = await projectReportController.addProjectReport(zipFile);
+            var result = await projectReportController.addProjectReport(formFile);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
 
 
-            /*// Check if the file exists
-            if (File.Exists(filePath))
-            {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-
-                IFormFile formFile = new FormFile(new MemoryStream(fileBytes), 0, fileBytes.Length, "formFile", Path.GetFileName(filePath));
-
-                // Act
-                var result = await projectReportController.addProjectReport(formFile);
-
-                // Assert
-                Assert.IsNotNull(result);
-                Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
-                *//*Assert.AreEqual(200, result.StatusCode);*//*
-            }
-            else
-            {
-                Console.WriteLine("The file does not exist.");
-            }*/
+         
         }
 
         [Test]
         public void getProjectReportByIdTest()
         {
-            Assert.Fail();
+            // Arange
+            Guid expectedId = Guid.NewGuid();
+            ProjectReportData data = new ProjectReportData();
+            data.Id = expectedId;
+
+            mockProjectReportService.Setup(service => service.GetReportByIdAsync(expectedId)).ReturnsAsync(data);
+
+            // Act
+            var result = projectReportController.getProjectReportById(expectedId);
+            var resultResponse = result.Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(OkObjectResult), resultResponse.GetType());
+
+        }
+
+        [Test]
+        public async void getProjectReportById_InvalidId_ReturnsErrorResponse()
+        {
+            // Arange
+            Guid expectedId = Guid.NewGuid();
+            CustomException expectedException = new CustomException(StatusCodes.Status404NotFound, "Report with searched ID not found");
+
+            mockProjectReportService.Setup(service => service.GetReportByIdAsync(expectedId)).ThrowsAsync(expectedException);
+
+            // Act
+            var result = await projectReportController.getProjectReportById(expectedId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(ErrorResponse), result.GetType());
         }
 
         //  TODO
