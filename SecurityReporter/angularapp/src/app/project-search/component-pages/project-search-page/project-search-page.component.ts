@@ -4,6 +4,7 @@ import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-search',
@@ -52,17 +53,26 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   resetSearch() {
-
     this.loadedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
   }
 
-  loadFindings() {
+  injectionOfTestVariables() {
+    this.projectNameTest = this.projectName;
+    this.detailsTest = this.details;
+    this.impactTest = this.impact;
+    this.repeatabilityTest = this.repeatability;
+    this.referencesTest = this.references;
+    this.cweTest = this.cwe;
+  }
 
+  loadFindings() {
+    this.highlightValue = this.value;
+    this.injectionOfTestVariables();
     this.isLoading = true;
-   this.projectReportService.getProjectReportFindings(
+    this.projectReportService.getProjectReportFindings(
       this.value,
       1,
       this.projectName,
@@ -83,6 +93,9 @@ export class ProjectSearchPageComponent implements OnInit {
           this.lastLoadedPage = response.pageNumber;
         }
         this.isLoading = false;
+      }, (HttpErrorResponse) => {
+        this.isLoading = false;
+        this.notificationService.displayMessage("No findings found.", "info");
       }
     )
   }
@@ -114,8 +127,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   value: string = '';
   keyword: string = '';
-  subcategory: string = '';
-
+  highlightValue: string = '';
   keywordsValues: string[] = [];
 
   keywords = [
@@ -135,6 +147,22 @@ export class ProjectSearchPageComponent implements OnInit {
   references?: string;
   cwe?: string;
 
+  projectNameTest?: string;
+  detailsTest?: string;
+  impactTest?: string;
+  repeatabilityTest?: string;
+  referencesTest?: string;
+  cweTest?: string;
+
+  clearReportVariables() {
+    this.projectName = '';
+    this.details = '';
+    this.impact = '';
+    this.repeatability = '';
+    this.references = '';
+    this.cwe = '';
+  }
+
 
   toggleCheckbox(selectedCase: any): void {
     this.keywords.forEach((caseItem) => {
@@ -153,54 +181,38 @@ export class ProjectSearchPageComponent implements OnInit {
         this.isCheckboxChecked = false;
       }
     }
+    this.clearReportVariables();
     this.checkFormValidity();
   }
 
   isFormValid: boolean = false;
 
   checkFormValidity(): void {
-    switch (this.keyword) {
-      case 'ProjectReportName':
-        this.subcategory = 'DocumentInfo';
-        break;
-      case 'SubsectionDetails':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionImpact':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionRepeatability':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionReferences':
-        this.subcategory = 'Finding';
-        break;
-      case 'CWE':
-        this.subcategory = 'Finding';
-        break;
-      default: this.subcategory = '';
-    }
 
-    this.isFormValid = this.value.trim() !== '' && this.subcategory !== '' && this.keywordsValues.length > 0;
+    this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
+
+
     console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
-     if(value == 'ProjectReportName') {
+      if(value == 'ProjectReportName') {
        this.projectName = value;
      }
-      if(value == 'SubsectionDetails') {
+      else if(value == 'SubsectionDetails') {
         this.details = value;
       }
-      if(value == 'SubsectionImpact') {
+      else if(value == 'SubsectionImpact') {
         this.impact = value;
       }
-      if(value == 'SubsectionRepeatability') {
+      else if(value == 'SubsectionRepeatability') {
         this.repeatability = value;
       }
-      if(value == 'SubsectionReferences') {
+      else if(value == 'SubsectionReferences') {
         this.references = value;
       }
-      if(value == 'CWE') {
+      else if(value == 'CWE') {
         this.cwe = value;
+        if(this.value.length > 0)
+        this.onlyNumbers(this.value);
       }
     }
   }
@@ -212,10 +224,36 @@ export class ProjectSearchPageComponent implements OnInit {
         caseItem.checked =false;
         this.keywordsValues = [];
         this.isCheckboxChecked = false;
-        this.isFormValid = false;
       }
     );
-
+    this.isFormValid = false;
+    this.clearReportVariables();
   }
+
+
+  onlyNumbers(event: string, ): void {
+    const numberRegex = /^[0-9]+$/;
+    console.log(numberRegex.test(event));
+
+    if (!numberRegex.test(event)) {
+      this.cwe = '';
+      const index = this.keywordsValues.indexOf('CWE');
+      if (index !== -1) {
+        this.keywordsValues.splice(index, 1);
+      }
+      this.keywords.forEach((caseItem) => {
+
+        if (caseItem.value === 'CWE') {
+         //delay 200ms
+          setTimeout(() => {
+          caseItem.checked = false;
+        }, 100);
+        }
+      });
+
+      this.notificationService.displayMessage("If you choose CWE search value has to be a number", "warning");
+    }
+  }
+
 
 }
