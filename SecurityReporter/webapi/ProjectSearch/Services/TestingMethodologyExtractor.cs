@@ -38,7 +38,7 @@ namespace webapi.ProjectSearch.Services
                             {
                                 inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
-                                if(inBracketContents.Length > 0 )
+                                if(inBracketContents.Length > 1)
                                 {
                                     toolsUsed = (inBracketContents[1] == "\\ToolsUsed") ? true : false;
                                     attackVectors = (inBracketContents[1] == "\\AttackVectors") ? true : false;
@@ -77,9 +77,13 @@ namespace webapi.ProjectSearch.Services
                                 }
                             } else
                             {
-                                throw new Exception("Testing_Methodology.tex is not formatted as required");
+                                throw new Exception("The LaTeX file is not formatted as required");
                             } 
                         }
+                    }
+                    if(toolsUsed == true || attackVectors == true)
+                    {
+                        throw new Exception("The LaTeX file is not formatted as required");
                     }
                     return newTestingMethodology;
                 }
