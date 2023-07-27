@@ -68,6 +68,15 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweTest = this.cwe;
   }
 
+  injectionOfSendingVariables() {
+    this.projectNameSending = this.projectName;
+    this.detailsSending = this.details;
+    this.impactSending = this.impact;
+    this.repeatabilitySending = this.repeatability;
+    this.referencesSending = this.references;
+    this.cweSending = this.cwe;
+  }
+
   loadFindings() {
     this.highlightValue = this.value;
     this.injectionOfTestVariables();
@@ -84,6 +93,7 @@ export class ProjectSearchPageComponent implements OnInit {
     ).subscribe(
       (response) => {
         console.log(response)
+        this.injectionOfSendingVariables();
         if (response.data.length == 0) {
           this.notificationService.displayMessage("No findings found.", "info");
         } else {
@@ -109,12 +119,12 @@ export class ProjectSearchPageComponent implements OnInit {
     this.projectReportService.getProjectReportFindings(
       this.value,
       (this.lastLoadedPage + 1),
-      this.projectName,
-      this.details,
-      this.impact,
-      this.repeatability,
-      this.references,
-      this.cwe
+      this.projectNameSending,
+      this.detailsSending,
+      this.impactSending,
+      this.repeatabilitySending,
+      this.referencesSending,
+      this.cweSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
       this.nextPage = res.nextPage;
@@ -153,6 +163,13 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatabilityTest?: string;
   referencesTest?: string;
   cweTest?: string;
+
+  projectNameSending?: string;
+  detailsSending?: string;
+  impactSending?: string;
+  repeatabilitySending?: string;
+  referencesSending?: string;
+  cweSending?: string;
 
   clearReportVariables() {
     this.projectName = '';
@@ -251,7 +268,7 @@ export class ProjectSearchPageComponent implements OnInit {
         }
       });
 
-      this.notificationService.displayMessage("If you choose CWE search value has to be a number", "warning");
+      this.notificationService.displayMessage("If you choose CWE, search value has to be a number", "warning");
     }
   }
 
