@@ -29,12 +29,15 @@ import { FiltersComponent } from './project-listing/components/filters/filters.c
 import { FiltersDatepickerComponent } from './project-listing/components/datepicker/datepicker.component';
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
+import { InputComponent } from './project-listing/components/input/input.component';
+import { RouterModule } from '@angular/router';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent,
+    AddProjectReportComponent,   
     
   ],
   imports: [
@@ -60,7 +63,7 @@ import { ExpansionPanelComponent } from './project-listing/components/expansion-
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent],

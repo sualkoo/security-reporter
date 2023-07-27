@@ -1,8 +1,6 @@
 <mat-form-field class="date">
   <mat-label>{{ title }}</mat-label>
   <input matInput
-         [min]="minDate"
-         [max]="maxDate"
          [matDatepicker]="picker"
          [(ngModel)]="inputValue"
          (dateChange)="onDateChange()" />

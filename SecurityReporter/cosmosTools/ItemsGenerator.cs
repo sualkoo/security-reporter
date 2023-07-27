@@ -99,7 +99,7 @@ namespace cosmosTools
                     ProjectStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().ToArray()),
                     ProjectQuestionare = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectQuestionare)).Cast<ProjectQuestionare>().ToArray()),
                     ProjectScope = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectScope)).Cast<ProjectScope>().ToArray()),
-                    PentestDuration = new Random().Next(1, 1000),
+                    PentestDuration = new Random().Next(2, 11),
                     CatsNumber = Generators.GenerateRandomString(10),
                     ProjectOfferStatus = Generators.GenerateRandomElement(Enum.GetValues(typeof(ProjectOfferStatus)).Cast<ProjectOfferStatus>().ToArray()),
                     PentestAspects = Generators.GeneratePentest(),
