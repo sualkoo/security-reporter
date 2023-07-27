@@ -1,7 +1,6 @@
 .filters {
   display: flex;
   justify-content: space-between;
-  margin-right: 100px;
   align-items: end;
   gap: 20px;
 }
@@ -20,4 +19,19 @@
 
 .select-thin {
   width: 120px;
+}
+
+.mat-mdc-unelevated-button.mat-warn {
+  --mdc-filled-button-container-color: #ec6602;
+  --mdc-filled-button-label-text-color: #fff;
+}
+
+.reset-button {
+  width: 120px;
+  height: 35px;
+  margin-left: 1440px;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }

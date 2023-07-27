@@ -5,6 +5,5 @@
 ::ng-deep .mat-expansion-panel-body {
   display: flex;
   overflow-x: auto;
-  white-space: nowrap;
   padding: 16px;
 }

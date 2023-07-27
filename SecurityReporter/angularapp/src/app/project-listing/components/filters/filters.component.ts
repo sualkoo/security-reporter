@@ -7,13 +7,14 @@ import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStat
 import { InputComponent } from '../input/input.component';
 import { FormControl, FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   standalone: true,
-  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent]
+  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent, MatButtonModule]
 })
 export class FiltersComponent {
   constructor() {
@@ -153,5 +154,12 @@ export class FiltersComponent {
       queryStringParams.push(`&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`);
     }
     return queryStringParams.join('');
+  }
+
+  resetFilters() {
+    this.projectNameControl.setValue('');
+    this.filteredClass = {};
+    this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
+    this.filtersChangedEvent.emit(this.url);
   }
 }
