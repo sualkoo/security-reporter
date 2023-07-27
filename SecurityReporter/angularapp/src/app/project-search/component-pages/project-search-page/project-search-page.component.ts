@@ -5,6 +5,7 @@ import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Finding } from '../../interfaces/ProjectReport/finding';
 
 @Component({
   selector: 'app-project-search',
@@ -32,8 +33,11 @@ export class ProjectSearchPageComponent implements OnInit {
     return atBottom;
   }
 
-  totalRecords?: number;
   loadedFindings: FindingResponse[] = []
+  groupedFindings: { [key: string]: Finding[] } = {};
+  groupedFindingsEntries: Array<[string, Finding[]]> = [];
+
+  totalRecords?: number;
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
   isLoading: boolean = false;
@@ -54,6 +58,8 @@ export class ProjectSearchPageComponent implements OnInit {
 
   resetSearch() {
     this.loadedFindings = [];
+    this.groupedFindings = {};
+    this.groupedFindingsEntries = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
@@ -77,6 +83,16 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweSending = this.cwe;
   }
 
+  groupFindings() {
+    this.loadedFindings.forEach((findingRes: FindingResponse) => {
+      if (!this.groupedFindings[findingRes.projectReportName]) {
+        this.groupedFindings[findingRes.projectReportName] = [];
+      }
+      this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
+    });
+    this.groupedFindingsEntries = Object.entries(this.groupedFindings);
+  }
+
   loadFindings() {
     this.highlightValue = this.value;
     this.injectionOfTestVariables();
@@ -98,6 +114,7 @@ export class ProjectSearchPageComponent implements OnInit {
           this.notificationService.displayMessage("No findings found.", "info");
         } else {
           this.loadedFindings = response.data;
+          this.groupFindings();
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
@@ -127,6 +144,7 @@ export class ProjectSearchPageComponent implements OnInit {
       this.cweSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
+      this.groupFindings();
       this.nextPage = res.nextPage;
       for (let report of res.data) {
         this.loadedFindings.push(report);
