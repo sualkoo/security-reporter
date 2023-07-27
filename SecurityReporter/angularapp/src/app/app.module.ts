@@ -25,12 +25,20 @@ import { DataGridComponentComponent } from './project-listing/components/data-gr
 import { MatButtonModule } from '@angular/material/button';
 import { DeletePopupComponentComponent } from './project-listing/components/delete-popup-component/delete-popup-component.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FiltersComponent } from './project-listing/components/filters/filters.component';
+import { FiltersDatepickerComponent } from './project-listing/components/datepicker/datepicker.component';
+import { SliderComponent } from './project-listing/components/slider/slider.component';
+import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
+import { InputComponent } from './project-listing/components/input/input.component';
+import { RouterModule } from '@angular/router';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
-    AddProjectReportComponent
+    AddProjectReportComponent,   
+    
   ],
   imports: [
     BrowserModule,
@@ -55,7 +63,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent],

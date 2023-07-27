@@ -14,20 +14,25 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { FiltersComponent } from '../filters/filters.component';
+import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule, CommonModule, MatButtonModule, MatTooltipModule, MatIconModule],
+  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
   checkedRows: Set<any> = new Set<any>();
   isLoading = false;
   databaseError = false;
+  filterError = false;
   selectedItems: any[] = [];
+  noItemsFound = false;
 
   displayedColumns: string[] = [
     'select',
@@ -48,6 +53,8 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  filters: string = '';
+
 
   length: number | undefined;
 
@@ -112,62 +119,62 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.selection.toggle(row);
     this.handleSelectedList(row);
 }
-
-  getStatusString(status: number): string {
-    switch (status) {
-      case 0:
-        return 'Requested';
-      case 1:
-        return 'Planned';
-      case 2:
-        return 'In progress';
-      case 3:
-        return 'Finished';
-      case 4:
-        return 'Cancelled';
-      case 5:
-        return 'Cancelled';
-      case 6:
-        return 'On hold';
-      default:
-        return 'Requested';
+    getStatusString(status: number): string {
+        switch (status) {
+            case 1:
+                return 'Requested';
+            case 2:
+                return 'Planned';
+            case 3:
+                return 'In progress';
+            case 4:
+                return 'Finished';
+            case 5:
+                return 'Cancelled';
+            case 6:
+                return 'On hold';
+            default:
+                return 'TBS';
+        }
     }
   }
 
   getQuestionareString(questionare: number): string {
     switch (questionare) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
+        return 'Sent';
+      case 3:
         return 'Received';
       default:
-        return '';
+        return '-';
     }
   }
 
   getScopeString(scope: number): string {
     switch (scope) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
-        return 'Confirmed';
+        return 'Sent';
       case 3:
+        return 'Confirmed';
+      case 4:
         return 'Signed';
       default:
-        return '';
+        return '-';
     }
   }
 
   async getInitItems() {
     this.isLoading = true;
     this.databaseError = false;
+    this.filterError = false;
+
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -187,7 +194,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -204,18 +211,31 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  getStatusColor(element: any): string {
-    switch (element.projectStatus) {
-      case 0:
-        return this.selection.isSelected(element) ? '#F2F2F2' : 'white';
-      case 1:
-        return '#E9D1D4';
-      case 1:
+  async filtersChangedHandler(filters: string) {
+    this.filters = filters;
+    this.isLoading = true;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.filterError = true;
+      this.databaseError = true;
+      this.dataSource.data = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+        return '#FDDDCB';
+      case 2:
         return '#CAC8E0';
-      case 2: 
+      case 3:
+        return '#FFF3BF';
+      case 3: 
         return '#FFF3BF';
       case 3:
-        return '#BFE6CD';
+        return '#FFF3BF';
       case 4:
         return '#F9BFC7';
       case 5:
@@ -237,13 +257,10 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  // ADD BUTTON
-
   navigateToPage(): void {
     this.router.navigate(['/project-management'])
   }
 
-  // POP UP PART
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeletePopupComponentComponent, {

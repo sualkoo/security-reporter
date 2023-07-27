@@ -1,0 +1,13 @@
+<mat-accordion>
+        <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div style="gap: 20px; display:flex; align-items: center">
+                        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="filter_list"></mat-icon>
+                        <p>Show filters</p>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-filters (filtersChangedEvent)="filtersChangedHandler($event)"></app-filters>
+        </mat-expansion-panel>
+</mat-accordion>

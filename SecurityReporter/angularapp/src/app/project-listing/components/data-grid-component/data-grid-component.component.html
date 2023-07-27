@@ -14,6 +14,11 @@
   </button>
 </div>
 
+<div class="expansion-panel">
+  <app-expansion-panel (filtersChangedEvent)="filtersChangedHandler($event)"></app-expansion-panel>
+</div>
+
+
 <div class="list-container">
   <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
@@ -126,8 +131,8 @@
           <div class="no-data" *ngIf="!isLoading && dataSource.data.length === 0 && !databaseError">
             No data available
           </div>
-          <div class="database-error" *ngIf="databaseError">
-            No data available
+          <div class="database-error" *ngIf="filterError">
+            No data found matching the filter criteria
           </div>
         </td>
       </tr>
