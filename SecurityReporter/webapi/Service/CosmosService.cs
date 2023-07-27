@@ -389,6 +389,7 @@ namespace webapi.Service
             }
             int offset = limit * (page - 1);
             int totalResults;
+            int valueInt = 0;
             List<string> querypath = new List<string>();
             List<FindingResponse> newData = new List<FindingResponse>();
 
@@ -405,7 +406,6 @@ namespace webapi.Service
                                 "JOIN f IN c.Findings " +
                                 "JOIN r IN f.SubsectionReferences " +
                                 "WHERE";
-            int valueInt = 0;
 
             if (!string.IsNullOrEmpty(projectName))
             {
@@ -413,15 +413,15 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f.SubsectionDetails) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f[@details]) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(impact))
             {
-                querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f[@impact]) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
-                querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f[@repeatability]) LIKE LOWER(@value) ");
             }
             if (!string.IsNullOrEmpty(references))
             {
@@ -429,26 +429,32 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(cWE) && int.TryParse(value, out valueInt))
             {
-                querypath.Add(" f.CWE = (@valueInt) ");
+                querypath.Add(" (f[@cwe]) = (@valueInt) ");
             }
             else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(value, out valueInt))
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
             }
-
-            foreach (var path in querypath)
+            if (querypath.Count() > 0)
             {
-                if (firstFilter)
+                foreach (var path in querypath)
                 {
-                    query = $"{query} OR {path}";
-                    queryCount = $"{queryCount} OR {path}";
+                    if (firstFilter)
+                    {
+                        query = $"{query} OR {path}";
+                        queryCount = $"{queryCount} OR {path}";
+                    }
+                    else
+                    {
+                        query = $"{query} {path}";
+                        queryCount = $"{queryCount} {path}";
+                        firstFilter = true;
+                    }
                 }
-                else
-                {
-                    query = $"{query} {path}";
-                    queryCount = $"{queryCount} {path}";
-                    firstFilter = true;
-                }
+            }
+            else
+            {
+                throw new CustomException(StatusCodes.Status400BadRequest, "At least one filter has to be selected");
             }
             query = $"{query}  OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
@@ -459,6 +465,10 @@ namespace webapi.Service
                 QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
                                                                             .WithParameter("@offset", offset)
                                                                             .WithParameter("@valueInt", valueInt)
+                                                                            .WithParameter("@details", $"{details}")
+                                                                            .WithParameter("@impact", $"{impact}")
+                                                                            .WithParameter("@repeatability", $"{repeatability}")
+                                                                            .WithParameter("@cwe", $"{cWE}")
                                                                             .WithParameter("@limit", limit);
 
             FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
@@ -471,6 +481,10 @@ namespace webapi.Service
 
             //Total Results
             QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%")
+                                                                                  .WithParameter("@details", $"{details}")
+                                                                                  .WithParameter("@impact", $"{impact}")
+                                                                                  .WithParameter("@repeatability", $"{repeatability}")
+                                                                                  .WithParameter("@cwe", $"{cWE}")
                                                                                   .WithParameter("@valueInt", valueInt);
 
             FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
