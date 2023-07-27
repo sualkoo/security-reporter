@@ -61,7 +61,58 @@ namespace webapi.ProjectSearch.Services.Tests
             Assert.ThrowsAsync<CosmosException>(async () => await projectReportService.GetReportByIdAsync(id));
         }
 
-        [Test()]
+        [Test]
+        public void GetReportFindingsAsync_AtLeastOneParamSpecified_ReturnsPageOfFindings()
+        {
+            // Arange
+            var searchedValue = "Dummy";
+
+            var expectedFinding = new FindingResponse();
+            expectedFinding.ProjectReportId = Guid.NewGuid();
+            expectedFinding.ProjectReportName = "Dummy Project 1";
+
+            var expectedData = new List<FindingResponse>
+            {
+                expectedFinding
+            };
+
+            var expectedResponse = new PagedDBResults<List<FindingResponse>>(expectedData, 1);
+
+
+            // Searching by Project Report Name
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings("aaa", null, null, null, null, null, searchedValue, 1)).ReturnsAsync(expectedResponse);
+
+            // Act
+            var result = projectReportService.GetReportFindingsAsync("aaa", null, null, null, null, null, searchedValue, 1).Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedResponse, result);
+        }
+
+        [Test]
+        public void GetReportFindingsAsync_NoFilterSpecified_ReturnsPageOfFindings()
+        {
+            // Arange
+            var searchedValue = "Dummy";
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, searchedValue, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "At least one search filter must be specified"));
+
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, searchedValue, 1));
+        }
+
+        [Test]
+        public void GetReportFindingsAsync_NoSearchValueSpecified_ReturnsPageOfFindings()
+        {
+            // Arange
+            var searchedValue = "Dummy";
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "Search value cannot be null."));
+
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, null, 1));
+        }
+
+        [Test]
         public async Task SaveReportFromZip_ValidZip_ReturnsProjectReportDataAsync()
         {
             //  Arrange
