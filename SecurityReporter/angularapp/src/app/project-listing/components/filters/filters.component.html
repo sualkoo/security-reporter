@@ -1,44 +1,44 @@
 <button mat-flat-button color="warn" class="reset-button" (click)="resetFilters()">Reset </button>
-<div class="filtering">
-  <div class="filters">
-    <app-input title="Project Name" (valueChanged)="onChildInputValueChanged($event, 'PN')"></app-input>
-    <div class="select-wide">
-      <app-select-component [option]="ProjectStatus"
-                            [title]="'Project status'"
-                            (valueChanged)="onChildInputValueChanged($event, 'PST')">
-      </app-select-component>
-    </div>
-    <div class="select-wide">
-      <app-select-component [option]="Questionare"
-                            [title]="'Questionare'"
-                            (valueChanged)="onChildInputValueChanged($event, 'QUE')">
-      </app-select-component>
-    </div>
-    <div class="select-wide">
-      <app-select-component [option]="ProjectScope"
-                            (valueChanged)="onChildInputValueChanged($event, 'PSC')"
-                            [title]="'Project scope'">
-      </app-select-component>
+        <div class="filtering">
+            <div class="filters">
+                <app-input title="Project Name" (valueChanged)="onChildInputValueChanged($event, 'PN')"></app-input>
+                <div class="select-wide">
+                    <app-select-component [option]="ProjectStatus"
+                                          [title]="'Project status'"
+                                          (valueChanged)="onChildInputValueChanged($event, 'PST')">
+                    </app-select-component>
+                </div>
+                <div class="select-wide">
+                    <app-select-component [option]="Questionare"
+                                          [title]="'Questionare'"
+                                          (valueChanged)="onChildInputValueChanged($event, 'QUE')">
+                    </app-select-component>
+                </div>
+                <div class="select-wide">
+                    <app-select-component [option]="ProjectScope"
+                                          (valueChanged)="onChildInputValueChanged($event, 'PSC')"
+                                          [title]="'Project scope'">
+                    </app-select-component>
 
-    </div>
-    <div class="date">
-      <app-datepicker title="Start date" (valueChanged)="onChildDateValueChanged($event, 'STR')"></app-datepicker>
-    </div>
+                </div>
+                <div class="date">
+                    <app-datepicker title="Start date" (valueChanged)="onChildDateValueChanged($event, 'STR')"></app-datepicker>
+                </div>
 
-    <div class="date">
-      <app-datepicker title="End date" (valueChanged)="onChildDateValueChanged($event, 'END')"></app-datepicker>
-    </div>
+                <div class="date">
+                    <app-datepicker title="End date" (valueChanged)="onChildDateValueChanged($event, 'END')"></app-datepicker>
+                </div>
 
-    <app-slider (valuesChanged)="onChildSliderValueChanged($event)"></app-slider>
-    <div class="select-thin">
-      <app-select-component [option]="IKO"
-                            (valueChanged)="onChildInputValueChanged($event, 'IKO')"
-                            [title]="'IKO'"></app-select-component>
-    </div>
-    <div class="select-thin">
-      <app-select-component [option]="TKO"
-                            (valueChanged)="onChildInputValueChanged($event, 'TKO')"
-                            [title]="'TKO'"></app-select-component>
-    </div>
-  </div>
-</div>
+                <app-slider (valuesChanged)="onChildSliderValueChanged($event)"></app-slider>
+                <div class="select-thin">
+                    <app-select-component [option]="IKO"
+                                          (valueChanged)="onChildInputValueChanged($event, 'IKO')"
+                                          [title]="'IKO'"></app-select-component>
+                </div>
+                <div class="select-thin">
+                    <app-select-component [option]="TKO"
+                                          (valueChanged)="onChildInputValueChanged($event, 'TKO')"
+                                          [title]="'TKO'"></app-select-component>
+                </div>
+            </div>
+        </div>
