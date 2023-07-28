@@ -1,15 +1,17 @@
 ﻿using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 using webapi.Models;
+
+[assembly: InternalsVisibleTo("cosmosTools_uTest")]
 
 namespace cosmosTools
 {
     internal class Generators
     {
-
         private List<string> workingTeam;
-        public Generators()
-        {
 
+        public Generators()
+        { 
             workingTeam = new List<string> { "John Smith", "Emma Johnson", "Michael Williams", "Emily Brown", "Daniel Jones", "Olivia Davis", "James Wilson",
                     "Ava Martinez", "William Taylor", "Sophia Anderson", "Alexander Thomas", "Mia Hernandez", "Benjamin White", "Charlotte Jackson", "Samuel Lee", "Harper Garcia",
                     "Joseph Martin", "Amelia Thompson", "David Perez", "Abigail Rodriguez", "Andrew Scott", "Grace Evans", "Christopher Turner", "Scarlett Murphy", "Matthew Adams",
@@ -17,10 +19,8 @@ namespace cosmosTools
                     "Hannah Green", "Robert Mitchell", "Ella Hall", "Matthew Torres", "Lily Wright", "Jacob Flores", "Lillian Walker", "Joshua Hill", "Avery Rivera", "Christopher Johnson",
                     "Zoey Howard", "Josephine Scott", "Natalie Ward", "David Morris", "Aubrey Roberts", "Benjamin Phillips", "Aria James", "William Bennett", "Addison Murphy", "Alexander Henderson"
             };
-
-
-
         }
+
         public string GenerateRandomEmail(string name)
         {
             var splitName = name.Split(' ');
