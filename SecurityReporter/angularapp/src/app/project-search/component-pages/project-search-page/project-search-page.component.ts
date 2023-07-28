@@ -1,8 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectDataReport } from '../../interfaces/project-data-report.model';
+import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
+import { FindingResponse } from '../../interfaces/finding-response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-search',
@@ -31,8 +33,7 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   totalRecords?: number;
-  newReport?: ProjectDataReport;
-  loadedReports: ProjectDataReport[] = []
+  loadedFindings: FindingResponse[] = []
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
   isLoading: boolean = false;
@@ -43,7 +44,7 @@ export class ProjectSearchPageComponent implements OnInit {
     console.log(this.keywordsValues);
     this.resetView();
     this.resetSearch();
-    this.loadReports();
+    this.loadFindings();
   }
 
   resetView() {
@@ -52,24 +53,35 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   resetSearch() {
-
-    this.loadedReports = [];
+    this.loadedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
-    this.newReport = undefined;
   }
 
-  displayNewReport(newReport: ProjectDataReport) {
-    this.resetView();
-    console.log("Displaying new report");
-    this.newReport = newReport;
+  injectionOfTestVariables() {
+    this.projectNameTest = this.projectName;
+    this.detailsTest = this.details;
+    this.impactTest = this.impact;
+    this.repeatabilityTest = this.repeatability;
+    this.referencesTest = this.references;
+    this.cweTest = this.cwe;
   }
 
-  loadReports() {
+  injectionOfSendingVariables() {
+    this.projectNameSending = this.projectName;
+    this.detailsSending = this.details;
+    this.impactSending = this.impact;
+    this.repeatabilitySending = this.repeatability;
+    this.referencesSending = this.references;
+    this.cweSending = this.cwe;
+  }
 
+  loadFindings() {
+    this.highlightValue = this.value;
+    this.injectionOfTestVariables();
     this.isLoading = true;
-   this.projectReportService.getProjectReports(
+    this.projectReportService.getProjectReportFindings(
       this.value,
       1,
       this.projectName,
@@ -81,15 +93,19 @@ export class ProjectSearchPageComponent implements OnInit {
     ).subscribe(
       (response) => {
         console.log(response)
+        this.injectionOfSendingVariables();
         if (response.data.length == 0) {
-          this.notificationService.displayMessage("No reports found.", "info");
+          this.notificationService.displayMessage("No findings found.", "info");
         } else {
-          this.loadedReports = response.data as ProjectDataReport[];
+          this.loadedFindings = response.data;
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
         }
         this.isLoading = false;
+      }, (HttpErrorResponse) => {
+        this.isLoading = false;
+        this.notificationService.displayMessage("No findings found.", "info");
       }
     )
   }
@@ -100,20 +116,20 @@ export class ProjectSearchPageComponent implements OnInit {
   loadNextPage() {
     console.log("Loading next page")
     this.isLoadingNextPage = true;
-    this.projectReportService.getProjectReports(
+    this.projectReportService.getProjectReportFindings(
       this.value,
       (this.lastLoadedPage + 1),
-      this.projectName,
-      this.details,
-      this.impact,
-      this.repeatability,
-      this.references,
-      this.cwe
+      this.projectNameSending,
+      this.detailsSending,
+      this.impactSending,
+      this.repeatabilitySending,
+      this.referencesSending,
+      this.cweSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
       this.nextPage = res.nextPage;
       for (let report of res.data) {
-        this.loadedReports.push(report);
+        this.loadedFindings.push(report);
       }
       this.isLoadingNextPage = false;
     })
@@ -121,8 +137,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   value: string = '';
   keyword: string = '';
-  subcategory: string = '';
-
+  highlightValue: string = '';
   keywordsValues: string[] = [];
 
   keywords = [
@@ -142,6 +157,29 @@ export class ProjectSearchPageComponent implements OnInit {
   references?: string;
   cwe?: string;
 
+  projectNameTest?: string;
+  detailsTest?: string;
+  impactTest?: string;
+  repeatabilityTest?: string;
+  referencesTest?: string;
+  cweTest?: string;
+
+  projectNameSending?: string;
+  detailsSending?: string;
+  impactSending?: string;
+  repeatabilitySending?: string;
+  referencesSending?: string;
+  cweSending?: string;
+
+  clearReportVariables() {
+    this.projectName = '';
+    this.details = '';
+    this.impact = '';
+    this.repeatability = '';
+    this.references = '';
+    this.cwe = '';
+  }
+
 
   toggleCheckbox(selectedCase: any): void {
     this.keywords.forEach((caseItem) => {
@@ -160,54 +198,38 @@ export class ProjectSearchPageComponent implements OnInit {
         this.isCheckboxChecked = false;
       }
     }
+    this.clearReportVariables();
     this.checkFormValidity();
   }
 
   isFormValid: boolean = false;
 
   checkFormValidity(): void {
-    switch (this.keyword) {
-      case 'ProjectReportName':
-        this.subcategory = 'DocumentInfo';
-        break;
-      case 'SubsectionDetails':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionImpact':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionRepeatability':
-        this.subcategory = 'Finding';
-        break;
-      case 'SubsectionReferences':
-        this.subcategory = 'Finding';
-        break;
-      case 'CWE':
-        this.subcategory = 'Finding';
-        break;
-      default: this.subcategory = '';
-    }
 
-    this.isFormValid = this.value.trim() !== '' && this.subcategory !== '' && this.keywordsValues.length > 0;
+    this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
+
+
     console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
-     if(value == 'ProjectReportName') {
+      if(value == 'ProjectReportName') {
        this.projectName = value;
      }
-      if(value == 'SubsectionDetails') {
+      else if(value == 'SubsectionDetails') {
         this.details = value;
       }
-      if(value == 'SubsectionImpact') {
+      else if(value == 'SubsectionImpact') {
         this.impact = value;
       }
-      if(value == 'SubsectionRepeatability') {
+      else if(value == 'SubsectionRepeatability') {
         this.repeatability = value;
       }
-      if(value == 'SubsectionReferences') {
+      else if(value == 'SubsectionReferences') {
         this.references = value;
       }
-      if(value == 'CWE') {
+      else if(value == 'CWE') {
         this.cwe = value;
+        if(this.value.length > 0)
+        this.onlyNumbers(this.value);
       }
     }
   }
@@ -219,10 +241,36 @@ export class ProjectSearchPageComponent implements OnInit {
         caseItem.checked =false;
         this.keywordsValues = [];
         this.isCheckboxChecked = false;
-        this.isFormValid = false;
       }
     );
-
+    this.isFormValid = false;
+    this.clearReportVariables();
   }
+
+
+  onlyNumbers(event: string, ): void {
+    const numberRegex = /^[0-9]+$/;
+    console.log(numberRegex.test(event));
+
+    if (!numberRegex.test(event)) {
+      this.cwe = '';
+      const index = this.keywordsValues.indexOf('CWE');
+      if (index !== -1) {
+        this.keywordsValues.splice(index, 1);
+      }
+      this.keywords.forEach((caseItem) => {
+
+        if (caseItem.value === 'CWE') {
+         //delay 200ms
+          setTimeout(() => {
+          caseItem.checked = false;
+        }, 100);
+        }
+      });
+
+      this.notificationService.displayMessage("If you choose CWE, search value has to be a number", "warning");
+    }
+  }
+
 
 }

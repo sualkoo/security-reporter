@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { NotificationService } from '../../providers/notification.service';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProjectDataReport } from '../../interfaces/project-data-report.model';
+import { ProjectReport } from '../../interfaces/project-report.model';
 import { ErrorResponse } from '../../interfaces/error-response';
 
 
@@ -12,13 +12,15 @@ import { ErrorResponse } from '../../interfaces/error-response';
   styleUrls: ['./add-project-report.component.css', '../../project-search.css']
 })
 export class AddProjectReportComponent implements OnInit{
+  @ViewChild('fileInputRef', { static: false }) fileInputRef!: ElementRef<HTMLInputElement>;
   constructor(
     private projectDataService: ProjectReportService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+  ) {
   }
   uploadedFile?: Blob;
+  isDragOver = false;
 
-  @Output() savedReportFromBackend = new EventEmitter<ProjectDataReport>();
 
   ngOnInit(): void {
   }
@@ -26,6 +28,12 @@ export class AddProjectReportComponent implements OnInit{
   upload({ event }: { event: any }) {
     this.uploadedFile = event.target.files[0];
   }
+
+  deleteFile() {
+    this.uploadedFile = undefined;
+    this.fileInputRef.nativeElement.value = '';
+  }
+
 
   uploadFile() {
     if (!this.uploadedFile) {
@@ -44,7 +52,6 @@ export class AddProjectReportComponent implements OnInit{
             (response) => {
               console.log(response);
               this.notificationService.displayMessage("Report successfully saved to DB.", "success");
-              this.savedReportFromBackend.emit(response);
             },
             (errorResponse: HttpErrorResponse) => {
               console.error(errorResponse);
@@ -63,5 +70,46 @@ export class AddProjectReportComponent implements OnInit{
         console.error(err.message);
         this.notificationService.displayMessage('Zip file is incorrect', 'warning');
       });
+  }
+
+  @HostListener('dragenter', ['$event'])
+  onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+    // Handle the dropped file here
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const droppedFile = files[0];
+      const fileExtension = droppedFile.name.split('.').pop()?.toLowerCase();
+
+      // Check if the file extension is 'zip'
+      if (fileExtension === 'zip') {
+        // File is a .zip file, handle it here
+        this.uploadedFile = droppedFile;
+      } else {
+        // File is not a .zip file, show an error or ignore the file
+        // For example:
+        console.log("Invalid file type. Only .zip files are allowed.");
+        this.notificationService.displayMessage("Invalid file type. Only .zip files are allowed.", "warning");
+      }
+    }
   }
 }

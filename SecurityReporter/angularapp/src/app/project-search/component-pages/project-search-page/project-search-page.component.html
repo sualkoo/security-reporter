@@ -1,17 +1,28 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!-- Sidebar -->
-    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh;">
+    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh; overflow-y: auto">
       <div class="mt-2 pt-2">
 
         <div class="search-container">
-          <h1 class="center pb-2">Search items</h1>
+          <h1 class="center pb-2 mt-3">Search items</h1>
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
             <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()">
           </mat-form-field>
-
-          <h4 class="center pt-2 pb-2">Filters</h4>
+          <div class="container-fluid">
+            <div class="row mb-2 mt-2">
+              <div class="col-auto">
+                <h4>Filters</h4>
+              </div>
+              <div class="col text-end">
+                <button class="clear-all-button" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+                  Clear all
+                </button>
+              </div>
+              <hr />
+            </div>
+          </div>
           <div class="center">
             <div class="filters-container">
               <div class="filter-item" *ngFor="let case of keywords;">
@@ -27,59 +38,83 @@
           </div>
 
           <div class="center submit-button pt-4">
-            <button class="btn btn-primary" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+            <button class="btn btn-primary custom-width" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
             </button>
-            <button class="btn btn-danger" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
-              Delete filters
-            </button>
           </div>
         </div>
-        <div class="pt-4">
-          <hr />
-          <!-- Upload -->
-          <app-add-project-report (savedReportFromBackend)="displayNewReport($event)"></app-add-project-report>
+        <div class="container  mt-5 ml-1 col-12">
+          <div>
+
+            <!-- Upload -->
+            <app-add-project-report></app-add-project-report>
+          </div>
         </div>
+
       </div>
     </div>
-    <!-- Project Reports -->
+    <!-- Project Report Findings -->
     <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
-
-          <div *ngIf="newReport">
-
-            <div class="card m-3">
-              <div class="card-body">
-                <h5 class="card-title">{{newReport.documentInfo?.projectReportName}} - <span class="text-danger">NEW</span></h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{newReport.documentInfo?.mainAuthor}}</h6>
-                <p class="card-text">{{newReport.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
-                <button class="btn btn-light">Get Source</button>
-              </div>
-            </div>
-            <hr />
-
-          </div>
-          <div class="text-center pagination-centered">
-
-            <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
-          </div>
-
           <div class="container-fluid mt-3">
-            <h4>Found reports: {{totalRecords}}</h4>
+            <h4>Found findings: {{totalRecords}}</h4>
           </div>
-          <div class="card m-3" *ngFor="let report of loadedReports">
+          <div class="card m-3" *ngFor="let findingRes of loadedFindings">
             <div class="card-body">
-              <h5 class="card-title">{{report.documentInfo?.projectReportName}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{report.documentInfo?.mainAuthor}}</h6>
-              <p class="card-text">{{report.projectInfo?.targetInfoDescription ?? "No description given..."}}</p>
+
+              <div class="card-title">
+                <h5 *ngIf="!projectNameTest">{{findingRes.projectReportName}} : {{findingRes.finding.findingName}}</h5>
+
+                <h5 *ngIf="projectNameTest">
+                  <span [innerHtml]="findingRes.projectReportName | highlighter:highlightValue:'partial'"></span>
+                  <span> : {{findingRes.finding.findingName}}</span>
+                </h5>
+              </div>
+
+            <h6 class="card-subtitle mb-2 text-muted">Author: {{findingRes.finding.findingAuthor}}</h6>
+
+            <div class="card-text">
+
+              <div class="mb-2">
+
+                <h6>Details</h6>
+                <div *ngIf="!detailsTest" class="mb-2">{{findingRes.finding.subsectionDetails}}</div>
+                <div *ngIf="detailsTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionDetails | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>Impact</h6>
+                <div *ngIf="!impactTest" class="mb-2">{{findingRes.finding.subsectionImpact}}</div>
+                <div *ngIf="impactTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionImpact  | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>References</h6>
+                <div *ngIf="!referencesTest" class="mb-2">{{findingRes.finding.subsectionReferences}}</div>
+                <div *ngIf="referencesTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionReferences | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>Repeatability</h6>
+                <div *ngIf="!repeatabilityTest" class="mb-2">{{findingRes.finding.subsectionRepeatability}}</div>
+                <div *ngIf="repeatabilityTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.subsectionRepeatability  | highlighter:highlightValue:'partial'">
+                </div>
+
+                <h6>CWE</h6>
+                <div *ngIf="!cweTest" class="mb-2">{{findingRes.finding.cwe}}</div>
+                <div *ngIf="cweTest" class="mb-2"
+                     [innerHtml]="findingRes.finding.cwe?.toString()  | highlighter:highlightValue:'partial'">
+                </div>
+              </div>
               <button class="btn btn-light">Get Source</button>
             </div>
           </div>
           <div class="text-center pagination-centered">
-
             <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+          </div>
           </div>
         </div>
       </div>
