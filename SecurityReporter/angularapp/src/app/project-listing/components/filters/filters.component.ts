@@ -111,6 +111,7 @@ export class FiltersComponent {
   filtersChanged() {
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
+    console.log(this.url)
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
