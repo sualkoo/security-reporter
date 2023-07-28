@@ -4,10 +4,8 @@
 %		Author: the DR
 %
 %
-\renewcommand{\FindingAuthor}{Lukas Nad}//
 % DO NOT USE \par, \newline or any other line breaking command in FindingName => report will not build
 \renewcommand{\FindingName}{DummyApplication Signed with a Debug Certificate}
-\renewcommand{\Location}{dummyapplication.apk}//
 \renewcommand{\Component}{META-INF/CERT.RSA}
 \renewcommand{\FoundWith}{KeyStore Explorer}
 \renewcommand{\TestMethod}{Manual Analysis}
@@ -18,7 +16,6 @@
 % High, Medium, Low, Info, TBR (To Be Rated)
 \renewcommand{\Criticality}{Info}
 % Easy, Average, Hard, TBR (To Be Rated)
-\renewcommand{\Exploitability}{Hard}//
 % Access control, Application Design, Information Disclosure, Outdated Software, Security Configuration
 \renewcommand{\Category}{Security Configuration}
 % Easy, Average, Difficult, TBR (To Be Rated)
@@ -32,7 +29,6 @@
 %	Details                                |
 %-------------------------------------------
 
-\subsection*{Details}//
 
 The \texttt{dummyapplication.apk} is signed with a debug certificate.
 
@@ -50,7 +46,6 @@ Debug certificates do not meet security standards of the release certificates.
 %	Repeatability                          |
 %-------------------------------------------
 \pagebreak
-\subsection*{Repeatability}
 
 The \texttt{dummyapplication.apk} is signed with a debug certificate (\texttt{CERT.RSA}), which can be found in the \texttt{META-INF} folder.
 The certificate properties are shown in \cref{figure:DebugCert}.
@@ -78,7 +73,6 @@ and SHA-2 keysizes.
 %	References - pulls bib entries         |
 %-------------------------------------------
 
-\subsection*{References}
 
 This finding references the following information sources:
 

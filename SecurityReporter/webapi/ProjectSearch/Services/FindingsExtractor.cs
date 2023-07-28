@@ -59,7 +59,7 @@ namespace webapi.ProjectSearch.Services
                 case "\\Component":
                     newFinding.Component = data;
                     break;
-                case "\\FoundWitch":
+                case "\\FoundWith":
                     newFinding.FoundWith = data;
                     break;
                 case "\\TestMethod":
@@ -187,8 +187,9 @@ namespace webapi.ProjectSearch.Services
                 string trimmedLine = line.Trim();
                 reading = (trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin") ? false : true;
                 reading = (trimmedLine.Length >= 11 && trimmedLine.Substring(0, 11) == "\\subsection") ? false : true;
+                reading = (trimmedLine.Length > 0 && trimmedLine[0] == '%') ? false : true;
 
-                if(reading)
+                if (reading)
                 {
                     if(!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && 
                         (trimmedLine[0] != '\\' && trimmedLine[0] != '%'))
@@ -198,7 +199,7 @@ namespace webapi.ProjectSearch.Services
                 } else
                 {
                     assignNewData(command, result, newFinding);
-                    if(trimmedLine.Substring(0,11) == "\\subsection")
+                    if(trimmedLine.Length >= 12 && trimmedLine.Substring(0,11) == "\\subsection")
                     {
                         char[] delimiters = { '{', '}' };
                         string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
@@ -234,7 +235,7 @@ namespace webapi.ProjectSearch.Services
                     {
                         if(currentItem != "")
                         {
-                            resultList.Add(currentItem);
+                            resultList.Add(currentItem.Trim());
                         }
                         return resultList;
                     }
@@ -244,7 +245,7 @@ namespace webapi.ProjectSearch.Services
                 {
                     if(!firstItem)
                     {
-                        resultList.Add(currentItem);
+                        resultList.Add(currentItem.Trim());
                         currentItem = "";
                     }
 
