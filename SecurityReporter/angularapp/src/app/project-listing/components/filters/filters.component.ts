@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
@@ -161,6 +161,5 @@ export class FiltersComponent {
     this.filteredClass = {};
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
-   
   }
 }
