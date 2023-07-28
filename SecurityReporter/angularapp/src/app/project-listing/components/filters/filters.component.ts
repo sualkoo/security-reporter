@@ -26,6 +26,7 @@ export class FiltersComponent {
 
   projectNameControl = new FormControl();
 
+
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
     { value: 'Planned', viewValue: 'Planned' },
