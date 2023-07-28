@@ -381,7 +381,7 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
-            int limit = 10;
+            int limit = 6;
             bool firstFilter = false;
             if (page < 1)
             {
@@ -456,7 +456,7 @@ namespace webapi.Service
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "At least one filter has to be selected");
             }
-            query = $"{query}  OFFSET @offset LIMIT @limit";
+            query = $"{query}  ORDER BY c.DocumentInfo.ProjectReportName OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
             
             //Executing Queries
