@@ -26,7 +26,6 @@ export class FiltersComponent {
 
   projectNameControl = new FormControl();
 
-
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
     { value: 'Planned', viewValue: 'Planned' },
@@ -112,7 +111,6 @@ export class FiltersComponent {
   filtersChanged() {
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
-    console.log("zavolane");
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
