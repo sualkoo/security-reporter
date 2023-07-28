@@ -8,17 +8,12 @@
           <h1 class="center pb-2 mt-3">Search items</h1>
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
-            <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()">
+            <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()"  (keyup.enter)="isFormValid && !isLoading ? onSearch() : null">
           </mat-form-field>
           <div class="container-fluid">
             <div class="row mb-2 mt-2">
               <div class="col-auto">
                 <h4>Filters</h4>
-              </div>
-              <div class="col text-end">
-                <button class="clear-all-button" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
-                  Clear all
-                </button>
               </div>
               <hr />
             </div>
@@ -38,9 +33,12 @@
           </div>
 
           <div class="center submit-button pt-4">
-            <button class="btn btn-primary custom-width" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+            <button class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            </button>
+            <button class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+              Clear filters
             </button>
           </div>
         </div>
@@ -65,14 +63,19 @@
             <div class="card mt-3 mb-3">
               <div class="card-body">
                 <div class="card-title">
-
-                  <h2>{{findingsGroup[0]}}</h2>
+                  <small>Project name</small>
+                  <h2 *ngIf="!projectNameTest" class="mb-2">{{findingsGroup[0]}}</h2>
+                  <h2 *ngIf="projectNameTest" class="mb-2"
+                      [innerHtml]="findingsGroup[0] | highlighter:highlightValue:'partial'">
+                  </h2>
+                  <small>Findings</small>
                 </div>
                 <div class="card bg-light mt-2 mb-2" *ngFor="let finding of groupedFindingsEntries[key][1]">
 
                   <div class="card-body">
 
                     <div class="card-title">
+                      
                       <h5 *ngIf="!projectNameTest">{{finding.findingName}}</h5>
 
                       <h5 *ngIf="projectNameTest">
@@ -90,6 +93,29 @@
                         <div *ngIf="!detailsTest" class="mb-2">{{finding.subsectionDetails}}</div>
                         <div *ngIf="detailsTest" class="mb-2"
                              [innerHtml]="finding.subsectionDetails | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>Impact</h6>
+                        <div *ngIf="!impactTest" class="mb-2">{{finding.subsectionImpact}}</div>
+                        <div *ngIf="impactTest" class="mb-2"
+                             [innerHtml]="finding.subsectionImpact  | highlighter:highlightValue:'partial'">
+                        </div>
+                        <h6>References</h6>
+                        <div *ngIf="!referencesTest" class="mb-2">{{finding.subsectionReferences}}</div>
+                        <div *ngIf="referencesTest" class="mb-2"
+                             [innerHtml]="finding.subsectionReferences  | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>Repeatability</h6>
+                        <div *ngIf="!repeatabilityTest" class="mb-2">{{finding.subsectionRepeatability}}</div>
+                        <div *ngIf="repeatabilityTest" class="mb-2"
+                             [innerHtml]="finding.subsectionRepeatability  | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>CWE</h6>
+                        <div *ngIf="!cweTest" class="mb-2">{{finding.cwe}}</div>
+                        <div *ngIf="cweTest" class="mb-2"
+                             [innerHtml]="finding.cwe?.toString()  | highlighter:highlightValue:'partial'">
                         </div>
                       </div>
                     </div>

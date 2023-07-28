@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class HighlighterPipe implements PipeTransform {
 
-  transform(value: any, args: any,type:string): unknown {
+  transform(value: any, args: any, type: string): unknown {
+    value = value.toString();
     if(!args) return value;
     if(type==='full'){
       const re = new RegExp("\\b("+args+"\\b)", 'igm');

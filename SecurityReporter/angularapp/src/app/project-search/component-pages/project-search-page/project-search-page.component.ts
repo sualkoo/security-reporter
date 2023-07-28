@@ -29,7 +29,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 10 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
     return atBottom;
   }
 
@@ -118,6 +118,7 @@ export class ProjectSearchPageComponent implements OnInit {
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
+          console.log(this.groupedFindingsEntries);
         }
         this.isLoading = false;
       }, (HttpErrorResponse) => {
@@ -132,6 +133,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   loadNextPage() {
     console.log("Loading next page")
+    console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
       this.value,
@@ -144,11 +146,11 @@ export class ProjectSearchPageComponent implements OnInit {
       this.cweSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
-      this.groupFindings();
       this.nextPage = res.nextPage;
       for (let report of res.data) {
         this.loadedFindings.push(report);
       }
+      this.groupFindings();
       this.isLoadingNextPage = false;
     })
   }
