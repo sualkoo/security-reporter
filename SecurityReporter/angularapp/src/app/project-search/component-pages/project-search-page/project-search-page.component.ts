@@ -83,15 +83,32 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweSending = this.cwe;
   }
 
+  //groupFindings() {
+  //  this.loadedFindings.forEach((findingRes: FindingResponse) => {
+  //    if (!this.groupedFindings[findingRes.projectReportName]) {
+  //      this.groupedFindings[findingRes.projectReportName] = [];
+  //    }
+  //    this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
+  //  });
+  //  this.groupedFindingsEntries = Object.entries(this.groupedFindings);
+  //}
+
   groupFindings() {
-    this.loadedFindings.forEach((findingRes: FindingResponse) => {
+    // Get the index from which to start grouping the new findings
+    const startIndex = (this.lastLoadedPage - 1) * 6;
+
+    for (let i = startIndex; i < this.loadedFindings.length; i++) {
+      const findingRes: FindingResponse = this.loadedFindings[i];
       if (!this.groupedFindings[findingRes.projectReportName]) {
         this.groupedFindings[findingRes.projectReportName] = [];
       }
       this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
-    });
+    }
+
+    // Update the groupedFindingsEntries with the newly added findings
     this.groupedFindingsEntries = Object.entries(this.groupedFindings);
   }
+
 
   loadFindings() {
     this.highlightValue = this.value;
@@ -151,6 +168,7 @@ export class ProjectSearchPageComponent implements OnInit {
         this.loadedFindings.push(report);
       }
       this.groupFindings();
+      console.log(res);
       this.isLoadingNextPage = false;
     })
   }
