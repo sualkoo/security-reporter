@@ -37,7 +37,7 @@ namespace webapi.ProjectSearch.Services
                             if(trimmedLine[0] == '\\')
                             {
                                 string[] inBracketContents = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                                if (inBracketContents[0] == "\\ReportVersionEntry")
+                                if (inBracketContents[0] == "\\ReportVersionEntry" && inBracketContents.Length >= 5)
                                 {
                                     if(inBracketContents.Length >= 5)
                                     {
@@ -85,7 +85,7 @@ namespace webapi.ProjectSearch.Services
 
         private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
         {
-            if(data != null)
+            if(data != null && data.Count > 0)
             {
                 switch (command)
                 {

@@ -12,8 +12,6 @@ namespace webapi.ProjectSearch.Services
 
         public string ExtractExecutiveSummary()
         {
-            DocumentInformation newDocumentInfo = new DocumentInformation();
-            newDocumentInfo.ReportDocumentHistory = new List<ReportVersionEntry>();
             string line;
             bool readingExecSum = false;
             string resultString = "";

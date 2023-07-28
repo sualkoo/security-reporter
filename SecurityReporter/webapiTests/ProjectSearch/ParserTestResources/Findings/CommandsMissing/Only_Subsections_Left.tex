@@ -1,0 +1,73 @@
+%
+%
+%		Finding: Template
+%		Author: the DR
+%
+%
+
+
+
+\ReportFindingHeader{\FindingName}
+
+
+%-------------------------------------------
+%	Details                                |
+%-------------------------------------------
+
+\subsection*{Details}
+
+The \texttt{dummyapplication.apk} is signed with a debug certificate.
+
+%-<Details>
+%-------------------------------------------
+%	Impact                                 |
+%-------------------------------------------
+
+\subsection*{Impact}
+
+Debug certificates do not meet security standards of the release certificates. 
+
+%-<Impact>
+%-------------------------------------------
+%	Repeatability                          |
+%-------------------------------------------
+\pagebreak
+\subsection*{Repeatability}
+
+The \texttt{dummyapplication.apk} is signed with a debug certificate (\texttt{CERT.RSA}), which can be found in the \texttt{META-INF} folder.
+The certificate properties are shown in \cref{figure:DebugCert}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth,frame]{\CurrentFilePath/DebugCert.png}
+\caption{Android debug certificate properties}
+\label{figure:DebugCert}
+\end{figure}
+	
+
+%-<Repeatability>
+%-------------------------------------------
+%	Countermeasures                        |
+%-------------------------------------------
+
+\subsection*{Countermeasures}
+
+Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)
+and SHA-2 keysizes.
+
+%-<Countermeasures>
+%-------------------------------------------
+%	References - pulls bib entries         |
+%-------------------------------------------
+
+\subsection*{References}
+
+This finding references the following information sources:
+
+\begin{itemize}
+	\item \href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design and
+	Development: 8.4 Code-Signing}
+	\item \bibentry{CWE-296}
+\end{itemize}
+
+%-<References>
