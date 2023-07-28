@@ -8,13 +8,13 @@ namespace webapi.ProjectSearch.Controllers
     [Route("project-reports")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
-        private ProjectReportService ProjectReportService { get; }
+        private IProjectReportService ProjectReportService { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportController(ILoggerFactory loggerFactory, IProjectReportService projectReportService) : base(loggerFactory)
+        public ProjectReportController(ILogger<ProjectReportController> logger, IProjectReportService projectReportService)
         {
-            ProjectReportService = (ProjectReportService)projectReportService;
-            Logger = loggerFactory.CreateLogger<ProjectReportController>();
+            ProjectReportService = projectReportService;
+            Logger = logger;
         }
 
         [HttpPost]
@@ -29,17 +29,16 @@ namespace webapi.ProjectSearch.Controllers
 
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value, int page)
-        //{
-        //    Logger.LogInformation("Received GET request for fetching reports");
-        //    return await HandleExceptionAsync(async () =>
-        //    {
-        //        PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value, page);
-        //        return Ok(fetchedReports);
-        //    });
-
-        //}
+        [HttpGet]
+        public async Task<IActionResult> getProjectReportsAsync(string? subcategory, string keyword, string value, int page)
+        {
+            Logger.LogInformation("Received GET request for fetching reports");
+            return await HandleExceptionAsync(async () =>
+            {
+                PagedDBResults<List<ProjectReportData>> fetchedReports = await ProjectReportService.GetReportsAsync(subcategory, keyword, value, page);
+                return Ok(fetchedReports);
+            });
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> getProjectReportById(Guid id)
