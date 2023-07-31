@@ -14,6 +14,7 @@ namespace webapi.Service
         Task<List<string>> DeleteProjects(List<string> projectIds);
         Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, [FromQuery] FilterData filter);
         Task<int> GetNumberOfProjects();
+        Task<ProjectData> GetProjectById(string id);
         Task<bool> UpdateProject(ProjectData data);
     }
 }

@@ -138,4 +138,44 @@ public class ProjectController : ControllerBase
         Console.WriteLine("Request executed without any errors.");
         return StatusCode(202, project);
     }
+
+    [HttpGet("getProject")]
+    public async Task<IActionResult> GetProjectById(string id)
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("GET");
+        Console.ResetColor();
+        Console.WriteLine($"\t /Project/{id}");
+
+        try
+        {
+            var project = await CosmosService.GetProjectById(id);
+
+            if (project != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Success: Project data retrieved successfully.");
+                Console.ResetColor();
+
+                return StatusCode(200, project);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Info: Project with ID '{id}' not found.");
+                Console.ResetColor();
+
+                return StatusCode(404, $"Project with ID '{id}' not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.ResetColor();
+
+            return StatusCode(400, $"Error retrieving project data: {ex.Message}");
+        }
+    }
 }
+    
