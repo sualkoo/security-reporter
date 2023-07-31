@@ -1,8 +1,39 @@
-<input type="file" (change)="upload({ event: $event })" accept=".zip" />
+<div class="pl-2">
+  <h4 class="left upload-items">Upload items</h4>
+  <hr />
+  <div class="drop-zone"
+     (drop)="onDrop($event)"
+     [ngClass]="{ 'drag-over': isDragOver }">
+    <div class="pb-2 pt-1">
+      <mat-icon>cloud_upload</mat-icon>
+      <div>
+        <input #fileInputRef type="file" (change)="upload({event: $event})" accept=".zip" />
+      </div>
+      <h4>
+        Drag and drop files here
+      </h4>
+      <h4>or</h4>
+      <button class="btn btn-primary" for="fileDropRef">Browse for file</button>
+      <p class="file-type pt-1">Accepted file type: .zip</p>
+    </div>
+  </div>
+  <div class="single-file d-flex align-items-center" *ngIf="uploadedFile">
+    <div class="d-flex align-items-center">
+      <mat-icon>folder_zip<</mat-icon>
+    </div>
+    <div class="flex-grow-1 text-left mt-4" style="margin-left: 5%">
+      <p>{{uploadedFile.name}}</p>
+    </div>
+    <div class="custom-cursor">
+      <mat-icon (click)="deleteFile()">delete</mat-icon>
+    </div>
+  </div>
+  <div class="center pt-4 pb-4">
+    <button class="btn btn-secondary" [disabled]="uploadedFile == undefined ? true : false" (click)="uploadFile(); deleteFile()">
+      Upload
+    </button>
+  </div>
+</div>
 
-<button
-  [disabled]="uploadedFile == undefined ? true : false"
-  (click)="uploadFile()"
->
-  Upload
-</button>
+
+

@@ -1,0 +1,51 @@
+%----------------------------------------------------------------------------------------
+%	DOCUMENT TYPE
+%----------------------------------------------------------------------------------------
+
+% Use "\ReportDocument" & "\TitlePageTableReport" when writing Report 
+% Use "\ScopeDocument" & "\TitlePageTableScope" for creating Scope Document
+\newcommand{\DocumentType}{\ReportDocument}
+\renewcommand{\SetTitlePageTable}{\TitlePageTableReport}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportProjectName}{\xspace}
+\newcommand{\ReportProjectType}{Penetration Test Report\xspace}
+\newcommand{\AssetType}{\xspace}
+
+%----------------------------------------------------------------------------------------
+%	AUTHORS, REVIEWERS, APPROVERS
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportDocumentMainAuthor}{Lukas Nad}
+\newcommand{\ReportDocumentAuthor}{}
+\newcommand{\ReportDocumentReviewer}{Katarina Amrichova}
+\newcommand{\ReportDocumentApprover}{Filip Mrocek}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT VERSION HISTORY
+%----------------------------------------------------------------------------------------
+% Document version history. Copy the inner line for subsequent version entries.
+% Example: \ReportVersionEntry{DATE}{VERSION}{FIRSTNAME LASTNAME}{draft / review / released}{COMMENT}
+
+% TODO: investigate git version tags (automatic compilation of document history table)
+
+\newcommand{\ReportDocumentHistory}{
+	\ReportVersionEntry{}{0.1}{Lukas Nad}{Initial Draft}
+	\ReportVersionEntry{2023-06-07}{0.2}{Michal Olencin}{Added Findings}
+	\ReportVersionEntry{2023-06-08}{}{}{}
+	\ReportVersionEntry{2023-06-08}{0.4}{Katarina Amrichova}{Review}
+	\ReportVersionEntry{2023-06-09}{}{Lukas Nad}{Release}
+}
+
+
+%----------------------------------------------------------------------------------------
+%	GENERAL DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+\newcommand{\FiscalYear}{FY23}
+\newcommand{\ReportVersion}{Default}
+\newcommand{\ReportDate}{}
+\newcommand{\ReportDocumentClassification}{CONFIDENTIAL}
+
+\newcommand{\ReportStatus}{RELEASE} 
+% \newcommand{\ReportStatus}{DRAFT} 
