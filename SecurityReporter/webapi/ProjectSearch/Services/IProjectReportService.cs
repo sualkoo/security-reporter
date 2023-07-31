@@ -7,5 +7,7 @@ namespace webapi.ProjectSearch.Services
         public Task<ProjectReportData> GetReportByIdAsync(Guid id);
         public Task<PagedDBResults<List<FindingResponse>>> GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page);
         public Task<ProjectReportData> SaveReportFromZip(IFormFile file);
+
+        public Task<bool> DeleteReportAsync(List<string> ids);
     }
 }

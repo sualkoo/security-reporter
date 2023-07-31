@@ -67,6 +67,10 @@ export class ProjectReportService {
     return this.http.get<PagedResponse>(this.apiUrl, { params: { subcategory: subcategory, keyword: keyword, value: value, page: page } });
   }*/
 
+  public deleteProjectReport(ids: string[]) {
+    console.log(ids);
+    return this.http.delete<string[]>(this.apiUrl,  { body: ids });
+  }
 
   async validateZipFile(file: File): Promise<boolean> {
     const zip = new JSZip();

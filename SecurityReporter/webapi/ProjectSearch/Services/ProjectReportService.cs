@@ -70,5 +70,11 @@ namespace webapi.ProjectSearch.Services
 
             return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability, references, cWE, value, page);
         }
+
+        public async Task<bool> DeleteReportAsync(List<string> ids)
+        {
+          
+            return true;
+        }
     }
 }
