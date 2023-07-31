@@ -52,5 +52,16 @@ namespace webapi.ProjectSearch.Controllers
             });
 
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> deleteProjectReports([FromBody] List<string> ids)
+        {
+
+            bool test = await ProjectReportService.DeleteReportAsync(ids);
+           
+            return Ok(test);
+
+
+        }
     }
 }
