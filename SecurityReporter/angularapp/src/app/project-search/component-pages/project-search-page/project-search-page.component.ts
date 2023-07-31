@@ -314,8 +314,13 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
-  onGetSource(projectId: string) {
+  onGetSource(projectId: string): void {
     console.log("Downloading source for project with ID" + projectId);
     this.notificationService.displayMessage("Feature in development.", "info");
+  }
+
+  resetScrollPosition() {
+    const scrollableBoxElement: HTMLElement = this.reportsScrollableBox.nativeElement;
+    scrollableBoxElement.scrollTop = 0;
   }
 }
