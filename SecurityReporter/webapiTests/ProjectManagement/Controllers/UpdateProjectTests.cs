@@ -10,61 +10,62 @@ namespace webapi.ProjectManagement.Controllers.Tests
     [TestFixture]
     public class UpdateProjectTests
     {
-        private ProjectController _projectController;
-        private Mock<ICosmosService> _cosmosServiceMock;
+        private ProjectController projectController;
+        private Mock<ICosmosService> cosmosServiceMock;
 
-        [SetUp]
-        public void Setup()
+        public ProjectData newProject = new ProjectData
         {
-            _cosmosServiceMock = new Mock<ICosmosService>();
-            _projectController = new ProjectController(_cosmosServiceMock.Object);
-        }
 
-        [Test]
-        public async Task UpdateProjectTestSuccess()
-        {
-            // Arrange
-            var projectData = new ProjectData
-            {
-                id = Guid.NewGuid(),
-                ProjectName = "Sample Project",
-                ProjectStatus = ProjectStatus.InProgress,
-                ProjectQuestionare = ProjectQuestionare.TBS,
-                ProjectScope = ProjectScope.TBS,
-                PentestDuration = 5,
-                StartDate = new DateOnly(2023, 8, 1),
-                EndDate = new DateOnly(2023, 8, 10),
-                IKO = new DateOnly(2023, 7, 20),
-                TKO = new DateOnly(2023, 8, 5),
-                ReportDueDate = new DateOnly(2023, 8, 15),
-                RequestCreated = DateTime.Now,
-                Comments = new List<Comment>
+            id = Guid.NewGuid(),
+            ProjectName = "Sample Project",
+            ProjectStatus = ProjectStatus.InProgress,
+            ProjectQuestionare = ProjectQuestionare.TBS,
+            ProjectScope = ProjectScope.TBS,
+            PentestDuration = 5,
+            StartDate = new DateOnly(2023, 8, 1),
+            EndDate = new DateOnly(2023, 8, 10),
+            IKO = new DateOnly(2023, 7, 20),
+            TKO = new DateOnly(2023, 8, 5),
+            ReportDueDate = new DateOnly(2023, 8, 15),
+            RequestCreated = DateTime.Now,
+            Comments = new List<Comment>
                 {
                     new Comment { Text = "Comment 1", Author = "User1", CreatedAt = DateTime.Now },
                     new Comment { Text = "Comment 2", Author = "User2", CreatedAt = DateTime.Now },
                 },
-                CatsNumber = "12345",
-                ProjectOfferStatus = ProjectOfferStatus.OfferSentForSignatue,
-                PentestAspects = "Aspect1, Aspect2, Aspect3",
-                WorkingTeam = new List<string> { "John Doe", "Jane Smith" },
-                ProjectLead = "John Doe",
-                ReportStatus = "In Progress",
-                ContactForClients = new List<string> { "client1@example.com", "client2@example.com" },
-            };
+            CatsNumber = "12345",
+            ProjectOfferStatus = ProjectOfferStatus.OfferSentForSignatue,
+            PentestAspects = "Aspect1, Aspect2, Aspect3",
+            WorkingTeam = new List<string> { "John Doe", "Jane Smith" },
+            ProjectLead = "John Doe",
+            ReportStatus = "In Progress",
+            ContactForClients = new List<string> { "client1@example.com", "client2@example.com" },
+        };
 
+        [SetUp]
+        public void Setup()
+        {
+            cosmosServiceMock = new Mock<ICosmosService>();
+            projectController = new ProjectController(cosmosServiceMock.Object);
+        }
+
+        [Test]
+        public async Task UpdateProject_UpdateName_Success()
+        {
+            // Arrange
             var newName = "updated";
-            var updatedProject = projectData;
+            var updatedProject = newProject;
             updatedProject.ProjectName = newName;
 
             // Act
-            _cosmosServiceMock.Setup(x => x.AddProject(projectData)).ReturnsAsync(true);
-            IActionResult postResult = await _projectController.PostProject(projectData);
+            cosmosServiceMock.Setup(x => x.AddProject(newProject)).ReturnsAsync(true);
+            IActionResult postResult = await projectController.PostProject(newProject);
 
-            _cosmosServiceMock.Setup(x => x.UpdateProject(updatedProject)).ReturnsAsync(true);
-            IActionResult updateResult = await _projectController.UpdateProject(updatedProject);
+            cosmosServiceMock.Setup(x => x.UpdateProject(updatedProject)).ReturnsAsync(true);
+            IActionResult updateResult = await projectController.UpdateProject(updatedProject);
 
-            _cosmosServiceMock.Setup(x => x.GetProjectById(projectData.id.ToString())).ReturnsAsync(updatedProject);
-            var getResult = await _projectController.GetProjectById(projectData.id.ToString());
+            cosmosServiceMock.Setup(x => x.GetProjectById(newProject.id.ToString())).ReturnsAsync(updatedProject);
+            var getResult = await projectController.GetProjectById(newProject.id.ToString());
 
             var objectResult = getResult as ObjectResult;
             var project = objectResult.Value as ProjectData;
@@ -75,41 +76,11 @@ namespace webapi.ProjectManagement.Controllers.Tests
         }
 
         [Test]
-        public async Task UpdateProjectTestFailed()
+        public async Task UpdateProject_NotExistingProject_Fail()
         {
-
-            // Arrange
-            var updatedProject = new ProjectData {
-               
-                id = Guid.NewGuid(),
-                ProjectName = "Sample Project",
-                ProjectStatus = ProjectStatus.InProgress,
-                ProjectQuestionare = ProjectQuestionare.TBS,
-                ProjectScope = ProjectScope.TBS,
-                PentestDuration = 5,
-                StartDate = new DateOnly(2023, 8, 1),
-                EndDate = new DateOnly(2023, 8, 10),
-                IKO = new DateOnly(2023, 7, 20),
-                TKO = new DateOnly(2023, 8, 5),
-                ReportDueDate = new DateOnly(2023, 8, 15),
-                RequestCreated = DateTime.Now,
-                Comments = new List<Comment>
-                {
-                    new Comment { Text = "Comment 1", Author = "User1", CreatedAt = DateTime.Now },
-                    new Comment { Text = "Comment 2", Author = "User2", CreatedAt = DateTime.Now },
-                },
-                CatsNumber = "12345",
-                ProjectOfferStatus = ProjectOfferStatus.OfferSentForSignatue,
-                PentestAspects = "Aspect1, Aspect2, Aspect3",
-                WorkingTeam = new List<string> { "John Doe", "Jane Smith" },
-                ProjectLead = "John Doe",
-                ReportStatus = "In Progress",
-                ContactForClients = new List<string> { "client1@example.com", "client2@example.com" },
-            };
-
             // Act
-            _cosmosServiceMock.Setup(x => x.UpdateProject(updatedProject)).ReturnsAsync(false);
-            var updateResult = await _projectController.UpdateProject(updatedProject) as ObjectResult;
+            cosmosServiceMock.Setup(x => x.UpdateProject(newProject)).ReturnsAsync(false);
+            var updateResult = await projectController.UpdateProject(newProject) as ObjectResult;
 
             // Assert
             Assert.AreEqual(400, updateResult.StatusCode);
