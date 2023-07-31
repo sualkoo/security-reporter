@@ -32,15 +32,14 @@ import { ExpansionPanelComponent } from './project-listing/components/expansion-
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,   
-    
+    LandingPageComponent,    
   ],
   imports: [
     BrowserModule,
@@ -66,6 +65,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
