@@ -26,10 +26,9 @@ export class ProjectReportService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  public getProjectReportFindings(value: string, page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
+  public getProjectReportFindings(page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
     let params = new HttpParams();
 
-    params = params.set('value', value);
     params = params.set('page', page);
 
     console.log("Project name: " + projectName);

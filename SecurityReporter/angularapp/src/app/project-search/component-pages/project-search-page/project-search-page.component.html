@@ -125,7 +125,9 @@
                 </div>
               </div>
             </div>
-
+            <div *ngIf="reportsScrollableBox.scrollTop !== 0">
+              <mat-icon style="position: absolute; right: 3%; bottom: 3%; cursor: pointer; border: solid 2px #ec6602; border-radius: 50%; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; background-color: white; color: #ec6602;" (click)="resetScrollPosition()">arrow_upward</mat-icon>
+            </div>
             <div class="text-center pagination-centered">
               <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
             </div>
