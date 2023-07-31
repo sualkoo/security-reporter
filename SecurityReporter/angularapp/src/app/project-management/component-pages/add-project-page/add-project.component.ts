@@ -51,6 +51,8 @@ import { Router } from '@angular/router';
   ],
 })
 export class AddProjectComponent {
+  defaultMaxDate: Date = new Date('3000-12-31'); 
+
   constructor(private addProjectService: AddProjectService, private router: Router) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
@@ -284,9 +286,7 @@ export class AddProjectComponent {
 
   validationFunction() {
     // @ts-ignore
-    if (this.projectClass.StartDate > this.projectClass.EndDate) {
-      this.errorValue = true;
-    }
+    
     // @ts-ignore
     if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
       this.errorValue = true;
@@ -327,6 +327,11 @@ export class AddProjectComponent {
         1
       );
     }
+  }
+
+  isEndDateSet(): boolean {
+    // Check if EndDate is '0001-01-01' or has been set to another date
+    return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
   }
 
   checkDateValidity() {

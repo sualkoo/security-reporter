@@ -20,6 +20,7 @@
           <div class="two-in-row">
             <datepicker-component
               #startDate
+              [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
               [title]="'Start Date'"
               (valueChanged)="onChildDateValueChanged($event, 'STR')"
             ></datepicker-component>
@@ -60,11 +61,13 @@
           <div class="two-in-row">
             <datepicker-component
               [minDate]="this.projectClass.StartDate"
+              [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
               [title]="'IKO'"
               (valueChanged)="onChildDateValueChanged($event, 'IKO')"
             ></datepicker-component>
             <datepicker-component
               [minDate]="this.projectClass.StartDate"
+              [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
               [title]="'TKO'"
               (valueChanged)="onChildDateValueChanged($event, 'TKO')"
             ></datepicker-component>
@@ -75,11 +78,7 @@
           <div class="two-in-row">
             <datepicker-component
               #reportDueDate
-              [minDate]="
-                projectClass.EndDate > projectClass.StartDate
-                  ? projectClass.EndDate
-                  : projectClass.StartDate
-              "
+              [minDate]="isEndDateSet() ? projectClass.EndDate : projectClass.StartDate"
               (valueChanged)="onChildDateValueChanged($event, 'REP')"
               [title]="'Report Due Date'"
             ></datepicker-component>
