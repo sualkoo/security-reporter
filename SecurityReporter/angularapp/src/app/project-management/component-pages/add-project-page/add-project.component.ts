@@ -51,7 +51,12 @@ import { Router } from '@angular/router';
   ],
 })
 export class AddProjectComponent {
-  defaultMaxDate: Date = new Date('3000-12-31'); 
+  defaultMaxDate: Date = new Date('3000-12-31');
+  isInvalidStartDate = false;
+  isInvalidEndDate = false;
+  isInvalidReportDueDate = false;
+  isInvalidIKO = false;
+  isInvalidTKO = false;
 
   constructor(private addProjectService: AddProjectService, private router: Router) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
@@ -178,16 +183,47 @@ export class AddProjectComponent {
   }
 
   onChildDateValueChanged(value: Date, id: string) {
-    if (id == 'STR') {
+    if (id === 'STR') {
       this.projectClass.StartDate = value;
-    } else if (id == 'END') {
+      // Check if the start date is after the end date
+      if (this.isEndDateSet() && this.projectClass.StartDate > this.projectClass.EndDate) {
+        this.isInvalidStartDate = true;
+      } else {
+        this.isInvalidStartDate = false;
+      }
+    } else if (id === 'END') {
       this.projectClass.EndDate = value;
-    } else if (id == 'REP') {
+      // Check if the end date is before the start date
+      if (this.projectClass.EndDate < this.projectClass.StartDate) {
+        this.isInvalidEndDate = true;
+      } else {
+        this.isInvalidEndDate = false;
+      }
+    } else if (id === 'REP') {
       this.projectClass.ReportDueDate = value;
-    } else if (id == 'IKO') {
+      // Check if Report Due Date is before the start date or end date
+      const minDate = this.isEndDateSet() ? this.projectClass.EndDate : this.projectClass.StartDate;
+      if (this.projectClass.ReportDueDate < minDate) {
+        this.isInvalidReportDueDate = true;
+      } else {
+        this.isInvalidReportDueDate = false;
+      }
+    } else if (id === 'IKO') {
       this.projectClass.IKO = value;
+      // Check if IKO is outside the range of Start Date and End Date
+      if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > this.projectClass.EndDate) {
+        this.isInvalidIKO = true;
+      } else {
+        this.isInvalidIKO = false;
+      }
     } else {
       this.projectClass.TKO = value;
+      // Check if TKO is outside the range of Start Date and End Date
+      if (this.projectClass.TKO < this.projectClass.StartDate || this.projectClass.TKO > this.projectClass.EndDate) {
+        this.isInvalidTKO = true;
+      } else {
+        this.isInvalidTKO = false;
+      }
     }
   }
 
@@ -330,7 +366,6 @@ export class AddProjectComponent {
   }
 
   isEndDateSet(): boolean {
-    // Check if EndDate is '0001-01-01' or has been set to another date
     return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
   }
 

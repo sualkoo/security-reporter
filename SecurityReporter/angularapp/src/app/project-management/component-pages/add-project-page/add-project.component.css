@@ -84,3 +84,28 @@ min-width: 500px;
   border-color: red;
   box-shadow: 0 0 5px red;
 }
+
+.date-container {
+  display: flex;
+  position: relative;
+}
+
+.cat-container {
+  display: flex;
+  position: relative;
+}
+
+.error-message {
+  position: absolute;
+  top: 100%;
+  margin-top: -15px;
+  left: 0;
+}
+
+.invalid-date-message {
+  color: red;
+  position: absolute;
+  margin-top: -15px;
+  top: 100%; 
+  left: 0;
+}
