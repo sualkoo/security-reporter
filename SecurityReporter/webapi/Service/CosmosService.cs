@@ -533,5 +533,26 @@ namespace webapi.Service
 
             return results;
         }
+
+        public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
+        {
+            Logger.LogInformation("Deleting Project Reports from database.");
+
+            try
+            {
+                foreach (string reportId in projectReportIds)
+                {
+                    ItemResponse<ProjectReportData> response = await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+
+                }
+                Logger.LogInformation("Successfully deleted Project Reports from database.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Unexpected error occurred during deleting reports from database: " + ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
+            }
+        }
     }
 }
