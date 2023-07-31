@@ -300,41 +300,6 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectReportData>> GetProjectReports(string? subcategory, string keyword, string value)
-        {
-            List<ProjectReportData> results = new List<ProjectReportData>();
-            string query = "SELECT * FROM c WHERE ";
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
-            }
-            else
-            {
-                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value)";
-            }
-            try
-            {
-                Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
-                                                                            .WithParameter("@value", $"%{value}%")
-                                                                            .WithParameter("@keyword", $"{keyword}");
-                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
-                while (queryResultSetIterator.HasMoreResults)
-                {
-                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    results.AddRange(currentResultSet.ToList());
-                }
-                Logger.LogInformation("Returning found reports");
-                return results;
-            }
-            catch (Exception exception)
-            {
-                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
-            }
-        }
-
         public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
         {
             int limit = 24;

@@ -17,6 +17,7 @@ namespace webapi.ProjectSearch.Models
             ValidationErrors = violations ?? new List<ValidationResult>();
         }
     }
+
     public class DataAnnotation
     {
         public static EntityValidationResult ValidateEntity<T>(T entity) where T : IEntity
@@ -32,6 +33,7 @@ namespace webapi.ProjectSearch.Models
             return new EntityValidator<T>().ValidateTimeFrames(entity);
         }
     }
+
     public class EntityValidator<T> where T : IEntity
     {
         public EntityValidationResult Validate(T entity)
@@ -59,6 +61,7 @@ namespace webapi.ProjectSearch.Models
             }
             return new EntityValidationResult(validationResults);
         }
+
         public EntityValidationResult ValidateTimeFrames(T entity)
         {
             var validationResults = new List<ValidationResult>();
@@ -84,6 +87,5 @@ namespace webapi.ProjectSearch.Models
 
             return new EntityValidationResult(validationResults);
         }
-
     }
 }
