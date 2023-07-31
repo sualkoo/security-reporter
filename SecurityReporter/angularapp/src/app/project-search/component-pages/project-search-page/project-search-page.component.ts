@@ -5,6 +5,8 @@ import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Finding } from '../../interfaces/ProjectReport/finding';
+import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
   selector: 'app-project-search',
@@ -28,12 +30,14 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 10 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
     return atBottom;
   }
 
-  totalRecords?: number;
   loadedFindings: FindingResponse[] = []
+  groupedFindings: GroupedFinding[] = [];
+
+  totalRecords?: number;
   nextPage: string | undefined | null;
   lastLoadedPage: number = 1;
   isLoading: boolean = false;
@@ -54,6 +58,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   resetSearch() {
     this.loadedFindings = [];
+    this.groupedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
@@ -77,12 +82,46 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweSending = this.cwe;
   }
 
+  //groupFindings() {
+  //  this.loadedFindings.forEach((findingRes: FindingResponse) => {
+  //    if (!this.groupedFindings[findingRes.projectReportName]) {
+  //      this.groupedFindings[findingRes.projectReportName] = [];
+  //    }
+  //    this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
+  //  });
+  //  this.groupedFindingsEntries = Object.entries(this.groupedFindings);
+  //}
+
+  groupFindings() {
+    const groupedFindingsMap = new Map<string, GroupedFinding>();
+
+    for (const findingRes of this.loadedFindings) {
+      const { projectReportId, projectReportName, finding } = findingRes;
+
+      if (groupedFindingsMap.has(projectReportId)) {
+        // Add the finding to an existing group
+        const existingGroup = groupedFindingsMap.get(projectReportId);
+        existingGroup?.findings.push(finding);
+      } else {
+        // Create a new group
+        const newGroup: GroupedFinding = {
+          projectId: projectReportId,
+          projectName: projectReportName,
+          findings: [finding],
+        };
+        groupedFindingsMap.set(projectReportId, newGroup);
+      }
+    }
+
+    // Convert the map to an array of GroupedFinding objects
+    this.groupedFindings = Array.from(groupedFindingsMap.values());
+  }
+
   loadFindings() {
     this.highlightValue = this.value;
     this.injectionOfTestVariables();
     this.isLoading = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       1,
       this.projectName,
       this.details,
@@ -98,6 +137,7 @@ export class ProjectSearchPageComponent implements OnInit {
           this.notificationService.displayMessage("No findings found.", "info");
         } else {
           this.loadedFindings = response.data;
+          this.groupFindings();
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
@@ -115,9 +155,9 @@ export class ProjectSearchPageComponent implements OnInit {
 
   loadNextPage() {
     console.log("Loading next page")
+    console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       (this.lastLoadedPage + 1),
       this.projectNameSending,
       this.detailsSending,
@@ -131,6 +171,8 @@ export class ProjectSearchPageComponent implements OnInit {
       for (let report of res.data) {
         this.loadedFindings.push(report);
       }
+      this.groupFindings();
+      console.log(res);
       this.isLoadingNextPage = false;
     })
   }
@@ -211,23 +253,23 @@ export class ProjectSearchPageComponent implements OnInit {
 
     console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
-      if(value == 'ProjectReportName') {
-       this.projectName = value;
+      if (value == 'ProjectReportName') {
+        this.projectName = this.value;
      }
       else if(value == 'SubsectionDetails') {
-        this.details = value;
+        this.details = this.value;
       }
       else if(value == 'SubsectionImpact') {
-        this.impact = value;
+        this.impact = this.value;
       }
       else if(value == 'SubsectionRepeatability') {
-        this.repeatability = value;
+        this.repeatability = this.value;
       }
       else if(value == 'SubsectionReferences') {
-        this.references = value;
+        this.references = this.value;
       }
       else if(value == 'CWE') {
-        this.cwe = value;
+        this.cwe = this.value;
         if(this.value.length > 0)
         this.onlyNumbers(this.value);
       }
@@ -272,5 +314,13 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
+  onGetSource(projectId: string): void {
+    console.log("Downloading source for project with ID" + projectId);
+    this.notificationService.displayMessage("Feature in development.", "info");
+  }
 
+  resetScrollPosition() {
+    const scrollableBoxElement: HTMLElement = this.reportsScrollableBox.nativeElement;
+    scrollableBoxElement.scrollTop = 0;
+  }
 }

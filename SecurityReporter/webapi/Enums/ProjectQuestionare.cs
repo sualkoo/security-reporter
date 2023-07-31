@@ -2,8 +2,8 @@
 {
     public enum ProjectQuestionare
     {
-        TBS,
-        Sent,
-        Received
+        TBS = 1,
+        Sent = 2,
+        Received = 3,
     }
 }

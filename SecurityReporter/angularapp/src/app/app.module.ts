@@ -38,12 +38,18 @@ import { ExpansionPanelComponent } from './project-listing/components/expansion-
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
 
 
+import { InputComponent } from './project-listing/components/input/input.component';
+import { RouterModule } from '@angular/router';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    LandingPageComponent,   
+    
     HighlighterPipe,
 
   ],
@@ -79,7 +85,7 @@ import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
