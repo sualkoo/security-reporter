@@ -257,5 +257,20 @@ namespace webapi.Service
             }
             return items;
         }
+
+        public async Task<bool> UpdateProject(ProjectData data)
+        {
+            try
+            {
+                await Container.ReplaceItemAsync(data, data.id.ToString(), new PartitionKey(data.id.ToString()));
+                Console.WriteLine("Item updated successfully.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred: " + ex);
+                return false;
+            }
+        }
     }
 }

@@ -122,6 +122,20 @@ public class ProjectController : ControllerBase
         }
     }
 
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateProject(ProjectData project)
+    {
+        Console.WriteLine("Updating project..");
+        
+        bool result = await CosmosService.UpdateProject(project);
+        
+        if (!result)
+        {
+            Console.WriteLine("Error occured in Project/update put request.");
+            return StatusCode(400, "Error: Unable to update project in DB.");
+        }
 
-
+        Console.WriteLine("Request executed without any errors.");
+        return StatusCode(202, project);
+    }
 }
