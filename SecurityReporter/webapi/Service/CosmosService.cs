@@ -378,7 +378,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
         {
             int limit = 6;
             bool firstFilter = false;
@@ -408,29 +408,29 @@ namespace webapi.Service
 
             if (!string.IsNullOrEmpty(projectName))
             {
-                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@projectName) ");
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f[@details]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionDeatils) LIKE LOWER(@details) ");
             }
             if (!string.IsNullOrEmpty(impact))
             {
-                querypath.Add(" LOWER(f[@impact]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@impact) ");
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
-                querypath.Add(" LOWER(f[@repeatability]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@repeatability) ");
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" LOWER(r) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(r) LIKE LOWER(@references) ");
             }
-            if (!string.IsNullOrEmpty(cWE) && int.TryParse(value, out valueInt))
+            if (!string.IsNullOrEmpty(cWE) && int.TryParse(cWE, out valueInt))
             {
-                querypath.Add(" (f[@cwe]) = (@valueInt) ");
+                querypath.Add(" (f.CWE) = (@valueInt) ");
             }
-            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(value, out valueInt))
+            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(cWE, out valueInt))
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
             }
@@ -457,18 +457,18 @@ namespace webapi.Service
             }
             query = $"{query}  ORDER BY c.DocumentInfo.ProjectReportName OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
-            
+
             //Executing Queries
             //Reports
             Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
-                                                                            .WithParameter("@offset", offset)
-                                                                            .WithParameter("@valueInt", valueInt)
-                                                                            .WithParameter("@details", $"{details}")
-                                                                            .WithParameter("@impact", $"{impact}")
-                                                                            .WithParameter("@repeatability", $"{repeatability}")
-                                                                            .WithParameter("@cwe", $"{cWE}")
-                                                                            .WithParameter("@limit", limit);
+            QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@projectName", $"%{projectName}%")
+                                                                        .WithParameter("@details", $"%{details}%")
+                                                                        .WithParameter("@impact", $"%{impact}%")
+                                                                        .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                        .WithParameter("@references", $"%{references}%")
+                                                                        .WithParameter("@valueInt", valueInt)
+                                                                        .WithParameter("@offset", offset)
+                                                                        .WithParameter("@limit", limit);
 
             FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
             while (queryResultSetIterator.HasMoreResults)
@@ -479,11 +479,11 @@ namespace webapi.Service
             Logger.LogInformation("Returning found reports");
 
             //Total Results
-            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%")
-                                                                                  .WithParameter("@details", $"{details}")
-                                                                                  .WithParameter("@impact", $"{impact}")
-                                                                                  .WithParameter("@repeatability", $"{repeatability}")
-                                                                                  .WithParameter("@cwe", $"{cWE}")
+            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@projectName", $"%{projectName}%")
+                                                                                  .WithParameter("@details", $"%{details}%")
+                                                                                  .WithParameter("@impact", $"%{impact}%")
+                                                                                  .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                                  .WithParameter("@references", $"%{references}%")
                                                                                   .WithParameter("@valueInt", valueInt);
 
             FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
@@ -525,7 +525,7 @@ namespace webapi.Service
                 {
                     queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
                 }
-                queryPage += "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
+                queryPage += "&page=" + (page + 1);
 
                 uriBuilder.Query = queryPage.TrimStart('?');
                 results.NextPage = uriBuilder.Uri;
