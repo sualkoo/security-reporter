@@ -257,5 +257,22 @@ namespace webapi.Service
             }
             return items;
         }
+
+        public async Task<ProjectData> GetProjectById(string id)
+        {
+            try
+            {
+                ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving project by ID: {ex.Message}", ex);
+            }
+        }
     }
 }
