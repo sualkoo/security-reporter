@@ -6,6 +6,7 @@ import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Finding } from '../../interfaces/ProjectReport/finding';
+import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
   selector: 'app-project-search',
@@ -34,8 +35,7 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   loadedFindings: FindingResponse[] = []
-  groupedFindings: { [key: string]: Finding[] } = {};
-  groupedFindingsEntries: Array<[string, Finding[]]> = [];
+  groupedFindings: GroupedFinding[] = [];
 
   totalRecords?: number;
   nextPage: string | undefined | null;
@@ -58,8 +58,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   resetSearch() {
     this.loadedFindings = [];
-    this.groupedFindings = {};
-    this.groupedFindingsEntries = [];
+    this.groupedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
@@ -94,21 +93,29 @@ export class ProjectSearchPageComponent implements OnInit {
   //}
 
   groupFindings() {
-    // Get the index from which to start grouping the new findings
-    const startIndex = (this.lastLoadedPage - 1) * 6;
+    const groupedFindingsMap = new Map<string, GroupedFinding>();
 
-    for (let i = startIndex; i < this.loadedFindings.length; i++) {
-      const findingRes: FindingResponse = this.loadedFindings[i];
-      if (!this.groupedFindings[findingRes.projectReportName]) {
-        this.groupedFindings[findingRes.projectReportName] = [];
+    for (const findingRes of this.loadedFindings) {
+      const { projectReportId, projectReportName, finding } = findingRes;
+
+      if (groupedFindingsMap.has(projectReportId)) {
+        // Add the finding to an existing group
+        const existingGroup = groupedFindingsMap.get(projectReportId);
+        existingGroup?.findings.push(finding);
+      } else {
+        // Create a new group
+        const newGroup: GroupedFinding = {
+          projectId: projectReportId,
+          projectName: projectReportName,
+          findings: [finding],
+        };
+        groupedFindingsMap.set(projectReportId, newGroup);
       }
-      this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
     }
 
-    // Update the groupedFindingsEntries with the newly added findings
-    this.groupedFindingsEntries = Object.entries(this.groupedFindings);
+    // Convert the map to an array of GroupedFinding objects
+    this.groupedFindings = Array.from(groupedFindingsMap.values());
   }
-
 
   loadFindings() {
     this.highlightValue = this.value;
@@ -135,7 +142,6 @@ export class ProjectSearchPageComponent implements OnInit {
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
-          console.log(this.groupedFindingsEntries);
         }
         this.isLoading = false;
       }, (HttpErrorResponse) => {
@@ -310,5 +316,8 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
-
+  onGetSource(projectId: string) {
+    console.log("Downloading source for project with ID" + projectId);
+    this.notificationService.displayMessage("Feature in development.", "info");
+  }
 }
