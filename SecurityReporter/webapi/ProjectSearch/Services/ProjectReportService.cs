@@ -59,25 +59,6 @@ namespace webapi.ProjectSearch.Services
             return newReportData;
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetReportsAsync(string? subcategory, string keyword, string value, int page)
-        {
-            Logger.LogInformation($"Fetching project reports by keywords");
-
-            if (string.IsNullOrEmpty(keyword) || string.IsNullOrEmpty(value))
-            {
-                throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
-            }
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                return await CosmosService.GetPagedProjectReports(subcategory, keyword, value, page);
-            }
-            else
-            {
-                return await CosmosService.GetPagedProjectReports(null, keyword, value, page);
-            }
-        }
-
         public async Task<PagedDBResults<List<FindingResponse>>> GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
