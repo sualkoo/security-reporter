@@ -5,30 +5,28 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { SelectInterface } from '../../interfaces/select-interface';
+import { SelectInterface } from '../../../project-management/interfaces/select-interface';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { CommentInterface } from '../../interfaces/comment-interface';
+import { CommentInterface } from '../../../project-management/interfaces/comment-interface';
 import {
   ProjectInterface,
   projectOfferStatusIndex,
   projectQuestionareIndex,
   projectScopeIndex,
   projectStatusIndex,
-} from '../../interfaces/project-interface';
+} from '../../../project-management/interfaces/project-interface';
 import { CommonModule, NgIf } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { EditSelectComponentComponent } from '../../components/edit-select-component/edit-select-component.component';
-import { EditInputComponentComponent } from '../../components/edit-input-component/edit-input-component.component';
-import { EditRadioButtonComponentComponent } from '../../components/edit-radio-button-component/edit-radio-button-component.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
+import { InputComponentComponent } from '../../../project-management/components/input-component/input-component.component';
+import { RadioButtonComponentComponent } from '../../../project-management/components/radio-button-component/radio-button-component.component';
 import { DatepickerComponent } from '../../../project-management/components/datepicker-component/datepicker-component.component';
 
 @Component({
-
-
   selector: 'app-project-editing-page',
   templateUrl: './project-editing-page.component.html',
   styleUrls: ['./project-editing-page.component.css'],
@@ -42,9 +40,9 @@ import { DatepickerComponent } from '../../../project-management/components/date
     MatNativeDateModule,
     MatSelectModule,
     MatRadioModule,
-    EditSelectComponentComponent,
-    EditInputComponentComponent,
-    EditRadioButtonComponentComponent,
+    SelectComponentComponent,
+    InputComponentComponent,
+    RadioButtonComponentComponent,
     MatButtonModule,
     NgIf,
     MatListModule,
@@ -52,8 +50,19 @@ import { DatepickerComponent } from '../../../project-management/components/date
   ],
 })
 export class ProjectEditingPageComponent {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private route: ActivatedRoute) { }
   @ViewChild('commentInput') commentInput?: ElementRef;
+
+
+
+  ngOnInit() {
+    // Subscribe to route parameter changes
+    this.route.paramMap.subscribe(params => {
+      // Get the 'id' parameter value from the route
+      //this.projectId = params.get('id');
+      // Now you can use this.projectId to fetch the project data or perform other tasks
+    });
+  }
 
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
@@ -102,7 +111,7 @@ export class ProjectEditingPageComponent {
   value = '';
 
   projectClass: ProjectInterface = {
-    id: uuidv4(),
+    id: '',
     ProjectName: '',
     StartDate: new Date('0001-01-01'),
     EndDate: new Date('0001-01-01'),
@@ -153,7 +162,6 @@ export class ProjectEditingPageComponent {
       case 'RS':
         this.projectClass.ReportStatus = value;
         break;
-
       case 'CN':
         this.projectClass.CatsNumber = value;
         break;

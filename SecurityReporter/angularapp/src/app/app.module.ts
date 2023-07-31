@@ -33,10 +33,6 @@ import { InputComponent } from './project-listing/components/input/input.compone
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
-import { DatepickerComponentComponent } from './project-editing/components/datepicker-component/datepicker-component.component';
-import { EditRadioButtonComponentComponent } from './project-editing/components/edit-radio-button-component/edit-radio-button-component.component';
-import { EditSelectComponentComponent } from './project-editing/components/edit-select-component/edit-select-component.component';
-import { EditInputComponentComponent } from './project-editing/components/edit-input-component/edit-input-component.component';
 
 
 @NgModule({
@@ -49,9 +45,7 @@ import { EditInputComponentComponent } from './project-editing/components/edit-i
   imports: [
     BrowserModule,
     HttpClientModule,
-    EditRadioButtonComponentComponent,
     MatSlideToggleModule,
-    EditSelectComponentComponent,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -59,8 +53,6 @@ import { EditInputComponentComponent } from './project-editing/components/edit-i
     MatNativeDateModule,
     ProjectEditingPageComponent,
     NgFor,
-    EditInputComponentComponent,
-    DatepickerComponentComponent,
     MatSelectModule,
     MatRadioModule,
     AddProjectComponent,
