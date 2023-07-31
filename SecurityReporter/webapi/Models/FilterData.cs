@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using webapi.Enums;
 using webapi.Utils;
+
 namespace webapi.Models
 {
     public class FilterData
@@ -9,11 +10,12 @@ namespace webapi.Models
         public ProjectStatus? FilteredProjectStatus { get; set; }
         public ProjectQuestionare? FilteredProjectQuestionare { get; set; }
         public ProjectScope? FilteredProjectScope { get; set; }
-        public int? FilteredPentestDuration { get; set; }
+        public int? FilteredPentestStart { get; set; }
+        public int? FilteredPentestEnd { get; set; }
         public DateOnly? FilteredStartDate { get; set; }
         public DateOnly? FilteredEndDate { get; set; }
-        public DateOnly? FilteredIKO { get; set; }
-        public DateOnly? FilteredTKO { get; set; }
+        public int? FilteredIKO { get; set; }
+        public int? FilteredTKO { get; set; }
     }
 }
 

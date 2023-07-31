@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-management',
@@ -50,7 +51,7 @@ import { AddProjectService } from '../../services/add-project.service';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService) {}
+  constructor(private addProjectService: AddProjectService, private router: Router) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -287,34 +288,27 @@ export class AddProjectComponent {
       this.errorValue = true;
     }
     // @ts-ignore
-
     if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
       this.errorValue = true;
     }
-
     if (
       // @ts-ignore
-
       this.projectClass.StartDate <= this.projectClass.EndDate &&
       // @ts-ignore
-
       this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
       // @ts-ignore
-
       this.projectClass.ProjectName?.length > 3 &&
       // @ts-ignore
-
       this.projectClass.ProjectName?.length < 50
     ) {
       if (
         // @ts-ignore
-
         this.projectClass.ProjectName[0].toUpperCase() ==
         // @ts-ignore
-
         this.projectClass.ProjectName[0]
       ) {
         this.sendRequest();
+        this.router.navigate(['/list-projects']);
         return;
       }
     }

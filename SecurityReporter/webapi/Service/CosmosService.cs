@@ -1,9 +1,11 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
+using System.Text;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -185,11 +187,45 @@ namespace webapi.Service
                 queryParameters["@endDate"] = filter.FilteredEndDate.Value.ToString("yyyy-MM-dd");
             }
 
-            if (filter.FilteredPentestDuration.HasValue)
+            if (filter.FilteredPentestStart.HasValue && filter.FilteredPentestEnd.HasValue)
             {
                 filterConditions.Add("c.PentestDuration >= @pentestDurationMin AND c.PentestDuration <= @pentestDurationMax");
-                queryParameters["@pentestDurationMin"] = filter.FilteredPentestDuration.Value;
-                queryParameters["@pentestDurationMax"] = filter.FilteredPentestDuration.Value;
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
+            }
+            else if (filter.FilteredPentestStart.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration >= @pentestDurationMin");
+                queryParameters["@pentestDurationMin"] = filter.FilteredPentestStart.Value;
+            }
+            else if (filter.FilteredPentestEnd.HasValue)
+            {
+                filterConditions.Add("c.PentestDuration <= @pentestDurationMax");
+                queryParameters["@pentestDurationMax"] = filter.FilteredPentestEnd.Value;
+            }
+
+            if (filter.FilteredIKO.HasValue)
+            {
+                if (filter.FilteredIKO.Value == 1)
+                {
+                    filterConditions.Add("IS_NULL(c.IKO)");
+                }
+                else if (filter.FilteredIKO.Value == 2) 
+                {
+                    filterConditions.Add("NOT IS_NULL(c.IKO)");
+                }
+            }
+
+            if (filter.FilteredTKO.HasValue)
+            {
+                if (filter.FilteredTKO.Value == 1) 
+                {
+                    filterConditions.Add("IS_NULL(c.TKO)");
+                }
+                else if (filter.FilteredTKO.Value == 2)
+                {
+                    filterConditions.Add("NOT IS_NULL(c.TKO)");
+                }
             }
 
             if (filterConditions.Count > 0)
@@ -208,7 +244,6 @@ namespace webapi.Service
                 queryDefinition.WithParameter(param.Key, param.Value);
             }
             var resultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
-
             try
             {
                 while (resultSetIterator.HasMoreResults)
@@ -223,7 +258,6 @@ namespace webapi.Service
                 Console.WriteLine("Error occurred while fetching items from DB: " + ex);
                 throw;
             }
-
             return items;
         
         }

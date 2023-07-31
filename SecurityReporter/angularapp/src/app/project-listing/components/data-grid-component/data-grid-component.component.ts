@@ -30,7 +30,9 @@ export class DataGridComponentComponent implements AfterViewInit {
   checkedRows: Set<any> = new Set<any>();
   isLoading = false;
   databaseError = false;
+  filterError = false;
   selectedItems: any[] = [];
+  noItemsFound = false;
 
   displayedColumns: string[] = [
     'select',
@@ -51,6 +53,8 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  filters: string = '';
+
 
   length: number | undefined;
 
@@ -118,8 +122,6 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   getStatusString(status: number): string {
     switch (status) {
-      case 0:
-        return 'TBS';
       case 1:
         return 'Requested';
       case 2:
@@ -133,44 +135,46 @@ export class DataGridComponentComponent implements AfterViewInit {
       case 6:
         return 'On hold';
       default:
-        return '-';
+        return 'TBS';
     }
   }
 
   getQuestionareString(questionare: number): string {
     switch (questionare) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
+        return 'Sent';
+      case 3:
         return 'Received';
       default:
-        return '';
+        return '-';
     }
   }
 
   getScopeString(scope: number): string {
     switch (scope) {
-      case 0:
-        return 'TBS';
       case 1:
-        return 'Sent';
+        return 'TBS';
       case 2:
-        return 'Confirmed';
+        return 'Sent';
       case 3:
+        return 'Confirmed';
+      case 4:
         return 'Signed';
       default:
-        return '';
+        return '-';
     }
   }
 
   async getInitItems() {
     this.isLoading = true;
     this.databaseError = false;
+    this.filterError = false;
+
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1);
+      this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -190,7 +194,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1);
+      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
     } catch (error) {
       this.databaseError = true;
@@ -207,19 +211,36 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
+  async filtersChangedHandler(filters: string) {
+    this.filters = filters;
+    this.isLoading = true;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.filterError = true;
+      this.databaseError = true;
+      this.dataSource.data = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
-      case 0:
-        return '#E9D1D4';
       case 1:
-        return '#CAC8E0';
+        return '#FDDDCB';
       case 2:
-        return '#FFF3BF';
+        return '#CAC8E0';
       case 3:
-        return '#BFE6CD';
+        return '#FFF3BF';
       case 4:
-        return '#F9BFC7';
+        return '#BFE6CD';
       case 5:
+        return '#F9BFC7';
+      case 6:
         return '#CEEFFB';
       default:
         return '#E9D1D4';
@@ -238,13 +259,10 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  // ADD BUTTON
-
   navigateToPage(): void {
     this.router.navigate(['/project-management'])
   }
 
-  // POP UP PART
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeletePopupComponentComponent, {

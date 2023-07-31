@@ -2,9 +2,9 @@
 {
     public enum ProjectScope
     {
-        TBS,
-        Sent,
-        Confirmed,
-        Signed
+        TBS = 1,
+        Sent = 2,
+        Confirmed = 3,
+        Signed = 4,
     }
 }
