@@ -56,12 +56,13 @@ namespace webapi.ProjectSearch.Controllers
         [HttpDelete]
         public async Task<IActionResult> deleteProjectReports([FromBody] List<string> ids)
         {
+            Logger.LogInformation("Recieved DELETE request for deleting reports by id.");
 
-            bool test = await ProjectReportService.DeleteReportAsync(ids);
-           
-            return Ok(test);
-
-
+            return await HandleExceptionAsync(async () =>
+            {
+                bool test = await ProjectReportService.DeleteReportAsync(ids);
+                return Ok(test);
+            });
         }
     }
 }

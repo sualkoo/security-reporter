@@ -210,7 +210,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -218,7 +218,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -259,7 +259,7 @@ namespace webapi.Service
                 throw;
             }
             return items;
-        
+
         }
 
 
@@ -536,23 +536,22 @@ namespace webapi.Service
 
         public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
         {
-            Logger.LogInformation("Deleting Project Reports from database.");
+            Logger.LogInformation("Searching for selected Project Reports in database.");
 
-            try
+            foreach (string reportId in projectReportIds)
             {
-                foreach (string reportId in projectReportIds)
-                {
-                    ItemResponse<ProjectReportData> response = await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+                await this.GetProjectReport(reportId);
+            }
 
-                }
-                Logger.LogInformation("Successfully deleted Project Reports from database.");
-                return true;
-            }
-            catch (Exception ex)
+            Logger.LogInformation("Deleting selected Project Reports from database.");
+
+            foreach (string reportId in projectReportIds)
             {
-                Logger.LogError("Unexpected error occurred during deleting reports from database: " + ex);
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
             }
+
+            Logger.LogInformation("Successfully deleted Project Reports from database.");
+            return true;
         }
     }
 }
