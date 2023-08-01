@@ -3,12 +3,13 @@
         <div class="header">
             <h1>Project editing</h1>
             <h3 style="color: #009999; font-weight: 400">
-                Project ID: {{ projectClass.id }}
+                Project ID: {{ this.loadedProject.id }}
             </h3>
         </div>
         <div style="margin-bottom: 20px">
             <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PN')"
                                  [title]="'Project name'"
+                                 [inputValue]="this.loadedProject.projectName"
                                  class="project-name-input">
             </app-input-component>
         </div>
@@ -38,7 +39,8 @@
                                           [option]="Questionare"
                                           [title]="'Questionare'"></app-select-component>
                     <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PA')"
-                                         [title]="'Pentest aspect'"></app-input-component>
+                                         [title]="'Pentest aspect'"
+                                         [inputValue]="this.loadedProject.pentestAspects"></app-input-component>
                     <div>
                         <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)"></app-radio-button-component>
                     </div>
@@ -66,11 +68,13 @@
                       >
                     </datepicker-component>
                     <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
-                                         [title]="'Cats number'"></app-input-component>
+                                         [title]="'Cats number'"
+                                         [inputValue]="this.loadedProject.catsNumber"></app-input-component>
                   </div>
 
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PL')"
-                                       [title]="'Project lead'"></app-input-component>
+                                       [title]="'Project lead'"
+                                       [inputValue]="this.loadedProject.catsNumber"></app-input-component>
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'WT')"
                                        [title]="'Working team'"
                                        [inputValue]="wtField"></app-input-component>
@@ -92,7 +96,8 @@
                     </mat-list-item>
                   </mat-list>
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'RS')"
-                                       [title]="'Report status'"></app-input-component>
+                                       [title]="'Report status'"
+                                       [inputValue]="this.loadedProject.reportStatus"></app-input-component>
                   <app-select-component (valueChanged)="onChildInputValueChanged($event, 'OS')"
                                         [option]="OfferStatus"
                                         [title]="'Offer Status'"></app-select-component>

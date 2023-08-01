@@ -50,8 +50,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
-  project!: ProjectInterface;
   projectForm!: FormGroup;
+
+  loadedProject: any;
 
   constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
     router: Router, alertService: AlertService,
@@ -74,21 +75,11 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
 
   }
 
-  getProjectDetails(projectId: string) {
-    this.getProjectService.getProjectById(projectId).subscribe(
-      (projectData: ProjectInterface) => {
-        this.project = projectData;
-        console.log(projectData);
-        // Initialize the projectForm FormGroup here after getting the project data
-        this.projectForm = this.formBuilder.group({
-          projectName: [this.project?.ProjectName || 'SomKar', Validators.required],
-          // Add other form controls for other properties of ProjectInterface if needed
-        });
-      },
-      (error) => {
-        console.error('Error fetching project data:', error);
-      }
-    );
+
+  async getProjectDetails(projectId: string) {
+    var projectData = await this.getProjectService.getProjectById(projectId);
+    this.loadedProject = projectData;
+    console.log(this.loadedProject);
   }
 
   submit() {
