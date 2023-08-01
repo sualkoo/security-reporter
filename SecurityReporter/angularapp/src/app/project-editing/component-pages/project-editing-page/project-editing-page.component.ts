@@ -20,7 +20,7 @@ import { ProjectInterface } from '../../../project-management/interfaces/project
 import { UpdateProjectService } from '../../services/update-project.service';
 import { AddProjectService } from '../../../project-management/services/add-project.service';
 import { Router } from '@angular/router';
->>>>>>> 1a6529939a9d7ba314e970eedb220701f49d7e99
+import { AlertService } from '../../../project-management/services/alert.service';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -46,14 +46,8 @@ import { Router } from '@angular/router';
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
-<<<<<<< HEAD
-  projectId!: string;
-  project!: ProjectInterface;
-
-
-=======
-  constructor(addProjectService: AddProjectService, router: Router, private updateProjectService: UpdateProjectService) {
-    super(addProjectService, router);
+  constructor(addProjectService: AddProjectService, router: Router, alertService: AlertService, private updateProjectService: UpdateProjectService) {
+    super(addProjectService, router, alertService);
   }
 
   submit() {
