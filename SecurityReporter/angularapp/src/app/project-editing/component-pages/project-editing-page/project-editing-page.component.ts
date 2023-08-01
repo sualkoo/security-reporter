@@ -68,19 +68,22 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     });
 
     this.projectForm = this.formBuilder.group({
-      projectName: ['', Validators.required] // Add form control for ProjectName
+      projectName: [this.project?.ProjectName || 'SomKar', Validators.required],
       // Add other form controls for other properties of ProjectInterface if needed
     });
-  }
 
+  }
 
   getProjectDetails(projectId: string) {
     this.getProjectService.getProjectById(projectId).subscribe(
       (projectData: ProjectInterface) => {
         this.project = projectData;
-        console.log(projectData)
-        // Set the project data to your projectClass or any other property used in the template
-        this.projectClass = projectData;
+        console.log(projectData);
+        // Initialize the projectForm FormGroup here after getting the project data
+        this.projectForm = this.formBuilder.group({
+          projectName: [this.project?.ProjectName || 'SomKar', Validators.required],
+          // Add other form controls for other properties of ProjectInterface if needed
+        });
       },
       (error) => {
         console.error('Error fetching project data:', error);
