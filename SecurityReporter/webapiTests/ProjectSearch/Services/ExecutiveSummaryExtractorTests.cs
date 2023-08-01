@@ -1,13 +1,6 @@
 ﻿using NUnit.Framework;
-using webapi.ProjectSearch.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO.Compression;
-using webapi.ProjectSearch.Models;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace webapi.ProjectSearch.Services.Tests
 {
