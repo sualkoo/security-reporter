@@ -20,6 +20,7 @@ import { UpdateProjectService } from '../../services/update-project.service';
 import { AddProjectService } from '../../../project-management/services/add-project.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../project-management/services/alert.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -44,6 +45,7 @@ import { ActivatedRoute } from '@angular/router';
     NgIf,
     MatListModule,
     MatIconModule,
+    MatTooltipModule
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
@@ -90,11 +92,14 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     this.updateProjectService.updateProject(this.projectClass).subscribe(
       (response) => {
         console.log('Success:', response);
+        this.alertService.showSnackbar('Item saved successfully.', 'Close', 'green-alert');
       },
       (error) => {
         console.log('Error:', error);
 
         const { title, status, errors } = error;
+
+        this.alertService.showSnackbar('Error occured during saving an item.', 'Close', 'red-alert');
 
         console.log('Title:', title);
         console.log('Status Code:', status);

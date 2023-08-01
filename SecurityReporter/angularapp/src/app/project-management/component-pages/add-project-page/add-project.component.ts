@@ -28,6 +28,7 @@ import { AddProjectService } from '../../services/add-project.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-project-management',
@@ -53,7 +54,7 @@ import { AlertService } from '../../services/alert.service';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService, private router: Router, private alertService: AlertService) {}
+  constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -127,6 +128,7 @@ export class AddProjectComponent {
 
   wtField = '';
   cfcField = '';
+  comField = '';
   errorValue = false;
 
   onChildRadioValueChanged(value: number) {
@@ -150,6 +152,9 @@ export class AddProjectComponent {
         break;
       case 'CFC':
         this.cfcField = value;
+        break;
+      case 'COM':
+        this.comField = value;
         break;
       case 'RS':
         this.projectClass.ReportStatus = value;
@@ -197,6 +202,15 @@ export class AddProjectComponent {
         this.projectClass.WorkingTeam.push(this.wtField);
       }
       this.wtField = '';
+    } else if (id == 'COM') {
+      if (this.comField != '') {
+        const newComment: CommentInterface = {
+          text: this.comField,
+        };
+
+        this.projectClass.Comments.push(newComment);
+      }
+      this.comField = '';
     } else {
       if (this.cfcField != '') {
         this.projectClass.ContactForClients.push(this.cfcField);
@@ -209,12 +223,14 @@ export class AddProjectComponent {
     this.addProjectService.submitPMProject(this.projectClass).subscribe(
       (response) => {
         console.log('Success:', response);
+        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
       },
       (error) => {
         console.log('Error:', error);
 
         const { title, status, errors } = error;
 
+        this.alertService.showSnackbar('Error occured during adding an item.', 'Close', 'red-alert');
 
         console.log('Title:', title);
         console.log('Status Code:', status);
@@ -315,7 +331,6 @@ export class AddProjectComponent {
       ) {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
-        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
         return;
       }
     }
@@ -328,6 +343,14 @@ export class AddProjectComponent {
         this.projectClass.WorkingTeam.indexOf(item),
         1
       );
+    } else if (id == 'COM') {
+      const index = this.projectClass.Comments.findIndex(
+        (comment: CommentInterface) => comment.text === item
+      );
+
+      if (index !== -1) {
+        this.projectClass.Comments.splice(index, 1);
+      }
     } else {
       this.projectClass.ContactForClients.splice(
         this.projectClass.ContactForClients.indexOf(item),

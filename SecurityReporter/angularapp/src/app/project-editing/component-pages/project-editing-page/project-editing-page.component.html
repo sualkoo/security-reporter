@@ -53,76 +53,91 @@
                 </div>
 
                 <div class="left-column">
-                    <div class="two-in-row">
-                        <datepicker-component #reportDueDate
-                                              [minDate]="
-                                              projectClass.EndDate>
-                            projectClass.StartDate
-                            ? projectClass.EndDate
-                            : projectClass.StartDate
-                            "
-                            (valueChanged)="onChildDateValueChanged($event, 'REP')"
-                            [title]="'Report Due Date'"
-                            >
-                        </datepicker-component>
-                        <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
-                                                  [title]="'Cats number'"></app-input-component>
-                    </div>
+                  <div class="two-in-row">
+                    <datepicker-component #reportDueDate
+                                          [minDate]="
+                                          projectClass.EndDate>
+                      projectClass.StartDate
+                      ? projectClass.EndDate
+                      : projectClass.StartDate
+                      "
+                      (valueChanged)="onChildDateValueChanged($event, 'REP')"
+                      [title]="'Report Due Date'"
+                      >
+                    </datepicker-component>
+                    <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
+                                         [title]="'Cats number'"></app-input-component>
+                  </div>
 
-                    <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PL')"
-                                         [title]="'Project lead'"></app-input-component>
-                    <app-input-component (valueChanged)="onChildInputValueChanged($event, 'WT')"
-                                              [title]="'Working team'"
-                                              [inputValue]="wtField"></app-input-component>
+                  <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PL')"
+                                       [title]="'Project lead'"></app-input-component>
+                  <app-input-component (valueChanged)="onChildInputValueChanged($event, 'WT')"
+                                       [title]="'Working team'"
+                                       [inputValue]="wtField"></app-input-component>
 
-                    <button mat-flat-button
-                            color="warn"
-                            style="--mdc-filled-button-container-color: #009999"
-                            (click)="onChildButtonValueChanged('WT')">
-                        Add
-                    </button>
+                  <button mat-flat-button
+                          color="warn"
+                          style="--mdc-filled-button-container-color: #009999"
+                          (click)="onChildButtonValueChanged('WT')">
+                    Add
+                  </button>
+                  <mat-list role="list">
+                    <mat-list-item *ngFor="let item of projectClass.WorkingTeam">
+                      {{ item }}
+                      <button mat-icon-button
+                              (click)="deleteItem(item, 'WT')"
+                              matListItemMeta>
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                    </mat-list-item>
+                  </mat-list>
+                  <app-input-component (valueChanged)="onChildInputValueChanged($event, 'RS')"
+                                       [title]="'Report status'"></app-input-component>
+                  <app-select-component (valueChanged)="onChildInputValueChanged($event, 'OS')"
+                                        [option]="OfferStatus"
+                                        [title]="'Offer Status'"></app-select-component>
+                  <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CFC')"
+                                       [title]="'Contact for client'"
+                                       [inputValue]="cfcField"></app-input-component>
+                  <button mat-flat-button
+                          color="warn"
+                          style="--mdc-filled-button-container-color: #009999"
+                          (click)="onChildButtonValueChanged('CFC')">
+                    Add
+                  </button>
+                  <mat-list role="list">
+                    <mat-list-item *ngFor="let item of projectClass.ContactForClients">
+                      {{ item }}
+                      <button mat-icon-button
+                              (click)="deleteItem(item, 'CFC')"
+                              matListItemMeta>
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                    </mat-list-item>
+                  </mat-list>
+
+                  <app-input-component (valueChanged)="onChildInputValueChanged($event, 'COM')"
+                                       [title]="'Comments'"
+                                       [inputValue]="comField"></app-input-component>
+                  <button mat-flat-button
+                          color="warn"
+                          style="--mdc-filled-button-container-color: #009999"
+                          (click)="onChildButtonValueChanged('COM')">
+                    Add
+                  </button>
+
+                  <div class="comment-container">
                     <mat-list role="list">
-                        <mat-list-item *ngFor="let item of projectClass.WorkingTeam">
-                            {{ item }}
-                            <button mat-icon-button
-                                    (click)="deleteItem(item, 'WT')"
-                                    matListItemMeta>
-                                <mat-icon>remove</mat-icon>
-                            </button>
-                        </mat-list-item>
+                      <mat-list-item *ngFor="let item of projectClass.Comments">
+                          <div [matTooltip]="item.text">{{ item.text }}</div>
+                        <button mat-icon-button
+                                (click)="deleteItem(item.text, 'COM')"
+                                matListItemMeta>
+                          <mat-icon>remove</mat-icon>
+                        </button>
+                      </mat-list-item>
                     </mat-list>
-                    <app-input-component (valueChanged)="onChildInputValueChanged($event, 'RS')"
-                                         [title]="'Report status'"></app-input-component>
-                    <app-select-component (valueChanged)="onChildInputValueChanged($event, 'OS')"
-                                          [option]="OfferStatus"
-                                          [title]="'Offer Status'"></app-select-component>
-                    <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CFC')"
-                                         [title]="'Contact for client'"
-                                         [inputValue]="cfcField"></app-input-component>
-                    <button mat-flat-button
-                            color="warn"
-                            style="--mdc-filled-button-container-color: #009999"
-                            (click)="onChildButtonValueChanged('CFC')">
-                        Add
-                    </button>
-                    <mat-list role="list">
-                        <mat-list-item *ngFor="let item of projectClass.ContactForClients">
-                            {{ item }}
-                            <button mat-icon-button
-                                    (click)="deleteItem(item, 'CFC')"
-                                    matListItemMeta>
-                                <mat-icon>remove</mat-icon>
-                            </button>
-                        </mat-list-item>
-                    </mat-list>
-                    <div>
-                        <h5>Add comment:</h5>
-
-                        <textarea type="text"
-                                  class="comment-input"
-                                  #commentInput
-                                  (input)="getValueFromTextarea()"></textarea>
-                    </div>
+                  </div>
                 </div>
             </div>
 
