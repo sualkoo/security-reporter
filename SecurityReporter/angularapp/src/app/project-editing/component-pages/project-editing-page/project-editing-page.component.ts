@@ -50,8 +50,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
-  project!: ProjectInterface;
   projectForm!: FormGroup;
+
+  loadedProject: any;
 
   constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
     router: Router, alertService: AlertService,
@@ -74,18 +75,10 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
   }
 
 
-  getProjectDetails(projectId: string) {
-    this.getProjectService.getProjectById(projectId).subscribe(
-      (projectData: ProjectInterface) => {
-        this.project = projectData;
-        console.log(projectData)
-        // Set the project data to your projectClass or any other property used in the template
-        this.projectClass = projectData;
-      },
-      (error) => {
-        console.error('Error fetching project data:', error);
-      }
-    );
+  async getProjectDetails(projectId: string) {
+    var projectData = await this.getProjectService.getProjectById(projectId);
+    this.loadedProject = projectData;
+    console.log(this.loadedProject);
   }
 
   submit() {
