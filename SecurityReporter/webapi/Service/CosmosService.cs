@@ -380,7 +380,7 @@ namespace webapi.Service
 
         public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
         {
-            int limit = 6;
+            int limit = 24;
             bool firstFilter = false;
             if (page < 1)
             {

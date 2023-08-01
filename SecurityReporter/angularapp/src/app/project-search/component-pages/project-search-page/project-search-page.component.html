@@ -64,8 +64,8 @@
               <p>Selected: {{selectedProjects.length}}</p>
             </div>
           </div>
-          <div *ngFor="let project of groupedFindings; let key = index">
-            <div class="card mt-3 mb-3">
+          <div *ngFor="let project of groupedFindings">
+            <div [class]="'card mt-3 mb-3 ' + (project.checked ? 'border-2 border-primary border-dark' : '' )">
               <div class="card-body">
                 <div class="card-title">
                   <input class="projectSelectionCheckbox form-check-input me-2 mt-2" [checked]="project.checked" (click)="onSelectionCheckboxChange($event)" type="checkbox" [value]="project.projectId">

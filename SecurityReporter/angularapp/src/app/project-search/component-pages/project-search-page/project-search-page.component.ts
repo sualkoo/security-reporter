@@ -1,11 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Finding } from '../../interfaces/ProjectReport/finding';
 import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
@@ -30,7 +28,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 50 >= container.scrollHeight;
     return atBottom;
   }
 
@@ -345,10 +343,26 @@ export class ProjectSearchPageComponent implements OnInit {
   selectedProjects: GroupedFinding[] = [];
 
   onDeleteSelectedProjects() {
+    const projectIds: string[] = this.selectedProjects.map(p => p.projectId);
     console.log("Deleting these projects:");
-    console.log(this.selectedProjects);
-    for (let selectedGf of this.selectedProjects) {
-      this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId === selectedGf.projectId);
-    }
+    console.log(projectIds);
+    // BE request
+    this.projectReportService.deleteProjectReport(projectIds).subscribe((res) => {
+      // Success
+      for (let selectedGf of this.selectedProjects) {
+        this.loadedFindings = this.loadedFindings.filter(lf => lf.projectReportId !== selectedGf.projectId);
+        this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId !== selectedGf.projectId);
+        this.totalRecords = this.totalRecords! - selectedGf.findings.length;
+      }
+      this.groupFindings();
+      this.selectedProjects = [];
+    }, (e: HttpErrorResponse) => {
+      // Error
+      console.log("Error occured on server side.");
+      console.error(e);
+      this.selectedProjects = [];
+    })
+
+    
   }
 }
