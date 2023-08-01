@@ -10,13 +10,11 @@
       "
     >
       <mat-label>{{ title }}</mat-label>
-      <input
-        formControlName="projectName"
-        matInput
-        placeholder=""
-        [(ngModel)]="inputValue"
-        (input)="onInputChange()"
-      />
+      <input formControlName="projectName"
+             matInput
+             placeholder=""
+             [(ngModel)]="inputValue"
+             (input)="onInputChange()" />
 
       <mat-error *ngIf="form.get('projectName')?.errors?.['minlength']">
         Minimal Project name lenght is <strong>3 characters</strong> and maximum

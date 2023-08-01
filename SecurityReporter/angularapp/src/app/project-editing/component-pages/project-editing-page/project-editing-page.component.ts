@@ -9,18 +9,19 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule, NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { InputComponentComponent } from '../../../project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from '../../../project-management/components/radio-button-component/radio-button-component.component';
 import { DatepickerComponent } from '../../../project-management/components/datepicker-component/datepicker-component.component';
 import { AddProjectComponent } from '../../../project-management/component-pages/add-project-page/add-project.component';
-<<<<<<< HEAD
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
-=======
 import { UpdateProjectService } from '../../services/update-project.service';
 import { AddProjectService } from '../../../project-management/services/add-project.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../project-management/services/alert.service';
+import { GetProjectService } from '../../services/get-project.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -46,8 +47,43 @@ import { AlertService } from '../../../project-management/services/alert.service
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
-  constructor(addProjectService: AddProjectService, router: Router, alertService: AlertService, private updateProjectService: UpdateProjectService) {
+  projectId!: string;
+  project!: ProjectInterface;
+  projectForm!: FormGroup;
+
+  constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
+    router: Router, alertService: AlertService,
+    private updateProjectService: UpdateProjectService,
+    private getProjectService: GetProjectService,
+    private formBuilder: FormBuilder) {
     super(addProjectService, router, alertService);
+  }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.projectId = params['id'];
+      this.getProjectDetails(this.projectId);
+    });
+
+    this.projectForm = this.formBuilder.group({
+      projectName: ['', Validators.required] // Add form control for ProjectName
+      // Add other form controls for other properties of ProjectInterface if needed
+    });
+  }
+
+
+  getProjectDetails(projectId: string) {
+    this.getProjectService.getProjectById(projectId).subscribe(
+      (projectData: ProjectInterface) => {
+        this.project = projectData;
+        console.log(projectData)
+        // Set the project data to your projectClass or any other property used in the template
+        this.projectClass = projectData;
+      },
+      (error) => {
+        console.error('Error fetching project data:', error);
+      }
+    );
   }
 
   submit() {
@@ -66,5 +102,4 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       }
     );
   }
->>>>>>> 1a6529939a9d7ba314e970eedb220701f49d7e99
 }
