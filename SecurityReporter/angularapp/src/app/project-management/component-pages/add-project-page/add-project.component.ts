@@ -203,6 +203,24 @@ export class AddProjectComponent {
     }
   }
 
+  submit() {
+    this.addProjectService.submitPMProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+        console.log('Errors:', errors);
+      }
+    );
+  }
+
   sendRequest() {
     for (const [key, value] of Object.entries(this.projectClass)) {
       if (this.projectClass.hasOwnProperty(key)) {
@@ -237,12 +255,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-          .toString()
-          // @ts-ignore
-          .padStart(2, '0')}-${this.projectClass[key]
-          .getUTCDate()
-          .toString()
-          .padStart(2, '0')}`;
+            .toString()
+            // @ts-ignore
+            .padStart(2, '0')}-${this.projectClass[key]
+              .getUTCDate()
+              .toString()
+              .padStart(2, '0')}`;
       }
     }
 
@@ -256,21 +274,7 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass).subscribe(
-      (response) => {
-        console.log('Success:', response);
-      },
-      (error) => {
-        console.log('Error:', error);
-
-        const { title, status, errors } = error;
-
-
-        console.log('Title:', title);
-        console.log('Status Code:', status);
-        console.log('Errors:', errors);
-      }
-    );
+    this.submit();
 
   }
 

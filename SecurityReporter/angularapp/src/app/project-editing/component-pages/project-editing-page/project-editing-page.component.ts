@@ -14,6 +14,9 @@ import { InputComponentComponent } from '../../../project-management/components/
 import { RadioButtonComponentComponent } from '../../../project-management/components/radio-button-component/radio-button-component.component';
 import { DatepickerComponent } from '../../../project-management/components/datepicker-component/datepicker-component.component';
 import { AddProjectComponent } from '../../../project-management/component-pages/add-project-page/add-project.component';
+import { UpdateProjectService } from '../../services/update-project.service';
+import { AddProjectService } from '../../../project-management/services/add-project.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -39,5 +42,24 @@ import { AddProjectComponent } from '../../../project-management/component-pages
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
-  
+  constructor(addProjectService: AddProjectService, router: Router, private updateProjectService: UpdateProjectService) {
+    super(addProjectService, router);
+  }
+
+  submit() {
+    this.updateProjectService.updateProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+        console.log('Errors:', errors);
+      }
+    );
+  }
 }
