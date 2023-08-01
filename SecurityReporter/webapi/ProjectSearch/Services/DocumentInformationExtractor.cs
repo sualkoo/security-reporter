@@ -25,13 +25,11 @@ namespace webapi.ProjectSearch.Services
             {
                 using (StreamReader reader = new StreamReader(documentEntry.Open()))
                 {
-
                     string line;
                     char[] delimiters = { '{', '}'};
                     while ((line = reader.ReadLine()) != null)
                     {
-
-                        if (!string.IsNullOrEmpty(line) && line.Length > 0)
+                        if (!string.IsNullOrEmpty(line))
                         {
                             string trimmedLine = line.Trim();
                             if(trimmedLine[0] == '\\')
@@ -39,25 +37,14 @@ namespace webapi.ProjectSearch.Services
                                 string[] inBracketContents = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                                 if (inBracketContents[0] == "\\ReportVersionEntry" && inBracketContents.Length >= 5)
                                 {
-                                    if(inBracketContents.Length >= 5)
-                                    {
-                                        ReportVersionEntry newReport = new ReportVersionEntry();
-                                        newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                        newReport.Version = inBracketContents[2];
-                                        newReport.WholeName = inBracketContents[3];
-                                        newReport.ReportStatus = inBracketContents[4];
-                                        newDocumentInfo.ReportDocumentHistory.Add(newReport);
-                                    }
+                                    newDocumentInfo.ReportDocumentHistory.Add(readReport(inBracketContents));
                                 }
-                                else
+                                else if (inBracketContents.Length > 2)
                                 {
-                                    if (inBracketContents.Length > 2)
-                                    {
-                                        List<string> result = ReadInlineContents(inBracketContents[2]);
-                                        assignNewData(inBracketContents[1], result, newDocumentInfo);
-                                    }
+                                    List<string> result = ReadInlineContents(inBracketContents[2]);
+                                    assignNewData(inBracketContents[1], result, newDocumentInfo);
                                 }
-                            } 
+                            }
                         }
                     }
                 }
@@ -68,9 +55,9 @@ namespace webapi.ProjectSearch.Services
         private List<string> ReadInlineContents(string extractedLine)
         {
             List<string> contents = null;
-            char delimiter = '\\';
+            string delimiter = "\\xspace";
             string[] cutString = extractedLine.Split(delimiter);
-            if(cutString.Length > 0 && (cutString[0].Trim() != "xspace")) 
+            if(cutString.Length > 0) 
             {
                 contents = new List<string>();
                 string[] actualData = cutString[0].Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -81,6 +68,27 @@ namespace webapi.ProjectSearch.Services
             }
 
             return contents;
+        }
+
+        private ReportVersionEntry readReport(string[] inBracketContents)
+        {
+            ReportVersionEntry newReport = new ReportVersionEntry();
+            try
+            {
+                newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Incorrect ReportVersionEntry Version Date format, correct format" +
+                    "is yyyy-MM-dd. " +
+                    "Or incorrect format of ReportVersionEntry itself " +
+                    "String found: " + inBracketContents[1].Trim());
+            }
+            newReport.Version = inBracketContents[2];
+            newReport.WholeName = inBracketContents[3];
+            newReport.ReportStatus = inBracketContents[4];
+
+            return newReport;
         }
 
         private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
@@ -120,8 +128,13 @@ namespace webapi.ProjectSearch.Services
                         }
                         break;
                     case "\\ReportDate":
-                        //ZMENIT ATRIBUT NA STRING
-                        newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
+                        try
+                        {
+                            newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
+                        } catch (FormatException ex)
+                        {
+                            Console.WriteLine("Incorrect format of ReportDate, the correct format is MMMM d yyyy");
+                        }
                         break;
                 }
             }
