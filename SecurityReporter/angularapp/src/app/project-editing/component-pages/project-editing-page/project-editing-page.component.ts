@@ -14,9 +14,7 @@ import { InputComponentComponent } from '../../../project-management/components/
 import { RadioButtonComponentComponent } from '../../../project-management/components/radio-button-component/radio-button-component.component';
 import { DatepickerComponent } from '../../../project-management/components/datepicker-component/datepicker-component.component';
 import { AddProjectComponent } from '../../../project-management/component-pages/add-project-page/add-project.component';
-<<<<<<< HEAD
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
-=======
 import { UpdateProjectService } from '../../services/update-project.service';
 import { AddProjectService } from '../../../project-management/services/add-project.service';
 import { Router } from '@angular/router';
@@ -69,5 +67,4 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       }
     );
   }
->>>>>>> 1a6529939a9d7ba314e970eedb220701f49d7e99
 }
