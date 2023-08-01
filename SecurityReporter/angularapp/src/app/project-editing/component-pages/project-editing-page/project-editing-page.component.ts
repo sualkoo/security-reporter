@@ -54,7 +54,6 @@ export class ProjectEditingPageComponent {
   @ViewChild('commentInput') commentInput?: ElementRef;
 
 
-
   ngOnInit() {
     // Subscribe to route parameter changes
     this.route.paramMap.subscribe(params => {
