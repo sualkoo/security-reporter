@@ -67,12 +67,6 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
     });
-
-    this.projectForm = this.formBuilder.group({
-      projectName: [this.project?.ProjectName || 'SomKar', Validators.required],
-      // Add other form controls for other properties of ProjectInterface if needed
-    });
-
   }
 
   mapJsonToProjectInterface(jsonData: any): ProjectInterface {
@@ -90,13 +84,13 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
     TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
     RequestCreated: jsonData.requestCreated,
-    Comments: jsonData.comments,
+    Comments: jsonData.comments ? jsonData.comments : [],
     CatsNumber: jsonData.castNumber,
     ProjectOfferStatus: jsonData.projectOfferStatus,
-    WorkingTeam: jsonData.workingTeam,
+    WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
     ProjectLead: jsonData.projectLead,
     ReportStatus: jsonData.reportStatus,
-    ContactForClients: jsonData.contactForClients
+    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : []
   };
 }
 
