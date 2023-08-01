@@ -53,7 +53,7 @@ import { AlertService } from '../../services/alert.service';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService, private router: Router, private alertService: AlertService) {}
+  constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -209,12 +209,14 @@ export class AddProjectComponent {
     this.addProjectService.submitPMProject(this.projectClass).subscribe(
       (response) => {
         console.log('Success:', response);
+        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
       },
       (error) => {
         console.log('Error:', error);
 
         const { title, status, errors } = error;
 
+        this.alertService.showSnackbar('Error occured during adding an item.', 'Close', 'red-alert');
 
         console.log('Title:', title);
         console.log('Status Code:', status);
@@ -315,7 +317,6 @@ export class AddProjectComponent {
       ) {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
-        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
         return;
       }
     }
