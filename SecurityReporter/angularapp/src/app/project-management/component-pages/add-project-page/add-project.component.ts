@@ -57,6 +57,15 @@ export class AddProjectComponent {
   isInvalidReportDueDate = false;
   isInvalidIKO = false;
   isInvalidTKO = false;
+  isProjectLeadWhitespace: boolean = false;
+  isPentestAspectWhitespace: boolean = false;
+  isWorkingTeamWhitespace: boolean = false;
+  isReportStatusWhitespace: boolean = false;
+  isCFCWhitespace: boolean = false;
+  isCatsNumberWhitespace: boolean = false;
+  isCommentWhitespace: boolean = false;
+  isCFCInvalidEmail: boolean = false;
+
 
   constructor(private addProjectService: AddProjectService, private router: Router) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
@@ -139,6 +148,10 @@ export class AddProjectComponent {
   }
 
   onChildInputValueChanged(value: string, id: string) {
+
+    const trimmedValue = value.trim();
+    const isWhitespace = trimmedValue === '';
+
     this.value = value;
     switch (id) {
       case 'PN':
@@ -146,22 +159,29 @@ export class AddProjectComponent {
         break;
       case 'PA':
         this.projectClass.PentestAspects = value;
+        this.isPentestAspectWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'PL':
         this.projectClass.ProjectLead = value;
+        this.isProjectLeadWhitespace = isWhitespace && value.length > 0;
         break;
       case 'WT':
         this.wtField = value;
+        this.isWorkingTeamWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'CFC':
         this.cfcField = value;
+        this.isCFCWhitespace = isWhitespace && value.length > 0;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern
+        this.isCFCInvalidEmail = !emailRegex.test(value) && value.length > 0; // Check if the email is invalid
         break;
       case 'RS':
         this.projectClass.ReportStatus = value;
+        this.isReportStatusWhitespace = isWhitespace && value.length > 0; 
         break;
-
       case 'CN':
         this.projectClass.CatsNumber = value;
+        this.isCatsNumberWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'OS':
         // @ts-ignore
@@ -314,9 +334,19 @@ export class AddProjectComponent {
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Comments = [{
-        text: this.commentInput.nativeElement.value
-      }];
+      const commentText = this.commentInput.nativeElement.value;
+      const trimmedComment = commentText.trim();
+      const isWhitespace = trimmedComment === '';
+
+      if (!isWhitespace) {
+        // Set the comment if it's not just whitespace
+        this.projectClass.Comments = [{
+          text: commentText
+        }];
+      } else {
+        // If comment is empty or contains only whitespace, remove the comment
+        this.isCommentWhitespace = isWhitespace && commentText.length > 0; 
+      }
     }
   }
 
@@ -369,7 +399,5 @@ export class AddProjectComponent {
     return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
   }
 
-  checkDateValidity() {
-    //here will be code to make datepicker red
-  }
+  
 }

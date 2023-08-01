@@ -59,14 +59,15 @@ min-width: 500px;
     align-items: flex-end;
   }
 
-  .create-button{
-    margin-top: 100px;
-    width: 300px;
-    height: 60px;
-    font-size: 15px;
-    font-weight: bolder;
-    text-transform: uppercase;
-  }
+.create-button {
+  position: relative;
+  margin-top: 100px;
+  width: 300px;
+  height: 60px;
+  font-size: 15px;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
 
   .mat-mdc-unelevated-button.mat-warn {
     --mdc-filled-button-container-color: #ec6602;
@@ -90,6 +91,18 @@ min-width: 500px;
   position: relative;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.input-container-pentest {
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+}
+
 .cat-container {
   display: flex;
   position: relative;
@@ -98,14 +111,33 @@ min-width: 500px;
 .error-message {
   position: absolute;
   top: 100%;
-  margin-top: -15px;
+  font-size: 15px;
+  margin-top: -20px;
   left: 0;
 }
 
 .invalid-date-message {
   color: red;
   position: absolute;
-  margin-top: -15px;
+  font-size: 15px;
+  margin-top: -20px;
   top: 100%; 
   left: 0;
 }
+
+.invalid-input-message {
+  margin-top: -18px;
+  font-size: 15px;
+  display: flex;
+}
+
+.invalid-comment-message {
+  margin-top: -10px;
+  margin-bottom: -18px;
+  font-size: 15px;
+  display: flex;
+  position: relative;
+}
+
+
+
