@@ -33,14 +33,14 @@ import { InputComponent } from './project-listing/components/input/input.compone
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,
+    LandingPageComponent,    
   ],
   imports: [
     BrowserModule,
@@ -67,6 +67,7 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
