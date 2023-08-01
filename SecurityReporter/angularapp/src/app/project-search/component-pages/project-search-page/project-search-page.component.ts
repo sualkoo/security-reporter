@@ -104,10 +104,12 @@ export class ProjectSearchPageComponent implements OnInit {
         existingGroup?.findings.push(finding);
       } else {
         // Create a new group
+        const isProjectSelected = this.groupedFindings.some(gf => gf.projectId === projectReportId && gf.checked === true);
         const newGroup: GroupedFinding = {
           projectId: projectReportId,
           projectName: projectReportName,
           findings: [finding],
+          checked: isProjectSelected
         };
         groupedFindingsMap.set(projectReportId, newGroup);
       }
@@ -319,5 +321,34 @@ export class ProjectSearchPageComponent implements OnInit {
   onGetSource(projectId: string) {
     console.log("Downloading source for project with ID" + projectId);
     this.notificationService.displayMessage("Feature in development.", "info");
+  }
+
+  onSelectionCheckboxChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    if (target.checked) {
+      console.log("Selecting project")
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = true;
+    } else {
+      console.log("Unselecting project")
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = false;
+    }
+
+    this.selectedProjects = [];
+    this.groupedFindings.forEach(gf => {
+      if (gf.checked) {
+        this.selectedProjects.push(gf );
+      }
+    })
+  }
+
+  selectedProjects: GroupedFinding[] = [];
+
+  onDeleteSelectedProjects() {
+    console.log("Deleting these projects:");
+    console.log(this.selectedProjects);
+    for (let selectedGf of this.selectedProjects) {
+      this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId === selectedGf.projectId);
+    }
   }
 }
