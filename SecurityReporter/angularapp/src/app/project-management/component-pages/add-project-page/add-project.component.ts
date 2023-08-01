@@ -26,6 +26,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-project-management',
@@ -51,7 +53,7 @@ import { Router } from '@angular/router';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService, private router: Router) {}
+  constructor(private addProjectService: AddProjectService, private router: Router, private alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -265,6 +267,7 @@ export class AddProjectComponent {
 
         const { title, status, errors } = error;
 
+        this.alertService.showSnackbar('Error occured during saving an item.', 'Close', 'red-alert');
 
         console.log('Title:', title);
         console.log('Status Code:', status);
@@ -309,6 +312,7 @@ export class AddProjectComponent {
       ) {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
+        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
         return;
       }
     }
