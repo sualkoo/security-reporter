@@ -45,7 +45,7 @@
                                          [title]="'Pentest aspect'"
                                          [inputValue]="this.projectClass.PentestAspects"></app-input-component>
                     <div>
-                        <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)"></app-radio-button-component>
+                        <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)"  [project]="this.projectClass" ></app-radio-button-component>
                     </div>
                     <div class="two-in-row">
                         <datepicker-component [minDate]="this.projectClass.StartDate"
