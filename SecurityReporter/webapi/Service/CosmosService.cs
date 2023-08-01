@@ -210,7 +210,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -218,7 +218,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -259,7 +259,7 @@ namespace webapi.Service
                 throw;
             }
             return items;
-        
+
         }
 
 
@@ -378,7 +378,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
+        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
         {
             int limit = 24;
             bool firstFilter = false;
@@ -390,9 +390,11 @@ namespace webapi.Service
             int totalResults;
             int valueInt = 0;
             List<string> querypath = new List<string>();
-            List<FindingResponse> newData = new List<FindingResponse>();
+            List<FindingResponse> data = new List<FindingResponse>();
+            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
+            string queryPage = uriBuilder.Query;
 
-            //Building Queries
+            //Building Queries and Next Page URL
 
             string query = "SELECT DISTINCT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } " +
                             "FROM c " +
@@ -408,29 +410,35 @@ namespace webapi.Service
 
             if (!string.IsNullOrEmpty(projectName))
             {
-                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@projectName) ");
+                queryPage += "&"+ nameof(projectName) + "=" + Uri.EscapeDataString(projectName);
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f[@details]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionDeatils) LIKE LOWER(@details) ");
+                queryPage += "&" + nameof(details) + "=" + Uri.EscapeDataString(details);
             }
             if (!string.IsNullOrEmpty(impact))
             {
-                querypath.Add(" LOWER(f[@impact]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@impact) ");
+                queryPage += "&" + nameof(impact) + "=" + Uri.EscapeDataString(impact);
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
-                querypath.Add(" LOWER(f[@repeatability]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@repeatability) ");
+                queryPage += "&" + nameof(repeatability) + "=" + Uri.EscapeDataString(repeatability);
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" LOWER(r) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(r) LIKE LOWER(@references) ");
+                queryPage += "&" + nameof(references) + "=" + Uri.EscapeDataString(references);
             }
-            if (!string.IsNullOrEmpty(cWE) && int.TryParse(value, out valueInt))
+            if (!string.IsNullOrEmpty(cWE) && int.TryParse(cWE, out valueInt))
             {
-                querypath.Add(" (f[@cwe]) = (@valueInt) ");
+                querypath.Add(" (f.CWE) = (@valueInt) ");
+                queryPage += "&" + nameof(cWE) + "=" + Uri.EscapeDataString(cWE);
             }
-            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(value, out valueInt))
+            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(cWE, out valueInt))
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
             }
@@ -455,83 +463,76 @@ namespace webapi.Service
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "At least one filter has to be selected");
             }
+
+            queryPage += "&page=" + (page + 1);
+
+            uriBuilder.Query = queryPage.TrimStart('?');
+
             query = $"{query}  ORDER BY c.DocumentInfo.ProjectReportName OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
-            
+
             //Executing Queries
             //Reports
             Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
-                                                                            .WithParameter("@offset", offset)
-                                                                            .WithParameter("@valueInt", valueInt)
-                                                                            .WithParameter("@details", $"{details}")
-                                                                            .WithParameter("@impact", $"{impact}")
-                                                                            .WithParameter("@repeatability", $"{repeatability}")
-                                                                            .WithParameter("@cwe", $"{cWE}")
-                                                                            .WithParameter("@limit", limit);
+            QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@projectName", $"%{projectName}%")
+                                                                        .WithParameter("@details", $"%{details}%")
+                                                                        .WithParameter("@impact", $"%{impact}%")
+                                                                        .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                        .WithParameter("@references", $"%{references}%")
+                                                                        .WithParameter("@valueInt", valueInt)
+                                                                        .WithParameter("@offset", offset)
+                                                                        .WithParameter("@limit", limit);
 
             FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                newData.AddRange(currentResultSet.ToList());
+                data.AddRange(currentResultSet.ToList());
             }
             Logger.LogInformation("Returning found reports");
 
             //Total Results
-            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%")
-                                                                                  .WithParameter("@details", $"{details}")
-                                                                                  .WithParameter("@impact", $"{impact}")
-                                                                                  .WithParameter("@repeatability", $"{repeatability}")
-                                                                                  .WithParameter("@cwe", $"{cWE}")
+            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@projectName", $"%{projectName}%")
+                                                                                  .WithParameter("@details", $"%{details}%")
+                                                                                  .WithParameter("@impact", $"%{impact}%")
+                                                                                  .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                                  .WithParameter("@references", $"%{references}%")
                                                                                   .WithParameter("@valueInt", valueInt);
 
             FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
             FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
             totalResults = response.FirstOrDefault();
 
-            //Filling PagedDBResult
+            //Filling PagedDBResult Response
 
-            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
+            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(data, page);
             results.TotalRecords = totalResults;
             results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
-            //Building URL for next page
-            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
-            string queryPage = uriBuilder.Query;
             if (results.TotalPages > page)
             {
-                if (!string.IsNullOrEmpty(projectName))
-                {
-                    queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
-                }
-                if (!string.IsNullOrEmpty(details))
-                {
-                    queryPage += "&Details=" + Uri.EscapeDataString(details);
-                }
-                if (!string.IsNullOrEmpty(impact))
-                {
-                    queryPage += "&Impact=" + Uri.EscapeDataString(impact);
-                }
-                if (!string.IsNullOrEmpty(repeatability))
-                {
-                    queryPage += "&Repeatability=" + Uri.EscapeDataString(repeatability);
-                }
-                if (!string.IsNullOrEmpty(references))
-                {
-                    queryPage += "&References=" + Uri.EscapeDataString(references);
-                }
-                if (!string.IsNullOrEmpty(cWE))
-                {
-                    queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
-                }
-                queryPage += "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
-
-                uriBuilder.Query = queryPage.TrimStart('?');
                 results.NextPage = uriBuilder.Uri;
             }
-
             return results;
+        }
+
+        public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
+        {
+            Logger.LogInformation("Searching for selected Project Reports in database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await this.GetProjectReport(reportId);
+            }
+
+            Logger.LogInformation("Deleting selected Project Reports from database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+
+            Logger.LogInformation("Successfully deleted Project Reports from database.");
+            return true;
         }
     }
 }

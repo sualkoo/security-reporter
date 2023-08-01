@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
@@ -122,7 +122,6 @@ export class ProjectSearchPageComponent implements OnInit {
     this.injectionOfTestVariables();
     this.isLoading = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       1,
       this.projectName,
       this.details,
@@ -159,7 +158,6 @@ export class ProjectSearchPageComponent implements OnInit {
     console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       (this.lastLoadedPage + 1),
       this.projectNameSending,
       this.detailsSending,
@@ -255,23 +253,23 @@ export class ProjectSearchPageComponent implements OnInit {
 
     console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
-      if(value == 'ProjectReportName') {
-       this.projectName = value;
+      if (value == 'ProjectReportName') {
+        this.projectName = this.value;
      }
       else if(value == 'SubsectionDetails') {
-        this.details = value;
+        this.details = this.value;
       }
       else if(value == 'SubsectionImpact') {
-        this.impact = value;
+        this.impact = this.value;
       }
       else if(value == 'SubsectionRepeatability') {
-        this.repeatability = value;
+        this.repeatability = this.value;
       }
       else if(value == 'SubsectionReferences') {
-        this.references = value;
+        this.references = this.value;
       }
       else if(value == 'CWE') {
-        this.cwe = value;
+        this.cwe = this.value;
         if(this.value.length > 0)
         this.onlyNumbers(this.value);
       }
@@ -316,7 +314,7 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
-  onGetSource(projectId: string) {
+  onGetSource(projectId: string): void {
     console.log("Downloading source for project with ID" + projectId);
     this.notificationService.displayMessage("Feature in development.", "info");
   }
@@ -364,5 +362,11 @@ export class ProjectSearchPageComponent implements OnInit {
     })
 
     
+  }
+
+  showSidebar: boolean = true;
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 }

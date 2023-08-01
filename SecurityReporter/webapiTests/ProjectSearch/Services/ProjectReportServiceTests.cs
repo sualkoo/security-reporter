@@ -80,10 +80,10 @@ namespace webapi.ProjectSearch.Services.Tests
 
 
             // Searching by Project Report Name
-            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings("aaa", null, null, null, null, null, searchedValue, 1)).ReturnsAsync(expectedResponse);
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(searchedValue, null, null, null, null, null, 1)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = projectReportService.GetReportFindingsAsync("aaa", null, null, null, null, null, searchedValue, 1).Result;
+            var result = projectReportService.GetReportFindingsAsync(searchedValue, null, null, null, null, null, 1).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -95,10 +95,10 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             // Arange
             var searchedValue = "Dummy";
-            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, searchedValue, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "At least one search filter must be specified"));
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "At least one search filter must be specified"));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, searchedValue, 1));
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, 1));
         }
 
         [Test]
@@ -106,10 +106,10 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             // Arange
             var searchedValue = "Dummy";
-            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "Search value cannot be null."));
+            mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "Search value cannot be null."));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, null, 1));
+            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, 1));
         }
 
         [Test]
