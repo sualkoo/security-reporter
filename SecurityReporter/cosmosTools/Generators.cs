@@ -8,6 +8,9 @@ namespace cosmosTools
 {
     internal class Generators
     {
+        internal int MinRandomValue { get; } = 3;
+        internal int MaxRandomValue { get; } = 8;
+
         private List<string> workingTeam;
 
         public Generators()
@@ -66,7 +69,7 @@ namespace cosmosTools
             return projectNames[new Random().Next(0, projectNames.Count())];
         }
 
-        public string GenerateReportStatus()
+        public static string GenerateReportStatus()
         {
             var reportStatus = new List<string> { "Pending", "In Progress", "Completed", "Approved", "Rejected", "On Hold", "Cancelled", "Draft", "Error", "Awaiting Review" };
             return reportStatus[new Random().Next(0, reportStatus.Count())];
@@ -142,9 +145,10 @@ namespace cosmosTools
 
         public List<string> GenerateWorkingTeam()
         {
+
             var newTeam = new List<string>();
 
-            for (int j = 0; j < new Random().Next(3, 8); j++)
+            for (int j = 0; j < new Random().Next(MinRandomValue, MaxRandomValue); j++)
             {
                 newTeam.Add(workingTeam[new Random().Next(0, workingTeam.Count())]);
             }
@@ -156,7 +160,7 @@ namespace cosmosTools
         {
             var contactForClients = new List<string>();
 
-            for (int j = 0; j < new Random().Next(3, 8); j++)
+            for (int j = 0; j < new Random().Next(MinRandomValue, MaxRandomValue); j++)
             {
                 contactForClients.Add(GenerateRandomEmail(workingTeam[new Random().Next(0, workingTeam.Count())]));
             }
