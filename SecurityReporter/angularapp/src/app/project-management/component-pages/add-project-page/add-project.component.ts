@@ -26,6 +26,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-project-management',
@@ -51,7 +53,7 @@ import { Router } from '@angular/router';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService, private router: Router) {}
+  constructor(private addProjectService: AddProjectService, private router: Router, private alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -203,6 +205,24 @@ export class AddProjectComponent {
     }
   }
 
+  submit() {
+    this.addProjectService.submitPMProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+        console.log('Errors:', errors);
+      }
+    );
+  }
+
   sendRequest() {
     for (const [key, value] of Object.entries(this.projectClass)) {
       if (this.projectClass.hasOwnProperty(key)) {
@@ -237,12 +257,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-          .toString()
-          // @ts-ignore
-          .padStart(2, '0')}-${this.projectClass[key]
-          .getUTCDate()
-          .toString()
-          .padStart(2, '0')}`;
+            .toString()
+            // @ts-ignore
+            .padStart(2, '0')}-${this.projectClass[key]
+              .getUTCDate()
+              .toString()
+              .padStart(2, '0')}`;
       }
     }
 
@@ -256,21 +276,7 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass).subscribe(
-      (response) => {
-        console.log('Success:', response);
-      },
-      (error) => {
-        console.log('Error:', error);
-
-        const { title, status, errors } = error;
-
-
-        console.log('Title:', title);
-        console.log('Status Code:', status);
-        console.log('Errors:', errors);
-      }
-    );
+    this.submit();
 
   }
 
@@ -309,6 +315,7 @@ export class AddProjectComponent {
       ) {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
+        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
         return;
       }
     }

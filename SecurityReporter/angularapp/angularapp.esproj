@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
   <PropertyGroup>
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
@@ -14,6 +14,7 @@
   <ItemGroup>
     <Folder Include="src\app\project-editing\component-pages\" />
     <Folder Include="src\app\project-editing\components\" />
+    <Folder Include="src\app\project-editing\services\" />
     <Folder Include="src\app\project-listing\interfaces\" />
     <Folder Include="src\app\project-listing\components\" />
     <Folder Include="src\app\project-listing\components\" />
