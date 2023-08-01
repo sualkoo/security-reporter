@@ -16,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-
+ 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
@@ -37,6 +37,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   displayedColumns: string[] = [
     'select',
     'projectName',
+    'edit',
     'projectStatus',
     'questionare',
     'projectScope',
@@ -172,7 +173,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
     this.filterError = false;
 
-
     try {
       this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
@@ -261,6 +261,12 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   navigateToPage(): void {
     this.router.navigate(['/project-management'])
+  }
+
+  navigateToThePage(projectId: number) {
+    if (projectId) {
+      this.router.navigate(['/edit-project/', projectId]);
+    }
   }
 
 
