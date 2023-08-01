@@ -26,6 +26,8 @@ export class RadioButtonComponentComponent implements OnInit {
         this.radioValue = '2';
       } else if (this.project.PentestDuration == 4) {
         this.radioValue = '4';
+      } else if (this.project.PentestDuration == null) {
+        this.radioValue = '0';
       } else {
         this.radioValue = '3';
         this.inputValue = this.project.PentestDuration;
