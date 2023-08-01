@@ -14,6 +14,7 @@ import { InputComponentComponent } from '../../../project-management/components/
 import { RadioButtonComponentComponent } from '../../../project-management/components/radio-button-component/radio-button-component.component';
 import { DatepickerComponent } from '../../../project-management/components/datepicker-component/datepicker-component.component';
 import { AddProjectComponent } from '../../../project-management/component-pages/add-project-page/add-project.component';
+import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -39,5 +40,8 @@ import { AddProjectComponent } from '../../../project-management/component-pages
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
-  
+  projectId!: string;
+  project!: ProjectInterface;
+
+
 }
