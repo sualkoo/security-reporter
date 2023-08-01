@@ -512,44 +512,6 @@ namespace webapi.Service
             {
                 results.NextPage = uriBuilder.Uri;
             }
-
-            //Building URL for next page
-            /*
-            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
-            string queryPage = uriBuilder.Query;
-            if (results.TotalPages > page)
-            {
-                if (!string.IsNullOrEmpty(projectName))
-                {
-                    queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
-                }
-                if (!string.IsNullOrEmpty(details))
-                {
-                    queryPage += "&Details=" + Uri.EscapeDataString(details);
-                }
-                if (!string.IsNullOrEmpty(impact))
-                {
-                    queryPage += "&Impact=" + Uri.EscapeDataString(impact);
-                }
-                if (!string.IsNullOrEmpty(repeatability))
-                {
-                    queryPage += "&Repeatability=" + Uri.EscapeDataString(repeatability);
-                }
-                if (!string.IsNullOrEmpty(references))
-                {
-                    queryPage += "&References=" + Uri.EscapeDataString(references);
-                }
-                if (!string.IsNullOrEmpty(cWE))
-                {
-                    queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
-                }
-                queryPage += "&page=" + (page + 1);
-
-                uriBuilder.Query = queryPage.TrimStart('?');
-                results.NextPage = uriBuilder.Uri;
-            }
-            */
-
             return results;
         }
 
