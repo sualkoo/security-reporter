@@ -69,9 +69,10 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     });
 
     this.projectForm = this.formBuilder.group({
-      projectName: ['', Validators.required] // Add form control for ProjectName
+      projectName: [this.project?.ProjectName || 'SomKar', Validators.required],
       // Add other form controls for other properties of ProjectInterface if needed
     });
+
   }
 
   mapJsonToProjectInterface(jsonData: any): ProjectInterface {
