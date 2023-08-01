@@ -1,4 +1,5 @@
-﻿using webapi.ProjectSearch.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services
 {
@@ -9,5 +10,6 @@ namespace webapi.ProjectSearch.Services
         public Task<ProjectReportData> SaveReportFromZip(IFormFile file);
 
         public Task<bool> DeleteReportAsync(List<string> ids);
+        public byte[] GetProjectZipFile();
     }
 }

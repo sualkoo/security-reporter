@@ -210,7 +210,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -218,7 +218,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -259,7 +259,7 @@ namespace webapi.Service
                 throw;
             }
             return items;
-        
+
         }
 
 
@@ -551,6 +551,26 @@ namespace webapi.Service
             */
 
             return results;
+        }
+
+        public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
+        {
+            Logger.LogInformation("Searching for selected Project Reports in database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await this.GetProjectReport(reportId);
+            }
+
+            Logger.LogInformation("Deleting selected Project Reports from database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+
+            Logger.LogInformation("Successfully deleted Project Reports from database.");
+            return true;
         }
     }
 }

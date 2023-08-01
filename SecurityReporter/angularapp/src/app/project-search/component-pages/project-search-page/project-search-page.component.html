@@ -1,9 +1,8 @@
 <div class="container-fluid bg-light">
   <div class="row">
-    <!-- Sidebar -->
-    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh; overflow-y: auto">
+     <!--Sidebar--> 
+    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" *ngIf="showSidebar" style="height: 100vh; overflow-y: auto">
       <div class="mt-2 pt-2">
-
         <div class="search-container">
           <h1 class="center pb-2 mt-3">Search items</h1>
           <mat-form-field class="search-field">
@@ -45,19 +44,19 @@
         <div class="container  mt-5 ml-1 col-12">
           <div>
 
-            <!-- Upload -->
+             <!-- Upload -->
             <app-add-project-report></app-add-project-report>
           </div>
         </div>
 
       </div>
     </div>
-    <!-- Project Report Findings -->
-    <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
+     <!-- Project Report Findings -->
+    <div [class]="showSidebar ? 'col offset-sm-6 offset-lg-4 offset-xl-3' : 'col'">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
           <div class="container-fluid mt-3">
-            <h4>Found findings: {{totalRecords}}</h4>
+            <h4 *ngIf="totalRecords">Found findings: {{totalRecords}}</h4>
           </div>
           <div *ngFor="let project of groupedFindings; let key = index">
             <div class="card mt-3 mb-3">
@@ -125,9 +124,6 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="reportsScrollableBox.scrollTop !== 0">
-              <mat-icon style="position: absolute; right: 3%; bottom: 3%; cursor: pointer; border: solid 2px #ec6602; border-radius: 50%; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; background-color: white; color: #ec6602;" (click)="resetScrollPosition()">arrow_upward</mat-icon>
-            </div>
             <div class="text-center pagination-centered">
               <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
             </div>
@@ -136,4 +132,11 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="group-icons">
+  <mat-icon class="icon" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
+  <mat-icon class="icon" *ngIf="totalRecords" (click)="resetView()">delete_outline</mat-icon>
+  <mat-icon class="icon" (click)="toggleSidebar()">menu</mat-icon>
+  <!--<mat-icon class="icon" *ngIf="selectedProjects.length >= 1" (click)="toggleSidebar()">menu</mat-icon>-->
 </div>
