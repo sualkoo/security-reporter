@@ -74,11 +74,109 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     });
   }
 
+  mapJsonToProjectInterface(jsonData: any): ProjectInterface {
+  return {
+    id: jsonData.id,
+    ProjectName: jsonData.projectName,
+    StartDate: jsonData.startDate ? jsonData.startDate : new Date('0001-01-01'),
+    EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
+    ProjectStatus: jsonData.projectSatus,
+    ProjectScope: jsonData.projectScope,
+    ProjectQuestionare: jsonData.projectQuestionare,
+    PentestAspects: jsonData.pentestAspects,
+    PentestDuration: jsonData.pentestDuration,
+    ReportDueDate: jsonData.reportDueDate ? jsonData.reportDueDate : new Date('0001-01-01'),
+    IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
+    TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
+    RequestCreated: jsonData.requestCreated,
+    Comments: jsonData.comments,
+    CatsNumber: jsonData.castNumber,
+    ProjectOfferStatus: jsonData.projectOfferStatus,
+    WorkingTeam: jsonData.workingTeam,
+    ProjectLead: jsonData.projectLead,
+    ReportStatus: jsonData.reportStatus,
+    ContactForClients: jsonData.contactForClients
+  };
+}
 
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
-    this.loadedProject = projectData;
-    console.log(this.loadedProject);
+    this.projectClass = this.mapJsonToProjectInterface(projectData);
+    console.log(this.projectClass);
+  }
+
+  getStatusString(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Requested';
+      case 2:
+        return 'Planned';
+      case 3:
+        return 'In progress';
+      case 4:
+        return 'Finished';
+      case 5:
+        return 'Cancelled';
+      case 6:
+        return 'On hold';
+      default:
+        return 'None';
+    }
+  }
+
+  getQuestionareString(questionare: number): string {
+    switch (questionare) {
+      case 1:
+        return 'TBS';
+      case 2:
+        return 'Sent';
+      case 3:
+        return 'Received';
+      default:
+        return 'None';
+    }
+  }
+
+  getScopeString(scope: number): string {
+    switch (scope) {
+      case 1:
+        return 'TBS';
+      case 2:
+        return 'Sent';
+      case 3:
+        return 'Confirmed';
+      case 4:
+        return 'Signed';
+      default:
+        return 'None';
+    }
+  }
+
+  getOfferStatusString(status: number): string {
+    switch (status) {
+      case 1:
+        return 'Waiting for Offer creation';
+      case 2:
+        return 'Offer Draft sent for Review';
+      case 3:
+        return 'Offer sent for signatue';
+      case 4:
+        return 'Offer signed - Ready For Invoicing';
+      case 5:
+        return 'Invoiced';
+      case 6:
+        return 'Individual Agreement';
+      case 7:
+        return 'Retest - free of charge';
+      case 8:
+        return 'Other';
+      case 9:
+        return 'Cancelled';
+      case 10:
+        return 'Prepared';
+      default:
+        return 'None';
+    }
   }
 
   submit() {

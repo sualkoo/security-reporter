@@ -3,13 +3,13 @@
         <div class="header">
             <h1>Project editing</h1>
             <h3 style="color: #009999; font-weight: 400">
-                Project ID: {{ this.loadedProject.id }}
+                Project ID: {{ this.projectClass.id }}
             </h3>
         </div>
         <div style="margin-bottom: 20px">
             <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PN')"
                                  [title]="'Project name'"
-                                 [inputValue]="this.loadedProject.projectName"
+                                 [inputValue]="this.projectClass.ProjectName"
                                  class="project-name-input">
             </app-input-component>
         </div>
@@ -24,23 +24,26 @@
                         <datepicker-component #endDate
                                               [minDate]="this.projectClass.StartDate"
                                               [title]="'End Date'"
-                                              (valueChanged)="onChildDateValueChanged($event, 'END')"></datepicker-component>
+                                              (valueChanged)="onChildDateValueChanged($event, 'END')" ></datepicker-component>
                     </div>
 
                     <app-select-component (valueChanged)="onChildInputValueChanged($event, 'PST')"
                                           [option]="ProjectStatus"
-                                          [title]="'Project status'"></app-select-component>
+                                          [title]="'Project status'"
+                                          [inputValue]="this.projectClass.ProjectStatus ? getStatusString(this.projectClass.ProjectStatus) : 'None'"></app-select-component>
 
                     <app-select-component (valueChanged)="onChildInputValueChanged($event, 'PSC')"
                                                [option]="ProjectScope"
-                                               [title]="'Project scope'"></app-select-component>
+                                               [title]="'Project scope'"
+                                               [inputValue]="this.projectClass.ProjectScope ? getScopeString(this.projectClass.ProjectScope) : 'None'"></app-select-component>
 
                     <app-select-component (valueChanged)="onChildInputValueChanged($event, 'QUE')"
                                           [option]="Questionare"
-                                          [title]="'Questionare'"></app-select-component>
+                                          [title]="'Questionare'"
+                                          [inputValue]="this.projectClass.ProjectQuestionare ? getQuestionareString(this.projectClass.ProjectQuestionare) : 'None'"></app-select-component>
                     <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PA')"
                                          [title]="'Pentest aspect'"
-                                         [inputValue]="this.loadedProject.pentestAspects"></app-input-component>
+                                         [inputValue]="this.projectClass.PentestAspects"></app-input-component>
                     <div>
                         <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)"></app-radio-button-component>
                     </div>
@@ -69,12 +72,12 @@
                     </datepicker-component>
                     <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
                                          [title]="'Cats number'"
-                                         [inputValue]="this.loadedProject.catsNumber"></app-input-component>
+                                         [inputValue]="this.projectClass.CatsNumber"></app-input-component>
                   </div>
 
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PL')"
                                        [title]="'Project lead'"
-                                       [inputValue]="this.loadedProject.catsNumber"></app-input-component>
+                                       [inputValue]="this.projectClass.ProjectLead"></app-input-component>
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'WT')"
                                        [title]="'Working team'"
                                        [inputValue]="wtField"></app-input-component>
@@ -97,10 +100,11 @@
                   </mat-list>
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'RS')"
                                        [title]="'Report status'"
-                                       [inputValue]="this.loadedProject.reportStatus"></app-input-component>
+                                       [inputValue]="this.projectClass.ReportStatus"></app-input-component>
                   <app-select-component (valueChanged)="onChildInputValueChanged($event, 'OS')"
                                         [option]="OfferStatus"
-                                        [title]="'Offer Status'"></app-select-component>
+                                        [title]="'Offer Status'"
+                                        [inputValue]="this.projectClass.ProjectOfferStatus ? getOfferStatusString(this.projectClass.ProjectOfferStatus) : 'None'"></app-select-component>
                   <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CFC')"
                                        [title]="'Contact for client'"
                                        [inputValue]="cfcField"></app-input-component>

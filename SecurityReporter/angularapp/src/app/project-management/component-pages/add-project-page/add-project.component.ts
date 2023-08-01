@@ -166,6 +166,7 @@ export class AddProjectComponent {
       case 'OS':
         // @ts-ignore
         this.projectClass.ProjectOfferStatus = projectOfferStatusIndex[value];
+        console.log(this.projectClass.ProjectOfferStatus);
         break;
       case 'PST':
         // @ts-ignore
