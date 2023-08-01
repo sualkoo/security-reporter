@@ -129,7 +129,7 @@
                   <div class="comment-container">
                     <mat-list role="list">
                       <mat-list-item *ngFor="let item of projectClass.Comments">
-                        {{ item.text }}
+                          <div [matTooltip]="item.text">{{ item.text }}</div>
                         <button mat-icon-button
                                 (click)="deleteItem(item.text, 'COM')"
                                 matListItemMeta>

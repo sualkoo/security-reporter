@@ -19,6 +19,7 @@ import { UpdateProjectService } from '../../services/update-project.service';
 import { AddProjectService } from '../../../project-management/services/add-project.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../project-management/services/alert.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -41,6 +42,7 @@ import { AlertService } from '../../../project-management/services/alert.service
     NgIf,
     MatListModule,
     MatIconModule,
+    MatTooltipModule
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
