@@ -56,7 +56,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   paginator!: MatPaginator;
   filters: string = '';
 
-
   length: number | undefined;
 
   constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog) { }
@@ -227,7 +226,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
       case 1:
@@ -268,7 +266,6 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.router.navigate(['/edit-project/', projectId]);
     }
   }
-
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeletePopupComponentComponent, {
