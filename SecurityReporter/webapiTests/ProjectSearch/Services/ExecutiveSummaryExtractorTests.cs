@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.IO.Compression;
-
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Tests
 {

@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using webapi.ProjectSearch.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using FluentAssertions;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Tests
 {

@@ -1,8 +1,10 @@
-﻿using System.Globalization;
+﻿using latexparse_csharp;
+using System.Globalization;
 using System.IO.Compression;
+using System.Xml;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class DocumentInformationExtractor
     {
@@ -26,13 +28,14 @@ namespace webapi.ProjectSearch.Services
                 using (StreamReader reader = new StreamReader(documentEntry.Open()))
                 {
                     string line;
-                    char[] delimiters = { '{', '}'};
+                    char[] delimiters = { '{', '}' };
                     while ((line = reader.ReadLine()) != null)
                     {
                         if (!string.IsNullOrEmpty(line))
                         {
+
                             string trimmedLine = line.Trim();
-                            if(trimmedLine[0] == '\\')
+                            if (trimmedLine[0] == '\\')
                             {
                                 string[] inBracketContents = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                                 if (inBracketContents[0] == "\\ReportVersionEntry" && inBracketContents.Length >= 5)
@@ -57,7 +60,7 @@ namespace webapi.ProjectSearch.Services
             List<string> contents = null;
             string delimiter = "\\xspace";
             string[] cutString = extractedLine.Split(delimiter);
-            if(cutString.Length > 0) 
+            if (cutString.Length > 0)
             {
                 contents = new List<string>();
                 string[] actualData = cutString[0].Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -93,7 +96,7 @@ namespace webapi.ProjectSearch.Services
 
         private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
         {
-            if(data != null && data.Count > 0)
+            if (data != null && data.Count > 0)
             {
                 switch (command)
                 {
@@ -131,7 +134,8 @@ namespace webapi.ProjectSearch.Services
                         try
                         {
                             newDocumentInfo.ReportDate = DateTime.ParseExact(data[0] + " " + data[1], "MMMM d yyyy", CultureInfo.InvariantCulture);
-                        } catch (FormatException ex)
+                        }
+                        catch (FormatException ex)
                         {
                             Console.WriteLine("Incorrect format of ReportDate, the correct format is MMMM d yyyy");
                         }

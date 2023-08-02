@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.IO.Compression;
 using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Tests
 {

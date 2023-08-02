@@ -1,6 +1,6 @@
 ﻿using webapi.ProjectSearch.Models;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor
 {
     public interface IProjectDataParser
     {

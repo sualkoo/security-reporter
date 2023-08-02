@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class FindingsExtractor
     {
@@ -15,14 +15,16 @@ namespace webapi.ProjectSearch.Services
             char[] delimiters = { '{', '}' };
             using (StreamReader reader = new StreamReader(currentEntry.Open()))
             {
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = reader.ReadLine()) != null)
+                {
                     if (!string.IsNullOrEmpty(line) && line.Trim().Length > 0 && line.Trim()[0] == '\\')
                     {
                         string[] splitString = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                         if (splitString.Length == 3)
                         {
                             assignNewData(splitString[1], splitString[2], newFinding);
-                        } else if (splitString.Length == 2)
+                        }
+                        else if (splitString.Length == 2)
                         {
                             if (splitString[0] == "\\subsection*")
                             {
@@ -45,7 +47,7 @@ namespace webapi.ProjectSearch.Services
 
         private void assignNewData(string command, string data, Finding newFinding)
         {
-            switch(command)
+            switch (command)
             {
                 case "\\FindingAuthor":
                     newFinding.FindingAuthor = data;
@@ -72,10 +74,10 @@ namespace webapi.ProjectSearch.Services
                     newFinding.CVSSVector = data;
                     break;
                 case "\\CWE":
-                    newFinding.CWE =  int.Parse(data);
+                    newFinding.CWE = int.Parse(data);
                     break;
                 case "\\Criticality":
-                    switch(data)
+                    switch (data)
                     {
                         case "High":
                             newFinding.Criticality = Enums.Criticality.High;
@@ -168,9 +170,9 @@ namespace webapi.ProjectSearch.Services
         private List<string> extractLocation(string data)
         {
             List<string> result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-            for(int i = 0; i < result.Count; i++)
+            for (int i = 0; i < result.Count; i++)
             {
-                result[i] = result[i].Trim();  
+                result[i] = result[i].Trim();
             }
 
             return result;
@@ -181,29 +183,30 @@ namespace webapi.ProjectSearch.Services
             string line;
             bool reading = true;
             string result = "";
-            while((line = reader.ReadLine()) != null && reading)
+            while ((line = reader.ReadLine()) != null && reading)
             {
-                
+
                 string trimmedLine = line.Trim();
-                reading = (trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin") ? false : true;
-                reading = (trimmedLine.Length >= 11 && trimmedLine.Substring(0, 11) == "\\subsection") ? false : true;
-                reading = (trimmedLine.Length > 0 && trimmedLine[0] == '%') ? false : true;
+                reading = trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin" ? false : true;
+                reading = trimmedLine.Length >= 11 && trimmedLine.Substring(0, 11) == "\\subsection" ? false : true;
+                reading = trimmedLine.Length > 0 && trimmedLine[0] == '%' ? false : true;
 
                 if (reading)
                 {
-                    if(!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && 
-                        (trimmedLine[0] != '\\' && trimmedLine[0] != '%'))
+                    if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 &&
+                        trimmedLine[0] != '\\' && trimmedLine[0] != '%')
                     {
                         result += trimmedLine;
                     }
-                } else
+                }
+                else
                 {
                     assignNewData(command, result, newFinding);
-                    if(trimmedLine.Length >= 12 && trimmedLine.Substring(0,11) == "\\subsection")
+                    if (trimmedLine.Length >= 12 && trimmedLine.Substring(0, 11) == "\\subsection")
                     {
                         char[] delimiters = { '{', '}' };
                         string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                        if(splitString.Length == 2)
+                        if (splitString.Length == 2)
                         {
                             if (splitString[1] == "References")
                             {
@@ -225,15 +228,15 @@ namespace webapi.ProjectSearch.Services
             List<string> resultList = new List<string>();
             string currentItem = "";
             bool firstItem = true;
-            
-            while((line = reader.ReadLine()) != null)
+
+            while ((line = reader.ReadLine()) != null)
             {
                 string trimmedLine = line.Trim();
-                if(trimmedLine.Length >= 13)
+                if (trimmedLine.Length >= 13)
                 {
-                    if(trimmedLine.Substring(0, 13) == "\\end{itemize}")
+                    if (trimmedLine.Substring(0, 13) == "\\end{itemize}")
                     {
-                        if(currentItem != "")
+                        if (currentItem != "")
                         {
                             resultList.Add(currentItem.Trim());
                         }
@@ -241,9 +244,9 @@ namespace webapi.ProjectSearch.Services
                     }
                 }
 
-                if(trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
+                if (trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
                 {
-                    if(!firstItem)
+                    if (!firstItem)
                     {
                         resultList.Add(currentItem.Trim());
                         currentItem = "";
@@ -251,8 +254,9 @@ namespace webapi.ProjectSearch.Services
 
                     currentItem += trimmedLine.Substring(5);
                     firstItem = false;
-                } 
-                else if(!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem) {
+                }
+                else if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem)
+                {
                     currentItem += trimmedLine;
                 }
             }

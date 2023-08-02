@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class ScopeAndProceduresExtractor
     {
@@ -16,25 +16,26 @@ namespace webapi.ProjectSearch.Services
         public ScopeAndProcedures ExtractScopeAndProcedures()
         {
             string line;
-            if(currentEntry == null)
+            if (currentEntry == null)
             {
                 throw new ArgumentNullException();
-            } else
+            }
+            else
             {
-                using(StreamReader reader = new StreamReader(currentEntry.Open()))
+                using (StreamReader reader = new StreamReader(currentEntry.Open()))
                 {
                     char[] delimiters = { '{', '}' };
-                    while((line = reader.ReadLine()) != null)
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if(!string.IsNullOrEmpty(line) && line.Length > 0) 
+                        if (!string.IsNullOrEmpty(line) && line.Length > 0)
                         {
                             string[] splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            if(splitLine.Length >= 2) 
+                            if (splitLine.Length >= 2)
                             {
                                 if (splitLine[1] == "\\InScope")
                                 {
                                     extractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
-                                } 
+                                }
                                 else if (splitLine[1] == "\\OutOfScope")
                                 {
                                     extractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
@@ -66,24 +67,27 @@ namespace webapi.ProjectSearch.Services
             string[] delimiters = { "&", "\\\\" };
             bool read = true;
 
-            while((line = reader.ReadLine()) != null && read) {
-                if(!string.IsNullOrEmpty(line) && line.Length > 0)
+            while ((line = reader.ReadLine()) != null && read)
+            {
+                if (!string.IsNullOrEmpty(line) && line.Length > 0)
                 {
                     string trimmedLine = line.Trim();
-                     if (trimmedLine[0] == '}')
-                     {
-                        if(newScopeProcedureList.Count() != 0)
+                    if (trimmedLine[0] == '}')
+                    {
+                        if (newScopeProcedureList.Count() != 0)
                         {
-                            if(inScope && !worstCase)
+                            if (inScope && !worstCase)
                             {
                                 newScopeAndProcedures.InScope = newScopeProcedureList;
-                            } else if(!inScope && !worstCase) 
+                            }
+                            else if (!inScope && !worstCase)
                             {
                                 newScopeAndProcedures.OutOfScope = newScopeProcedureList;
-                            } else if(!inScope && worstCase)
+                            }
+                            else if (!inScope && worstCase)
                             {
                                 List<string> newWorstCaseList = new List<string>();
-                                foreach(ScopeProcedure procedure in newScopeProcedureList)
+                                foreach (ScopeProcedure procedure in newScopeProcedureList)
                                 {
                                     newWorstCaseList.Add(procedure.Detail);
                                 }
@@ -92,7 +96,8 @@ namespace webapi.ProjectSearch.Services
                             }
                         }
                         read = false;
-                    } else if (trimmedLine[0] != '\\')
+                    }
+                    else if (trimmedLine[0] != '\\')
                     {
                         string[] splitLine = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                         if (splitLine.Length == 2)
@@ -111,30 +116,30 @@ namespace webapi.ProjectSearch.Services
         {
             string line;
             bool read = true;
-            string[] delimiters = { "&", "\\Huge", "\\\\"};
+            string[] delimiters = { "&", "\\Huge", "\\\\" };
             WorstCaseScenarioReport newReport = new WorstCaseScenarioReport();
 
             while ((line = reader.ReadLine()) != null && read)
             {
-                if(!string.IsNullOrEmpty(line) && line.Length > 0) 
-                { 
+                if (!string.IsNullOrEmpty(line) && line.Length > 0)
+                {
                     string trimmedLine = line.Trim();
-                    if(trimmedLine.Length >= 15) 
+                    if (trimmedLine.Length >= 15)
                     {
-                        read = (trimmedLine == "\\end{xltabular}") ? false : true;
+                        read = trimmedLine == "\\end{xltabular}" ? false : true;
                     }
 
                     string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                     splitString = splitString.Where(item => !string.IsNullOrWhiteSpace(item)).ToArray();
-                    
-                    if(splitString.Length == 6 && splitString[0][0] != '\\') 
+
+                    if (splitString.Length == 6 && splitString[0][0] != '\\')
                     {
                         List<bool> newBoolList = new List<bool>();
 
                         for (int i = 0; i < splitString.Length; i++)
                         {
 
-                            switch(i)
+                            switch (i)
                             {
                                 case 1:
                                     newReport.FindingDescription = splitString[i].Trim();
@@ -144,10 +149,11 @@ namespace webapi.ProjectSearch.Services
                                 case 4:
                                 case 5:
                                     string trimSplitString = splitString[i].Trim();
-                                    if(trimSplitString == "$\\cdotp$")
+                                    if (trimSplitString == "$\\cdotp$")
                                     {
                                         newBoolList.Add(true);
-                                    } else if(trimSplitString == "\\phantom{}")
+                                    }
+                                    else if (trimSplitString == "\\phantom{}")
                                     {
                                         newBoolList.Add(false);
                                     }
@@ -167,29 +173,31 @@ namespace webapi.ProjectSearch.Services
             bool read = true;
             bool readItem = false;
             string[] delimiters = { "\\item", "," };
-            List<string > newEnvironment = new List<string>();
-            
-            while((line = reader.ReadLine()) != null && read) 
-            { 
-                if(!string.IsNullOrEmpty(line) && line.Length > 0)
+            List<string> newEnvironment = new List<string>();
+
+            while ((line = reader.ReadLine()) != null && read)
+            {
+                if (!string.IsNullOrEmpty(line) && line.Length > 0)
                 {
                     string trimmedLine = line.Trim();
-                    if(trimmedLine.Length >= 15 && !readItem) {
-                        readItem = (trimmedLine == "\\begin{itemize}") ? true : false;
-                    } else if(trimmedLine.Length >= 12 && readItem)
+                    if (trimmedLine.Length >= 15 && !readItem)
                     {
-                        if(trimmedLine == "\\end{itemize}")
+                        readItem = trimmedLine == "\\begin{itemize}" ? true : false;
+                    }
+                    else if (trimmedLine.Length >= 12 && readItem)
+                    {
+                        if (trimmedLine == "\\end{itemize}")
                         {
                             readItem = false;
                             read = false;
                         }
-                    } 
-                    if(readItem)
+                    }
+                    if (readItem)
                     {
-                        if(trimmedLine.Substring(0,5) == "\\item")
+                        if (trimmedLine.Substring(0, 5) == "\\item")
                         {
                             string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            if(splitString.Length > 0)
+                            if (splitString.Length > 0)
                             {
                                 newEnvironment.Add(splitString[0].Trim());
                             }
@@ -197,7 +205,7 @@ namespace webapi.ProjectSearch.Services
                     }
                 }
             }
-            if(newEnvironment.Count > 0)
+            if (newEnvironment.Count > 0)
             {
                 newScopeAndProcedures.Environment = newEnvironment;
             }
