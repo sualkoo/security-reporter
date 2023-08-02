@@ -14,7 +14,7 @@ namespace webapi.ProjectSearch.Controllers
         private IProjectReportService ProjectReportService { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportController(ILogger<ProjectReportController> logger, IProjectReportService projectReportService)
+        public ProjectReportController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService) :base(baseLogger)
         {
             ProjectReportService = projectReportService;
             Logger = logger;
