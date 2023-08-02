@@ -2,10 +2,10 @@
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class ScopeAndProceduresExtractor
+    public class DBScopeAndProceduresExtractor
     {
         private ScopeAndProcedures scopeAndProcedures = null;
-        public ScopeAndProceduresExtractor(ScopeAndProcedures scopeAndProcedures)
+        public DBScopeAndProceduresExtractor(ScopeAndProcedures scopeAndProcedures)
         {
             this.scopeAndProcedures = scopeAndProcedures;
         }

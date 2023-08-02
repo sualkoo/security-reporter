@@ -2,10 +2,10 @@
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class ExecutiveSummaryExtractor
+    public class DBExecutiveSummaryExtractor
     {
         private string executiveSummary = "";
-        public ExecutiveSummaryExtractor(string executiveSummary)
+        public DBExecutiveSummaryExtractor(string executiveSummary)
         {
             this.executiveSummary = executiveSummary;
         }

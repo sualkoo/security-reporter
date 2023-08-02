@@ -4,10 +4,10 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DocumentInformationExtractor
+    public class DBDocumentInformationExtractor
     {
         private DocumentInformation documentInformation = null;
-        public DocumentInformationExtractor(DocumentInformation documentInformation) 
+        public DBDocumentInformationExtractor(DocumentInformation documentInformation) 
         {
             this.documentInformation = documentInformation;
         }

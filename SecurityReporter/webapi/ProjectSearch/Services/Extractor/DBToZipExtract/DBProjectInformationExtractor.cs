@@ -2,10 +2,10 @@
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class ProjectInformationExtractor
+    public class DBProjectInformationExtractor
     {
         private ProjectInformation projectInformation = null;
-        public ProjectInformationExtractor(ProjectInformation projectInformation)
+        public DBProjectInformationExtractor(ProjectInformation projectInformation)
         {
             this.projectInformation = projectInformation;
         }

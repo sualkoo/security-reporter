@@ -5,7 +5,10 @@ using System.IO.Compression;
 using System.IO.Pipes;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
+using webapi.ProjectSearch.Services.Extractor;
+using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
+
 
 namespace webapi.ProjectSearch.Services
 {

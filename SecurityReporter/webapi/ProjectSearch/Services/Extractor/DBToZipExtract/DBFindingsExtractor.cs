@@ -2,10 +2,10 @@
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class FindingsExtractor
+    public class DBFindingsExtractor
     {
         private Finding finding = null;
-        public FindingsExtractor(Finding finding)
+        public DBFindingsExtractor(Finding finding)
         {
             this.finding = finding;
         }

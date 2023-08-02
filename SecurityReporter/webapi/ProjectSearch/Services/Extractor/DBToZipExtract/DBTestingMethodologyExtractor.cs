@@ -2,10 +2,10 @@
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class TestingMethodologyExtractor
+    public class DBTestingMethodologyExtractor
     {
         private TestingMethodology testingMethodology = null;
-        public TestingMethodologyExtractor(TestingMethodology testingMethodology)
+        public DBTestingMethodologyExtractor(TestingMethodology testingMethodology)
         {
             this.testingMethodology = testingMethodology;
         }
