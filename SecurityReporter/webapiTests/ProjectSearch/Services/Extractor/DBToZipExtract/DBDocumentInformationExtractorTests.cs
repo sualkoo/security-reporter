@@ -1,10 +1,6 @@
-﻿using NUnit.Framework;
-using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FluentAssertions;
+using NUnit.Framework;
 using System.Text;
-using System.Threading.Tasks;
 using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
@@ -15,26 +11,21 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
         [Test()]
         public void extractDocumentInformationTest()
         {
-            // General info
+            // Arrange
             DBDocumentInformationExtractor extractor = new DBDocumentInformationExtractor();
+
+            // Input data
             DocumentInformation documentInfo = new DocumentInformation();
             documentInfo.ProjectReportName = "Dummy Project 1";
             documentInfo.AssetType = "Mobile Application";
             documentInfo.MainAuthor = "Lukas Nad";
-
-
-            // Authors
-
-            // Reviewers
+            documentInfo.Authors = new List<string>();
+            documentInfo.Authors.Add("Lukas Nad");
             documentInfo.Reviewiers = new List<string>();
             documentInfo.Reviewiers.Add("Katarina Amrichova");
-
-            // Approvers
             documentInfo.Approvers = new List<string>();
             documentInfo.Approvers.Add("Filip Mrocek");
 
-
-            // Report Version Entries
             var reportVersionEntry1 = new ReportVersionEntry();
             var reportVersionEntry2 = new ReportVersionEntry();
 
@@ -48,17 +39,26 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             reportVersionEntry2.WholeName = "Michal Olencin";
             reportVersionEntry2.ReportStatus = "Added Findings";
 
-
-
-
             documentInfo.ReportDocumentHistory = new List<ReportVersionEntry>
             {
                 reportVersionEntry1,
                 reportVersionEntry2
             };
 
-            extractor.extractDocumentInformation(documentInfo);
-            Assert.Fail();
+            // Act
+            var result = extractor.extractDocumentInformation(documentInfo);
+            string resultDecoded = Encoding.UTF8.GetString(result);
+
+
+            // Assert
+            Assert.IsNotNull(result);
+            StringAssert.Contains("\\newcommand{\\ReportProjectName}{Dummy Project 1\\xspace}", resultDecoded);
+            StringAssert.Contains("\\newcommand{\\ReportProjectType}{Penetration Test Report\\xspace}", resultDecoded);
+            StringAssert.Contains("\\newcommand{\\AssetType}{Mobile Application\\xspace}", resultDecoded);
+            StringAssert.Contains("\\newcommand{\\ReportDocumentReviewer}{Katarina Amrichova}", resultDecoded);
+            StringAssert.Contains("\\newcommand{\\ReportDocumentApprover}{Filip Mrocek}", resultDecoded);
+            StringAssert.Contains("\t\\ReportVersionEntry{2023-08-02}{0.1}{Lukas Nad}{Initial Draft}", resultDecoded);
+            StringAssert.Contains("\t\\ReportVersionEntry{2023-08-02}{0.2}{Michal Olencin}{Added Findings}", resultDecoded);
         }
     }
 }
