@@ -32,6 +32,7 @@ import { ExpansionPanelComponent } from './project-listing/components/expansion-
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
@@ -50,6 +51,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,

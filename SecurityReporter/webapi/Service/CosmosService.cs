@@ -277,6 +277,17 @@ namespace webapi.Service
 
         public async Task<bool> UpdateProject(ProjectData data)
         {
+            if (data.Comments != null)
+            {
+                foreach (var comment in data.Comments)
+                {
+                    if (string.IsNullOrEmpty(comment.Text))
+                    {
+                        comment.CreatedAt = DateTime.Now;
+                    }
+                }
+            }
+
             try
             {
                 await Container.ReplaceItemAsync(data, data.id.ToString(), new PartitionKey(data.id.ToString()));
