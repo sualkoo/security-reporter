@@ -34,6 +34,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   selectedItems: any[] = [];
   noItemsFound = false;
 
+  userRole: string = 'admin'; // there will be some service for getting userRole
+
   displayedColumns: string[] = [
     'select',
     'projectName',

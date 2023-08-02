@@ -7,7 +7,7 @@ export class Roles implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const allowedRoles: string[] = route.data.allowedRoles;
-    const userRole = 'admin';
+    const userRole = 'admin'; // there will be some service for getting userRole
 
     if (allowedRoles.includes(userRole)) {
       return true;
