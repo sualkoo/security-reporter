@@ -51,14 +51,12 @@ import { ActivatedRoute } from '@angular/router';
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
-
-  loadedProject: any;
-
   constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
     router: Router, alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
     private formBuilder: FormBuilder) {
+
     super(addProjectService, router, alertService);
   }
 
