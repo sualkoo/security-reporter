@@ -11,8 +11,8 @@ export interface ProjectInterface {
   PentestAspects?: string;
   PentestDuration?: number;
   ReportDueDate: Date;
-  IKO?: Date;
-  TKO?: Date;
+  IKO: Date;
+  TKO: Date;
   RequestCreated?: string;
   Comments: CommentInterface[];
   CatsNumber?: string;
