@@ -223,7 +223,9 @@ export class AddProjectComponent {
     } else if (id === 'END') {
       this.projectClass.EndDate = value;
       const maxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
-      if (this.projectClass.EndDate < this.projectClass.StartDate || this.projectClass.EndDate > maxDate) {
+      const IKOmaxDate = this.isIKOSet() ? this.projectClass.IKO : this.defaultMaxDate;
+      const TKOmaxDate = this.isTKOSet() ? this.projectClass.TKO : this.defaultMaxDate;
+      if (this.projectClass.EndDate < this.projectClass.StartDate || this.projectClass.EndDate > maxDate || this.projectClass.EndDate > IKOmaxDate! || this.projectClass.EndDate > TKOmaxDate!) {
         this.isInvalidEndDate = true;
       } else {
         this.isInvalidEndDate = false;
@@ -395,5 +397,13 @@ export class AddProjectComponent {
 
   isRepDateSet(): boolean {
     return this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isIKOSet(): boolean {
+    return this.projectClass.IKO!.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isTKOSet(): boolean {
+    return this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
   }
 }
