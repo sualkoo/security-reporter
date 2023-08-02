@@ -31,8 +31,8 @@ export class DatepickerComponent {
   @ViewChild('picker') picker: any;
   @Input() title: string = '';
   @Input() minDate: Date;
-  inputValue: Date = new Date('0001-01-01');
-
+  @Input() inputValue = new Date('0001-01-01');
+  
   maxDate: Date;
 
   constructor() {

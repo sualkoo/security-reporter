@@ -45,7 +45,7 @@ export class InputComponentComponent {
   }
 
   @Input() title: string = '';
-  @Input() inputValue: string = '';
+  @Input() inputValue: string | undefined = '';
   @Output() valueChanged = new EventEmitter<string>();
 
   onInputChange() {
