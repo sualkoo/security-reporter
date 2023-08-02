@@ -26,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
 import { Router } from '@angular/router';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-project-management',
@@ -65,6 +66,11 @@ export class AddProjectComponent {
   isCatsNumberWhitespace: boolean = false;
   isCommentWhitespace: boolean = false;
   isCFCInvalidEmail: boolean = false;
+  isProjectNameInvalidLength: boolean = false;
+  isProjectNameWhitespace: boolean = false;
+  isProjectNameEmpty: boolean = true;
+  isPentestValueInvalid: boolean = false;
+
 
 
   constructor(private addProjectService: AddProjectService, private router: Router) {}
@@ -145,6 +151,7 @@ export class AddProjectComponent {
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
+    this.isPentestValueInvalid = value <= 2 || value > 10;
   }
 
   onChildInputValueChanged(value: string, id: string) {
@@ -156,6 +163,9 @@ export class AddProjectComponent {
     switch (id) {
       case 'PN':
         this.projectClass.ProjectName = value;
+        this.isProjectNameInvalidLength = value.length < 3 || value.length > 50;
+        this.isProjectNameWhitespace = isWhitespace;
+        this.isProjectNameEmpty = !(value.length > 0);
         break;
       case 'PA':
         this.projectClass.PentestAspects = value;
@@ -172,8 +182,8 @@ export class AddProjectComponent {
       case 'CFC':
         this.cfcField = value;
         this.isCFCWhitespace = isWhitespace && value.length > 0;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern
-        this.isCFCInvalidEmail = !emailRegex.test(value) && value.length > 0; // Check if the email is invalid
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        this.isCFCInvalidEmail = !emailRegex.test(value) && value.length > 0; 
         break;
       case 'RS':
         this.projectClass.ReportStatus = value;
@@ -205,7 +215,6 @@ export class AddProjectComponent {
   onChildDateValueChanged(value: Date, id: string) {
     if (id === 'STR') {
       this.projectClass.StartDate = value;
-      // Check if the start date is after the end date
       if (this.isEndDateSet() && this.projectClass.StartDate > this.projectClass.EndDate) {
         this.isInvalidStartDate = true;
       } else {
@@ -213,15 +222,14 @@ export class AddProjectComponent {
       }
     } else if (id === 'END') {
       this.projectClass.EndDate = value;
-      // Check if the end date is before the start date
-      if (this.projectClass.EndDate < this.projectClass.StartDate) {
+      const maxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      if (this.projectClass.EndDate < this.projectClass.StartDate || this.projectClass.EndDate > maxDate) {
         this.isInvalidEndDate = true;
       } else {
         this.isInvalidEndDate = false;
       }
     } else if (id === 'REP') {
       this.projectClass.ReportDueDate = value;
-      // Check if Report Due Date is before the start date or end date
       const minDate = this.isEndDateSet() ? this.projectClass.EndDate : this.projectClass.StartDate;
       if (this.projectClass.ReportDueDate < minDate) {
         this.isInvalidReportDueDate = true;
@@ -230,16 +238,19 @@ export class AddProjectComponent {
       }
     } else if (id === 'IKO') {
       this.projectClass.IKO = value;
-      // Check if IKO is outside the range of Start Date and End Date
-      if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > this.projectClass.EndDate) {
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > endMaxDate || this.projectClass.IKO > repMaxDate) {
         this.isInvalidIKO = true;
       } else {
         this.isInvalidIKO = false;
       }
     } else {
       this.projectClass.TKO = value;
-      // Check if TKO is outside the range of Start Date and End Date
-      if (this.projectClass.TKO < this.projectClass.StartDate || this.projectClass.TKO > this.projectClass.EndDate) {
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+
+      if (this.projectClass.TKO < this.projectClass.StartDate || this.projectClass.TKO > endMaxDate || this.projectClass.TKO > repMaxDate) {
         this.isInvalidTKO = true;
       } else {
         this.isInvalidTKO = false;
@@ -339,40 +350,23 @@ export class AddProjectComponent {
       const isWhitespace = trimmedComment === '';
 
       if (!isWhitespace) {
-        // Set the comment if it's not just whitespace
         this.projectClass.Comments = [{
           text: commentText
         }];
       } else {
-        // If comment is empty or contains only whitespace, remove the comment
         this.isCommentWhitespace = isWhitespace && commentText.length > 0; 
       }
     }
   }
 
   validationFunction() {
-    // @ts-ignore
-    
-    // @ts-ignore
-    if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
-      this.errorValue = true;
-    }
-    if (
+    if (   
       // @ts-ignore
-      this.projectClass.StartDate <= this.projectClass.EndDate &&
-      // @ts-ignore
-      this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
-      // @ts-ignore
-      this.projectClass.ProjectName?.length > 3 &&
+      this.projectClass.ProjectName?.length > 2 &&
       // @ts-ignore
       this.projectClass.ProjectName?.length < 50
     ) {
-      if (
-        // @ts-ignore
-        this.projectClass.ProjectName[0].toUpperCase() ==
-        // @ts-ignore
-        this.projectClass.ProjectName[0]
-      ) {
+       {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
         return;
@@ -399,5 +393,7 @@ export class AddProjectComponent {
     return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
   }
 
-  
+  isRepDateSet(): boolean {
+    return this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+  }
 }

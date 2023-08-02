@@ -30,6 +30,7 @@
             <div class="date-container">
               <datepicker-component #endDate
                                     [minDate]="this.projectClass.StartDate"
+                                    [maxDate]="isRepDateSet() ? projectClass.ReportDueDate : defaultMaxDate"
                                     [title]="'End Date'"
                                     (valueChanged)="onChildDateValueChanged($event, 'END')">
               </datepicker-component>
@@ -58,12 +59,13 @@
 
         
           <div>
-            <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)"></app-radio-button-component>
+            <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)">                                        
+            </app-radio-button-component>
           </div>
           <div class="two-in-row">
             <div class="date-container">
               <datepicker-component [minDate]="this.projectClass.StartDate"
-                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
+                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
                                     [title]="'IKO'"
                                     (valueChanged)="onChildDateValueChanged($event, 'IKO')">
               </datepicker-component>
@@ -72,7 +74,7 @@
 
             <div class="date-container">
               <datepicker-component [minDate]="this.projectClass.StartDate"
-                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
+                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
                                     [title]="'TKO'"
                                     (valueChanged)="onChildDateValueChanged($event, 'TKO')">
               </datepicker-component>
@@ -118,6 +120,7 @@
           <button mat-flat-button
                   color="warn"
                   style="--mdc-filled-button-container-color: #009999"
+                  [disabled]="isWorkingTeamWhitespace"
                   (click)="onChildButtonValueChanged('WT')">
             Add
           </button>
@@ -153,6 +156,7 @@
           <button mat-flat-button
                   color="warn"
                   style="--mdc-filled-button-container-color: #009999"
+                  [disabled]="isCFCInvalidEmail"
                   (click)="onChildButtonValueChanged('CFC')">
             Add
           </button>
@@ -182,6 +186,9 @@
         mat-flat-button
         color="warn"
         class="create-button"
+        [disabled]="isProjectNameInvalidLength || isProjectNameWhitespace || isProjectNameEmpty || isInvalidStartDate || isInvalidEndDate || isPentestAspectWhitespace ||
+              isPentestValueInvalid || isInvalidIKO || isInvalidTKO || isInvalidReportDueDate ||
+              isCatsNumberWhitespace || isProjectLeadWhitespace || isWorkingTeamWhitespace || isReportStatusWhitespace || isCFCInvalidEmail || isCommentWhitespace"
         (click)="validationFunction()"
       >
         Create

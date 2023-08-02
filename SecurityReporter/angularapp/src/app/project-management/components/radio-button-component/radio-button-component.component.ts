@@ -15,7 +15,6 @@ export class RadioButtonComponentComponent {
   @Input() title: string = '';
   radioValue: number = 0;
   inputValue: number = 5;
-  selectedOption: number = 0;
 
   @Output() valueChanged = new EventEmitter<number>();
 

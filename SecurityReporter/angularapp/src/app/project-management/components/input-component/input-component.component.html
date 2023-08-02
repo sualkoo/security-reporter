@@ -1,15 +1,13 @@
 <div *ngIf="title == 'Project name'">
   <form [formGroup]="form">
     <mat-form-field class="project-name"
-                    style="width: 450px; .mat-mdc-text-field-wrapper { background-color: rgb(255, 255, 255); }">
+                    style="width: 500px; .mat-mdc-text-field-wrapper { background-color: rgb(255, 255, 255); }">
       <mat-label>{{ title }}</mat-label>
       <input formControlName="projectName"
              matInput
              placeholder=""
              [(ngModel)]="inputValue"
              (input)="onInputChange()" />
-
-      <!-- Add style to mat-error elements -->
       <mat-error *ngIf="form.get('projectName')?.errors?.['minlength']"
                  class="error-message">
         Project name must have from <strong>3 </strong> to <strong>50 characters</strong>
@@ -18,9 +16,8 @@
                  class="error-message">
         Project name is required
       </mat-error>
-      <mat-error *ngIf="form.get('projectName')?.hasError('pattern')"
-                 class="error-message">
-        Project should start with <strong>Capital letter</strong>
+      <mat-error *ngIf="form.get('projectName')?.errors?.['whitespace']" class="error-message">
+        Project name cannot contain only whitespace
       </mat-error>
     </mat-form-field>
   </form>
