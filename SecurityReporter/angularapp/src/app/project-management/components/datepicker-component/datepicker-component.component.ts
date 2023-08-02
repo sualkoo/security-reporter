@@ -31,10 +31,8 @@ export class DatepickerComponent {
   @ViewChild('picker') picker: any;
   @Input() title: string = '';
   @Input() minDate: Date;
+  @Input() inputValue = new Date('0001-01-01');
   @Input() maxDate: Date;
-
-  inputValue: Date = new Date('0001-01-01');
-
 
   constructor() {
     // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
