@@ -415,7 +415,7 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f.SubsectionDeatils) LIKE LOWER(@details) ");
+                querypath.Add(" LOWER(f.SubsectionDetails) LIKE LOWER(@details) ");
                 queryPage += "&" + nameof(details) + "=" + Uri.EscapeDataString(details);
             }
             if (!string.IsNullOrEmpty(impact))
