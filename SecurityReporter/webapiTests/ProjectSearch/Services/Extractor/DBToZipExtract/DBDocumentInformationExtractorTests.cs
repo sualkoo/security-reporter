@@ -24,9 +24,6 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
 
 
             // Authors
-            documentInfo.Authors = new List<string>();
-            documentInfo.Authors.Add("Lukas Nad");
-            documentInfo.Authors.Add("Michal Olencin");
 
             // Reviewers
             documentInfo.Reviewiers = new List<string>();

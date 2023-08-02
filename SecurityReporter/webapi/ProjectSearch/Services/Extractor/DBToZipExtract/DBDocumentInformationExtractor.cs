@@ -2,6 +2,7 @@
 using System.Security.Policy;
 using System.Text;
 using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
@@ -9,28 +10,23 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
     {
         public byte[] extractDocumentInformation(DocumentInformation documentInformation)
         {
-            if (documentInformation == null)
-            {
-                throw new ArgumentNullException(nameof(documentInformation), "Document information cannot be null.");
-            }
-
-            // Validate required properties before processing
-            if (string.IsNullOrEmpty(documentInformation.ProjectReportName))
-            {
-                throw new ArgumentNullException(nameof(documentInformation.ProjectReportName), "Project report name cannot be null or empty.");
-            }
+            // Initialize lists if null
             if (documentInformation.Authors == null)
             {
                 documentInformation.Authors = new List<string>();
             }
-            if (documentInformation.Approvers == null)
-            {
-                documentInformation.Approvers = new List<string>();
-            }
+
             if (documentInformation.Reviewiers == null)
             {
                 documentInformation.Reviewiers = new List<string>();
             }
+
+            if (documentInformation.Approvers == null)
+            {
+                documentInformation.Approvers = new List<string>();
+            }
+
+
 
             if (documentInformation.ReportDocumentHistory == null)
             {
@@ -42,11 +38,10 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
             List<string> reportVersionEntries = new List<string>();
             foreach (ReportVersionEntry rve in documentInformation.ReportDocumentHistory)
             {
-                // Validate ReportVersionEntry properties as needed...
-
                 string entryString = "\t\\ReportVersionEntry{" + rve.VersionDate.ToString("yyyy-MM-dd") + "}{" + rve.Version + "}{" + rve.WholeName + "}{" + rve.ReportStatus + "}";
                 reportVersionEntries.Add(entryString);
             }
+
             string documentInfoContent = 
 @"%----------------------------------------------------------------------------------------
 %	DOCUMENT TYPE
@@ -95,7 +90,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 
 % \newcommand{\ReportStatus}{RELEASE} 
 \newcommand{\ReportStatus}{DRAFT}";
-
+            Console.WriteLine(documentInfoContent);
             return Encoding.UTF8.GetBytes(documentInfoContent);
         }
     }
