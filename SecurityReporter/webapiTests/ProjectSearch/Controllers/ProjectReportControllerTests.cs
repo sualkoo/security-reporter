@@ -21,14 +21,16 @@ namespace webapi.ProjectReportControllers.Tests
     {
         private Mock<IProjectReportService> mockProjectReportService;
         private Mock<ILogger<ProjectReportController>> mockLogger;
+        private Mock<ILogger<ExceptionHandlingControllerBase>> mockLoggerBase;
         private ProjectReportController projectReportController;
 
         [SetUp]
         public void SetUp()
         {
             mockLogger = new Mock<ILogger<ProjectReportController>>();
+            mockLoggerBase = new Mock<ILogger<ExceptionHandlingControllerBase>>();
             mockProjectReportService = new Mock<IProjectReportService>();
-            projectReportController = new ProjectReportController(mockLogger.Object, mockProjectReportService.Object);
+            projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
         }
 
         [Test]
