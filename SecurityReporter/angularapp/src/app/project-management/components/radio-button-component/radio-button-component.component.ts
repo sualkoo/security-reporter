@@ -1,14 +1,16 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, NgModule } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { CommonModule, NgIf } from '@angular/common'
 import { FormsModule } from '@angular/forms';
 import { ProjectInterface } from '../../interfaces/project-interface';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-radio-button-component',
   templateUrl: './radio-button-component.component.html',
   styleUrls: ['./radio-button-component.component.css'],
   standalone: true,
-  imports: [MatRadioModule, FormsModule],
+  imports: [MatRadioModule, FormsModule, CommonModule, MatInputModule],
 })
 export class RadioButtonComponentComponent implements OnInit {
   @Input() title: string = '';

@@ -95,6 +95,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
     this.projectClass = this.mapJsonToProjectInterface(projectData);
+    this.isProjectNameEmpty = false;
     console.log(this.projectClass);
   }
 

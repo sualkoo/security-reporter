@@ -29,6 +29,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert.service';
 import { DatePipe } from '@angular/common';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-project-management',
@@ -54,6 +55,25 @@ import { DatePipe } from '@angular/common';
   ],
 })
 export class AddProjectComponent {
+  defaultMaxDate: Date = new Date('3000-12-31');
+  isInvalidStartDate = false;
+  isInvalidEndDate = false;
+  isInvalidReportDueDate = false;
+  isInvalidIKO = false;
+  isInvalidTKO = false;
+  isProjectLeadWhitespace: boolean = false;
+  isPentestAspectWhitespace: boolean = false;
+  isWorkingTeamWhitespace: boolean = false;
+  isReportStatusWhitespace: boolean = false;
+  isCFCWhitespace: boolean = false;
+  isCatsNumberWhitespace: boolean = false;
+  isCommentWhitespace: boolean = false;
+  isCFCInvalidEmail: boolean = false;
+  isProjectNameInvalidLength: boolean = false;
+  isProjectNameWhitespace: boolean = false;
+  isProjectNameEmpty: boolean = true;
+  isPentestValueInvalid: boolean = false;
+
   constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
@@ -133,35 +153,50 @@ export class AddProjectComponent {
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
+    this.isPentestValueInvalid = value <= 2 || value > 10;
   }
 
   onChildInputValueChanged(value: string, id: string) {
+
+    const trimmedValue = value.trim();
+    const isWhitespace = trimmedValue === '';
+
     this.value = value;
     switch (id) {
       case 'PN':
         this.projectClass.ProjectName = value;
+        this.isProjectNameInvalidLength = value.length < 3 || value.length > 50;
+        this.isProjectNameWhitespace = isWhitespace;
+        this.isProjectNameEmpty = !(value.length > 0);
         break;
       case 'PA':
         this.projectClass.PentestAspects = value;
+        this.isPentestAspectWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'PL':
         this.projectClass.ProjectLead = value;
+        this.isProjectLeadWhitespace = isWhitespace && value.length > 0;
         break;
       case 'WT':
         this.wtField = value;
+        this.isWorkingTeamWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'CFC':
         this.cfcField = value;
+        this.isCFCWhitespace = isWhitespace && value.length > 0;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        this.isCFCInvalidEmail = !emailRegex.test(value) && value.length > 0; 
         break;
       case 'COM':
         this.comField = value;
         break;
       case 'RS':
         this.projectClass.ReportStatus = value;
+        this.isReportStatusWhitespace = isWhitespace && value.length > 0; 
         break;
-
       case 'CN':
         this.projectClass.CatsNumber = value;
+        this.isCatsNumberWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'OS':
         // @ts-ignore
@@ -184,16 +219,50 @@ export class AddProjectComponent {
   }
 
   onChildDateValueChanged(value: Date, id: string) {
-    if (id == 'STR') {
+    if (id === 'STR') {
       this.projectClass.StartDate = value;
-    } else if (id == 'END') {
+      if (this.isEndDateSet() && this.projectClass.StartDate > this.projectClass.EndDate) {
+        this.isInvalidStartDate = true;
+      } else {
+        this.isInvalidStartDate = false;
+      }
+    } else if (id === 'END') {
       this.projectClass.EndDate = value;
-    } else if (id == 'REP') {
+      const maxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      const IKOmaxDate = this.isIKOSet() ? this.projectClass.IKO : this.defaultMaxDate;
+      const TKOmaxDate = this.isTKOSet() ? this.projectClass.TKO : this.defaultMaxDate;
+      if (this.projectClass.EndDate < this.projectClass.StartDate || this.projectClass.EndDate > maxDate || this.projectClass.EndDate > IKOmaxDate! || this.projectClass.EndDate > TKOmaxDate!) {
+        this.isInvalidEndDate = true;
+      } else {
+        this.isInvalidEndDate = false;
+      }
+    } else if (id === 'REP') {
       this.projectClass.ReportDueDate = value;
-    } else if (id == 'IKO') {
+      const minDate = this.isEndDateSet() ? this.projectClass.EndDate : this.projectClass.StartDate;
+      if (this.projectClass.ReportDueDate < minDate) {
+        this.isInvalidReportDueDate = true;
+      } else {
+        this.isInvalidReportDueDate = false;
+      }
+    } else if (id === 'IKO') {
       this.projectClass.IKO = value;
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > endMaxDate || this.projectClass.IKO > repMaxDate) {
+        this.isInvalidIKO = true;
+      } else {
+        this.isInvalidIKO = false;
+      }
     } else {
       this.projectClass.TKO = value;
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+
+      if (this.projectClass.TKO < this.projectClass.StartDate || this.projectClass.TKO > endMaxDate || this.projectClass.TKO > repMaxDate) {
+        this.isInvalidTKO = true;
+      } else {
+        this.isInvalidTKO = false;
+      }
     }
   }
 
@@ -299,37 +368,28 @@ export class AddProjectComponent {
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Comments = [{
-        text: this.commentInput.nativeElement.value
-      }];
+      const commentText = this.commentInput.nativeElement.value;
+      const trimmedComment = commentText.trim();
+      const isWhitespace = trimmedComment === '';
+
+      if (!isWhitespace) {
+        this.projectClass.Comments = [{
+          text: commentText
+        }];
+      } else {
+        this.isCommentWhitespace = isWhitespace && commentText.length > 0; 
+      }
     }
   }
 
   validationFunction() {
-    // @ts-ignore
-    if (this.projectClass.StartDate > this.projectClass.EndDate) {
-      this.errorValue = true;
-    }
-    // @ts-ignore
-    if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
-      this.errorValue = true;
-    }
-    if (
+    if (   
       // @ts-ignore
-      this.projectClass.StartDate <= this.projectClass.EndDate &&
-      // @ts-ignore
-      this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
-      // @ts-ignore
-      this.projectClass.ProjectName?.length > 3 &&
+      this.projectClass.ProjectName?.length > 2 &&
       // @ts-ignore
       this.projectClass.ProjectName?.length < 50
     ) {
-      if (
-        // @ts-ignore
-        this.projectClass.ProjectName[0].toUpperCase() ==
-        // @ts-ignore
-        this.projectClass.ProjectName[0]
-      ) {
+       {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
         return;
@@ -360,7 +420,19 @@ export class AddProjectComponent {
     }
   }
 
-  checkDateValidity() {
-    //here will be code to make datepicker red
+  isEndDateSet(): boolean {
+    return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isRepDateSet(): boolean {
+    return this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isIKOSet(): boolean {
+    return this.projectClass.IKO!.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isTKOSet(): boolean {
+    return this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
   }
 }
