@@ -1,7 +1,7 @@
 <div class="container-fluid bg-light">
   <div class="row">
-     <!--Sidebar--> 
-    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" *ngIf="showSidebar" style="height: 100vh; overflow-y: auto">
+    <!--Sidebar-->
+    <div class="col-12 col-sm-12 col-lg-4 col-xl-3 bg-white" *ngIf="showSidebar" style="height: 100vh; overflow-y: auto; ">
       <div class="mt-2 pt-2">
         <div class="search-container">
           <h1 class="center pb-2 mt-3">Search items</h1>
@@ -44,15 +44,15 @@
         <div class="container  mt-5 ml-1 col-12">
           <div>
 
-             <!-- Upload -->
+            <!-- Upload -->
             <app-add-project-report></app-add-project-report>
           </div>
         </div>
 
       </div>
     </div>
-     <!-- Project Report Findings -->
-    <div [class]="showSidebar ? 'col offset-sm-6 offset-lg-4 offset-xl-3' : 'col'">
+    <!-- Project Report Findings -->
+    <div [ngClass]="{'col': !showSidebar, 'col-sm-6': showSidebar, 'col-lg-8': showSidebar, 'col-xl-9': showSidebar}">
       <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
         <div>
           <div class="container-fluid mt-3">
@@ -136,7 +136,7 @@
 
 <div class="group-icons">
   <mat-icon class="icon" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
-  <mat-icon class="icon" *ngIf="totalRecords" (click)="resetView()">delete_outline</mat-icon>
-  <mat-icon class="icon" (click)="toggleSidebar()">menu</mat-icon>
-  <!--<mat-icon class="icon" *ngIf="selectedProjects.length >= 1" (click)="toggleSidebar()">menu</mat-icon>-->
+  <mat-icon class="icon" *ngIf="totalRecords">delete_outline</mat-icon>
+  <mat-icon class="icon" *ngIf="totalRecords" (click)="toggleSidebar()">menu</mat-icon>
 </div>
+      
