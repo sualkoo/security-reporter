@@ -64,6 +64,7 @@ namespace webapi.ProjectSearch.Services
         private List<Finding> extractFindings(ZipArchive archive)
         {
             FindingsExtractor fe = new FindingsExtractor();
+            Dictionary<string, List<ZipArchiveEntry>> findingDictionary = new Dictionary<string, List<ZipArchiveEntry>>(); 
             List<Finding> findingsList = new List<Finding> ();
             if (archive == null)
             {
@@ -73,15 +74,83 @@ namespace webapi.ProjectSearch.Services
             {
                 foreach (var fileEntry in archive.Entries)
                 {
-                    if (fileEntry.Name.EndsWith("main.tex")
-                        && !fileEntry.FullName.Equals("Config/Findings_Database/DR_Template/main.tex"))
+                    if (fileEntry.FullName.StartsWith("Config/Findings_Database")
+                        && !fileEntry.FullName.StartsWith("Config/Findings_Database/DR_Template"))
                     {
-                        findingsList.Add(fe.extractFinding(fileEntry));
+                        string[] splitString = fileEntry.FullName.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                        string folderPath = "";
+                        if(splitString.Length > 3)
+                        {
+                            folderPath = splitString[0] + "/" + splitString[1] + "/" + splitString[2];
+                        }
+                        if(!String.IsNullOrEmpty(folderPath))
+                        {
+                            if (!findingDictionary.ContainsKey(folderPath))
+                            {
+                                findingDictionary.Add(folderPath, new List<ZipArchiveEntry> { fileEntry });
+                            }
+                            else
+                            {
+                                findingDictionary[folderPath].Add(fileEntry);
+                            }
+                        }
                     }
+                }
+
+                foreach(var list in findingDictionary.Values)
+                {
+                    Finding newFinding = null;
+                    List<ZipArchiveEntry> processedMembers = new List<ZipArchiveEntry> ();
+                    for(int count = 0; count < list.Count;)
+                    {
+                        foreach(var entry in list)
+                        {
+                            if(count == 0)
+                            {
+                                if(entry.FullName.EndsWith("main.tex"))
+                                {
+                                    newFinding = fe.extractFinding(entry);
+                                    newFinding.imagesList = new List<FileData>();
+                                    processedMembers.Add(entry);
+
+                                    count++;
+                                }
+                            } else
+                            {
+                                if(!processedMembers.Contains(entry))
+                                {
+                                    newFinding.imagesList.Add(ProcessImages(entry));
+                                    processedMembers.Add(entry);
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+                    findingsList.Add(newFinding);
                 }
             }
 
             return findingsList;
+        }
+        private FileData ProcessImages(ZipArchiveEntry image)
+        {
+            string[] splitString = image.FullName.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            string fileName = "";
+            if (splitString.Length > 3) fileName = splitString[3];
+
+            byte[] contents;
+            using(Stream entryStream = image.Open())
+            using(MemoryStream memoryStream = new MemoryStream())
+            {
+                entryStream.CopyTo(memoryStream);
+                contents = memoryStream.ToArray();
+            }
+
+            FileData newData = new FileData();
+            newData.FileName = fileName;
+            newData.Content = contents;
+
+            return newData;
         }
     }
 }
