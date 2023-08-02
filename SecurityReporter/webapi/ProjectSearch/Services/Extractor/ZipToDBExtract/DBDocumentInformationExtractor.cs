@@ -6,11 +6,11 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
-    public class DocumentInformationExtractor
+    public class DBDocumentInformationExtractor
     {
         private ZipArchiveEntry documentEntry;
 
-        public DocumentInformationExtractor(ZipArchiveEntry documentEntry)
+        public DBDocumentInformationExtractor(ZipArchiveEntry documentEntry)
         {
             this.documentEntry = documentEntry;
         }

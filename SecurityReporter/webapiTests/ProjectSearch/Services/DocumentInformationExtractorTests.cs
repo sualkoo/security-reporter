@@ -31,7 +31,7 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/MultipleAttributesEmpty/RPN_AT_RDA_RDH{Dt_F_VND_V}_RD/Document_Information.tex");
 
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
+            DBDocumentInformationExtractor die = new DBDocumentInformationExtractor(entry);
 
             DocumentInformation testObject = new DocumentInformation();
             testObject.ProjectReportName = null;
@@ -75,7 +75,7 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/MultipleAttributesMissing/RPN_RDA_RDMA_RDH_RV_RD_RDC/Document_Information.tex");
 
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
+            DBDocumentInformationExtractor die = new DBDocumentInformationExtractor(entry);
             DocumentInformation parsedObject = new DocumentInformation();
             parsedObject = die.ExtractDocumentInformation();
 
@@ -94,7 +94,7 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/Empty/Document_Information.tex");
 
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
+            DBDocumentInformationExtractor die = new DBDocumentInformationExtractor(entry);
             DocumentInformation parsedObject = new DocumentInformation();
             parsedObject = die.ExtractDocumentInformation();
 
@@ -109,7 +109,7 @@ namespace webapi.ProjectSearch.Services.Tests
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/FullInformation/Document_Information.tex");
 
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
+            DBDocumentInformationExtractor die = new DBDocumentInformationExtractor(entry);
             DocumentInformation parsedObject = new DocumentInformation();
             parsedObject = die.ExtractDocumentInformation();
 
