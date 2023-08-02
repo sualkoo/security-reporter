@@ -75,7 +75,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     ProjectName: jsonData.projectName,
     StartDate: jsonData.startDate ? jsonData.startDate : new Date('0001-01-01'),
     EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
-    ProjectStatus: jsonData.projectSatus,
+    ProjectStatus: jsonData.projectStatus,
     ProjectScope: jsonData.projectScope,
     ProjectQuestionare: jsonData.projectQuestionare,
     PentestAspects: jsonData.pentestAspects,
