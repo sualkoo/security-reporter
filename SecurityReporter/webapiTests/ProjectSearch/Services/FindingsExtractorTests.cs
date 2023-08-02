@@ -2,9 +2,10 @@
 using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using FluentAssertions;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Tests
-{   
+{
     [TestFixture()]
     public class FindingsExtractorTests
     {

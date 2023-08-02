@@ -4,7 +4,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class ProjectInformationExtractor
     {
@@ -14,8 +14,9 @@ namespace webapi.ProjectSearch.Services
         DateTime newReportDate;
         bool technicalContacts = false;
         bool pentestTeamMember = false;
-        public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry, 
-            Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary) {
+        public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry,
+            Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary)
+        {
             this.projectInfoEntry = projectInfoEntry;
             this.pentestTeamDictionary = pentestTeamDictionary;
         }
@@ -25,10 +26,11 @@ namespace webapi.ProjectSearch.Services
             string line;
             newProjectInfo.PentestTeam = new List<ProjectInformationParticipant>();
             newProjectInfo.TechnicalContacts = new List<ProjectInformationParticipant>();
-            if(projectInfoEntry == null)
+            if (projectInfoEntry == null)
             {
                 throw new ArgumentNullException();
-            } else
+            }
+            else
             {
                 using (StreamReader reader = new StreamReader(projectInfoEntry.Open()))
                 {
@@ -39,7 +41,7 @@ namespace webapi.ProjectSearch.Services
                         if (!string.IsNullOrEmpty(line) && (line[0] == '\\' || line[0] == '\t'))
                         {
                             string[] pentestTeamMemberContents = line.Split(listsDelimiter, StringSplitOptions.None);
-                            if ((pentestTeamMemberContents.Length == 2))
+                            if (pentestTeamMemberContents.Length == 2)
                             {
                                 if (technicalContacts)
                                 {
@@ -49,14 +51,15 @@ namespace webapi.ProjectSearch.Services
                                 {
                                     AssignNewData("\\PentestTeamMember", pentestTeamMemberContents[0].Trim());
                                 }
-                            } else
+                            }
+                            else
                             {
                                 string[] inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
-                                if(inBracketContents.Length == 2)
+                                if (inBracketContents.Length == 2)
                                 {
-                                    pentestTeamMember = (inBracketContents[1] == "\\PentestTeamMember") ? true : false;
-                                    technicalContacts = (inBracketContents[1] == "\\TechnicalContacts") ? true : false;
+                                    pentestTeamMember = inBracketContents[1] == "\\PentestTeamMember" ? true : false;
+                                    technicalContacts = inBracketContents[1] == "\\TechnicalContacts" ? true : false;
                                 }
                                 else if (inBracketContents.Length == 3 || inBracketContents.Length == 4)
                                 {
@@ -68,7 +71,7 @@ namespace webapi.ProjectSearch.Services
                                     AssignNewData(inBracketContents[1], inBracketContents[3]);
                                 }
                             }
-                            
+
                         }
                     }
                 }
@@ -79,7 +82,7 @@ namespace webapi.ProjectSearch.Services
 
         private string extractDepartment(string data)
         {
-            if(data != null)
+            if (data != null)
             {
                 string result = "";
                 string delimiter = "\\&";
@@ -93,12 +96,12 @@ namespace webapi.ProjectSearch.Services
             }
 
             return null;
-            
+
         }
 
         private string extractContact(string data)
         {
-            if(data != null )
+            if (data != null)
             {
                 return data.Substring(9);
             }
@@ -108,9 +111,9 @@ namespace webapi.ProjectSearch.Services
 
         private void AssignNewData(string command, string data)
         {
-            if(data != null && command != null)
+            if (data != null && command != null)
             {
-                switch(command)
+                switch (command)
                 {
                     case "\\ApplicationManager":
                         newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
@@ -332,7 +335,7 @@ namespace webapi.ProjectSearch.Services
                         newProjectInfo.FindingsCountCriticalTBD = int.Parse(data);
                         break;
                 }
-            }   
+            }
         }
     }
 }

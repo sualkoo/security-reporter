@@ -1,12 +1,13 @@
 ﻿using System.IO.Compression;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class ExecutiveSummaryExtractor
     {
         private ZipArchiveEntry execSumEntry;
-        public ExecutiveSummaryExtractor(ZipArchiveEntry execSumEntry) { 
+        public ExecutiveSummaryExtractor(ZipArchiveEntry execSumEntry)
+        {
             this.execSumEntry = execSumEntry;
         }
 
