@@ -13,6 +13,7 @@ using Microsoft.Azure.Cosmos.Linq;
 using System.IO.Compression;
 using NUnit.Framework.Constraints;
 using Microsoft.AspNetCore.Http.HttpResults;
+using NUnit.Framework.Interfaces;
 
 namespace webapi.ProjectReportControllers.Tests
 {
@@ -21,14 +22,16 @@ namespace webapi.ProjectReportControllers.Tests
     {
         private Mock<IProjectReportService> mockProjectReportService;
         private Mock<ILogger<ProjectReportController>> mockLogger;
+        private Mock<ILogger<ExceptionHandlingControllerBase>> mockLoggerBase;
         private ProjectReportController projectReportController;
 
         [SetUp]
         public void SetUp()
         {
             mockLogger = new Mock<ILogger<ProjectReportController>>();
+            mockLoggerBase = new Mock<ILogger<ExceptionHandlingControllerBase>>();
             mockProjectReportService = new Mock<IProjectReportService>();
-            projectReportController = new ProjectReportController(mockLogger.Object, mockProjectReportService.Object);
+            projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
         }
 
         [Test]
@@ -47,7 +50,7 @@ namespace webapi.ProjectReportControllers.Tests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(typeof(OkObjectResult), result.GetType());
-            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);     
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
         }
 
         [Test]
@@ -154,10 +157,10 @@ namespace webapi.ProjectReportControllers.Tests
 
             var expectedResponse = new PagedDBResults<List<FindingResponse>>(expectedData, 1);
 
-            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(projectName, details, impact, repeatability, references, cWE, searchedValue, page)).ReturnsAsync(expectedResponse);
+            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(projectName, details, impact, repeatability, references, cWE, searchedValue, page).Result;
+            var result = projectReportController.getProjectReportFindings(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -174,12 +177,47 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status400BadRequest, "At list one filter has to be selected");
 
-            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, searchedValue, page)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, page)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, searchedValue, page).Result;
+            var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, page).Result;
 
             // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
+        }
+
+        [Test]
+        public void deleteProjectReports_WithValidIds_ReturnsOkResult()
+        {
+            // Arrange
+            var ids = new List<string> { "1", "2", "3" };
+            mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).ReturnsAsync(true);
+
+            // Act
+            var task = projectReportController.deleteProjectReports(ids);
+
+            var result = task.Result as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(true, result.Value);
+
+        }
+
+        [Test]
+        public void deleteProjectReports_WithException_ReturnsBadRequestResult()
+        {
+            var ids = new List<string> { "1", "2", "3" };
+            CustomException expectedException = new CustomException(StatusCodes.Status400BadRequest, "Items with that id don't exist");
+            mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).Throws(expectedException);
+
+            // Act
+            var result = projectReportController.deleteProjectReports(ids).Result;
+
+            // Assert
+
             Assert.IsNotNull(result);
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
         }

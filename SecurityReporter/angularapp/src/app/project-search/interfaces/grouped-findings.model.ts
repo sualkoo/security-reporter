@@ -4,4 +4,5 @@ export interface GroupedFinding {
   projectId: string;
   projectName: string;
   findings: Finding[];
+  checked: boolean
 }

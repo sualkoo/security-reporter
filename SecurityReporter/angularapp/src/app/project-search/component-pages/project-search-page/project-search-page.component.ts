@@ -1,11 +1,9 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Finding } from '../../interfaces/ProjectReport/finding';
 import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
@@ -30,7 +28,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 50 >= container.scrollHeight;
     return atBottom;
   }
 
@@ -104,10 +102,12 @@ export class ProjectSearchPageComponent implements OnInit {
         existingGroup?.findings.push(finding);
       } else {
         // Create a new group
+        const isProjectSelected = this.groupedFindings.some(gf => gf.projectId === projectReportId && gf.checked === true);
         const newGroup: GroupedFinding = {
           projectId: projectReportId,
           projectName: projectReportName,
           findings: [finding],
+          checked: isProjectSelected
         };
         groupedFindingsMap.set(projectReportId, newGroup);
       }
@@ -317,6 +317,62 @@ export class ProjectSearchPageComponent implements OnInit {
   onGetSource(projectId: string): void {
     console.log("Downloading source for project with ID" + projectId);
     this.notificationService.displayMessage("Feature in development.", "info");
+  }
+
+  onSelectionCheckboxChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    if (target.checked) {
+      console.log("Selecting project")
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = true;
+    } else {
+      console.log("Unselecting project")
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = false;
+    }
+
+    this.selectedProjects = [];
+    this.groupedFindings.forEach(gf => {
+      if (gf.checked) {
+        this.selectedProjects.push(gf );
+      }
+    })
+  }
+
+  selectedProjects: GroupedFinding[] = [];
+
+  onDeleteSelectedProjects() {
+    const projectIds: string[] = this.selectedProjects.map(p => p.projectId);
+    console.log("Deleting these projects:");
+    console.log(projectIds);
+    // BE request
+    this.projectReportService.deleteProjectReport(projectIds).subscribe((res) => {
+      // Success
+      for (let selectedGf of this.selectedProjects) {
+        this.loadedFindings = this.loadedFindings.filter(lf => lf.projectReportId !== selectedGf.projectId);
+        this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId !== selectedGf.projectId);
+        this.totalRecords = this.totalRecords! - selectedGf.findings.length;
+      }
+      this.groupFindings();
+      this.selectedProjects = [];
+      this.notificationService.displayMessage("Successfully removed from db!", "info");
+    }, (e: HttpErrorResponse) => {
+      // Error
+      console.log("Error occured on server side.");
+      console.error(e);
+      this.selectedProjects = [];
+    })
+
+    
+  }
+
+  showPopup: boolean = false;
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
   }
 
   showSidebar: boolean = true;

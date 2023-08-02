@@ -71,3 +71,9 @@
     background-color: #f9b591;
     opacity: 40%;
   }
+
+  /* Checkbox */
+  .form-check-input:checked {
+    background-color: #ec6602;
+    border-color: #ec6602;
+  }
