@@ -37,8 +37,8 @@ namespace webapi.Models.ProjectReport
 
         [Range(typeof(bool), "false", "true", ErrorMessage = "TargetInfoSNXConnectivity must be either true or false!")]
         public bool TargetInfoSNXConnectivity { get; set; }
-        [StringLength(100, ErrorMessage = "TargetInfoHostingConnection cannot exceed 100 characters.")]
-        public string? TargetInfoHostingConnection { get; set; }
+        [StringLength(100, ErrorMessage = "TargetInfoHostingLocation cannot exceed 100 characters.")]
+        public string? TargetInfoHostingLocation { get; set; }
 
         [StringLength(100, ErrorMessage = "TargetInfoHostingProvider cannot exceed 100 characters!")]
         public string? TargetInfoHostingProvider { get; set; }
