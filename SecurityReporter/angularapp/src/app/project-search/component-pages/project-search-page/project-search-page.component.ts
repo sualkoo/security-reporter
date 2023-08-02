@@ -354,6 +354,7 @@ export class ProjectSearchPageComponent implements OnInit {
       }
       this.groupFindings();
       this.selectedProjects = [];
+      this.notificationService.displayMessage("Successfully removed from db!", "info");
     }, (e: HttpErrorResponse) => {
       // Error
       console.log("Error occured on server side.");
@@ -362,6 +363,16 @@ export class ProjectSearchPageComponent implements OnInit {
     })
 
     
+  }
+
+  showPopup: boolean = false;
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
   }
 
   showSidebar: boolean = true;
