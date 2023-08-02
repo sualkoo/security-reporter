@@ -210,7 +210,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -218,7 +218,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -259,7 +259,7 @@ namespace webapi.Service
                 throw;
             }
             return items;
-        
+
         }
 
 
@@ -390,9 +390,11 @@ namespace webapi.Service
             int totalResults;
             int valueInt = 0;
             List<string> querypath = new List<string>();
-            List<FindingResponse> newData = new List<FindingResponse>();
+            List<FindingResponse> data = new List<FindingResponse>();
+            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
+            string queryPage = uriBuilder.Query;
 
-            //Building Queries
+            //Building Queries and Next Page URL
 
             string query = "SELECT DISTINCT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } " +
                             "FROM c " +
@@ -409,26 +411,32 @@ namespace webapi.Service
             if (!string.IsNullOrEmpty(projectName))
             {
                 querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@projectName) ");
+                queryPage += "&"+ nameof(projectName) + "=" + Uri.EscapeDataString(projectName);
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f.SubsectionDeatils) LIKE LOWER(@details) ");
+                querypath.Add(" LOWER(f.SubsectionDetails) LIKE LOWER(@details) ");
+                queryPage += "&" + nameof(details) + "=" + Uri.EscapeDataString(details);
             }
             if (!string.IsNullOrEmpty(impact))
             {
                 querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@impact) ");
+                queryPage += "&" + nameof(impact) + "=" + Uri.EscapeDataString(impact);
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
                 querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@repeatability) ");
+                queryPage += "&" + nameof(repeatability) + "=" + Uri.EscapeDataString(repeatability);
             }
             if (!string.IsNullOrEmpty(references))
             {
                 querypath.Add(" LOWER(r) LIKE LOWER(@references) ");
+                queryPage += "&" + nameof(references) + "=" + Uri.EscapeDataString(references);
             }
             if (!string.IsNullOrEmpty(cWE) && int.TryParse(cWE, out valueInt))
             {
                 querypath.Add(" (f.CWE) = (@valueInt) ");
+                queryPage += "&" + nameof(cWE) + "=" + Uri.EscapeDataString(cWE);
             }
             else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(cWE, out valueInt))
             {
@@ -455,6 +463,11 @@ namespace webapi.Service
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "At least one filter has to be selected");
             }
+
+            queryPage += "&page=" + (page + 1);
+
+            uriBuilder.Query = queryPage.TrimStart('?');
+
             query = $"{query}  ORDER BY c.DocumentInfo.ProjectReportName OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
 
@@ -474,7 +487,7 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                newData.AddRange(currentResultSet.ToList());
+                data.AddRange(currentResultSet.ToList());
             }
             Logger.LogInformation("Returning found reports");
 
@@ -490,48 +503,36 @@ namespace webapi.Service
             FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
             totalResults = response.FirstOrDefault();
 
-            //Filling PagedDBResult
+            //Filling PagedDBResult Response
 
-            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
+            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(data, page);
             results.TotalRecords = totalResults;
             results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
-            //Building URL for next page
-            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
-            string queryPage = uriBuilder.Query;
             if (results.TotalPages > page)
             {
-                if (!string.IsNullOrEmpty(projectName))
-                {
-                    queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
-                }
-                if (!string.IsNullOrEmpty(details))
-                {
-                    queryPage += "&Details=" + Uri.EscapeDataString(details);
-                }
-                if (!string.IsNullOrEmpty(impact))
-                {
-                    queryPage += "&Impact=" + Uri.EscapeDataString(impact);
-                }
-                if (!string.IsNullOrEmpty(repeatability))
-                {
-                    queryPage += "&Repeatability=" + Uri.EscapeDataString(repeatability);
-                }
-                if (!string.IsNullOrEmpty(references))
-                {
-                    queryPage += "&References=" + Uri.EscapeDataString(references);
-                }
-                if (!string.IsNullOrEmpty(cWE))
-                {
-                    queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
-                }
-                queryPage += "&page=" + (page + 1);
-
-                uriBuilder.Query = queryPage.TrimStart('?');
                 results.NextPage = uriBuilder.Uri;
             }
-
             return results;
+        }
+
+        public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
+        {
+            Logger.LogInformation("Searching for selected Project Reports in database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await this.GetProjectReport(reportId);
+            }
+
+            Logger.LogInformation("Deleting selected Project Reports from database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+
+            Logger.LogInformation("Successfully deleted Project Reports from database.");
+            return true;
         }
     }
 }

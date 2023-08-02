@@ -79,8 +79,9 @@ namespace webapi.ProjectSearch.Services
 
         public async Task<bool> DeleteReportAsync(List<string> ids)
         {
-          
-            return true;
+            Logger.LogInformation($"Deleting items from database");
+
+            return await CosmosService.DeleteProjectReports(ids);
         }
 
         public byte[] GetProjectZipFile()

@@ -21,14 +21,16 @@ namespace webapi.ProjectReportControllers.Tests
     {
         private Mock<IProjectReportService> mockProjectReportService;
         private Mock<ILogger<ProjectReportController>> mockLogger;
+        private Mock<ILogger<ExceptionHandlingControllerBase>> mockLoggerBase;
         private ProjectReportController projectReportController;
 
         [SetUp]
         public void SetUp()
         {
             mockLogger = new Mock<ILogger<ProjectReportController>>();
+            mockLoggerBase = new Mock<ILogger<ExceptionHandlingControllerBase>>();
             mockProjectReportService = new Mock<IProjectReportService>();
-            projectReportController = new ProjectReportController(mockLogger.Object, mockProjectReportService.Object);
+            projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
         }
 
         [Test]
@@ -154,10 +156,10 @@ namespace webapi.ProjectReportControllers.Tests
 
             var expectedResponse = new PagedDBResults<List<FindingResponse>>(expectedData, 1);
 
-            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(projectName, details, impact, repeatability, references, cWE, searchedValue, page)).ReturnsAsync(expectedResponse);
+            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(projectName, details, impact, repeatability, references, cWE, searchedValue, page).Result;
+            var result = projectReportController.getProjectReportFindings(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -174,10 +176,10 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status400BadRequest, "At list one filter has to be selected");
 
-            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, searchedValue, page)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, page)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, searchedValue, page).Result;
+            var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, page).Result;
 
             // Assert
             Assert.IsNotNull(result);

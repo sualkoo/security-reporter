@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
@@ -319,8 +319,9 @@ export class ProjectSearchPageComponent implements OnInit {
     this.notificationService.displayMessage("Feature in development.", "info");
   }
 
-  resetScrollPosition() {
-    const scrollableBoxElement: HTMLElement = this.reportsScrollableBox.nativeElement;
-    scrollableBoxElement.scrollTop = 0;
+  showSidebar: boolean = true;
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 }
