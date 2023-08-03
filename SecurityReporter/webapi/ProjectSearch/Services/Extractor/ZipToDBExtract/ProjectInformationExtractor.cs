@@ -267,7 +267,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         }
                         break;
                     case "\\TargetInfoHostingLocation":
-                        newProjectInfo.TargetInfoHostingConnection = data;
+                        newProjectInfo.TargetInfoHostingLocation = data;
                         break;
                     case "\\TargetInfoHostingProvider":
                         newProjectInfo.TargetInfoHostingProvider = data;

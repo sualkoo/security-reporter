@@ -1,12 +1,12 @@
-﻿using System.IO.Compression;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.IO.Compression;
+using webapi.Models;
 using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class FindingsExtractor
     {
-        ZipArchiveEntry currentEntry;
-        ZipArchiveEntry findingsDirectory;
         List<Finding> findingsList = new List<Finding>();
         public Finding extractFinding(ZipArchiveEntry currentEntry)
         {
@@ -28,14 +28,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         {
                             if (splitString[0] == "\\subsection*")
                             {
-                                if (splitString[1] == "References")
-                                {
-                                    newFinding.SubsectionReferences = extractReferences(splitString[1], reader, newFinding);
-                                }
-                                else
-                                {
-                                    extractSubsection(splitString[1], reader, newFinding);
-                                }
+                                extractSubsection(splitString[1], reader, newFinding);
                             }
                         }
                     }
@@ -163,6 +156,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     newFinding.SubsectionCountermeasures = data;
                     break;
                 case "References":
+                    newFinding.SubsectionReferences = data;
                     break;
             }
         }
@@ -187,17 +181,13 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
 
                 string trimmedLine = line.Trim();
-                reading = trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin" ? false : true;
+                //reading = trimmedLine.Length >= 6 && trimmedLine.Substring(0, 6) == "\\begin" ? false : true;
                 reading = trimmedLine.Length >= 11 && trimmedLine.Substring(0, 11) == "\\subsection" ? false : true;
-                reading = trimmedLine.Length > 0 && trimmedLine[0] == '%' ? false : true;
+                //reading = trimmedLine.Length > 0 && trimmedLine[0] == '%' ? false : true;
 
                 if (reading)
                 {
-                    if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 &&
-                        trimmedLine[0] != '\\' && trimmedLine[0] != '%')
-                    {
-                        result += trimmedLine;
-                    }
+                    result += line;
                 }
                 else
                 {
@@ -208,21 +198,14 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                         if (splitString.Length == 2)
                         {
-                            if (splitString[1] == "References")
-                            {
-                                newFinding.SubsectionReferences = extractReferences(splitString[1], reader, newFinding);
-                            }
-                            else
-                            {
-                                extractSubsection(splitString[1], reader, newFinding);
-                            }
+                            extractSubsection(splitString[1], reader, newFinding);
                         }
                     }
                 }
             }
         }
 
-        private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
+        /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
         {
             string line;
             List<string> resultList = new List<string>();
@@ -262,6 +245,6 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
 
             return resultList;
-        }
+        }*/
     }
 }
