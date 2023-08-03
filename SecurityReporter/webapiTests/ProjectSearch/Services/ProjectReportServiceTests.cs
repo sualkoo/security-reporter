@@ -15,6 +15,7 @@ namespace webapi.ProjectSearch.Services.Tests
     {
         private Mock<ICosmosService> mockCosmosService;
         private Mock<IProjectDataParser> mockParser;
+        private Mock<IDBProjectDataParser> mockDBParser;
         private Mock<IProjectDataValidator> mockValidator;
         private ProjectReportService projectReportService;
 
@@ -25,8 +26,9 @@ namespace webapi.ProjectSearch.Services.Tests
             // Initialize mocks and service
             mockCosmosService = new Mock<ICosmosService>();
             mockParser = new Mock<IProjectDataParser>();
+            mockDBParser = new Mock<IDBProjectDataParser>();
             mockValidator = new Mock<IProjectDataValidator>();
-            projectReportService = new ProjectReportService(mockParser.Object, mockValidator.Object, mockCosmosService.Object);
+            projectReportService = new ProjectReportService(mockParser.Object, mockDBParser.Object, mockValidator.Object, mockCosmosService.Object);
         }
 
         [Test]
@@ -42,7 +44,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup((cosmos) => cosmos.GetProjectReport(id.ToString())).ReturnsAsync(expectedProjectReport);
 
             // Act
-            var result = await projectReportService.GetReportByIdAsync(id);
+            var result = await ((IProjectReportService)projectReportService).GetReportByIdAsync(id);
 
             // Assert
             Assert.IsNotNull(result);
@@ -59,7 +61,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup((cosmos) => cosmos.GetProjectReport(id.ToString())).ThrowsAsync(new Microsoft.Azure.Cosmos.CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));
 
             // Act & Assert
-            Assert.ThrowsAsync<CosmosException>(async () => await projectReportService.GetReportByIdAsync(id));
+            Assert.ThrowsAsync<CosmosException>(async () => await ((IProjectReportService)projectReportService).GetReportByIdAsync(id));
         }
 
         [Test]
@@ -84,7 +86,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(searchedValue, null, null, null, null, null, 1)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = projectReportService.GetReportFindingsAsync(searchedValue, null, null, null, null, null, 1).Result;
+            var result = ((IProjectReportService)projectReportService).GetReportFindingsAsync(searchedValue, null, null, null, null, null, 1).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -99,7 +101,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "At least one search filter must be specified"));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, 1));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).GetReportFindingsAsync(null, null, null, null, null, null, 1));
         }
 
         [Test]
@@ -110,7 +112,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup(cosmos => cosmos.GetPagedProjectReportFindings(null, null, null, null, null, null, 1)).ThrowsAsync(new CustomException(StatusCodes.Status400BadRequest, "Search value cannot be null."));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.GetReportFindingsAsync(null, null, null, null, null, null, 1));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).GetReportFindingsAsync(null, null, null, null, null, null, 1));
         }
 
         [Test]
@@ -140,7 +142,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
 
             // Act
-            var result = await projectReportService.SaveReportFromZip(file);
+            var result = await ((IProjectReportService)projectReportService).SaveReportFromZip(file);
 
             // Assert
             Assert.IsNotNull(result);
@@ -160,10 +162,10 @@ namespace webapi.ProjectSearch.Services.Tests
             mockParser.Setup(parser => parser.Extract(fileStream)).Throws(new ArgumentNullException());
 
             // Act
-            var result = projectReportService.SaveReportFromZip(file.Object);
+            var result = ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object);
 
             // Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file.Object));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object));
         }
 
         [Test()]
@@ -205,7 +207,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(false);
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
         }
 
         [Test()]
@@ -250,7 +252,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database."));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await projectReportService.SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
 
             // Cleanup
             File.Delete(fileName);
