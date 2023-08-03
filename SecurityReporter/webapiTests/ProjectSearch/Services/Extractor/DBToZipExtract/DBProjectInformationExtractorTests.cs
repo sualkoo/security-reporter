@@ -82,7 +82,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             projectInformation.TargetInfoEnvironment = "Testing Environment";
             projectInformation.TargetInfoInternetFacing = true;
             projectInformation.TargetInfoSNXConnectivity = false;
-            projectInformation.TargetInfoHostingConnection = "Special Network";
+            projectInformation.TargetInfoHostingLocation = "Special Network";
             projectInformation.TargetInfoHostingProvider = "N/A";
             projectInformation.TargetInfoLifeCyclePhase = "Pre-Production";
             projectInformation.TargetInfoCriticality = "N/A";

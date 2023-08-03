@@ -73,7 +73,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 \newcommand{\TargetInfoEnvironment}{" + projectInformation.TargetInfoEnvironment + @"}
 \newcommand{\TargetInfoInternetFacing}{" + (projectInformation.TargetInfoInternetFacing ? "Yes" : "No") + @"} %% Asset Internet Facing
 \newcommand{\TargetInfoSNXConnectivity}{" + (projectInformation.TargetInfoSNXConnectivity ? "Yes" : "No") + @"} %% SNX Connectivity
-\newcommand{\TargetInfoHostingLocation}{" + projectInformation.TargetInfoHostingConnection + @"} %% Hosting Location
+\newcommand{\TargetInfoHostingLocation}{" + projectInformation.TargetInfoHostingLocation + @"} %% Hosting Location
 \newcommand{\TargetInfoHostingProvider}{" + projectInformation.TargetInfoHostingProvider + @"} %% Hosting Provider
 \newcommand{\TargetInfoLifecyclePhase}{" + projectInformation.TargetInfoLifeCyclePhase + @"}
 \newcommand{\TargetInfoCriticality}{" + projectInformation.TargetInfoCriticality + @"}
