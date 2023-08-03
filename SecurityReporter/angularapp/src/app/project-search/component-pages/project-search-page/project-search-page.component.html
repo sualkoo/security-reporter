@@ -1,6 +1,6 @@
 <div class="container-fluid bg-light">
   <div class="row">
-     <!--Sidebar--> 
+     <!--Sidebar-->
     <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" *ngIf="showSidebar" style="height: 100vh; overflow-y: auto">
       <div class="mt-2 pt-2">
         <div class="search-container">
@@ -32,11 +32,11 @@
           </div>
 
           <div class="center submit-button pt-4">
-            <button class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+            <button id="search_button" class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
             </button>
-            <button class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+            <button id="clear_button" class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
               Clear filters
             </button>
           </div>
