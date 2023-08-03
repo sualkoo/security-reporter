@@ -2,7 +2,7 @@ import {delay} from "rxjs";
 
 describe('template spec', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4200/project-search')
+    cy.visit('https://127.0.0.1:4200/project-search')
   }
     )
   it('h1', () => {
