@@ -421,34 +421,20 @@ export class AddProjectComponent {
   }
 
   isEndDateSet(): boolean {
-    if (this.projectClass && this.projectClass.EndDate instanceof Date) {
-      // Check if EndDate is a valid Date object and then call getTime()
-      return this.projectClass.EndDate.getTime() > 0;
-    }
-    return false;
+    return this.projectClass.EndDate instanceof Date && this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
   }
 
   isRepDateSet(): boolean {
-    if (this.projectClass && this.projectClass.ReportDueDate instanceof Date) {
-      // Check if EndDate is a valid Date object and then call getTime()
-      return this.projectClass.ReportDueDate.getTime() > 0;
-    }
-    return false;
+    return this.projectClass.ReportDueDate instanceof Date && this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+
   }
 
   isIKOSet(): boolean {
-    if (this.projectClass && this.projectClass.IKO instanceof Date) {
-      // Check if EndDate is a valid Date object and then call getTime()
-      return this.projectClass.IKO.getTime() > 0;
-    }
-    return false;
+    return this.projectClass.IKO! instanceof Date && this.projectClass.IKO!.getTime() !== new Date('0001-01-01').getTime();
+
   }
 
   isTKOSet(): boolean {
-    if (this.projectClass && this.projectClass.TKO instanceof Date) {
-      // Check if EndDate is a valid Date object and then call getTime()
-      return this.projectClass.TKO.getTime() > 0;
-    }
-    return false;
+    return this.projectClass.TKO! instanceof Date && this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
   }
 }

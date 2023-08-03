@@ -6,7 +6,7 @@
         Project ID: {{ this.projectClass.id }}
       </h3>
     </div>
-    <div style="margin-bottom: 20px">
+    <div style="margin-bottom: 20px" class="projectname-input">
       <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PN')"
                            [title]="'Project name'"
                            [inputValue]="this.projectClass.ProjectName"
@@ -18,19 +18,26 @@
       <div class="pm-columns">
         <div class="left-column">
           <div class="two-in-row">
-            <datepicker-component #startDate
-                                  [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
-                                  [title]="'Start Date'"
-                                  [inputValue]="projectClass.StartDate"
-                                  (valueChanged)="onChildDateValueChanged($event, 'STR')">
-            </datepicker-component>
-            <datepicker-component #endDate
-                                  [minDate]="this.projectClass.StartDate"
-                                  [maxDate]="isRepDateSet() ? projectClass.ReportDueDate : defaultMaxDate"
-                                  [title]="'End Date'"
-                                  [inputValue]="projectClass.EndDate"
-                                  (valueChanged)="onChildDateValueChanged($event, 'END')">
-            </datepicker-component>
+            <div class="date-container">
+              <datepicker-component #startDate
+                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : defaultMaxDate"
+                                    [title]="'Start Date'"
+                                    [inputValue]="projectClass.StartDate"
+                                    (valueChanged)="onChildDateValueChanged($event, 'STR')">
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidStartDate" class="error-message">Invalid start date</mat-error>
+            </div>
+
+            <div class="date-container">
+              <datepicker-component #endDate
+                                    [minDate]="this.projectClass.StartDate"
+                                    [maxDate]="isRepDateSet() ? projectClass.ReportDueDate : defaultMaxDate"
+                                    [title]="'End Date'"
+                                    [inputValue]="projectClass.EndDate"
+                                    (valueChanged)="onChildDateValueChanged($event, 'END')">
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidEndDate" class="error-message">Invalid end date</mat-error>
+            </div>
           </div>
 
           <app-select-component (valueChanged)="onChildInputValueChanged($event, 'PST')"
@@ -58,29 +65,40 @@
             <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)" [project]="this.projectClass"></app-radio-button-component>
           </div>
           <div class="two-in-row">
-            <datepicker-component [minDate]="this.projectClass.StartDate"
-                                  [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
-                                  [title]="'IKO'"
-                                  [inputValue]="projectClass.IKO"
-                                  (valueChanged)="onChildDateValueChanged($event, 'IKO')">
-            </datepicker-component>
-            <datepicker-component [minDate]="this.projectClass.StartDate"
-                                  [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
-                                  [title]="'TKO'"
-                                  [inputValue]="projectClass.TKO"
-                                  (valueChanged)="onChildDateValueChanged($event, 'TKO')">
-            </datepicker-component>
+            <div class="date-container">
+              <datepicker-component [minDate]="this.projectClass.StartDate"
+                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
+                                    [title]="'IKO'"
+                                    [inputValue]="projectClass.IKO"
+                                    (valueChanged)="onChildDateValueChanged($event, 'IKO')">
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidIKO" class="error-message">Invalid IKO</mat-error>
+            </div>
+
+            <div class="date-container">
+              <datepicker-component [minDate]="this.projectClass.StartDate"
+                                    [maxDate]="isEndDateSet() ? projectClass.EndDate : (this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate)"
+                                    [title]="'TKO'"
+                                    [inputValue]="projectClass.TKO"
+                                    (valueChanged)="onChildDateValueChanged($event, 'TKO')">
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidTKO" class="error-message">Invalid TKO</mat-error>
+            </div>
           </div>
         </div>
 
         <div class="left-column">
           <div class="two-in-row">
-            <datepicker-component #reportDueDate
-                                  [minDate]="isEndDateSet() ? projectClass.EndDate : projectClass.StartDate"
-                                  [title]="'Report Due Date'"
-                                  [inputValue]="projectClass.ReportDueDate"
-                                  (valueChanged)="onChildDateValueChanged($event, 'REP')">
-            </datepicker-component>
+            <div class="date-container">
+              <datepicker-component #reportDueDate
+                                    [minDate]="isEndDateSet() ? projectClass.EndDate : projectClass.StartDate"
+                                    [title]="'Report Due Date'"
+                                    [inputValue]="projectClass.ReportDueDate"
+                                    (valueChanged)="onChildDateValueChanged($event, 'REP')">
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidReportDueDate" class="invalid-date-message">Invalid Report Due Date</mat-error>
+            </div>
+
             <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
                                  [title]="'Cats number'"
                                  [inputValue]="this.projectClass.CatsNumber">
