@@ -1,11 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO.Compression;
-using System.IO.Pipes;
+﻿using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
+
 
 namespace webapi.ProjectSearch.Services
 {

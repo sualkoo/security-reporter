@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using webapi.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Models.ProjectReport
@@ -8,21 +6,16 @@ namespace webapi.Models.ProjectReport
     public class ProjectInformation : IEntity
     {
         [Required(ErrorMessage = "ApplicationManager is required!")]
-        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "ApplicationManager cannot contain numbers or special characters!")]
         public ProjectInformationParticipant? ApplicationManager { get; set; }
         [Required(ErrorMessage = "BusinessOwner is required!")]
-        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "BusinessOwner cannot contain numbers or special characters!")]
         public ProjectInformationParticipant? BusinessOwner { get; set; }
         [Required(ErrorMessage = "BusinessRepresentative is required!")]
-        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "BusinessRepresentative contain numbers or special characters!")]
         public ProjectInformationParticipant? BusinessRepresentative { get; set; }
         [MinLength(1, ErrorMessage = "TechnicalContacts must have at least one participant.")]
         public List<ProjectInformationParticipant>? TechnicalContacts { get; set; }
         [Required(ErrorMessage = "PentestLead is required!")]
-        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "PentestLead contain numbers or special characters!")]
         public ProjectInformationParticipant? PentestLead { get; set; }
         [Required(ErrorMessage = "PentestCoordinator is required!")]
-        //[RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "PentestCoordinator contain numbers or special characters!")]
         public ProjectInformationParticipant? PentestCoordinator { get; set; }
         [MinLength(1, ErrorMessage = "PentestTeam must have at least one participant.")]
         public List<ProjectInformationParticipant>? PentestTeam { get; set; }

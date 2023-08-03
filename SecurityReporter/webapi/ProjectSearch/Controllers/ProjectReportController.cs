@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.IO.Compression;
-using System.Text;
-
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -86,9 +83,6 @@ namespace webapi.ProjectSearch.Controllers
                 return StatusCode(500, $"Error serving the zip file: {ex.Message}");
             }
         }
-
-
-
 
         [HttpDelete]
         public async Task<IActionResult> deleteProjectReports([FromBody] List<string> ids)

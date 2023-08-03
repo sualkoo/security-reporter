@@ -10,7 +10,6 @@ namespace webapi.ProjectSearch.Services.Tests
     {
         private ZipArchive zipArchive;
 
-
         [SetUp]
         public void SetUp()
         {
@@ -59,14 +58,6 @@ namespace webapi.ProjectSearch.Services.Tests
 
             Assert.IsNotNull(parsedObject);
             parsedObject.Should().BeEquivalentTo(testObject); 
-            
-            /*try
-            {
-             
-            } catch(Exception ex)
-            {
-                Assert.Fail();
-            }*/
         }
 
         [Test()]
@@ -75,8 +66,7 @@ namespace webapi.ProjectSearch.Services.Tests
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/MultipleAttributesMissing/RPN_RDA_RDMA_RDH_RV_RD_RDC/Document_Information.tex");
 
             DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
+            DocumentInformation parsedObject = die.ExtractDocumentInformation();
 
             DocumentInformation testObject = new DocumentInformation();
             testObject.AssetType = "Mobile Application";
@@ -94,8 +84,7 @@ namespace webapi.ProjectSearch.Services.Tests
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/Empty/Document_Information.tex");
 
             DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
+            DocumentInformation parsedObject = die.ExtractDocumentInformation();
 
             DocumentInformation testObject = new DocumentInformation();
             testObject.ReportDocumentHistory = new List<ReportVersionEntry>();
@@ -109,8 +98,7 @@ namespace webapi.ProjectSearch.Services.Tests
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/FullInformation/Document_Information.tex");
 
             DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
+            DocumentInformation parsedObject = die.ExtractDocumentInformation();
 
             DocumentInformation testObject = new DocumentInformation();
             testObject.ProjectReportName = "Dummy Project 1";
