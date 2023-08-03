@@ -381,13 +381,4 @@ export class ProjectSearchPageComponent implements OnInit {
     this.showSidebar = !this.showSidebar;
   }
 
-  isSmallScreen = window.innerWidth < window.document.body.scrollWidth;
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isSmallScreen = window.innerWidth < window.document.body.scrollWidth;
-    if (this.isSmallScreen) {
-      this.toggleSidebar();
-    }
-  }
 }

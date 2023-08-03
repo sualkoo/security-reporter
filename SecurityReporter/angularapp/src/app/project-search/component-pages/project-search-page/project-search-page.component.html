@@ -1,7 +1,7 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!--Sidebar-->
-    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-4': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar}" style="height: 100vh; overflow-y: auto">
+    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-3': showSidebar, 'col-lg-3': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
       <div class="mt-2 pt-2">
         <div class="search-container">
           <h1 class="center pb-2 mt-3">Search items</h1>
@@ -30,7 +30,6 @@
               </div>
             </div>
           </div>
-
           <div class="center submit-button pt-4">
             <button id="search_button" class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
@@ -43,7 +42,6 @@
         </div>
         <div class="container  mt-5 ml-1 col-12">
           <div>
-
             <!-- Upload -->
             <app-add-project-report></app-add-project-report>
           </div>
@@ -52,8 +50,8 @@
       </div>
     </div>
     <!-- Project Report Findings -->
-    <div [ngClass]="{'col': showSidebar, 'col-sm-8': showSidebar, 'col-lg-9': showSidebar, 'col-xl-9': showSidebar, 'd-none d-sm-block': showSidebar}">
-      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
+    <div [ngClass]="{'col': showSidebar, 'col-sm-9': showSidebar, 'col-lg-9': showSidebar, 'col-xl-9': showSidebar, 'd-none d-sm-block': showSidebar, 'offset-3': showSidebar}">
+      <div style="overflow-y: auto; height: 100vh;" #reportsScrollableBox>
         <div>
           <div class="mt-3">
             <h4 *ngIf="totalRecords">Found findings: {{totalRecords}}</h4>
