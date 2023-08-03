@@ -80,16 +80,6 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweSending = this.cwe;
   }
 
-  //groupFindings() {
-  //  this.loadedFindings.forEach((findingRes: FindingResponse) => {
-  //    if (!this.groupedFindings[findingRes.projectReportName]) {
-  //      this.groupedFindings[findingRes.projectReportName] = [];
-  //    }
-  //    this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
-  //  });
-  //  this.groupedFindingsEntries = Object.entries(this.groupedFindings);
-  //}
-
   groupFindings() {
     const groupedFindingsMap = new Map<string, GroupedFinding>();
 
@@ -131,7 +121,6 @@ export class ProjectSearchPageComponent implements OnInit {
       this.cwe
     ).subscribe(
       (response) => {
-        console.log(response)
         this.injectionOfSendingVariables();
         if (response.data.length == 0) {
           this.notificationService.displayMessage("No findings found.", "info");
@@ -154,8 +143,6 @@ export class ProjectSearchPageComponent implements OnInit {
   @ViewChild('reportsScrollableBox', { static: true }) reportsScrollableBox!: ElementRef;
 
   loadNextPage() {
-    console.log("Loading next page")
-    console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
       (this.lastLoadedPage + 1),
@@ -172,7 +159,6 @@ export class ProjectSearchPageComponent implements OnInit {
         this.loadedFindings.push(report);
       }
       this.groupFindings();
-      console.log(res);
       this.isLoadingNextPage = false;
     })
   }
@@ -247,11 +233,8 @@ export class ProjectSearchPageComponent implements OnInit {
   isFormValid: boolean = false;
 
   checkFormValidity(): void {
-
     this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
 
-
-    console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
       if (value == 'ProjectReportName') {
         this.projectName = this.value;
@@ -292,7 +275,6 @@ export class ProjectSearchPageComponent implements OnInit {
 
   onlyNumbers(event: string, ): void {
     const numberRegex = /^[0-9]+$/;
-    console.log(numberRegex.test(event));
 
     if (!numberRegex.test(event)) {
       this.cwe = '';
@@ -315,7 +297,6 @@ export class ProjectSearchPageComponent implements OnInit {
   }
 
   onGetSource(projectId: string): void {
-    console.log("Downloading source for project with ID" + projectId);
     this.notificationService.displayMessage("Feature in development.", "info");
   }
 
@@ -323,10 +304,8 @@ export class ProjectSearchPageComponent implements OnInit {
     const target = event.target as HTMLInputElement;
 
     if (target.checked) {
-      console.log("Selecting project")
       this.groupedFindings.find(p => p.projectId == target.value)!.checked = true;
     } else {
-      console.log("Unselecting project")
       this.groupedFindings.find(p => p.projectId == target.value)!.checked = false;
     }
 
@@ -342,8 +321,6 @@ export class ProjectSearchPageComponent implements OnInit {
 
   onDeleteSelectedProjects() {
     const projectIds: string[] = this.selectedProjects.map(p => p.projectId);
-    console.log("Deleting these projects:");
-    console.log(projectIds);
     // BE request
     this.projectReportService.deleteProjectReport(projectIds).subscribe((res) => {
       // Success
@@ -357,7 +334,6 @@ export class ProjectSearchPageComponent implements OnInit {
       this.notificationService.displayMessage("Successfully removed from db!", "info");
     }, (e: HttpErrorResponse) => {
       // Error
-      console.log("Error occured on server side.");
       console.error(e);
       this.selectedProjects = [];
     })

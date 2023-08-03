@@ -17,8 +17,6 @@
   button:hover {
     cursor: pointer;
   }
-  
-  /* btn-secondary */
 
 .btn-secondary {
   border: 1px solid #009999;
@@ -50,8 +48,6 @@
     background-color: #009999;
     opacity: 40%;
   }
-  
-  /* btn-primary */
   
   .btn-primary {
     border: 1px solid #ec6602;

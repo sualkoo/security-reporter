@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace webapi.ProjectSearch.Models
+﻿namespace webapi.ProjectSearch.Models
 {
     public class CustomException : Exception
     {
