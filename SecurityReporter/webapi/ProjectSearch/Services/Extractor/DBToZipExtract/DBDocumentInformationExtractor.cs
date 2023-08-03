@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Security.Policy;
+﻿using System.Globalization;
 using System.Text;
 using webapi.Models.ProjectReport;
-using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
@@ -85,7 +83,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %----------------------------------------------------------------------------------------
 \newcommand{\FiscalYear}{FY23}
 \newcommand{\ReportVersion}{Default}
-\newcommand{\ReportDate}{\today}
+\newcommand{\ReportDate}{" + documentInformation.ReportDate.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US")) + @"}
 \newcommand{\ReportDocumentClassification}{CONFIDENTIAL}
 
 % \newcommand{\ReportStatus}{RELEASE} 
