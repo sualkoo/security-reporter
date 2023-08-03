@@ -101,6 +101,7 @@ namespace webapi.ProjectSearch.Services
                 {
                     Finding newFinding = null;
                     List<ZipArchiveEntry> processedMembers = new List<ZipArchiveEntry> ();
+                    
                     for(int count = 0; count < list.Count;)
                     {
                         foreach(var entry in list)
@@ -112,7 +113,8 @@ namespace webapi.ProjectSearch.Services
                                     newFinding = fe.extractFinding(entry);
                                     newFinding.imagesList = new List<FileData>();
                                     processedMembers.Add(entry);
-
+                                    string[] splitString = entry.FullName.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                                    newFinding.FolderName = splitString[2];
                                     count++;
                                 }
                             } else
@@ -127,6 +129,7 @@ namespace webapi.ProjectSearch.Services
                         }
                     }
                     findingsList.Add(newFinding);
+                    
                 }
             }
 

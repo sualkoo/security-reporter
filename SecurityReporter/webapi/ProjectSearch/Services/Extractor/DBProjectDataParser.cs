@@ -9,6 +9,7 @@ namespace webapi.ProjectSearch.Services.Extractor
         public byte[] Extract(ProjectReportData projectReportData)
         {
             this.projectReportData = projectReportData;
+            return null;
         }
     }
 }
