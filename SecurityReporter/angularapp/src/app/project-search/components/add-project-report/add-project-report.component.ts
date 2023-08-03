@@ -15,7 +15,9 @@ export class AddProjectReportComponent implements OnInit{
     private projectDataService: ProjectReportService,
     private notificationService: NotificationService,
   ) {
+    this.checkScreenSize();
   }
+  isSmallDevice = false;
   uploadedFile?: Blob;
   isDragOver = false;
 
@@ -107,5 +109,14 @@ export class AddProjectReportComponent implements OnInit{
         this.notificationService.displayMessage("Invalid file type. Only .zip files are allowed.", "warning");
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize(): void {
+    this.isSmallDevice = window.innerWidth < 768; // Adjust the breakpoint as needed
   }
 }
