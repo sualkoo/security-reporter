@@ -421,18 +421,34 @@ export class AddProjectComponent {
   }
 
   isEndDateSet(): boolean {
-    return this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
+    if (this.projectClass && this.projectClass.EndDate instanceof Date) {
+      // Check if EndDate is a valid Date object and then call getTime()
+      return this.projectClass.EndDate.getTime() > 0;
+    }
+    return false;
   }
 
   isRepDateSet(): boolean {
-    return this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+    if (this.projectClass && this.projectClass.ReportDueDate instanceof Date) {
+      // Check if EndDate is a valid Date object and then call getTime()
+      return this.projectClass.ReportDueDate.getTime() > 0;
+    }
+    return false;
   }
 
   isIKOSet(): boolean {
-    return this.projectClass.IKO!.getTime() !== new Date('0001-01-01').getTime();
+    if (this.projectClass && this.projectClass.IKO instanceof Date) {
+      // Check if EndDate is a valid Date object and then call getTime()
+      return this.projectClass.IKO.getTime() > 0;
+    }
+    return false;
   }
 
   isTKOSet(): boolean {
-    return this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
+    if (this.projectClass && this.projectClass.TKO instanceof Date) {
+      // Check if EndDate is a valid Date object and then call getTime()
+      return this.projectClass.TKO.getTime() > 0;
+    }
+    return false;
   }
 }
