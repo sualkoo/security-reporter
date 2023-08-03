@@ -27,7 +27,6 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "types": ["cypress", "node"]
 
   }
 }
