@@ -2,8 +2,8 @@
   <h4 class="left upload-items">Upload items</h4>
   <hr />
   <div class="drop-zone"
-     (drop)="onDrop($event)"
-     [ngClass]="{ 'drag-over': isDragOver }">
+       (drop)="onDrop($event)"
+       [ngClass]="{ 'drag-over': isDragOver }" *ngIf="!isSmallDevice">
     <div class="pb-2 pt-1">
       <mat-icon>cloud_upload</mat-icon>
       <div>
@@ -13,8 +13,19 @@
         Drag and drop files here
       </h4>
       <h4>or</h4>
-      <button class="btn btn-primary" for="fileDropRef">Browse for file</button>
+      <button class="btn btn-primary" (click)="fileInputRef.click()">Browse for file</button>
       <p class="file-type pt-1">Accepted file type: .zip</p>
+    </div>
+  </div>
+  <div class="center">
+    <div (drop)="onDrop($event)" [ngClass]="{ 'drag-over': isDragOver }" *ngIf="isSmallDevice">
+      <div class="pb-2 pt-1">
+        <div>
+          <input #fileInputRef type="file" (change)="upload({event: $event})" accept=".zip" />
+        </div>
+        <button class="btn btn-primary" (click)="fileInputRef.click()">Browse for file</button>
+        <p class="file-type pt-1">Accepted file type: .zip</p>
+      </div>
     </div>
   </div>
   <div class="single-file d-flex align-items-center" *ngIf="uploadedFile">
