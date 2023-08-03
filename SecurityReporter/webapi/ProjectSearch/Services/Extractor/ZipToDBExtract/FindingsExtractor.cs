@@ -187,7 +187,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
                 if (reading)
                 {
-                    result += line;
+                    result += (line + '\n');
                 }
                 else
                 {
@@ -202,6 +202,11 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         }
                     }
                 }
+                
+            }
+            if(line == null)
+            {
+                assignNewData(command, result, newFinding);
             }
         }
 

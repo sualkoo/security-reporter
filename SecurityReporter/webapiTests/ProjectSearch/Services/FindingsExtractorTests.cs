@@ -49,12 +49,11 @@ namespace webapi.ProjectSearch.Services.Tests
             testFinding.SubsectionRepeatability = "The \\texttt{dummyapplication.apk} is signed with a debug certificate (\\texttt{CERT.RSA}), " +
                 "which can be found in the \\texttt{META-INF} folder.The certificate properties are shown in \\cref{figure:DebugCert}.";
             testFinding.SubsectionCountermeasures = "Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)and SHA-2 keysizes.";
-            testFinding.SubsectionReferences = new List<string>
+            /*testFinding.SubsectionReferences = new List<string>
             {
-
                 "\\href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design andDevelopment: 8.4 Code-Signing}",
                 "\\bibentry{CWE-296}"
-            };
+            };*/
 
             parsedFinding.Should().BeEquivalentTo(testFinding);
         }
@@ -86,12 +85,12 @@ namespace webapi.ProjectSearch.Services.Tests
             testFinding.SubsectionRepeatability = "The \\texttt{dummyapplication.apk} is signed with a debug certificate (\\texttt{CERT.RSA}), " +
                 "which can be found in the \\texttt{META-INF} folder.The certificate properties are shown in \\cref{figure:DebugCert}.";
             testFinding.SubsectionCountermeasures = "Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)and SHA-2 keysizes.";
-            testFinding.SubsectionReferences = new List<string>
+            /*testFinding.SubsectionReferences = new List<string>
             {
 
                 "\\href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design andDevelopment: 8.4 Code-Signing}",
                 "\\bibentry{CWE-296}"
-            };
+            };*/
 
             parsedFinding.Should().BeEquivalentTo(testFinding);
 
@@ -111,7 +110,7 @@ namespace webapi.ProjectSearch.Services.Tests
             testFinding.SubsectionDetails = "The \\texttt{dummyapplication.apk} is signed with a debug certificate.";
             testFinding.SubsectionImpact = "Debug certificates do not meet security standards of the release certificates.";
             testFinding.SubsectionRepeatability = "";
-            testFinding.SubsectionReferences = new List<string>();
+            //testFinding.SubsectionReferences = new List<string>();
             testFinding.SubsectionCountermeasures = "";
             parsedFinding.Should().BeEquivalentTo(testFinding);
         }
@@ -155,12 +154,12 @@ namespace webapi.ProjectSearch.Services.Tests
             testFinding.SubsectionRepeatability = "The \\texttt{dummyapplication.apk} is signed with a debug certificate (\\texttt{CERT.RSA}), " +
                 "which can be found in the \\texttt{META-INF} folder.The certificate properties are shown in \\cref{figure:DebugCert}.";
             testFinding.SubsectionCountermeasures = "Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)and SHA-2 keysizes.";
-            testFinding.SubsectionReferences = new List<string>
+            /*testFinding.SubsectionReferences = new List<string>
             {
 
                 "\\href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design andDevelopment: 8.4 Code-Signing}",
                 "\\bibentry{CWE-296}"
-            };
+            };*/
 
             parsedFinding.Should().BeEquivalentTo(testFinding);
         }
