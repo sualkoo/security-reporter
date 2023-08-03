@@ -36,11 +36,11 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
-
-
+import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 
 @NgModule({
@@ -50,7 +50,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     AddProjectReportComponent,
     LandingPageComponent,   
     
-    HighlighterPipe,
+    HighlighterPipe, LoginPageComponent,
 
   ],
   imports: [
@@ -66,6 +66,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     NgFor,
     MatSelectModule,
     MatRadioModule,
+    MatCardModule,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
