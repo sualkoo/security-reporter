@@ -14,7 +14,6 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             // Arrange
             DBDocumentInformationExtractor extractor = new DBDocumentInformationExtractor();
 
-            // Input data
             DocumentInformation documentInfo = new DocumentInformation();
             documentInfo.ProjectReportName = "Dummy Project 1";
             documentInfo.AssetType = "Mobile Application";
