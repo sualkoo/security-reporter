@@ -31,8 +31,8 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             {
                 ProjectReportData data = pdp.Extract(filestream);
                 Finding parsedFinding = data.Findings[0];
-                DBFindingsExtractor dfe = new DBFindingsExtractor(parsedFinding);
-                var result = dfe.extractFinding();
+                DBFindingsExtractor dfe = new DBFindingsExtractor();
+                var result = dfe.extractFinding(parsedFinding);
                 DirectoryInfo createdDirectory = Directory.CreateDirectory("C:\\Users\\user\\Downloads\\resultTest");
 
                 File.WriteAllBytes(createdDirectory + "//main.tex", result.Item1.ToArray());

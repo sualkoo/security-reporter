@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.IO.Compression;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
@@ -11,6 +12,7 @@ namespace webapi.ProjectSearch.Services.Extractor
         DBDocumentInformationExtractor documentInformationExtractor;
         DBExecutiveSummaryExtractor executiveSummaryExtractor;
         DBProjectInformationExtractor projectInformationExtractor;
+        DBFindingsExtractor findingsExtractor;
         DBScopeAndProceduresExtractor scopeAndProceduresExtractor;
         DBTestingMethodologyExtractor testingMethodologyExtractor;
 
@@ -20,6 +22,7 @@ namespace webapi.ProjectSearch.Services.Extractor
             documentInformationExtractor = new DBDocumentInformationExtractor();
             executiveSummaryExtractor = new DBExecutiveSummaryExtractor();
             projectInformationExtractor = new DBProjectInformationExtractor();
+            findingsExtractor = new DBFindingsExtractor();
             scopeAndProceduresExtractor = new DBScopeAndProceduresExtractor();
             testingMethodologyExtractor = new DBTestingMethodologyExtractor();
         }
@@ -44,7 +47,7 @@ namespace webapi.ProjectSearch.Services.Extractor
                     { "Config/Testing_Methodology.tex", testingMethodologyExtractor.extractTestingMethodology(data!.TestingMethodology) },
                 };
 
-                byte[] zipFileBytes = CreateZipFile(fileContents);
+                byte[] zipFileBytes = CreateZipFile(fileContents, data);
 
                 return new FileContentResult(zipFileBytes, "application/zip")
                 {
@@ -58,12 +61,24 @@ namespace webapi.ProjectSearch.Services.Extractor
         }
 
         // Helper function
-        private byte[] CreateZipFile(Dictionary<string, byte[]> fileContents)
+        private byte[] CreateZipFile(Dictionary<string, byte[]> fileContents, ProjectReportData projectReportData)
         {
             using (var memoryStream = new MemoryStream())
             {
                 using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
+                    using(ZipArchive TemplateZip = ZipFile.OpenRead("./ProjectSearch/Services/Extractor/DBToZipExtract/No-Config-Base-Template.zip"))
+                    {
+                        foreach(ZipArchiveEntry templateEntry in TemplateZip.Entries)
+                        {
+                            ZipArchiveEntry destinationEntry = zipArchive.CreateEntry(templateEntry.FullName);
+                            using(Stream sourceStream = templateEntry.Open())
+                            using(Stream destinationStream = destinationEntry.Open())
+                            {
+                                sourceStream.CopyTo(destinationStream);
+                            }
+                        }
+                    }
                     foreach (var entry in fileContents)
                     {
                         var zipEntry = zipArchive.CreateEntry(entry.Key);
@@ -72,9 +87,38 @@ namespace webapi.ProjectSearch.Services.Extractor
                             entryStream.Write(entry.Value, 0, entry.Value.Length);
                         }
                     }
+
+                    extractFindings(zipArchive, projectReportData);
+                    
                 }
                 return memoryStream.ToArray();
             }
         }
+
+        private void extractFindings(ZipArchive zipArchive, ProjectReportData projectReportData)
+        {
+            foreach (Finding finding in projectReportData.Findings)
+            {
+                var resultFinding = findingsExtractor.extractFinding(finding);
+                string entryFolderName = "Config/Findings_Database/" + finding.FolderName;
+
+                var mainFile = zipArchive.CreateEntry(entryFolderName + "/main.tex");
+                using (Stream entryStream = mainFile.Open())
+                {
+                    resultFinding.Item1.CopyTo(entryStream);
+                }
+
+                foreach (var imageData in resultFinding.Item2)
+                {
+                    string imageEntryName = Path.Combine(entryFolderName, imageData.FileName);
+                    ZipArchiveEntry entry = zipArchive.CreateEntry(imageEntryName);
+                    using (Stream entryStream = entry.Open())
+                    {
+                        entryStream.Write(imageData.image, 0, imageData.image.Length);
+                    }
+                }
+            }
+        }
+
     }
 }

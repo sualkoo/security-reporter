@@ -7,12 +7,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
     public class DBFindingsExtractor
     {
-        private Finding finding = null;
-        public DBFindingsExtractor(Finding finding)
-        {
-            this.finding = finding;
-        }
-        public Tuple<MemoryStream, List<(string FileName, Image image)>> extractFinding()
+        public Tuple<MemoryStream, List<(string FileName, byte[] image)>> extractFinding(Finding finding)
         {
             string findingContent =
 @"%
@@ -21,25 +16,25 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %		Author: the DR
 %
 %
-\renewcommand{\FindingAuthor}{" + this.finding.FindingAuthor + @"}
+\renewcommand{\FindingAuthor}{" + finding.FindingAuthor + @"}
 % DO NOT USE \par, \newline or any other line breaking command in FindingName => report will not build
-\renewcommand{\FindingName}{" + this.finding.FindingName + @"}
-\renewcommand{\Location}{" + string.Join(", ", this.finding.Location) + @"}
-\renewcommand{\Component}{" + this.finding.Component + @"}
-\renewcommand{\FoundWith}{" + this.finding.FoundWith + @"}
-\renewcommand{\TestMethod}{" + this.finding.TestMethod + @"}
-\renewcommand{\CVSS}{" + this.finding.CVSS + @"}
-\renewcommand{\CVSSvector}{" + this.finding.CVSSVector + @"}
-\renewcommand{\CWE}{" + this.finding.CWE.ToString() + @"}
+\renewcommand{\FindingName}{" + finding.FindingName + @"}
+\renewcommand{\Location}{" + string.Join(", ", finding.Location) + @"}
+\renewcommand{\Component}{" + finding.Component + @"}
+\renewcommand{\FoundWith}{" + finding.FoundWith + @"}
+\renewcommand{\TestMethod}{" + finding.TestMethod + @"}
+\renewcommand{\CVSS}{" + finding.CVSS + @"}
+\renewcommand{\CVSSvector}{" + finding.CVSSVector + @"}
+\renewcommand{\CWE}{" + finding.CWE.ToString() + @"}
 % Poor-man's combo boxes:
 % High, Medium, Low, Info, TBR (To Be Rated)
-\renewcommand{\Criticality}{" + this.finding.Criticality.ToString() + @"}
+\renewcommand{\Criticality}{" + finding.Criticality.ToString() + @"}
 % Easy, Average, Hard, TBR (To Be Rated)
-\renewcommand{\Exploitability}{" + this.finding.Exploitability.ToString() + @"}
+\renewcommand{\Exploitability}{" + finding.Exploitability.ToString() + @"}
 % Access control, Application Design, Information Disclosure, Outdated Software, Security Configuration
-\renewcommand{\Category}{" + this.finding.Category.ToString() + @"}
+\renewcommand{\Category}{" + finding.Category.ToString() + @"}
 % Easy, Average, Difficult, TBR (To Be Rated)
-\renewcommand{\Detectability}{" + this.finding.Detectability.ToString() + @"}
+\renewcommand{\Detectability}{" + finding.Detectability.ToString() + @"}
 
 
 \ReportFindingHeader{\FindingName}
@@ -50,32 +45,32 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %-------------------------------------------
 
 \subsection*{Details}
-" + this.finding.SubsectionDetails + @"
+" + finding.SubsectionDetails + @"
 \subsection*{Impact}
-" + this.finding.SubsectionImpact + @"
+" + finding.SubsectionImpact + @"
 \subsection*{Repeatability}
-" + this.finding.SubsectionRepeatability + @"
+" + finding.SubsectionRepeatability + @"
 \subsection*{Countermeasures}
-" + this.finding.SubsectionCountermeasures + @"
+" + finding.SubsectionCountermeasures + @"
 \subsection*{References}
-" + this.finding.SubsectionReferences + @"
+" + finding.SubsectionReferences + @"
 ";
             MemoryStream memoryStream = new MemoryStream();
             byte[] bytes = Encoding.UTF8.GetBytes(findingContent);
             memoryStream.Write(bytes, 0, bytes.Length);
             memoryStream.Seek(0, SeekOrigin.Begin);
 
-            var imageList= CreateFindingImages();
+            var imageList= CreateFindingImages(finding);
 
-            Tuple<MemoryStream, List<(string FileName, Image image)>> result = 
-                new Tuple<MemoryStream, List<(string FileName, Image image)>>(memoryStream, imageList);
+            Tuple<MemoryStream, List<(string FileName, byte[] image)>> result = 
+                new Tuple<MemoryStream, List<(string FileName, byte[] image)>>(memoryStream, imageList);
 
             return result;
         }
 
-        private List<(string FileName, Image Image)> CreateFindingImages()
+        private List<(string FileName, byte[] Image)> CreateFindingImages(Finding finding)
         {
-            List<(string FileName, Image Image)> result = new List<(string FileName, Image Image)>();
+            List<(string FileName, byte[] Image)> result = new List<(string FileName, byte[] Image)>();
 
             foreach (var image in finding.imagesList)
             {
@@ -83,7 +78,8 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
                 {
                     using (MemoryStream memoryStream = new MemoryStream(image.Content))
                     {
-                        result.Add((image.FileName, Image.FromStream(memoryStream)));
+                        byte[] imageBytes = memoryStream.ToArray();
+                        result.Add((image.FileName, imageBytes));
                     }
                 }
             }
