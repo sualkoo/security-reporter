@@ -5,9 +5,6 @@ namespace webapi.ProjectSearch.Services
 {
     public class FindingsExtractor
     {
-        ZipArchiveEntry currentEntry;
-        ZipArchiveEntry findingsDirectory;
-        List<Finding> findingsList = new List<Finding>();
         public Finding extractFinding(ZipArchiveEntry currentEntry)
         {
             Finding newFinding = new Finding();

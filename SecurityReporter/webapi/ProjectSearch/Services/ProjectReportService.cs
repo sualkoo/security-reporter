@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
+﻿using System.Text;
 using webapi.ProjectSearch.Models;
 using webapi.Service;
 using Ionic.Zip;
-using System.IO;
-using System.Web;
-
 
 namespace webapi.ProjectSearch.Services
 {

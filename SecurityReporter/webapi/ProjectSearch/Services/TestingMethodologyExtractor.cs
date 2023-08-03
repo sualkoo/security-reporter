@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.ObjectPool;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services

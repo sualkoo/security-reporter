@@ -65,7 +65,6 @@ namespace webapi.ProjectSearch.Models
         public EntityValidationResult ValidateTimeFrames(T entity)
         {
             var validationResults = new List<ValidationResult>();
-            var vc = new ValidationContext(entity, null, null);
 
             var timeFrameStartProperty = typeof(T).GetProperty("TimeFrameStart");
             var timeFrameEndProperty = typeof(T).GetProperty("TimeFrameEnd");

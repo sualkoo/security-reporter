@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services
 {

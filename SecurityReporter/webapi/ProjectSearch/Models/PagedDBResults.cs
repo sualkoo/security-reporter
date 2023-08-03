@@ -7,7 +7,6 @@
         public int TotalRecords { get; set; }
         public Uri NextPage { get; set; }
         public T Data { get; set; }
-
         public PagedDBResults(T data, int pageNumber)
         {
             this.PageNumber = pageNumber;

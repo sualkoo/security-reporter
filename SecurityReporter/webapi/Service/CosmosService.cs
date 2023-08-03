@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Azure.Cosmos;
 using System.ComponentModel;
 using System.Net;
-using System.Text;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace webapi.Service
 {

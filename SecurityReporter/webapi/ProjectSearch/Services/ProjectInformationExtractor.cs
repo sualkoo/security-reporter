@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webapi.Models.ProjectReport;
@@ -11,7 +10,6 @@ namespace webapi.ProjectSearch.Services
         ZipArchiveEntry projectInfoEntry;
         Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary;
         ProjectInformation newProjectInfo = new ProjectInformation();
-        DateTime newReportDate;
         bool technicalContacts = false;
         bool pentestTeamMember = false;
         public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry, 

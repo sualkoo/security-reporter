@@ -1,19 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using System.IO;
-using System.Threading.Tasks;
 using webapi.ProjectSearch.Controllers;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using NUnit.Framework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Models.ProjectReport;
-using Microsoft.Azure.Cosmos.Linq;
-using System.IO.Compression;
-using NUnit.Framework.Constraints;
-using Microsoft.AspNetCore.Http.HttpResults;
-using NUnit.Framework.Interfaces;
 
 namespace webapi.ProjectReportControllers.Tests
 {
