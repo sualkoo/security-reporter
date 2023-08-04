@@ -118,3 +118,16 @@
     margin-right: 100px;
    margin-top: 50px;
 }
+
+.edit-icon {
+  color: #009999;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative; 
+}
+
+  .edit-icon:hover {
+    color: #ff9900; 
+    transform: scale(1.1); 
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+  }
