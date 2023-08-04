@@ -153,7 +153,7 @@ export class AddProjectComponent {
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
-    this.isPentestValueInvalid = value <= 2 || value > 10;
+    this.isPentestValueInvalid = value < 2 || value > 10;
   }
 
   onChildInputValueChanged(value: string, id: string) {
