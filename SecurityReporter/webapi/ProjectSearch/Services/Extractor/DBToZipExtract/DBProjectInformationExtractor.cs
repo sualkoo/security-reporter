@@ -11,7 +11,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 			if (projectInformation.TechnicalContacts != null) {
 				foreach (ProjectInformationParticipant tc in projectInformation.TechnicalContacts)
 				{
-					string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+					string tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
 					technicalContactsParsed.Add(tcString);
 				}
 			}
@@ -21,7 +21,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
             {
                 foreach (ProjectInformationParticipant tc in projectInformation.PentestTeam)
                 {
-                    string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+                    string tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
                     pentestTeamParsed.Add(tcString);
                 }
             }
@@ -31,15 +31,15 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %	PROJECT INFORMATION
 %----------------------------------------------------------------------------------------
 \newcommand{\ApplicationManager}{" + projectInformation.ApplicationManager!.Name + @"}
-\newcommand{\ApplicationManagerDepartment}{" + projectInformation.ApplicationManager.Department + @"}
+\newcommand{\ApplicationManagerDepartment}{" + projectInformation.ApplicationManager.Department!.Replace("&", "\\&") + @"}
 \newcommand{\ApplicationManagerContact}{\href{mailto://" + projectInformation.ApplicationManager.Contact + @"}{" + projectInformation.ApplicationManager.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\BusinessOwnerName}{" + projectInformation.BusinessOwner!.Name + @"}
-\newcommand{\BusinessOwnerDepartment}{" + projectInformation.BusinessOwner!.Department + @"}
+\newcommand{\BusinessOwnerDepartment}{" + projectInformation.BusinessOwner!.Department!.Replace("&", "\\&") + @"}
 \newcommand{\BusinessOwnerContact}{\href{mailto://" + projectInformation.BusinessOwner!.Contact + @"}{" + projectInformation.BusinessOwner.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\BusinessRepresentativeName}{" + projectInformation.BusinessRepresentative!.Name + @"}
-\newcommand{\BusinessRepresentativeDepartment}{" + projectInformation.BusinessRepresentative!.Department + @"}
+\newcommand{\BusinessRepresentativeDepartment}{" + projectInformation.BusinessRepresentative!.Department!.Replace("&", "\\&") + @"}
 \newcommand{\BusinessRepresentativeContact}{\href{mailto://" + projectInformation.BusinessRepresentative!.Contact + @"}{" + projectInformation.BusinessRepresentative.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\TechnicalContactsNumber}{" + technicalContactsParsed.Count() + @"}
@@ -50,11 +50,11 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 % Not needed for Scope document
 % Required for Report document
 \newcommand{\PentestLeadName}{" + projectInformation.PentestLead!.Name + @"}
-\newcommand{\PentestLeadDepartment}{" + projectInformation.PentestLead!.Department + @"}
+\newcommand{\PentestLeadDepartment}{" + projectInformation.PentestLead!.Department!.Replace("&", "\\&") + @"}
 \newcommand{\PentestLeadContact}{\href{mailto://" + projectInformation.PentestLead!.Contact + @"}{" + projectInformation.PentestLead!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\PentestCoordinatorName}{" + projectInformation.PentestCoordinator!.Name + @"}
-\newcommand{\PentestCoordinatorDepartment}{" + projectInformation.PentestCoordinator!.Department + @"}
+\newcommand{\PentestCoordinatorDepartment}{" + projectInformation.PentestCoordinator!.Department!.Replace("&", "\\&") + @"}
 \newcommand{\PentestCoordinatorContact}{\href{mailto://" + projectInformation.PentestCoordinator!.Contact + @"}{" + projectInformation.PentestCoordinator!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 

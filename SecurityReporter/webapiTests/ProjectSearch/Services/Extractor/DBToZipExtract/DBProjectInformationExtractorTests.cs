@@ -17,32 +17,32 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             projectInformation.ApplicationManager = new ProjectInformationParticipant()
             {
                 Name = "Anakin Skywalker",
-                Department = "SHS DI D\\&A CEC ITH EH-PLM",
+                Department = "SHS DI DA CEC ITH EH-PLM",
                 Contact = "anakin.skywalker@siemens-healthineers.com"
             };
             projectInformation.BusinessOwner = new ProjectInformationParticipant()
             {
                 Name = "Padme Amidala",
-                Department = "SHS DI D\\&A CEC EPE",
+                Department = "SHS DI DA CEC EPE",
                 Contact = "padme.amidala@siemens-healthineers.com"
             };
             projectInformation.BusinessRepresentative = new ProjectInformationParticipant()
             {
                 Name = "Luke Skywalker",
-                Department = "SHS DI D\\&A CEC ITH EH-PLM",
+                Department = "SHS DI DA CEC ITH EH-PLM",
                 Contact = "luke.skywalker@siemens-healthineers.com"
             };
             projectInformation.TechnicalContacts = new List<ProjectInformationParticipant>();
             ProjectInformationParticipant technicalContact = new ProjectInformationParticipant() 
             {
                 Name = "Obi Wan Kenobi",
-                Department = "SHS TE DC SVK D\\&A DIG PTM",
+                Department = "SHS TE DC SVK D&A DIG PTM",
                 Contact = "obi-wan.kenobi@siemens-healthineers.com"
             };
             ProjectInformationParticipant technicalContact2 = new ProjectInformationParticipant()
             {
                 Name = "Baby Yoda",
-                Department = "SHS DI D\\&A CEC ITH EH-R\\&D",
+                Department = "SHS DI D&A CEC ITH EH-R&D",
                 Contact = "baby.yoda@siemens-healthineers.com"
             };
             projectInformation.TechnicalContacts.Add(technicalContact);
@@ -51,14 +51,14 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             ProjectInformationParticipant pentestLead = new ProjectInformationParticipant()
             {
                 Name = "Lukas Nad",
-                Department = "SHS TE DC CYS CSA P\\&PA",
+                Department = "SHS TE DC CYS CSA PPA",
                 Contact = "lukas.nad@siemens-healthineers.com"
             };
             projectInformation.PentestLead = pentestLead;
             ProjectInformationParticipant pentestCoordinator = new ProjectInformationParticipant()
             {
                 Name = "Alzbeta Vojtusova",
-                Department = "SHS TE DC CYS CSA P\\&PA",
+                Department = "SHS TE DC CYS CSA& P&PA",
                 Contact = "alzbeta.vojtusova@siemens-healthineers.com"
             };
             projectInformation.PentestCoordinator = pentestCoordinator;
@@ -66,7 +66,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract.Tests
             ProjectInformationParticipant PentestTeamParticipant = new ProjectInformationParticipant()
             {
                 Name = "Lukas Nad",
-                Department = "SHS TE DC CYS CSA P\\&PA",
+                Department = "SHS TE DC CYS CSA P&PA",
                 Contact = "lukas.nad@siemens-healthineers.com"
             };
             ProjectInformationParticipant PentestTeamParticipant2 = new ProjectInformationParticipant()

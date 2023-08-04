@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as JSZip from 'jszip';
-import { NotificationService } from './notification.service';
 import { ProjectReport } from '../interfaces/project-report.model';
 import { PagedResponse } from '../interfaces/paged-response.model';
 import { FindingResponse } from '../interfaces/finding-response.model';
@@ -10,7 +9,8 @@ import { FindingResponse } from '../interfaces/finding-response.model';
   providedIn: 'root',
 })
 export class ProjectReportService {
-  private apiUrl: string;
+
+  public readonly apiUrl: string;
 
   constructor(private http: HttpClient) {
     this.apiUrl = 'https://localhost:7075/project-reports';
