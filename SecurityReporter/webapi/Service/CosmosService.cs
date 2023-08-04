@@ -20,7 +20,6 @@ namespace webapi.Service
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ProjectReportContainer";
-        private string ReportDownloadContainer { get; } = "ProjectDownloadContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
@@ -30,8 +29,7 @@ namespace webapi.Service
             PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
-            //ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
-            ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportDownloadContainer);
+            ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
