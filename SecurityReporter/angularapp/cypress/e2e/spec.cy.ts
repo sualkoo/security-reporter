@@ -77,7 +77,7 @@ describe('template spec', () => {
 
     cy.get('div#scrollable_box').scrollTo(0, 500);
     cy.get('mat-icon#upButton').should('contain', 'arrow_upward');
-    
+
     cy.get('mat-icon#upButton').click();
 
   })
@@ -107,8 +107,7 @@ describe('template spec', () => {
 
     cy.get('input.checkbox').eq(5).check();
     cy.get('input.checkbox').eq(5).should('be.checked');
-
-    cy.get('button#search_button').click();
+    
 
     cy.get('div.card-body').should('not.exist');
     cy.get('mat-icon#upButton').should('not.exist');
@@ -167,13 +166,29 @@ describe('template spec', () => {
     }
     )
 
-    it('Uploading wrong zip', () => {
+  it('Should upload Zip file', () => {
 
-      cy.fixture('zle.zip').then(fileContent => {
-        cy.get('input[type="file"]').attachFile({ fileContent, fileName: 'zle.zip', mimeType: 'application/zip' });
-
-      });
+    cy.get('input[type="file"]').attachFile({
+      filePath: 'dobre.zip',
+      fileName: 'dobre.zip',
+      mimeType: 'application/zip'
+    }).then(() => {
+      cy.wait(2000);
       cy.get('button#upload_button').click();
     });
+    cy.wait(2000);
+  });
+
+  it('Shouldnt upload Zip file', () => {
+
+    cy.get('input[type="file"]').attachFile({
+      filePath: 'zle.zip',
+      fileName: 'zle.zip',
+      mimeType: 'application/zip'
+    }).then(() => {
+      cy.wait(2000);
+      cy.get('button#upload_button').click();
+    });
+  });
 
 })
