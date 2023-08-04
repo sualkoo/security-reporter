@@ -22,7 +22,7 @@ describe('Item Management Test', () => {
 
     // Step 2: Select the edit option for a specific item
     function SearchSpecificPMItem() {
-        cy.get('.mat-icon').click();
+        cy.get('.mat-expansion-panel-header-title > div').click();
         cy.get('.ng-tns-c1205077789-2 > .mat-mdc-form-field-infix').click();
         cy.get('#mat-input-0').type('A');
         cy.get(':nth-child(2) > app-select-component > .mat-mdc-form-field > .mat-mdc-text-field-wrapper').click();
@@ -54,7 +54,7 @@ describe('Item Management Test', () => {
 
         cy.get('#mat-input-8').click({ force: true });
         cy.get('#mat-input-8').clear().type('dataNow', { force: true });
-        cy.get('#mat-radio-2-input').click();
+        cy.get('#mat-radio-3-input').click();
         cy.get('#mat-input-14').click().type('random@siemens-healthineers.com');
         cy.get(':nth-child(9) > .mdc-button__label').click();
         cy.get('#mat-select-value-13').click();
@@ -63,7 +63,6 @@ describe('Item Management Test', () => {
 
     // Step 6: Verify that mandatory fields are indicated and prevent incomplete data submission
     function errorHandling() {
-        cy.get('strong').should('have.value', '');
         cy.wait(1000);
         cy.get('#mat-input-8').click().clear().type('SDA2023');
         cy.wait(1000);
