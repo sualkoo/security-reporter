@@ -11,7 +11,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 
 
 const routes: Routes = [
-  { path: 'welcome, component: LandingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'pentester', 'coordinator', 'client', 'default'] } },
+  { path: 'welcome', component: LandingPageComponent, canActivate: [Roles], data: { allowedRoles: ["admin", "pentester", "coordinator", "client", "default"] } },
   { path: 'project-search', component: ProjectSearchPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'pentester'] } },
   { path: 'project-management', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'add-project', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },

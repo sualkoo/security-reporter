@@ -41,7 +41,6 @@ import { InputComponent } from './project-listing/components/input/input.compone
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 
