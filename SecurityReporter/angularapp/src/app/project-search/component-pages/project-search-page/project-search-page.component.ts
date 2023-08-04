@@ -314,11 +314,28 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
-  onGetSource(projectId: string): void {
+  onGetSource(projectId: string, projectName: string): void {
     this.notificationService.displayMessage("Downloading source...", "info");
-    const link = document.createElement('a');
-    link.href = `${this.projectReportService.apiUrl}/${projectId}/download`;
-    link.click();
+    const url = `${this.projectReportService.apiUrl}/${projectId}/download`;
+
+    fetch(url)
+      .then(response => {
+        // Clone the response before consuming it as a blob
+        return response.blob().then(blob => {
+          // Now you can safely read the text from the cloned response
+            const sanitizedProjectName = projectName.replace(/\s/g, "_");
+            const fullFilename = `Report-${sanitizedProjectName}.zip`;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = fullFilename;
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href); // Clean up the object URL
+        });
+      })
+      .catch(error => {
+        console.error('Error downloading the file:', error);
+      });
   }
 
   showSidebar: boolean = true;
