@@ -21,4 +21,15 @@ export class SelectComponentComponent {
   onSelectChange() {
     this.valueChanged.emit(this.inputValue);
   }
+
+  selectedValue: string | null = null;
+
+  onValueChange(value: string) {
+    this.selectedValue = value;
+    this.valueChanged.emit(value);
+  }
+
+  setSelectedValue(value: string | null) {
+    this.selectedValue = value;
+  }
 }

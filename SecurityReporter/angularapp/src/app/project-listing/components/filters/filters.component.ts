@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
@@ -8,13 +8,14 @@ import { InputComponent } from '../input/input.component';
 import { FormControl, FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   standalone: true,
-  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent, MatButtonModule]
+  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent, MatButtonModule, MatFormFieldModule]
 })
 export class FiltersComponent {
   constructor() {
@@ -111,7 +112,7 @@ export class FiltersComponent {
   filtersChanged() {
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
-    console.log("zavolane");
+    console.log(this.url)
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
@@ -157,7 +158,6 @@ export class FiltersComponent {
   }
 
   resetFilters() {
-    this.projectNameControl.setValue('');
     this.filteredClass = {};
     this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);

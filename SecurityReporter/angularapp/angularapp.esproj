@@ -18,6 +18,7 @@
     <Folder Include="src\app\project-listing\services\" />
     <Folder Include="src\app\project-listing\services\" />
     <Folder Include="src\app\project-search\components\" />
-    <Folder Include="src\app\project-search\interfaces\" />
+    <Folder Include="src\app\project-search\interfaces\Enums\" />
+    <Folder Include="src\app\project-search\interfaces\ProjectReport\" />
   </ItemGroup>
 </Project>

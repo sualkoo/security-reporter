@@ -1,0 +1,35 @@
+
+.dismiss-button {
+  background-color: #ec6602;
+}
+
+.alert-message {
+  position: relative;
+  color: #393939;
+  left: 13%;
+  width: 75%;
+}
+
+.header {
+    color: #351a1a;
+    font-family: 'Siemens sans';
+}
+
+.title {
+    position: absolute;
+    font-family: 'Siemens sans';
+    font-size: large;
+    top: 13%;
+    left: 15%;
+    font-weight: bold;
+}
+
+.cancel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 3px;
+    margin-right: 3px;
+    text-decoration: none;
+    cursor: pointer;
+}
