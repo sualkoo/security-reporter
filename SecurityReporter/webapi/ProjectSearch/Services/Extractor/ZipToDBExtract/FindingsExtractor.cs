@@ -156,7 +156,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     newFinding.SubsectionCountermeasures = data;
                     break;
                 case "References":
-                    newFinding.SubsectionReferences = data;
+                    newFinding.SubsectionReferences = new List<string> { data };
                     break;
             }
         }
