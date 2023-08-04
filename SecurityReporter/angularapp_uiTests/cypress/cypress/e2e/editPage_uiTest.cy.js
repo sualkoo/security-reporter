@@ -42,7 +42,7 @@ describe('Item Management Test', () => {
 
         cy.wait(1000);
 
-        // Step 4: Verify that the edit page/form is pre-populated with the existing item's information
+        // Step 4: Verify that the edit page/form is pre-populated with the existing item's information 
         cy.get('#mat-select-value-13').should('not.be.empty');
         cy.get('#mat-select-value-15').should('not.be.empty');
         cy.get('#mat-select-value-17').should('not.be.empty');
