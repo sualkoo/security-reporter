@@ -1,1 +1,138 @@
-<app-add-project-report></app-add-project-report>
+<div class="container-fluid bg-light">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh; overflow-y: auto">
+      <div class="mt-2 pt-2">
+
+        <div class="search-container">
+          <h1 class="center pb-2 mt-3">Search items</h1>
+          <mat-form-field class="search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()" (keyup.enter)="isFormValid && !isLoading ? onSearch() : null">
+          </mat-form-field>
+          <div class="container-fluid">
+            <div class="row mb-2 mt-2">
+              <div class="col-auto">
+                <h4>Filters</h4>
+              </div>
+              <hr />
+            </div>
+          </div>
+          <div class="center">
+            <div class="filters-container">
+              <div class="filter-item" *ngFor="let case of keywords;">
+                <input class="checkbox"
+                       type="checkbox"
+                       [id]="case.id"
+                       [value]="case.value"
+                       [checked]="case.checked"
+                       (change)="toggleCheckbox(case)">
+                <label class="p-2" [for]="case.id">{{ case.label }}</label><br>
+              </div>
+            </div>
+          </div>
+
+          <div class="center submit-button pt-4">
+            <button class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+              <span *ngIf="!isLoading">Search</span>
+              <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            </button>
+            <button class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+              Clear filters
+            </button>
+          </div>
+        </div>
+        <div class="container  mt-5 ml-1 col-12">
+          <div>
+
+            <!-- Upload -->
+            <app-add-project-report></app-add-project-report>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Project Report Findings -->
+    <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
+      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
+        <div>
+          <div class="container-fluid mt-3">
+            <h4>Found findings: {{totalRecords}}</h4>
+          </div>
+          <div *ngFor="let findingsGroup of groupedFindingsEntries; let key = index">
+            <div class="card mt-3 mb-3">
+              <div class="card-body">
+                <div class="card-title">
+                  <h3 *ngIf="!projectNameTest" class="mb-2">Project: {{findingsGroup[0]}}</h3>
+                  <h3 *ngIf="projectNameTest" class="mb-2"
+                      [innerHtml]="findingsGroup[0] | highlighter:highlightValue:'partial'">
+                  </h3>
+                </div>
+                <div class="card bg-light mt-2 mb-2" *ngFor="let finding of groupedFindingsEntries[key][1]">
+
+                  <div class="card-body">
+
+                    <div class="card-title">
+
+                      <h5 *ngIf="!projectNameTest">Finding: {{finding.findingName}}</h5>
+
+                      <h5 *ngIf="projectNameTest">
+                        <span>Finding: {{finding.findingName}}</span>
+                      </h5>
+                    </div>
+
+                    <h6 class="card-subtitle mb-2 text-muted">Author: {{finding.findingAuthor}}</h6>
+
+                    <div class="card-text">
+
+                      <div class="mb-2">
+
+                        <h6>Details</h6>
+                        <div *ngIf="!detailsTest" class="mb-2">{{finding.subsectionDetails}}</div>
+                        <div *ngIf="detailsTest" class="mb-2"
+                             [innerHtml]="finding.subsectionDetails | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>Impact</h6>
+                        <div *ngIf="!impactTest" class="mb-2">{{finding.subsectionImpact}}</div>
+                        <div *ngIf="impactTest" class="mb-2"
+                             [innerHtml]="finding.subsectionImpact  | highlighter:highlightValue:'partial'">
+                        </div>
+                        <h6>References</h6>
+                        <div *ngIf="!referencesTest" class="mb-2">{{finding.subsectionReferences}}</div>
+                        <div *ngIf="referencesTest" class="mb-2"
+                             [innerHtml]="finding.subsectionReferences  | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>Repeatability</h6>
+                        <div *ngIf="!repeatabilityTest" class="mb-2">{{finding.subsectionRepeatability}}</div>
+                        <div *ngIf="repeatabilityTest" class="mb-2"
+                             [innerHtml]="finding.subsectionRepeatability  | highlighter:highlightValue:'partial'">
+                        </div>
+
+                        <h6>CWE</h6>
+                        <div *ngIf="!cweTest" class="mb-2">{{finding.cwe}}</div>
+                        <div *ngIf="cweTest" class="mb-2"
+                             [innerHtml]="finding.cwe?.toString()  | highlighter:highlightValue:'partial'">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3">
+
+                  <button class="btn btn-dark">Get Source</button>
+                  <button class="btn btn-dark">Get PDF</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center pagination-centered">
+              <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

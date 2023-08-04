@@ -228,6 +228,23 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
+  async filtersChangedHandler(filters: string) {
+    this.filters = filters;
+    this.isLoading = true;
+
+    try {
+      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
+      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+    } catch (error) {
+      this.filterError = true;
+      this.databaseError = true;
+      this.dataSource.data = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
       case 1:

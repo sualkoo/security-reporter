@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppComponent } from './app.component';
-import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,7 +16,6 @@ import { SelectComponentComponent } from './project-management/components/select
 import { InputComponentComponent } from './project-management/components/input-component/input-component.component';
 import { RadioButtonComponentComponent } from './project-management/components/radio-button-component/radio-button-component.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
@@ -25,10 +23,21 @@ import { DataGridComponentComponent } from './project-listing/components/data-gr
 import { MatButtonModule } from '@angular/material/button';
 import { DeletePopupComponentComponent } from './project-listing/components/delete-popup-component/delete-popup-component.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AddProjectReportComponent } from './project-search/components/add-project-report/add-project-report.component';
+import { AddProjectComponent } from './project-management/component-pages/add-project-page/add-project.component';
 import { FiltersComponent } from './project-listing/components/filters/filters.component';
 import { FiltersDatepickerComponent } from './project-listing/components/datepicker/datepicker.component';
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
+import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
+
+
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -41,9 +50,14 @@ import { Roles } from './roles/roles';
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    LandingPageComponent,   
+    
+    HighlighterPipe,
+
     LandingPageComponent,    
   ],
   imports: [
+    AddProjectComponent,
     BrowserModule,
     HttpClientModule,
     MatSlideToggleModule,
@@ -56,12 +70,20 @@ import { Roles } from './roles/roles';
     NgFor,
     MatSelectModule,
     MatRadioModule,
-    AddProjectComponent,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
+    MatSnackBarModule,
+    MatIconModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    ScrollingModule,
+    MatSnackBarModule,
+    MatIconModule,
     CommonModule,
     ListProjectsPageComponent,
     DataGridComponentComponent,

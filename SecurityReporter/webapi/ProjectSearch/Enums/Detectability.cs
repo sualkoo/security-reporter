@@ -2,6 +2,7 @@
 {
     public enum Detectability
     {
+        Undefined,
         Difficult,
         Average,
         Easy,
