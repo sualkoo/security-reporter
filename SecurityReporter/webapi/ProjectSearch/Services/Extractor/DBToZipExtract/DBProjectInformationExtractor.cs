@@ -11,7 +11,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 			if (projectInformation.TechnicalContacts != null) {
 				foreach (ProjectInformationParticipant tc in projectInformation.TechnicalContacts)
 				{
-					string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+					string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
 					technicalContactsParsed.Add(tcString);
 				}
 			}
@@ -21,7 +21,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
             {
                 foreach (ProjectInformationParticipant tc in projectInformation.PentestTeam)
                 {
-                    string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+                    string tcString = "\t" + tc.Name + " & " + tc.Department + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
                     pentestTeamParsed.Add(tcString);
                 }
             }
