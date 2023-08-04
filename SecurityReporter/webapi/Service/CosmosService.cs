@@ -20,6 +20,7 @@ namespace webapi.Service
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ProjectReportContainer";
+        private string ReportDownloadContainer { get; } = "ProjectDownloadContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
@@ -29,7 +30,8 @@ namespace webapi.Service
             PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
-            ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
+            //ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
+            ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportDownloadContainer);
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
@@ -399,13 +401,11 @@ namespace webapi.Service
             string query = "SELECT DISTINCT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
-                            "JOIN r IN f.SubsectionReferences " +
                             "WHERE";
 
             string queryCount = "SELECT DISTINCT c.id, f.FindingName " +
                                 "FROM c " +
                                 "JOIN f IN c.Findings " +
-                                "JOIN r IN f.SubsectionReferences " +
                                 "WHERE";
 
             if (!string.IsNullOrEmpty(projectName))
@@ -430,7 +430,7 @@ namespace webapi.Service
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" LOWER(r) LIKE LOWER(@references) ");
+                querypath.Add(" LOWER(f.SubsectionReferences) LIKE LOWER(@references) ");
                 queryPage += "&" + nameof(references) + "=" + Uri.EscapeDataString(references);
             }
             if (!string.IsNullOrEmpty(cWE) && int.TryParse(cWE, out valueInt))
