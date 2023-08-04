@@ -1,71 +1,80 @@
-// Describe the test suite
-describe('Edit Page Test', () => {
-    // Set up the test environment before each test case
+describe('Item Management Test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200/list-projects');
+        cy.visit('https://localhost:4200');
+        // Assuming the user is already logged in and on the homepage or item management section.
     });
 
-    // Test case: should edit a page
     it('should edit a page', () => {
         navigateToEditPage();
+        SearchSpecificPMItem();
+        editPageVerification();
         editPageActions();
-        saveChanges();
-        verifyChanges();
+        errorHandling();
+        feedbackWindow();
     });
 
-    // Function to navigate to the edit page
+    // Step 1: View the list or overview of items
     function navigateToEditPage() {
-        // Click on the edit icon to navigate to the edit page
+        cy.get('.buttons-container > :nth-child(1) > .mdc-button__label').click();
+
+    }
+
+    // Step 2: Select the edit option for a specific item
+    function SearchSpecificPMItem() {
         cy.get('.mat-icon').click();
-        // Click on the form field to focus on it
         cy.get('.ng-tns-c1205077789-2 > .mat-mdc-form-field-infix').click();
-        // Type 'A' into the input field
         cy.get('#mat-input-0').type('A');
-        // Click on the edit icon of the first row to open the edit page
+        cy.get(':nth-child(2) > app-select-component > .mat-mdc-form-field > .mat-mdc-text-field-wrapper').click();
+        cy.get('#mat-option-9').click();
+        cy.get(':nth-child(5) > app-datepicker > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-icon-suffix').click();
+        const clicks = 5;
+        for (let i = 0; i < clicks; i++) {
+            cy.get('.mat-calendar-previous-button').click();
+        }
+        cy.get('.cdk-overlay-backdrop').click();
         cy.get('.mat-mdc-row:nth-child(1) .mat-icon').contains('edit').click();
-        // Scroll to a specific position on the page
-        cy.scrollTo(0, 260);
     }
 
-    // Function to perform edit page actions
+    function editPageVerification() {
+        // Step 3: Verify that the web application navigates to the edit page/form
+        cy.url().should('include', '/edit-project/');
+
+        cy.wait(1000);
+
+        // Step 4: Verify that the edit page/form is pre-populated with the existing item's information
+        cy.get('#mat-select-value-13').should('not.be.empty');
+        cy.get('#mat-select-value-15').should('not.be.empty');
+        cy.get('#mat-select-value-17').should('not.be.empty');
+        cy.get('#mat-input-11').invoke('val').should('not.be.empty');
+    }
+
+    // Step 5: Modify the item's information accurately using input fields or controls
     function editPageActions() {
-        // Click on the input field for Project Name and type 'VantedCorp'
+
         cy.get('#mat-input-8').click({ force: true });
-        cy.get('#mat-input-8').clear().type('VantedCorp', { force: true });
-        // Click on a button to perform some action
-        cy.get('.ng-tns-c1205077789-17 .mat-mdc-button-touch-target').click();
-        // Click on a specific cell in the calendar
-        cy.get(':nth-child(4) > [data-mat-col="3"] > .mat-calendar-body-cell').click({ force: true });
-        // Click on the body of the page to dismiss any popups or dropdowns
-        cy.get('body').click();
-        // Click on a dropdown and select an option
-        cy.get('#mat-select-value-15').click();
-        cy.get('#mat-option-35').click();
-        // Click on a radio button to select it
+        cy.get('#mat-input-8').clear().type('dataNow', { force: true });
         cy.get('#mat-radio-2-input').click();
-        // Scroll to a specific position on the page
-        cy.scrollTo(0, 260);
-        // Click on an input field and type an email address
-        cy.get('#mat-input-14').click().type('random@siemens-healthineers.com').should('have.value', 'random@siemens-healthineers.com');
-        // Click on a button to perform some action
+        cy.get('#mat-input-14').click().type('random@siemens-healthineers.com');
         cy.get(':nth-child(9) > .mdc-button__label').click();
-        // Scroll to a specific position on the page
-        cy.scrollTo(0, 308);
-        // Click on a button to perform some action
+        cy.get('#mat-select-value-13').click();
+        cy.get('#mat-option-31').click();
+    }
+
+    // Step 6: Verify that mandatory fields are indicated and prevent incomplete data submission
+    function errorHandling() {
+        cy.get('strong').should('have.value', '');
+        cy.wait(1000);
+        cy.get('#mat-input-8').click().clear().type('SDA2023');
+        cy.wait(1000);
         cy.get('.create-button > .mdc-button__label').click();
+
     }
 
-    // Function to save changes (scroll to a specific position)
-    function saveChanges() {
-        cy.scrollTo(0, 75);
-    }
+    // Step 7: Verify that real-time feedback and validation messages are provided for errors or missing information
 
-    // Function to verify the changes made on the page
-    function verifyChanges() {
-        // Assert that the Project Name input field has the expected value 'VantedCorp'
-        cy.get('#mat-input-8').should('have.value', 'VantedCorp');
-        // Assert that a radio button is checked
-        cy.get('#mat-radio-2-input').should('be.checked');
+    function feedbackWindow() {
+
+        cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
     }
 });

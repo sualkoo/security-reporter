@@ -81,15 +81,8 @@ Scenario: User can easily select and edit specific items
   And mandatory fields should be clearly indicated to prevent incomplete data submission
   And the web application should support validation to ensure correct data format and requirements
   And provide real-time feedback and validation messages for any errors or missing information
-  And the user should be able to navigate and interact with the edit form easily
-
-Scenario: Handling Errors and Confirmation Message
   When the user attempts to save the modifications by clicking the "Save" or "Update" button
   Then the web application should handle any encountered errors or exceptions gracefully
   And display appropriate error messages or notifications
   And upon successful saving of the changes, the web application should display a confirmation message indicating the update was successful
 
-Scenario: Security Measures
-  Given the web application implements appropriate security measures
-  When unauthorized users attempt to access the edit page or modify item information
-  Then they should be denied access and not be able to perform any unauthorized actions
