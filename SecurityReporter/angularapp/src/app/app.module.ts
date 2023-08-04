@@ -40,8 +40,10 @@ import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
-
 
 @NgModule({
   declarations: [
@@ -49,9 +51,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     LandingPageComponent,   
-    
     HighlighterPipe, LoginPageComponent,
-
+    LandingPageComponent,    
   ],
   imports: [
     AddProjectComponent,
@@ -63,6 +64,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,
@@ -87,8 +89,9 @@ import { LoginPageComponent } from './login-page/login-page.component';
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule,
   ],
-  providers: [],
+  providers: [Roles],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -18,5 +18,7 @@ namespace webapi.Service
         Task<ProjectReportData> GetProjectReport(string projectId);
         Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page);
 
+        Task<ProjectData> GetProjectById(string id);
+        Task<bool> UpdateProject(ProjectData data);
     }
 }

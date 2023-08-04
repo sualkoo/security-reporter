@@ -37,7 +37,7 @@ export class InputComponentComponent {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[A-Z].*$/),
+          notOnlyWhitespace,
         ]),
       ],
     });
@@ -45,10 +45,19 @@ export class InputComponentComponent {
   }
 
   @Input() title: string = '';
-  @Input() inputValue: string = '';
+  @Input() inputValue: string | undefined = '';
   @Output() valueChanged = new EventEmitter<string>();
 
   onInputChange() {
     this.valueChanged.emit(this.inputValue);
   }
+
+
+}
+
+function notOnlyWhitespace(control: FormControl): { [key: string]: any } | null {
+  if (control.value && control.value.trim().length === 0) {
+    return { whitespace: true };
+  }
+  return null;
 }

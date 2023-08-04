@@ -26,6 +26,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AddProjectService } from '../../services/add-project.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertService } from '../../services/alert.service';
+import { DatePipe } from '@angular/common';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-project-management',
@@ -51,7 +55,26 @@ import { Router } from '@angular/router';
   ],
 })
 export class AddProjectComponent {
-  constructor(private addProjectService: AddProjectService, private router: Router) {}
+  defaultMaxDate: Date = new Date('3000-12-31');
+  isInvalidStartDate = false;
+  isInvalidEndDate = false;
+  isInvalidReportDueDate = false;
+  isInvalidIKO = false;
+  isInvalidTKO = false;
+  isProjectLeadWhitespace: boolean = false;
+  isPentestAspectWhitespace: boolean = false;
+  isWorkingTeamWhitespace: boolean = false;
+  isReportStatusWhitespace: boolean = false;
+  isCFCWhitespace: boolean = false;
+  isCatsNumberWhitespace: boolean = false;
+  isCommentWhitespace: boolean = false;
+  isCFCInvalidEmail: boolean = false;
+  isProjectNameInvalidLength: boolean = false;
+  isProjectNameWhitespace: boolean = false;
+  isProjectNameEmpty: boolean = true;
+  isPentestValueInvalid: boolean = false;
+
+  constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {}
   @ViewChild('commentInput') commentInput?: ElementRef;
 
   ProjectStatus: SelectInterface[] = [
@@ -125,40 +148,60 @@ export class AddProjectComponent {
 
   wtField = '';
   cfcField = '';
+  comField = '';
   errorValue = false;
 
   onChildRadioValueChanged(value: number) {
     this.projectClass.PentestDuration = value;
+    this.isPentestValueInvalid = value <= 2 || value > 10;
   }
 
   onChildInputValueChanged(value: string, id: string) {
+
+    const trimmedValue = value.trim();
+    const isWhitespace = trimmedValue === '';
+
     this.value = value;
     switch (id) {
       case 'PN':
         this.projectClass.ProjectName = value;
+        this.isProjectNameInvalidLength = value.length < 3 || value.length > 50;
+        this.isProjectNameWhitespace = isWhitespace;
+        this.isProjectNameEmpty = !(value.length > 0);
         break;
       case 'PA':
         this.projectClass.PentestAspects = value;
+        this.isPentestAspectWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'PL':
         this.projectClass.ProjectLead = value;
+        this.isProjectLeadWhitespace = isWhitespace && value.length > 0;
         break;
       case 'WT':
         this.wtField = value;
+        this.isWorkingTeamWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'CFC':
         this.cfcField = value;
+        this.isCFCWhitespace = isWhitespace && value.length > 0;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        this.isCFCInvalidEmail = !emailRegex.test(value) && value.length > 0; 
+        break;
+      case 'COM':
+        this.comField = value;
         break;
       case 'RS':
         this.projectClass.ReportStatus = value;
+        this.isReportStatusWhitespace = isWhitespace && value.length > 0; 
         break;
-
       case 'CN':
         this.projectClass.CatsNumber = value;
+        this.isCatsNumberWhitespace = isWhitespace && value.length > 0; 
         break;
       case 'OS':
         // @ts-ignore
         this.projectClass.ProjectOfferStatus = projectOfferStatusIndex[value];
+        console.log(this.projectClass.ProjectOfferStatus);
         break;
       case 'PST':
         // @ts-ignore
@@ -176,16 +219,50 @@ export class AddProjectComponent {
   }
 
   onChildDateValueChanged(value: Date, id: string) {
-    if (id == 'STR') {
+    if (id === 'STR') {
       this.projectClass.StartDate = value;
-    } else if (id == 'END') {
+      if (this.isEndDateSet() && this.projectClass.StartDate > this.projectClass.EndDate) {
+        this.isInvalidStartDate = true;
+      } else {
+        this.isInvalidStartDate = false;
+      }
+    } else if (id === 'END') {
       this.projectClass.EndDate = value;
-    } else if (id == 'REP') {
+      const maxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      const IKOmaxDate = this.isIKOSet() ? this.projectClass.IKO : this.defaultMaxDate;
+      const TKOmaxDate = this.isTKOSet() ? this.projectClass.TKO : this.defaultMaxDate;
+      if (this.projectClass.EndDate < this.projectClass.StartDate || this.projectClass.EndDate > maxDate || this.projectClass.EndDate > IKOmaxDate! || this.projectClass.EndDate > TKOmaxDate!) {
+        this.isInvalidEndDate = true;
+      } else {
+        this.isInvalidEndDate = false;
+      }
+    } else if (id === 'REP') {
       this.projectClass.ReportDueDate = value;
-    } else if (id == 'IKO') {
+      const minDate = this.isEndDateSet() ? this.projectClass.EndDate : this.projectClass.StartDate;
+      if (this.projectClass.ReportDueDate < minDate) {
+        this.isInvalidReportDueDate = true;
+      } else {
+        this.isInvalidReportDueDate = false;
+      }
+    } else if (id === 'IKO') {
       this.projectClass.IKO = value;
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+      if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > endMaxDate || this.projectClass.IKO > repMaxDate) {
+        this.isInvalidIKO = true;
+      } else {
+        this.isInvalidIKO = false;
+      }
     } else {
       this.projectClass.TKO = value;
+      const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
+      const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
+
+      if (this.projectClass.TKO < this.projectClass.StartDate || this.projectClass.TKO > endMaxDate || this.projectClass.TKO > repMaxDate) {
+        this.isInvalidTKO = true;
+      } else {
+        this.isInvalidTKO = false;
+      }
     }
   }
 
@@ -195,12 +272,41 @@ export class AddProjectComponent {
         this.projectClass.WorkingTeam.push(this.wtField);
       }
       this.wtField = '';
+    } else if (id == 'COM') {
+      if (this.comField != '') {
+        const newComment: CommentInterface = {
+          text: this.comField,
+        };
+
+        this.projectClass.Comments.push(newComment);
+      }
+      this.comField = '';
     } else {
       if (this.cfcField != '') {
         this.projectClass.ContactForClients.push(this.cfcField);
       }
       this.cfcField = '';
     }
+  }
+
+  submit() {
+    this.addProjectService.submitPMProject(this.projectClass).subscribe(
+      (response) => {
+        console.log('Success:', response);
+        this.alertService.showSnackbar('Item added successfully.', 'Close', 'green-alert');
+      },
+      (error) => {
+        console.log('Error:', error);
+
+        const { title, status, errors } = error;
+
+        this.alertService.showSnackbar('Error occured during adding an item.', 'Close', 'red-alert');
+
+        console.log('Title:', title);
+        console.log('Status Code:', status);
+        console.log('Errors:', errors);
+      }
+    );
   }
 
   sendRequest() {
@@ -237,12 +343,12 @@ export class AddProjectComponent {
           .toString()
           // @ts-ignore
           .padStart(4, '0')}-${(this.projectClass[key].getUTCMonth() + 1)
-          .toString()
-          // @ts-ignore
-          .padStart(2, '0')}-${this.projectClass[key]
-          .getUTCDate()
-          .toString()
-          .padStart(2, '0')}`;
+            .toString()
+            // @ts-ignore
+            .padStart(2, '0')}-${this.projectClass[key]
+              .getUTCDate()
+              .toString()
+              .padStart(2, '0')}`;
       }
     }
 
@@ -256,57 +362,34 @@ export class AddProjectComponent {
       }
     }
 
-    this.addProjectService.submitPMProject(this.projectClass).subscribe(
-      (response) => {
-        console.log('Success:', response);
-      },
-      (error) => {
-        console.log('Error:', error);
-
-        const { title, status, errors } = error;
-
-
-        console.log('Title:', title);
-        console.log('Status Code:', status);
-        console.log('Errors:', errors);
-      }
-    );
+    this.submit();
 
   }
 
   getValueFromTextarea() {
     if (this.commentInput) {
-      this.projectClass.Comments = [{
-        text: this.commentInput.nativeElement.value
-      }];
+      const commentText = this.commentInput.nativeElement.value;
+      const trimmedComment = commentText.trim();
+      const isWhitespace = trimmedComment === '';
+
+      if (!isWhitespace) {
+        this.projectClass.Comments = [{
+          text: commentText
+        }];
+      } else {
+        this.isCommentWhitespace = isWhitespace && commentText.length > 0; 
+      }
     }
   }
 
   validationFunction() {
-    // @ts-ignore
-    if (this.projectClass.StartDate > this.projectClass.EndDate) {
-      this.errorValue = true;
-    }
-    // @ts-ignore
-    if (this.projectClass.EndDate > this.projectClass.ReportDueDate) {
-      this.errorValue = true;
-    }
-    if (
+    if (   
       // @ts-ignore
-      this.projectClass.StartDate <= this.projectClass.EndDate &&
-      // @ts-ignore
-      this.projectClass.EndDate <= this.projectClass.ReportDueDate &&
-      // @ts-ignore
-      this.projectClass.ProjectName?.length > 3 &&
+      this.projectClass.ProjectName?.length > 2 &&
       // @ts-ignore
       this.projectClass.ProjectName?.length < 50
     ) {
-      if (
-        // @ts-ignore
-        this.projectClass.ProjectName[0].toUpperCase() ==
-        // @ts-ignore
-        this.projectClass.ProjectName[0]
-      ) {
+       {
         this.sendRequest();
         this.router.navigate(['/list-projects']);
         return;
@@ -321,6 +404,14 @@ export class AddProjectComponent {
         this.projectClass.WorkingTeam.indexOf(item),
         1
       );
+    } else if (id == 'COM') {
+      const index = this.projectClass.Comments.findIndex(
+        (comment: CommentInterface) => comment.text === item
+      );
+
+      if (index !== -1) {
+        this.projectClass.Comments.splice(index, 1);
+      }
     } else {
       this.projectClass.ContactForClients.splice(
         this.projectClass.ContactForClients.indexOf(item),
@@ -329,7 +420,21 @@ export class AddProjectComponent {
     }
   }
 
-  checkDateValidity() {
-    //here will be code to make datepicker red
+  isEndDateSet(): boolean {
+    return this.projectClass.EndDate instanceof Date && this.projectClass.EndDate.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  isRepDateSet(): boolean {
+    return this.projectClass.ReportDueDate instanceof Date && this.projectClass.ReportDueDate.getTime() !== new Date('0001-01-01').getTime();
+
+  }
+
+  isIKOSet(): boolean {
+    return this.projectClass.IKO! instanceof Date && this.projectClass.IKO!.getTime() !== new Date('0001-01-01').getTime();
+
+  }
+
+  isTKOSet(): boolean {
+    return this.projectClass.TKO! instanceof Date && this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
   }
 }
