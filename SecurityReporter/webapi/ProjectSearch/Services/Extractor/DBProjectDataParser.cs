@@ -67,7 +67,7 @@ namespace webapi.ProjectSearch.Services.Extractor
             {
                 using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    using(ZipArchive TemplateZip = ZipFile.OpenRead("./ProjectSearch/Services/Extractor/DBToZipExtract/No-Config-Base-Template.zip"))
+                    using(ZipArchive TemplateZip = ZipFile.OpenRead("./ProjectSearch/Services/Extractor/DBToZipExtract/Base_Template.zip"))
                     {
                         foreach(ZipArchiveEntry templateEntry in TemplateZip.Entries)
                         {
@@ -117,6 +117,11 @@ namespace webapi.ProjectSearch.Services.Extractor
                         entryStream.Write(imageData.image, 0, imageData.image.Length);
                     }
                 }
+            }
+            ZipArchiveEntry newEntry = zipArchive.CreateEntry("Config/Findings_Database/Findings_Database.tex");
+            using(StreamWriter writer = new StreamWriter(newEntry.Open()))
+            {
+                writer.Write(projectReportData.FindingsDatabase);
             }
         }
 

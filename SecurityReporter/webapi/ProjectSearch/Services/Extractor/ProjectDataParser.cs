@@ -47,6 +47,14 @@ namespace webapi.ProjectSearch.Services
                     TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);
                     newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
                     newProjectReportData.Findings = extractFindings(archive);
+                    currentEntry = archive.GetEntry("Config/Findings_Database/Findings_Database.tex");
+                    if(currentEntry != null)
+                    {
+                        using (StreamReader reader = new StreamReader(currentEntry.Open()))
+                        {
+                            newProjectReportData.FindingsDatabase = reader.ReadToEnd();
+                        }
+                    }
 
                 }
                 else if(zipStream == null)

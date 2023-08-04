@@ -68,20 +68,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 % Required for Report
 
 
-\newcommand{\WorstCaseScenariosReport}{
-
-\begin{xltabular}{\textwidth}{|l|X|c|c|c|c|c|c|}
-	\hline 
-	\cellcolor{grey230}  \textbf{Finding \#} &	 \cellcolor{grey230} \textbf{Description} & \cellcolor{grey230}
-	
-	\textbf{WS1} & \cellcolor{grey230} \textbf{WS2} & \cellcolor{grey230} \textbf{WS3}\\
-    \hline 
-	1		&	TODOTODO  & \Huge \phantom{} & \Huge \phantom{} & \Huge $\cdotp$ \\
-	\hline
-	
-	\caption{Findings case scenarios} \label{table:FindingCaseScenarios}
-\end{xltabular}
-}
+" + scopeAndProcedures.WorstCaseScenariosReport + @"
 
 
 % Required for Scope & Report.

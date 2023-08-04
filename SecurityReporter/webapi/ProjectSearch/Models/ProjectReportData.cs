@@ -20,5 +20,6 @@ namespace webapi.ProjectSearch.Models
         public ScopeAndProcedures? ScopeAndProcedures { get; set; }
         [Required(ErrorMessage = "TestingMethodology is required!")]
         public TestingMethodology? TestingMethodology { get; set; }
+        public string? FindingsDatabase { get; set; }
     }
 } 
