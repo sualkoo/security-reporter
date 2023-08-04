@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using webapi.Models.ProjectReport;
+﻿using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services

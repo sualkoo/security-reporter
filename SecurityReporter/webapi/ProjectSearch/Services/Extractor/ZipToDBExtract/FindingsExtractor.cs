@@ -8,6 +8,10 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
     public class FindingsExtractor
     {
         List<Finding> findingsList = new List<Finding>();
+        ZipArchiveEntry findingsDirectory;
+        List<Finding> findingsList = new List<Finding>();
+        ZipArchiveEntry findingsDirectory;
+        List<Finding> findingsList = new List<Finding>();
         public Finding extractFinding(ZipArchiveEntry currentEntry)
         {
             Finding newFinding = new Finding();

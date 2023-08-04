@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.IO.Compression;
-using System.Text;
-
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -65,9 +62,6 @@ namespace webapi.ProjectSearch.Controllers
                 return await ProjectReportService.GetReportSourceByIdAsync(id);
             });
         }
-
-
-
 
         [HttpDelete]
         public async Task<IActionResult> deleteProjectReports([FromBody] List<string> ids)

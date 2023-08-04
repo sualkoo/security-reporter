@@ -1,11 +1,9 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Finding } from '../../interfaces/ProjectReport/finding';
 import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
@@ -30,7 +28,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 50 >= container.scrollHeight;
     return atBottom;
   }
 
@@ -82,16 +80,6 @@ export class ProjectSearchPageComponent implements OnInit {
     this.cweSending = this.cwe;
   }
 
-  //groupFindings() {
-  //  this.loadedFindings.forEach((findingRes: FindingResponse) => {
-  //    if (!this.groupedFindings[findingRes.projectReportName]) {
-  //      this.groupedFindings[findingRes.projectReportName] = [];
-  //    }
-  //    this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
-  //  });
-  //  this.groupedFindingsEntries = Object.entries(this.groupedFindings);
-  //}
-
   groupFindings() {
     const groupedFindingsMap = new Map<string, GroupedFinding>();
 
@@ -104,10 +92,12 @@ export class ProjectSearchPageComponent implements OnInit {
         existingGroup?.findings.push(finding);
       } else {
         // Create a new group
+        const isProjectSelected = this.groupedFindings.some(gf => gf.projectId === projectReportId && gf.checked === true);
         const newGroup: GroupedFinding = {
           projectId: projectReportId,
           projectName: projectReportName,
           findings: [finding],
+          checked: isProjectSelected
         };
         groupedFindingsMap.set(projectReportId, newGroup);
       }
@@ -131,7 +121,6 @@ export class ProjectSearchPageComponent implements OnInit {
       this.cwe
     ).subscribe(
       (response) => {
-        console.log(response)
         this.injectionOfSendingVariables();
         if (response.data.length == 0) {
           this.notificationService.displayMessage("No findings found.", "info");
@@ -154,8 +143,6 @@ export class ProjectSearchPageComponent implements OnInit {
   @ViewChild('reportsScrollableBox', { static: true }) reportsScrollableBox!: ElementRef;
 
   loadNextPage() {
-    console.log("Loading next page")
-    console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
       (this.lastLoadedPage + 1),
@@ -172,7 +159,6 @@ export class ProjectSearchPageComponent implements OnInit {
         this.loadedFindings.push(report);
       }
       this.groupFindings();
-      console.log(res);
       this.isLoadingNextPage = false;
     })
   }
@@ -247,11 +233,8 @@ export class ProjectSearchPageComponent implements OnInit {
   isFormValid: boolean = false;
 
   checkFormValidity(): void {
-
     this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
 
-
-    console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
       if (value == 'ProjectReportName') {
         this.projectName = this.value;
@@ -289,10 +272,10 @@ export class ProjectSearchPageComponent implements OnInit {
     this.clearReportVariables();
   }
 
+  checkCheckbox: number = 0;
 
   onlyNumbers(event: string, ): void {
     const numberRegex = /^[0-9]+$/;
-    console.log(numberRegex.test(event));
 
     if (!numberRegex.test(event)) {
       this.cwe = '';
@@ -306,7 +289,19 @@ export class ProjectSearchPageComponent implements OnInit {
          //delay 200ms
           setTimeout(() => {
           caseItem.checked = false;
+          this.checkFormValidity();
+
+          for(let value of this.keywords) {
+            if (value.checked) {
+              this.checkCheckbox++;
+            }
+          }
+          console.log(this.checkCheckbox);
+          if (this.checkCheckbox == 0) {
+            this.isCheckboxChecked = false;
+          }
         }, 100);
+          this.checkCheckbox = 0;
         }
       });
 
@@ -338,9 +333,61 @@ export class ProjectSearchPageComponent implements OnInit {
       });
   }
 
+  onSelectionCheckboxChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    if (target.checked) {
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = true;
+    } else {
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = false;
+    }
+
+    this.selectedProjects = [];
+    this.groupedFindings.forEach(gf => {
+      if (gf.checked) {
+        this.selectedProjects.push(gf );
+      }
+    })
+  }
+
+  selectedProjects: GroupedFinding[] = [];
+
+  onDeleteSelectedProjects() {
+    const projectIds: string[] = this.selectedProjects.map(p => p.projectId);
+    // BE request
+    this.projectReportService.deleteProjectReport(projectIds).subscribe((res) => {
+      // Success
+      for (let selectedGf of this.selectedProjects) {
+        this.loadedFindings = this.loadedFindings.filter(lf => lf.projectReportId !== selectedGf.projectId);
+        this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId !== selectedGf.projectId);
+        this.totalRecords = this.totalRecords! - selectedGf.findings.length;
+      }
+      this.groupFindings();
+      this.selectedProjects = [];
+      this.notificationService.displayMessage("Successfully removed from db!", "info");
+    }, (e: HttpErrorResponse) => {
+      // Error
+      console.error(e);
+      this.selectedProjects = [];
+    })
+
+
+  }
+
+  showPopup: boolean = false;
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
+
   showSidebar: boolean = true;
 
   toggleSidebar() {
     this.showSidebar = !this.showSidebar;
   }
+
 }

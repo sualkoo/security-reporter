@@ -2,9 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, View
 import { NotificationService } from '../../providers/notification.service';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProjectReport } from '../../interfaces/project-report.model';
 import { ErrorResponse } from '../../interfaces/error-response';
-
 
 @Component({
   selector: 'app-add-project-report',
@@ -17,7 +15,9 @@ export class AddProjectReportComponent implements OnInit{
     private projectDataService: ProjectReportService,
     private notificationService: NotificationService,
   ) {
+    this.checkScreenSize();
   }
+  isSmallDevice = false;
   uploadedFile?: Blob;
   isDragOver = false;
 
@@ -50,7 +50,6 @@ export class AddProjectReportComponent implements OnInit{
           // Correct zip file
           this.projectDataService.postZipFile(formData).subscribe(
             (response) => {
-              console.log(response);
               this.notificationService.displayMessage("Report successfully saved to DB.", "success");
             },
             (errorResponse: HttpErrorResponse) => {
@@ -107,9 +106,17 @@ export class AddProjectReportComponent implements OnInit{
       } else {
         // File is not a .zip file, show an error or ignore the file
         // For example:
-        console.log("Invalid file type. Only .zip files are allowed.");
         this.notificationService.displayMessage("Invalid file type. Only .zip files are allowed.", "warning");
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize(): void {
+    this.isSmallDevice = window.innerWidth < 768; // Adjust the breakpoint as needed
   }
 }

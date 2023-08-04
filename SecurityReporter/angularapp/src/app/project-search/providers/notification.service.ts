@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackbarComponent } from '../components/custom-snackbar/custom-snackbar.component';
-import { messageTypes } from 'jest-editor-support';
 
 @Injectable({
   providedIn: 'root',

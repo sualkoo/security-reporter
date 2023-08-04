@@ -33,7 +33,6 @@ namespace webapi.ProjectSearch.Services.Tests
             ZipArchiveEntry entry = zipArchive.GetEntry("ScopeAndProcedures/Empty/Scope_And_Procedures.tex");
             ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(entry);
             Assert.IsNotNull(sape);
-            ScopeAndProcedures parsedScope = sape.ExtractScopeAndProcedures();
         }
 
         [Test()]

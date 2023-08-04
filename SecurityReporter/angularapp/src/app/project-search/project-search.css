@@ -17,8 +17,6 @@
   button:hover {
     cursor: pointer;
   }
-  
-  /* btn-secondary */
 
 .btn-secondary {
   border: 1px solid #009999;
@@ -51,8 +49,6 @@
     opacity: 40%;
   }
   
-  /* btn-primary */
-  
   .btn-primary {
     border: 1px solid #ec6602;
     color: white;
@@ -70,4 +66,10 @@
     color: #fdddcb;
     background-color: #f9b591;
     opacity: 40%;
+  }
+
+  /* Checkbox */
+  .form-check-input:checked {
+    background-color: #ec6602;
+    border-color: #ec6602;
   }

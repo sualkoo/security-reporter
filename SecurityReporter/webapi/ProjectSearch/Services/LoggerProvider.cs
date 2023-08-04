@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-namespace webapi.ProjectSearch.Services
+﻿namespace webapi.ProjectSearch.Services
 {
     public class LoggerProvider
     {

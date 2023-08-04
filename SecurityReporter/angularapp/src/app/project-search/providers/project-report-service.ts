@@ -21,8 +21,6 @@ export class ProjectReportService {
   }
 
   public getProjectReport(id: string) {
-    console.log("Fetching project report, id=" + id);
-    // Todo: Add type to get request
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
@@ -57,17 +55,10 @@ export class ProjectReportService {
       params = params.set('cwe', cwe);
     }
 
-    console.log(params);
     return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUrl}/findings`, { params: params });
   }
 
-  /*public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
-
-    return this.http.get<PagedResponse>(this.apiUrl, { params: { subcategory: subcategory, keyword: keyword, value: value, page: page } });
-  }*/
-
   public deleteProjectReport(ids: string[]) {
-    console.log(ids);
     return this.http.delete<string[]>(this.apiUrl,  { body: ids });
   }
 

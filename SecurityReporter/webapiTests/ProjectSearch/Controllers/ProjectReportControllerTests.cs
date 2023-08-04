@@ -1,18 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using System.IO;
-using System.Threading.Tasks;
 using webapi.ProjectSearch.Controllers;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using NUnit.Framework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Models.ProjectReport;
-using Microsoft.Azure.Cosmos.Linq;
-using System.IO.Compression;
-using NUnit.Framework.Constraints;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace webapi.ProjectReportControllers.Tests
 {
@@ -49,7 +42,7 @@ namespace webapi.ProjectReportControllers.Tests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(typeof(OkObjectResult), result.GetType());
-            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);     
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
         }
 
         [Test]
@@ -182,6 +175,41 @@ namespace webapi.ProjectReportControllers.Tests
             var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, page).Result;
 
             // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
+        }
+
+        [Test]
+        public void deleteProjectReports_WithValidIds_ReturnsOkResult()
+        {
+            // Arrange
+            var ids = new List<string> { "1", "2", "3" };
+            mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).ReturnsAsync(true);
+
+            // Act
+            var task = projectReportController.deleteProjectReports(ids);
+
+            var result = task.Result as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(true, result.Value);
+
+        }
+
+        [Test]
+        public void deleteProjectReports_WithException_ReturnsBadRequestResult()
+        {
+            var ids = new List<string> { "1", "2", "3" };
+            CustomException expectedException = new CustomException(StatusCodes.Status400BadRequest, "Items with that id don't exist");
+            mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).Throws(expectedException);
+
+            // Act
+            var result = projectReportController.deleteProjectReports(ids).Result;
+
+            // Assert
+
             Assert.IsNotNull(result);
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
         }
