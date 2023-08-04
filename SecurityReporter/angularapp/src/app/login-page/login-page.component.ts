@@ -18,14 +18,16 @@ export class LoginPageComponent implements OnInit {
     });
   }
 
-  /*
   onLoginSubmit() {
     if (this.loginForm.valid) {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
-      console.log('Username:', username);
-      console.log('Password:', password);
+      if (username === "admin" && password === "admin") {
+        window.location.href = "/welcome";
+      } else {
+        console.log("Incorrect username or password");
+      }
     }
-  }*/
+  }
 }

@@ -2,7 +2,8 @@
   display: flex;
   justify-content: center;
   background-image: url('../../assets/shman.jfif');
-  background-repeat: no-repeat; 
+  background-repeat: no-repeat;
+  background-size: cover;
   align-items: center;
   height: 100vh;
 }

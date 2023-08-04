@@ -21,7 +21,4 @@
     <Folder Include="src\app\project-search\interfaces\Enums\" />
     <Folder Include="src\app\project-search\interfaces\ProjectReport\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="src\app\login-page\shman.jfif" />
-  </ItemGroup>
 </Project>

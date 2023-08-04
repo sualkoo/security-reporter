@@ -9,12 +9,12 @@ import { LoginPageComponent } from './login-page/login-page.component';
 
 
 const routes: Routes = [
-  { path: '', component: LandingPageComponent },
+  { path: 'welcome', component: LandingPageComponent },
   { path: 'project-search', component: ProjectSearchPageComponent },
   { path: 'project-management', component: AddProjectComponent },
   { path: 'add-project', component: AddProjectComponent },
   { path: 'list-projects', component: ListProjectsPageComponent },
-  { path: 'login', component: LoginPageComponent },
+  { path: '', component: LoginPageComponent },
 ];
 
 @NgModule({
