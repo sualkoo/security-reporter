@@ -156,7 +156,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     newFinding.SubsectionCountermeasures = data;
                     break;
                 case "References":
-                    newFinding.SubsectionReferences = new List<string> { data };
+                    newFinding.SubsectionReferences = data;
                     break;
             }
         }
@@ -213,7 +213,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
         {
             string line;
-            List<string> resultList = new List<string>();
+            string resultList = "";
             string currentItem = "";
             bool firstItem = true;
 
@@ -226,7 +226,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     {
                         if (currentItem != "")
                         {
-                            resultList.Add(currentItem.Trim());
+                            resultList = resultList + currentItem.Trim();
                         }
                         return resultList;
                     }
@@ -236,7 +236,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 {
                     if (!firstItem)
                     {
-                        resultList.Add(currentItem.Trim());
+                        resultList = resultList + currentItem.Trim();
                         currentItem = "";
                     }
 

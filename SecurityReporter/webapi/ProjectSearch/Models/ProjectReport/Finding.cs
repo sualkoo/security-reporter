@@ -34,7 +34,7 @@ namespace webapi.Models.ProjectReport
         public string? SubsectionImpact { get; set; }
         public string? SubsectionRepeatability { get; set; }
         public string? SubsectionCountermeasures { get; set; }
-        public List<string>? SubsectionReferences { get; set; }
+        public string? SubsectionReferences { get; set; }
         public string? FolderName { get; set; }
         public List<FileData>? imagesList { get; set; }
     }
