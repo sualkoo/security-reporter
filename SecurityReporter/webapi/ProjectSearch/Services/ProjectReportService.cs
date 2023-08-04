@@ -6,6 +6,8 @@ using Ionic.Zip;
 using System.IO;
 using System.Web;
 using webapi.ProjectSearch.Services.Extractor;
+using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+using System.IO.Compression;
 
 namespace webapi.ProjectSearch.Services
 {
@@ -13,25 +15,28 @@ namespace webapi.ProjectSearch.Services
     {
         public IProjectDataValidator Validator { get; set; }
         public IProjectDataParser Parser { get; set; }
+        public IDBProjectDataParser DBParser { get; set; }
+
         public ICosmosService CosmosService { get; set; }
         private readonly ILogger Logger;
 
-        public ProjectReportService(IProjectDataParser parser, IProjectDataValidator validator, ICosmosService cosmosService)
+        public ProjectReportService(IProjectDataParser parser,IDBProjectDataParser dbParser, IProjectDataValidator validator, ICosmosService cosmosService)
         {
             Validator = validator;
             Parser = parser;
+            DBParser = dbParser;
             CosmosService = cosmosService;
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
-        public async Task<ProjectReportData> GetReportByIdAsync(Guid id)
+        async Task<ProjectReportData> IProjectReportService.GetReportByIdAsync(Guid id)
         {
             Logger.LogInformation($"Fetching project report by ID");
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
-        public async Task<ProjectReportData> SaveReportFromZip(IFormFile file)
+        async Task<ProjectReportData> IProjectReportService.SaveReportFromZip(IFormFile file)
         {
             Logger.LogInformation($"Saving new project report");
             ProjectReportData newReportData;
@@ -64,7 +69,7 @@ namespace webapi.ProjectSearch.Services
             return newReportData;
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
+        async Task<PagedDBResults<List<FindingResponse>>> IProjectReportService.GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
             if (!string.IsNullOrEmpty(projectName) && !string.IsNullOrEmpty(details) && 
@@ -77,43 +82,18 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability, references, cWE, page);
         }
 
-        public async Task<bool> DeleteReportAsync(List<string> ids)
+        async Task<bool> IProjectReportService.DeleteReportAsync(List<string> ids)
         {
             Logger.LogInformation($"Deleting items from database");
 
             return await CosmosService.DeleteProjectReports(ids);
         }
 
-        public byte[] GetProjectZipFile()
+        public async Task<FileContentResult> GetReportSourceByIdAsync(Guid id)
         {
-            try
-            {
-                // Create a new zip archive
-                using (var memoryStream = new MemoryStream())
-                using (var zipFile = new ZipFile())
-                {
-                    // Add files to the zip archive
-                    var entryName = "project.txt";
-                    var fileContent = "This is some example text in the zip file.";
-
-                    // Create a new entry in the zip archive
-                    var entry = zipFile.AddEntry(entryName, fileContent, Encoding.UTF8);
-
-                    // Set the file modification time to the current time in UTC
-                    entry.LastModified = DateTime.UtcNow;
-
-                    // Save the zip archive to the memory stream
-                    zipFile.Save(memoryStream);
-
-                    return memoryStream.ToArray();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception for debugging
-                Logger.LogError($"Error generating the zip file: {ex}");
-                return new byte[0]; // Return an empty byte array to indicate failure.
-            }
+            ProjectReportData data = await CosmosService.GetProjectReport(id.ToString());
+            FileContentResult zip = DBParser.Extract(data);
+            return zip;
         }
     }
 }

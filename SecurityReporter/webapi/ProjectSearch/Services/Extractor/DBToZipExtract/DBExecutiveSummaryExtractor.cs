@@ -1,17 +1,25 @@
-﻿using webapi.Models.ProjectReport;
+﻿using System.Text;
+using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
     public class DBExecutiveSummaryExtractor
     {
-        private string executiveSummary = "";
-        public DBExecutiveSummaryExtractor(string executiveSummary)
+        public byte[] extractExecutiveSummary(string executiveSummary)
         {
-            this.executiveSummary = executiveSummary;
-        }
-        public byte[] extractExecutiveSummary()
-        {
-            return null;
+            string executiveSummaryContent =
+@"%----------------------------------------------------------------------------------------
+%	EXECUTIVE SUMMARY
+%----------------------------------------------------------------------------------------
+%-<ExecSum>->
+
+" + executiveSummary + @"
+
+%-<ExecSum>
+\pagebreak
+\section*{Overall Exposure}";
+            Console.WriteLine(executiveSummaryContent);
+            return Encoding.UTF8.GetBytes(executiveSummaryContent);
         }
     }
 }

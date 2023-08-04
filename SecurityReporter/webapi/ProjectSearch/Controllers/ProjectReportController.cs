@@ -56,35 +56,14 @@ namespace webapi.ProjectSearch.Controllers
 
         }
 
-        [HttpGet("download")]
-        public IActionResult downloadProjectZip()
+        [HttpGet("{id}/download")]
+        public async Task<IActionResult> downloadProjectZip(Guid id)
         {
-            try
+            Logger.LogInformation("Received GET request for download report by ID");
+            return await HandleExceptionAsync(async () =>
             {
-                byte[] zipData = ProjectReportService.GetProjectZipFile();
-
-                if (zipData == null || zipData.Length == 0)
-                {
-                    Logger.LogInformation("Empty zip file data.");
-                    return NotFound(); // Return a 404 Not Found response if the zip file data is empty.
-                }
-
-                // Set appropriate response headers
-                var contentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-                contentDisposition.FileName = "project.zip";
-                Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-                Response.Headers.Add("Content-Length", zipData.Length.ToString());
-                Response.ContentType = "application/zip";
-                
-                // Return the zip file data directly as a FileContentResult
-                return new FileContentResult(zipData, "application/zip");
-            }
-            catch (Exception ex)
-            {
-                // Log and return an error response if something goes wrong
-                Logger.LogError($"Error serving the zip file: {ex}");
-                return StatusCode(500, $"Error serving the zip file: {ex.Message}");
-            }
+                return await ProjectReportService.GetReportSourceByIdAsync(id);
+            });
         }
 
 
