@@ -95,9 +95,6 @@ export class ProjectReportService {
       ),
       configScopeAndProcedures: zipData.file('Config/Scope_and_Procedures.tex'),
       configTestingMethodology: zipData.file('Config/Testing_Methodology.tex'),
-      configFindingsDatabaseDRTemplate: zipData.file(
-        'Config/Findings_Database/DR_Template/main.tex'
-      ),
       staticPentestTeam: zipData.file('Static/PentestTeam.tex')
     };
 
