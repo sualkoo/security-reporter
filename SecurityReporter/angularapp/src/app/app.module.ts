@@ -36,13 +36,10 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
-
-
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Roles } from './roles/roles';
 
 @NgModule({
@@ -75,14 +72,12 @@ import { Roles } from './roles/roles';
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    MatSnackBarModule,
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
-    MatSnackBarModule,
     MatIconModule,
     CommonModule,
     ListProjectsPageComponent,
