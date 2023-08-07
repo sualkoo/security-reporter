@@ -49,10 +49,6 @@ steps:
     Contents: '**'
     TargetFolder: '$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot'
 
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'sda-2023-service-connection'
-
 - task: CmdLine@2
   inputs:
     script: 'ng build'
