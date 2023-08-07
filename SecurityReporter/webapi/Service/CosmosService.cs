@@ -10,7 +10,7 @@ namespace webapi.Service
     public class CosmosService : ICosmosService
     {
         private string PrimaryKey { get; set; }
-        private string EndpointUri { get; } = "https://localhost:8081";
+        private string EndpointUri { get; set; }
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ProjectReportContainer";
@@ -21,6 +21,7 @@ namespace webapi.Service
         public CosmosService(IConfiguration configuration)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
+            EndpointUri = configuration["DB:EndpointUri"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
