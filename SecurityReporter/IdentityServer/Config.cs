@@ -23,7 +23,8 @@ namespace IdentityServer
             {
                 new ApiResource("ApiName")
                 {
-                    ApiSecrets = {new Secret("secret_for_the_api".Sha256())}
+                    ApiSecrets = {new Secret("secret_for_the_api".Sha256())},
+                    Scopes = new List<string> { "ApiName" }
                 }
             };
         }
@@ -35,9 +36,9 @@ namespace IdentityServer
                 new Client
                 {
                     ClientId = "ConsoleApp_ClientId",
-                    ClientSecrets = { new Secret("secret_for_the_consoleapp".Sha256()) },
+                    ClientSecrets = { new Secret("nieco_nevulgarne".Sha256()) },
                     AccessTokenType = AccessTokenType.Reference,
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
                     AllowedScopes = { "ApiName" },
                     //Claims =
                     //{
@@ -63,5 +64,13 @@ namespace IdentityServer
                 }
             };
         }
+
+        public static IEnumerable<ApiScope> GetApiScopes =>
+
+            new[]
+            {
+                new ApiScope("ApiName")
+            };
+
     }
 }
