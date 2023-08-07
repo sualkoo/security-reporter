@@ -1,12 +1,13 @@
 describe('Item Management Test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200');        
+        cy.visit('https://sda-projectmanagement.azurewebsites.net/');        
     });
 
     it('should edit a page', () => {
         navigateToAddProjectPage();
         testrpojectName();
+        fillSelectableFields();
     });
 
     // Step 1: View the list and click Add Project button
@@ -17,7 +18,14 @@ describe('Item Management Test', () => {
 
     function testrpojectName() {
         cy.get('#mat-input-8').click().type("Test");
-        cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > datepicker-component > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-icon-suffix > .mat-datepicker-toggle > .mdc-icon-button > .mat-mdc-button-touch-target').click();
-        
+        //cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > datepicker-component > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-icon-suffix > .mat-datepicker-toggle > .mdc-icon-button > .mat-mdc-button-touch-target').click();
+    }
+
+    function fillSelectableFields() {
+        cy.get(':nth-child(2) > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix').click();
+        cy.get('#mat-option-30').click();
+
+        cy.get(':nth-child(3) > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix').click();
+        cy.get('#mat-option-36').click();
     }
 });

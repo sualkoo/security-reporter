@@ -73,7 +73,6 @@ describe('Item Management Test', () => {
     // Step 7: Verify that real-time feedback and validation messages are provided for errors or missing information
 
     function feedbackWindow() {
-
         cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
     }
 });
