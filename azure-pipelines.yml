@@ -28,9 +28,9 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'npm build'
+    script: 'ng build'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
-  displayName: 'npm build'   
+  displayName: 'ng build'   
 
 - task: CmdLine@2
   inputs:
