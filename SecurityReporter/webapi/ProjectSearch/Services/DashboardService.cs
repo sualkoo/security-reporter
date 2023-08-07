@@ -22,5 +22,12 @@ namespace webapi.ProjectSearch.Services
 
             return await CosmosService.GetCriticalityData();
         }
+
+        public async Task<List<Tuple<int, int>>> GetVulnerabilityData() 
+        {
+            Logger.LogInformation($"Fetching Vulnerability data");
+
+            return await CosmosService.GetVulnerabilityData();
+        }
     }
 }

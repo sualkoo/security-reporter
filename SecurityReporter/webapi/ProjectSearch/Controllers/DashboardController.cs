@@ -28,5 +28,17 @@ namespace webapi.ProjectSearch.Controllers
             });
 
         }
+
+        [HttpGet("Vulnerability")]
+        public async Task<IActionResult> getVulnerabilityData()
+        {
+            Logger.LogInformation("Received Get request for getting Vulnerability data for graph");
+            return await HandleExceptionAsync(async () =>
+            {
+                List<Tuple<int, int>> data = await DashboardService.GetVulnerabilityData();
+                return Ok(data);
+            });
+
+        }
     }
 }

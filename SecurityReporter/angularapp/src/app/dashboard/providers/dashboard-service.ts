@@ -13,4 +13,8 @@ export class DashboardService {
   public getCriticality() {
     return this.http.get<number[]>(`${this.apiUrl}/Criticality`);
   }
+
+  public getVulnerability() {
+    return this.http.get<number[]>(`${this.apiUrl}/Vulnerability`);
+  }
 }
