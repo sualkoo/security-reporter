@@ -10,7 +10,7 @@ export class DeleteProjectsServiceService {
   private deleteEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.deleteEndPointURL = 'https://localhost:7075/Project/delete';
+    this.deleteEndPointURL = '/Project/delete';
   }
 
   public deletePMProjects(data: Array<string>): Observable<any> {

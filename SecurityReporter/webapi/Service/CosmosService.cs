@@ -350,7 +350,7 @@ namespace webapi.Service
                 results.TotalRecords = totalResults;
                 results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
 
-                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports");
+                UriBuilder uriBuilder = new UriBuilder("/project-reports");
                 string queryPage = uriBuilder.Query;
                 if (results.TotalPages > page)
                 {
@@ -528,6 +528,48 @@ namespace webapi.Service
 
             Logger.LogInformation("Successfully deleted Project Reports from database.");
             return true;
+        }
+        public async Task<ProjectData> GetProjectById(string id)
+        {
+            try
+            {
+                ItemResponse<ProjectData> response = await Container.ReadItemAsync<ProjectData>(id, new PartitionKey(id));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving project by ID: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<bool> UpdateProject(ProjectData data)
+        {
+            if (data.Comments != null)
+            {
+                foreach (var comment in data.Comments)
+                {
+                    if (string.IsNullOrEmpty(comment.Text))
+                    {
+                        comment.CreatedAt = DateTime.Now;
+                    }
+                }
+            }
+
+            try
+            {
+                await Container.ReplaceItemAsync(data, data.id.ToString(), new PartitionKey(data.id.ToString()));
+                Console.WriteLine("Item updated successfully.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred: " + ex);
+                return false;
+            }
         }
     }
 }

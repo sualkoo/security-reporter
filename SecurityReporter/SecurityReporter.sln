@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapiTests", "webapiTests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmosTools", "cosmosTools\cosmosTools.csproj", "{6D41F52B-45BC-4EA5-AF14-040E79BD6517}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cosmosTools_uTest", "cosmosTools_uTest\cosmosTools_uTest.csproj", "{2061B342-9685-48FC-86BC-00FE2913CEED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cosmosTools_uTest", "cosmosTools_uTest\cosmosTools_uTest.csproj", "{2061B342-9685-48FC-86BC-00FE2913CEED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "angularapp_uiTests", "angularapp_uiTests\angularapp_uiTests.csproj", "{D19F32F7-E26A-4890-A6E3-F1C35EEF6B58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{2061B342-9685-48FC-86BC-00FE2913CEED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2061B342-9685-48FC-86BC-00FE2913CEED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2061B342-9685-48FC-86BC-00FE2913CEED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D19F32F7-E26A-4890-A6E3-F1C35EEF6B58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D19F32F7-E26A-4890-A6E3-F1C35EEF6B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D19F32F7-E26A-4890-A6E3-F1C35EEF6B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D19F32F7-E26A-4890-A6E3-F1C35EEF6B58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
