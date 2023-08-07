@@ -528,5 +528,10 @@ namespace webapi.Service
             Logger.LogInformation("Successfully deleted Project Reports from database.");
             return true;
         }
+
+        public async Task<int[]> GetCriticalityData()
+        {
+            return null;
+        }
     }
 }
