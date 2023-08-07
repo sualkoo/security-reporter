@@ -12,6 +12,7 @@ builder.Services.AddSingleton<ICosmosService, CosmosService>();
 builder.Services.AddSingleton<IProjectDataValidator, ProjectDataValidator>();
 builder.Services.AddSingleton<IProjectDataParser, ProjectDataParser>();
 builder.Services.AddSingleton<IProjectReportService, ProjectReportService>();
+builder.Services.AddSingleton<IDashboardService, DashboardService>();
 
 var app = builder.Build();
 

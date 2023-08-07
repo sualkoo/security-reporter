@@ -9,9 +9,9 @@ namespace webapi.ProjectSearch.Controllers
     public class DashboardController : ExceptionHandlingControllerBase
     {
         private readonly ILogger Logger;
-        private DashboardService DashboardService { get; }
+        private IDashboardService DashboardService { get; }
 
-        public DashboardController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, DashboardService dashboardService) : base(baseLogger)
+        public DashboardController(ILogger<DashboardController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IDashboardService dashboardService) : base(baseLogger)
         {
             DashboardService = dashboardService;
             Logger = logger;
@@ -23,7 +23,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger.LogInformation("Received Get request for getting Criticality data for graph");
             return await HandleExceptionAsync(async () =>
             {
-                int[] data = await DashboardService.GetCriticalityData();
+                List<Tuple<int, int>> data = await DashboardService.GetCriticalityData();
                 return Ok(data);
             });
 

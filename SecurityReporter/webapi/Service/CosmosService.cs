@@ -1,9 +1,13 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography.Xml;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace webapi.Service
 {
@@ -572,9 +576,23 @@ namespace webapi.Service
             }
         }
 
-        public async Task<int[]> GetCriticalityData()
+        public async Task<List<Tuple<int, int>>> GetCriticalityData()
         {
-            return null;
+            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            string query = "SELECT f.Criticality, Count(1) AS Count " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "GROUP BY f.Criticality";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Criticality, (int)f.Count)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
         }
     }
 }

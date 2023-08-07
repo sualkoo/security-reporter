@@ -17,6 +17,6 @@ namespace webapi.Service
         Task<ProjectReportData> GetProjectReport(string projectId);
         Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page);
         Task<bool> DeleteProjectReports(List<string> projectReportIds);
-        Task<int[]> GetCriticalityData();
+        Task<List<Tuple<int, int>>> GetCriticalityData();
     }
 }

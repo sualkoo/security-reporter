@@ -4,7 +4,7 @@ using webapi.Service;
 
 namespace webapi.ProjectSearch.Services
 {
-    public class DashboardService
+    public class DashboardService : IDashboardService
     {
         public ICosmosService CosmosService { get; set; }
         private readonly ILogger Logger;
@@ -16,7 +16,7 @@ namespace webapi.ProjectSearch.Services
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
-        public async Task<int[]> GetCriticalityData()
+        public async Task<List<Tuple<int, int>>> GetCriticalityData()
         {
             Logger.LogInformation($"Fetching Criticality data");
 
