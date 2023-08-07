@@ -65,6 +65,6 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'npm run e2e --force'
+    script: 'npm cypress run --force'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
   displayName: 'npx cypress run'
