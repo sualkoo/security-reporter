@@ -36,17 +36,22 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
+import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-import { DefaultPageComponentComponent } from './default-page/default-page-component/default-page-component.component';
-
+import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
+import { Roles } from './roles/roles';
+import { LoginPageComponent } from './login-page/login-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
+    LandingPageComponent,   
+    HighlighterPipe, LoginPageComponent,
+    LandingPageComponent,    
     LandingPageComponent,
     HighlighterPipe,
     DefaultPageComponentComponent,
@@ -61,9 +66,11 @@ import { DefaultPageComponentComponent } from './default-page/default-page-compo
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,
+    MatCardModule,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
@@ -84,8 +91,9 @@ import { DefaultPageComponentComponent } from './default-page/default-page-compo
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule,
   ],
-  providers: [],
+  providers: [Roles],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
