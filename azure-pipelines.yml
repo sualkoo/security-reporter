@@ -65,4 +65,4 @@ steps:
   inputs:
     script: 'npx cypress run'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
-  displayName: 'npx cypress run'  
+  displayName: 'npx cypress run'
