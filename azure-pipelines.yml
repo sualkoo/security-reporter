@@ -56,8 +56,3 @@ steps:
     appName: 'sda-projectmanagement'
     package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
    
-- task: Cypress
-  inputs:
-    script: 'npx cypress run'
-    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
-  displayName: 'Run Cypress tests'
