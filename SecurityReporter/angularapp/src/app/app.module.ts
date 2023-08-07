@@ -41,6 +41,7 @@ import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -48,10 +49,9 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,   
-    
+    LandingPageComponent,
     HighlighterPipe,
-
+    FooterComponent,
   ],
   imports: [
     AddProjectComponent,
