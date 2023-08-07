@@ -28,19 +28,6 @@ namespace webapi
             };
         }
 
-        public static List<TestUser> GetTestUsers()
-        {
-            return new List<TestUser>()
-            {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "admin",
-                    Password = "admin",
-                }
-            };
-        }
-
         public static IEnumerable<ApiScope> GetApiScopes =>
 
             new[]

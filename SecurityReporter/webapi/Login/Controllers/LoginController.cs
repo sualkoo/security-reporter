@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using webapi;
+using webapi.Login;
 
 namespace webapi.Login.Controllers
 {
@@ -21,7 +21,7 @@ namespace webapi.Login.Controllers
                 return BadRequest("Already signed in!");
             }
 
-            var testUsers = Config.GetTestUsers();
+            var testUsers = Users.Data;
 
             var user = testUsers.SingleOrDefault(u => u.Username == name);
 

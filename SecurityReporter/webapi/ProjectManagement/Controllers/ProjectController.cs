@@ -18,6 +18,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("add")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -36,7 +37,9 @@ public class ProjectController : ControllerBase
         return StatusCode(201, project);
     }
 
+
     [HttpPost("delete")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(List<string> ids)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -54,6 +57,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpDelete("delete")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(string id)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -71,6 +75,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("count")]
+    [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetNumberOfProjects()
     {
         int count = await CosmosService.GetNumberOfProjects();
@@ -84,6 +89,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
+    [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
         var items = new List<ProjectData>();
@@ -124,6 +130,62 @@ public class ProjectController : ControllerBase
         }
     }
 
+    [HttpPut("update")]
+    [Authorize(Policy = "AdminPAdminCoordinatorPolicy")]
+    public async Task<IActionResult> UpdateProject(ProjectData project)
+    {
+        Console.WriteLine("Updating project..");
+        
+        bool result = await CosmosService.UpdateProject(project);
+        
+        if (!result)
+        {
+            Console.WriteLine("Error occured in Project/update put request.");
+            return StatusCode(400, "Error: Unable to update project in DB.");
+        }
 
+        Console.WriteLine("Request executed without any errors.");
+        return StatusCode(202, project);
+    }
 
+    [HttpGet("getProject")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
+    public async Task<IActionResult> GetProjectById(string id)
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("GET");
+        Console.ResetColor();
+        Console.WriteLine($"\t /Project/{id}");
+
+        try
+        {
+            var project = await CosmosService.GetProjectById(id);
+
+            if (project != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Success: Project data retrieved successfully.");
+                Console.ResetColor();
+
+                return StatusCode(200, project);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Info: Project with ID '{id}' not found.");
+                Console.ResetColor();
+
+                return StatusCode(404, $"Project with ID '{id}' not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.ResetColor();
+
+            return StatusCode(400, $"Error retrieving project data: {ex.Message}");
+        }
+    }
 }
+    

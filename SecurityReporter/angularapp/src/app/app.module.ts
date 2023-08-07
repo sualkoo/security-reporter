@@ -41,7 +41,8 @@ import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
+import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
+import { Roles } from './roles/roles';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     
     HighlighterPipe,
 
+    LandingPageComponent,    
   ],
   imports: [
     AddProjectComponent,
@@ -63,6 +65,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,
@@ -78,7 +81,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
-    MatSnackBarModule,
     MatIconModule,
     CommonModule,
     ListProjectsPageComponent,
@@ -87,7 +89,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
   ],
-  providers: [],
+  providers: [Roles],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -5,11 +5,28 @@
   [(ngModel)]="radioValue"
   (change)="onRadioChange()"
 >
-  <mat-radio-button value="1">Two weeks</mat-radio-button>
-  <mat-radio-button value="2">Four weeks</mat-radio-button>
+  <div>
+    <mat-radio-button value="2">Two weeks</mat-radio-button>
+  </div>
+
+  <div>
+    <mat-radio-button value="4">Four weeks</mat-radio-button>
+  </div>
+
   <div class="radio-input">
     <mat-radio-button value="3"></mat-radio-button>
-    <input type="number" min="0" [(ngModel)]="inputValue" />
-    <p>weeks</p>
+    <div class="input-container">
+      <input type="number"
+              #weeksInput="ngModel"
+              min="2"
+              max="10"
+              [(ngModel)]="inputValue"
+              [ngClass]="{'invalid-input': weeksInput.invalid && weeksInput.dirty}" />
+      <p>weeks</p>
+    </div>
+
+    <mat-error *ngIf="weeksInput.invalid && weeksInput.dirty" class="invalid-message">
+      Value must be a number between 2 and 10
+    </mat-error>
   </div>
-</mat-radio-group>
+ </mat-radio-group>
