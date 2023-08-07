@@ -41,6 +41,7 @@ import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { Roles } from './roles/roles';
     
     HighlighterPipe,
 
-    LandingPageComponent,    
+    LandingPageComponent,
+      DashboardComponent,    
   ],
   imports: [
     AddProjectComponent,

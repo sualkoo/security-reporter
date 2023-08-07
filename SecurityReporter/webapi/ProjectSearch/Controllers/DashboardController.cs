@@ -17,7 +17,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("Criticality")]
         public async Task<IActionResult> getCriticalityData()
         {
             Logger.LogInformation("Received Get request for getting Criticality data for graph");

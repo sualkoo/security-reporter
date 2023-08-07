@@ -7,6 +7,7 @@ import { ListProjectsPageComponent } from './project-listing/component-pages/lis
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'pentester', 'coordinator', 'client', 'default'] } },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'add-project', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'list-projects', component: ListProjectsPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator', 'client'] } },
   { path: 'edit-project/:id', component: ProjectEditingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
 ];
 
 @NgModule({
