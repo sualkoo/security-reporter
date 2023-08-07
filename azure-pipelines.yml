@@ -28,7 +28,7 @@ steps:
       **/*Test.csproj
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: 'SecurityReporter'
-  displayName: 'dotnet tests'
+  displayName: '.NET Tests'
 
 - task: CmdLine@2
   inputs:
@@ -53,18 +53,18 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'ng build'
+    script: 'ng build --configuration=production'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
-  displayName: 'ng build'   
+  displayName: 'Angular build'   
 
 - task: CmdLine@2
   inputs:
     script: 'npm install cypress --save-dev --force'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
-  displayName: 'npm install cypress' 
+  displayName: 'Cypress installation' 
 
 - task: CmdLine@2
   inputs:
-    script: 'npm cypress run --force'
+    script: 'npm run test --force'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
-  displayName: 'npx cypress run'
+  displayName: 'Run Cypress Tests'
