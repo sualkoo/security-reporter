@@ -55,3 +55,14 @@ steps:
     appType: 'webAppLinux'
     appName: 'sda-projectmanagement'
     package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
+
+- task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+
+  - script: 'npm install'
+    displayName: 'Install npm dependencies'
+
+  - script: 'npx cypress run'
+    displayName: 'Run Cypress tests'
