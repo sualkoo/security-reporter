@@ -43,6 +43,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component'
 
 @NgModule({
   declarations: [
