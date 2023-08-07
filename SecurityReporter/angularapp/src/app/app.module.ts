@@ -44,6 +44,7 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
+import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 
 
 
@@ -57,7 +58,8 @@ import { DefaultPageComponentComponent } from './default-page/component-pages/de
     LandingPageComponent,    
     LandingPageComponent,
     HighlighterPipe,
-    DefaultPageComponentComponent
+    DefaultPageComponentComponent,
+    AfterLoginPageComponent
   ],
   imports: [
     AddProjectComponent,

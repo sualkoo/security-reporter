@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login-page',
@@ -9,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -23,11 +24,14 @@ export class LoginPageComponent implements OnInit {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
-      //DUMMY LOGIN
+      //DUMMY TEMPORARY LOGIN
       if (username === "admin" && password === "admin") {
-        window.location.href = "/welcome";
+        window.location.href = 'after-login';
       } else {
-        console.log("Incorrect username or password");
+        this.snackBar.open('Error logging in.', 'Close', {
+          duration: 5000,
+          panelClass: 'red-alert'
+        });
       }
     }
   }
