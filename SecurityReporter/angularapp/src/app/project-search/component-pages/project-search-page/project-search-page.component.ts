@@ -272,6 +272,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.clearReportVariables();
   }
 
+  checkCheckbox: number = 0;
 
   onlyNumbers(event: string, ): void {
     const numberRegex = /^[0-9]+$/;
@@ -288,7 +289,19 @@ export class ProjectSearchPageComponent implements OnInit {
          //delay 200ms
           setTimeout(() => {
           caseItem.checked = false;
+          this.checkFormValidity();
+
+          for(let value of this.keywords) {
+            if (value.checked) {
+              this.checkCheckbox++;
+            }
+          }
+          console.log(this.checkCheckbox);
+          if (this.checkCheckbox == 0) {
+            this.isCheckboxChecked = false;
+          }
         }, 100);
+          this.checkCheckbox = 0;
         }
       });
 
@@ -338,7 +351,7 @@ export class ProjectSearchPageComponent implements OnInit {
       this.selectedProjects = [];
     })
 
-    
+
   }
 
   showPopup: boolean = false;

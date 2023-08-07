@@ -11,7 +11,7 @@ export class AddProjectService {
   private addEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.addEndPointURL = 'https://localhost:7075/Project/add';
+    this.addEndPointURL = '/Project/add';
   }
 
   public submitPMProject(data: ProjectInterface): Observable<any> {

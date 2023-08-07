@@ -20,8 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Properties\serviceDependencies.local.json.user" />
-    <None Include="webapi.csproj" />
+    <ProjectReference Include="..\angularapp\angularapp.esproj">
+	    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+	<None Include="Properties\serviceDependencies.local.json.user" />
+	<None Include="webapi.csproj" />
   </ItemGroup>
 
 </Project>
