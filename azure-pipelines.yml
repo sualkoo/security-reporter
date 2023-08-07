@@ -20,39 +20,26 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
   workingDirectory: 'SecurityReporter'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: |
-      **/*Tests.csproj
-      **/*Test.csproj
-    arguments: '--configuration $(buildConfiguration)'
-    workingDirectory: 'SecurityReporter'
-  displayName: 'dotnet tests'
-
 - task: CmdLine@2
   inputs:
     script: 'npm install'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'npm install'
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   inputs:
-    command: 'publish'
-    publishWebProjects: true
-    zipAfterPublish: true
-    workingDirectory: 'SecurityReporter'
+    script: 'npm build'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'npm build'   
 
-- task: CopyFiles@2
+  - task: CmdLine@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/SecurityReporter/angularapp/dist/angularapp'
-    Contents: '**'
-    TargetFolder: '$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot'
+    script: 'npm install cypress --save-dev'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+  displayName: 'npm install cypress' 
 
-- task: AzureWebApp@1
+  - task: CmdLine@2
   inputs:
-    azureSubscription: 'sda-2023-service-connection'
-    appType: 'webAppLinux'
-    appName: 'sda-projectmanagement'
-    package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
-   
+    script: 'npx cypress run'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+  displayName: 'npx cypress run'  
