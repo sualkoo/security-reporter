@@ -1,32 +1,23 @@
 <div *ngIf="title == 'Project name'">
   <form [formGroup]="form">
-    <mat-form-field
-      class="project-name"
-      style="
-        width: 450px;
-        .mat-mdc-text-field-wrapper {
-          background-color: rgb(255, 255, 255);
-        }
-      "
-    >
+    <mat-form-field class="project-name"
+                    style="width: 500px; .mat-mdc-text-field-wrapper { background-color: rgb(255, 255, 255); }">
       <mat-label>{{ title }}</mat-label>
-      <input
-        formControlName="projectName"
-        matInput
-        placeholder=""
-        [(ngModel)]="inputValue"
-        (input)="onInputChange()"
-      />
-
-      <mat-error *ngIf="form.get('projectName')?.errors?.['minlength']">
-        Minimal Project name lenght is <strong>3 characters</strong> and maximum
-        <strong>50 characters</strong>
+      <input formControlName="projectName"
+             matInput
+             placeholder=""
+             [(ngModel)]="inputValue"
+             (input)="onInputChange()" />
+      <mat-error *ngIf="form.get('projectName')?.errors?.['minlength']"
+                 class="error-message">
+        Project name must have from <strong>3 </strong> to <strong>50 characters</strong>
       </mat-error>
-      <mat-error *ngIf="form.get('projectName')?.errors?.['required']">
+      <mat-error *ngIf="form.get('projectName')?.errors?.['required']"
+                 class="error-message">
         Project name is required
       </mat-error>
-      <mat-error *ngIf="form.get('projectName')?.hasError('pattern')">
-        Project should start with <strong>Capital letter</strong>
+      <mat-error *ngIf="form.get('projectName')?.errors?.['whitespace']" class="error-message">
+        Project name cannot contain only whitespace
       </mat-error>
     </mat-form-field>
   </form>
@@ -34,11 +25,9 @@
 <div *ngIf="title != 'Project name'">
   <mat-form-field class="project-name">
     <mat-label>{{ title }}</mat-label>
-    <input
-      matInput
-      placeholder=""
-      [(ngModel)]="inputValue"
-      (input)="onInputChange()"
-    />
+    <input matInput
+           placeholder=""
+           [(ngModel)]="inputValue"
+           (input)="onInputChange()" />
   </mat-form-field>
 </div>

@@ -16,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-
+ 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
@@ -34,9 +34,12 @@ export class DataGridComponentComponent implements AfterViewInit {
   selectedItems: any[] = [];
   noItemsFound = false;
 
+  userRole: string = 'admin'; // there will be some service for getting userRole
+
   displayedColumns: string[] = [
     'select',
     'projectName',
+    'edit',
     'projectStatus',
     'questionare',
     'projectScope',
@@ -54,7 +57,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   filters: string = '';
-
 
   length: number | undefined;
 
@@ -172,7 +174,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
     this.filterError = false;
 
-
     try {
       this.projects = await this.getProjectsService.getProjects(15, 1,'');
       this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
@@ -227,7 +228,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
       case 1:
@@ -263,6 +263,11 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.router.navigate(['/project-management'])
   }
 
+  navigateToThePage(projectId: number) {
+    if (projectId) {
+      this.router.navigate(['/edit-project/', projectId]);
+    }
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeletePopupComponentComponent, {
