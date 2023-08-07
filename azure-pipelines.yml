@@ -32,7 +32,9 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'npm install'
+    script: |
+      npm install -g @angular/cli
+      npm install
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'npm install'
 
