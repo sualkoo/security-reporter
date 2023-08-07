@@ -30,7 +30,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'npm install cypress --save-dev'
+    script: 'npm install cypress --save-dev -- force'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
   displayName: 'npm install cypress' 
 
