@@ -65,6 +65,6 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'npm run test --force'
+    script: 'npx cypress run'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
   displayName: 'Run Cypress Tests'
