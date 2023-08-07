@@ -4,9 +4,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBDocumentInformationExtractor
+    public class DbDocumentInformationExtractor
     {
-        public byte[] extractDocumentInformation(DocumentInformation documentInformation)
+        public static byte[] ExtractDocumentInformation(DocumentInformation documentInformation)
         {
             // Initialize lists if null
             if (documentInformation.Authors == null)

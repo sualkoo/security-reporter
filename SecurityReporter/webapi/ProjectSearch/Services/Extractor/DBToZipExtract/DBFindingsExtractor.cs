@@ -5,9 +5,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBFindingsExtractor
+    public class DbFindingsExtractor
     {
-        public Tuple<MemoryStream, List<(string FileName, byte[] image)>> extractFinding(Finding finding)
+        public static Tuple<MemoryStream, List<(string FileName, byte[] image)>> ExtractFinding(Finding finding)
         {
             string findingContent =
 @"%
@@ -68,7 +68,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
             return result;
         }
 
-        private List<(string FileName, byte[] Image)> CreateFindingImages(Finding finding)
+        private static List<(string FileName, byte[] Image)> CreateFindingImages(Finding finding)
         {
             List<(string FileName, byte[] Image)> result = new List<(string FileName, byte[] Image)>();
 

@@ -87,7 +87,7 @@ namespace webapi.ProjectSearch.Services.Tests
                 "test user credentials."
             };
 
-            testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>();
+            // testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>();
 
             List<bool> row1 = new List<bool> { true, true, false, false };
             List<bool> row2 = new List<bool> { true, true, true, false };
@@ -97,7 +97,7 @@ namespace webapi.ProjectSearch.Services.Tests
             List<bool> row6 = new List<bool> { false, false, false, false };
             List<bool> row7 = new List<bool> { false, false, false, false };
 
-            testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>{ row1, row2, row3, row4, row5, row6, row7 };
+            // testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>{ row1, row2, row3, row4, row5, row6, row7 };
 
 
             parsedScope.Should().BeEquivalentTo(testScope);

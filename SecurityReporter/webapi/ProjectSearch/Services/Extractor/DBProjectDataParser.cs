@@ -3,28 +3,17 @@ using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Extractor
 {
-    public class DBProjectDataParser : IDBProjectDataParser
+    public class DbProjectDataParser : IDBProjectDataParser
     {
-        private ILogger Logger;
-        DBDocumentInformationExtractor documentInformationExtractor;
-        DBExecutiveSummaryExtractor executiveSummaryExtractor;
-        DBProjectInformationExtractor projectInformationExtractor;
-        DBFindingsExtractor findingsExtractor;
-        DBScopeAndProceduresExtractor scopeAndProceduresExtractor;
-        DBTestingMethodologyExtractor testingMethodologyExtractor;
+        private readonly ILogger logger;
 
-        public DBProjectDataParser(ILogger<DBProjectDataParser> logger)
+        public DbProjectDataParser(ILogger<DbProjectDataParser> logger)
         {
-            Logger = logger;
-            documentInformationExtractor = new DBDocumentInformationExtractor();
-            executiveSummaryExtractor = new DBExecutiveSummaryExtractor();
-            projectInformationExtractor = new DBProjectInformationExtractor();
-            findingsExtractor = new DBFindingsExtractor();
-            scopeAndProceduresExtractor = new DBScopeAndProceduresExtractor();
-            testingMethodologyExtractor = new DBTestingMethodologyExtractor();
+            this.logger = logger;
         }
 
         public FileContentResult Extract(ProjectReportData data)
@@ -33,18 +22,18 @@ namespace webapi.ProjectSearch.Services.Extractor
             {
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Looks like we have missing/incorrect information in project report data.");
             }
-            Logger.LogInformation("Fetched data: " + (data != null ? data.DocumentInfo!.ProjectReportName : null));
-            Logger.LogInformation("Trying to parse data");
+            logger.LogInformation("Fetched data: " + (data != null ? data.DocumentInfo!.ProjectReportName : null));
+            logger.LogInformation("Trying to parse data");
 
             try
             {
                 var fileContents = new Dictionary<string, byte[]>()
                 {
-                    { "Config/Document_Information.tex", documentInformationExtractor.extractDocumentInformation(data!.DocumentInfo) },
-                    { "Config/Executive_Summary.tex", executiveSummaryExtractor.extractExecutiveSummary(data!.ExecutiveSummary) },
-                    { "Config/Project_Information.tex", projectInformationExtractor.extractProjectInformation(data!.ProjectInfo) },
-                    { "Config/Scope_and_Procedures.tex", scopeAndProceduresExtractor.extractScopeAndProcedures(data!.ScopeAndProcedures) },
-                    { "Config/Testing_Methodology.tex", testingMethodologyExtractor.extractTestingMethodology(data!.TestingMethodology) },
+                    { "Config/Document_Information.tex", DbDocumentInformationExtractor.ExtractDocumentInformation(data!.DocumentInfo) },
+                    { "Config/Executive_Summary.tex", DbExecutiveSummaryExtractor.ExtractExecutiveSummary(data!.ExecutiveSummary) },
+                    { "Config/Project_Information.tex", DbProjectInformationExtractor.ExtractProjectInformation(data!.ProjectInfo) },
+                    { "Config/Scope_and_Procedures.tex", DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(data!.ScopeAndProcedures) },
+                    { "Config/Testing_Methodology.tex", DbTestingMethodologyExtractor.ExtractTestingMethodology(data!.TestingMethodology) },
                 };
 
                 byte[] zipFileBytes = CreateZipFile(fileContents, data);
@@ -99,7 +88,7 @@ namespace webapi.ProjectSearch.Services.Extractor
         {
             foreach (Finding finding in projectReportData.Findings)
             {
-                var resultFinding = findingsExtractor.extractFinding(finding);
+                var resultFinding = DbFindingsExtractor.ExtractFinding(finding);
                 string entryFolderName = "Config/Findings_Database/" + finding.FolderName;
 
                 var mainFile = zipArchive.CreateEntry(entryFolderName + "/main.tex");
