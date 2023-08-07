@@ -57,5 +57,6 @@ steps:
     package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
    
 - task: Cypress
-  - script: 'npx cypress run'
-    displayName: 'Run Cypress tests'
+  inputs:
+    script: 'npx cypress run'
+  displayName: 'Run Cypress tests'
