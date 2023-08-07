@@ -19,12 +19,39 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
   workingDirectory: 'SecurityReporter'
-  
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: |
+      **/*Tests.csproj
+      **/*Test.csproj
+    arguments: '--configuration $(buildConfiguration)'
+    workingDirectory: 'SecurityReporter'
+  displayName: 'dotnet tests'
+
 - task: CmdLine@2
   inputs:
     script: 'npm install'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'npm install'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: true
+    workingDirectory: 'SecurityReporter'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/SecurityReporter/angularapp/dist/angularapp'
+    Contents: '**'
+    TargetFolder: '$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'sda-2023-service-connection'
 
 - task: CmdLine@2
   inputs:
