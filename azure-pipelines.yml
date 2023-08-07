@@ -64,5 +64,5 @@ steps:
   - script: 'npm install'
     displayName: 'Install npm dependencies'
 
-  - script: 'npx cypress run'
+  - script: 'npm run cypress'
     displayName: 'Run Cypress tests'
