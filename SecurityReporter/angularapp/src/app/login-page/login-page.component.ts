@@ -23,6 +23,7 @@ export class LoginPageComponent implements OnInit {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
+      //DUMMY LOGIN
       if (username === "admin" && password === "admin") {
         window.location.href = "/welcome";
       } else {
