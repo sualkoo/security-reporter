@@ -36,11 +36,10 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
-
-
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { DefaultPageComponentComponent } from './default-page/default-page-component/default-page-component.component';
 
 
 @NgModule({
@@ -48,10 +47,9 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,   
-    
+    LandingPageComponent,
     HighlighterPipe,
-
+    DefaultPageComponentComponent,
   ],
   imports: [
     AddProjectComponent,

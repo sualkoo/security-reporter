@@ -5,6 +5,7 @@ import { AddProjectComponent } from './project-management/component-pages/add-pr
 import { ProjectSearchPageComponent } from './project-search/component-pages/project-search-page/project-search-page.component';
 import { ListProjectsPageComponent } from './project-listing/component-pages/list-projects-page/list-projects-page.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'project-management', component: AddProjectComponent },
   { path: 'add-project', component: AddProjectComponent },
   { path: 'list-projects', component: ListProjectsPageComponent },
+  { path: 'default-page', component: DefaultPageComponentComponent },
 ];
 
 @NgModule({
