@@ -65,7 +65,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    - script: 'ng serve --configuration=production'
+    script: 'ng serve --configuration=production'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'Start Angular server'
 
