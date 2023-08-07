@@ -36,12 +36,11 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
-
-
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
+import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
+import { Roles } from './roles/roles';
 
 @NgModule({
   declarations: [
@@ -52,6 +51,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     
     HighlighterPipe,
 
+    LandingPageComponent,    
   ],
   imports: [
     AddProjectComponent,
@@ -63,6 +63,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,
@@ -71,14 +72,12 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    MatSnackBarModule,
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
-    MatSnackBarModule,
     MatIconModule,
     CommonModule,
     ListProjectsPageComponent,
@@ -86,8 +85,9 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule,
   ],
-  providers: [],
+  providers: [Roles],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

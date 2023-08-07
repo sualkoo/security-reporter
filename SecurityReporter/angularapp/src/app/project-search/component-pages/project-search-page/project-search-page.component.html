@@ -1,7 +1,7 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!--Sidebar-->
-    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-3': showSidebar, 'col-lg-3': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
+    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 100vh; overflow-y: auto; overflow-x: hidden;">
       <div class="mt-2 pt-2">
         <div class="search-container">
           <h1 class="center pb-2 mt-3">Search items</h1>
@@ -50,7 +50,7 @@
       </div>
     </div>
     <!-- Project Report Findings -->
-    <div [ngClass]="{'col': showSidebar, 'col-sm-9': showSidebar, 'col-lg-9': showSidebar, 'col-xl-9': showSidebar, 'd-none d-sm-block': showSidebar, 'offset-3': showSidebar}">
+    <div [ngClass]="{'col': showSidebar, 'col-sm-7': showSidebar, 'col-lg-8': showSidebar, 'col-xl-9': showSidebar, 'd-none d-sm-block': showSidebar, 'offset-3': showSidebar, 'offset-sm-5': showSidebar, 'offset-lg-4': showSidebar, 'offset-xl-3': showSidebar}">
       <div id ="scrollable_box" style="overflow-y: auto; height: 100vh;" #reportsScrollableBox>
         <div>
           <div class="mt-3">

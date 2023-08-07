@@ -11,11 +11,11 @@ export class GetProjectsServiceService {
   private getProjectEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.getProjectEndPointURL = 'https://localhost:7075/Project/retrieve';
+    this.getProjectEndPointURL = '/Project/retrieve';
   }
 
   public getProjects(pageSize: number, pageNumber: number, filters: string): Promise<any> {
-    this.getProjectEndPointURL = 'https://localhost:7075/Project/retrieve' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber + filters;
+    this.getProjectEndPointURL = '/Project/retrieve' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber + filters;
     return new Promise((resolve, reject) => {
       this.http.get(this.getProjectEndPointURL).subscribe(
         (response) => {
