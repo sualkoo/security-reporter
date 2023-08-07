@@ -9,17 +9,18 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
-
+import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: LandingPageComponent, canActivate: [Roles], data: { allowedRoles: ["admin", "pentester", "coordinator", "client", "default"] } },
   { path: 'project-search', component: ProjectSearchPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'pentester'] } },
   { path: 'project-management', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'add-project', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'list-projects', component: ListProjectsPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator', 'client'] } },
   { path: 'edit-project/:id', component: ProjectEditingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
-  { path: '', component: LoginPageComponent },
-  { path: '', component: LandingPageComponent },
+  { path: 'login', component: LoginPageComponent },
+  { path: 'after-login', component: AfterLoginPageComponent },
   { path: 'project-search', component: ProjectSearchPageComponent },
   { path: 'project-management', component: AddProjectComponent },
   { path: 'add-project', component: AddProjectComponent },
