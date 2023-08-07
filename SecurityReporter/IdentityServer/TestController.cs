@@ -1,8 +1,9 @@
-﻿using IdentityModel.Client;
+﻿using IdentityServer4;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Net.Http;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -22,17 +23,38 @@ namespace IdentityServer
         [HttpPost("login")]
         public async Task<IActionResult> Login(string name, string password)
         {
-            var htttpClient = new HttpClient();
-            var token = await htttpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Address = "https://localhost:5001/connect/token",
-                ClientId = "ConsoleApp_ClientId",
-                ClientSecret = "nieco_nevulgarne",
-                Scope = ""
-            });
+                return BadRequest("Already signed in!");
+            }
 
-            Console.WriteLine(token.AccessToken);
-            return Ok(token.AccessToken);
+            var testUsers = Config.GetTestUsers();
+
+            var user = testUsers.SingleOrDefault(u => u.Username == name);
+
+            if (user == null || user.Password != password)
+            {
+                return BadRequest("Invalid credentials");
+            }
+
+            var token = new IdentityServerUser(user.SubjectId);
+            await HttpContext.SignInAsync(token);
+
+            return Ok("Signed in!");
+
+        }
+
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync();
+                return Ok("Signed out!");
+            }
+            return BadRequest("Not signed in!");
+
         }
     }
 }
