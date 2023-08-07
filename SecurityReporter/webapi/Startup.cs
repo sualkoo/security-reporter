@@ -1,13 +1,7 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+﻿using webapi.ProjectSearch.Services;
+using webapi.Service;
 
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-namespace IdentityServer
+namespace webapi
 {
     public class Startup
     {
@@ -20,22 +14,20 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // uncomment, if you want to add an MVC-based UI
-            //services.AddControllersWithViews();
             services.AddControllers();
+            services.AddSingleton<ICosmosService, CosmosService>();
+            services.AddSingleton<IProjectDataValidator, ProjectDataValidator>();
+            services.AddSingleton<IProjectDataParser, ProjectDataParser>();
+            services.AddSingleton<IProjectReportService, ProjectReportService>();
 
             var builder = services.AddIdentityServer(options =>
             {
-                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                 options.EmitStaticAudienceClaim = true;
             })
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApis())
-                .AddInMemoryClients(Config.GetClients())
                 .AddTestUsers(Config.GetTestUsers())
+                .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryApiScopes(Config.GetApiScopes);
-
-            // not recommended for production - you need to store your key material somewhere secure
 
             builder.AddDeveloperSigningCredential();
 
@@ -47,14 +39,10 @@ namespace IdentityServer
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            // uncomment if you want to add MVC
-            //app.UseStaticFiles();
             app.UseRouting();
 
             app.UseIdentityServer();
 
-            // uncomment, if you want to add MVC
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

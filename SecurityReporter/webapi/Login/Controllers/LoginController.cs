@@ -6,20 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using webapi;
 
-namespace IdentityServer
+namespace webapi.Login.Controllers
 {
     [ApiController]
-    public class TestController : ControllerBase
+    public class LoginController : ControllerBase
     {
-        [Authorize]
-        [HttpGet("identity")]
-        public IActionResult ProtectedResource()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Ok($"Protected resource accessed by user with ID: id");
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(string name, string password)
         {
@@ -43,7 +36,6 @@ namespace IdentityServer
             return Ok("Signed in!");
 
         }
-
 
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()

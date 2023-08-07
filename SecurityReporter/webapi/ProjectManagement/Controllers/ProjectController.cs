@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
 
 namespace webapi.ProjectManagement.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class ProjectController : ControllerBase
