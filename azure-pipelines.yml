@@ -32,13 +32,13 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'npm build'   
 
-  - task: CmdLine@2
+- task: CmdLine@2
   inputs:
     script: 'npm install cypress --save-dev'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
   displayName: 'npm install cypress' 
 
-  - task: CmdLine@2
+- task: CmdLine@2
   inputs:
     script: 'npx cypress run'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
