@@ -55,3 +55,4 @@ steps:
     appType: 'webAppLinux'
     appName: 'sda-projectmanagement'
     package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
+   
