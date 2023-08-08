@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
+﻿<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.83-alpha">
   <PropertyGroup>
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
@@ -24,5 +24,6 @@
     <Folder Include="src\app\project-search\components\" />
     <Folder Include="src\app\project-search\interfaces\Enums\" />
     <Folder Include="src\app\project-search\interfaces\ProjectReport\" />
+    <Folder Include="src\app\shared\services\" />
   </ItemGroup>
 </Project>
