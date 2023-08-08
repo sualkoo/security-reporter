@@ -18,6 +18,7 @@ describe('Item Management Test', () => {
         cy.get('.buttons-container > :nth-child(1) > .mdc-button__label').click();
         cy.get('.button-container > .add-button').click();
     }
+
     function fillInputValues() {
         cy.get('#mat-input-8').click().type("Testing");
         cy.get('#mat-input-9').click().type("Testing");
