@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using System.Text.Unicode;
+using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -9,11 +11,13 @@ namespace webapi.ProjectSearch.Controllers
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }
+        private IPDFBuilder PDFBuilder { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService) :base(baseLogger)
+        public ProjectReportController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService, IPDFBuilder pdfBuilder) :base(baseLogger)
         {
             ProjectReportService = projectReportService;
+            PDFBuilder = pdfBuilder;
             Logger = logger;
         }
 
@@ -60,6 +64,17 @@ namespace webapi.ProjectSearch.Controllers
             return await HandleExceptionAsync(async () =>
             {
                 return await ProjectReportService.GetReportSourceByIdAsync(id);
+            });
+        }
+
+        [HttpGet("{id}/download/pdf")]
+        public async Task<IActionResult> downloadProjectPdf(Guid id)
+        {
+            Logger.LogInformation("Received GET request for downloading PDF of report by ID");
+            return await HandleExceptionAsync(async () =>
+            {
+                FileContentResult zip = await ProjectReportService.GetReportSourceByIdAsync(id);
+                return await PDFBuilder.GeneratePDFFromZip(zip, "Report-Cyber_Security_Assesment");
             });
         }
 

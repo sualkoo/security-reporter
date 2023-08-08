@@ -16,7 +16,6 @@ namespace webapi.ProjectSearch.Services
         public IProjectDataValidator Validator { get; set; }
         public IProjectDataParser Parser { get; set; }
         public IDBProjectDataParser DBParser { get; set; }
-
         public ICosmosService CosmosService { get; set; }
         private readonly ILogger Logger;
 
