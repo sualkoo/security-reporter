@@ -7,7 +7,7 @@ import { ErrorResponse } from '../../interfaces/error-response';
 @Component({
   selector: 'app-add-project-report',
   templateUrl: './add-project-report.component.html',
-  styleUrls: ['./add-project-report.component.css', '../../project-search.css']
+  styleUrls: ['./add-project-report.component.css', '../../../project-search.css']
 })
 export class AddProjectReportComponent implements OnInit{
   @ViewChild('fileInputRef', { static: false }) fileInputRef!: ElementRef<HTMLInputElement>;
