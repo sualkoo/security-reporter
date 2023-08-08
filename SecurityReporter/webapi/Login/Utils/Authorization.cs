@@ -23,15 +23,13 @@ namespace webapi.Login.Utils.Authorization
         {
             this.roleService = roleService;
         }
-        protected override Task HandleRequirementAsync(
+        protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context, RoleRequirement requirement)
         {
-            if (requirement.RequiredRoles.Contains(this.roleService.GetUserRoleBySubjectId(context.User?.FindFirst("sub")?.Value)))
+            if (requirement.RequiredRoles.Contains(await roleService.GetUserRoleBySubjectId(context.User?.FindFirst("sub")?.Value)))
             {
                 context.Succeed(requirement);
             }
-
-            return Task.CompletedTask;
         }
     }
 }
