@@ -6,9 +6,12 @@
     padding: 10px;
 }
 
-.radio-input{
-    display: flex;
-  }
+.radio-input {
+  display: flex;
+}
+.text {
+  margin-top: 8px;
+}
 
 .radio-input input{
   border: #f2f2f2;
