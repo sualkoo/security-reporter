@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoginService {
-  private loginUrl = "/login";
+  private loginUrl = "/login?name=admin&password=admin";
 
   constructor(private http: HttpClient) {  }
 
@@ -17,7 +17,7 @@ export class LoginService {
     console.log("Poslal login", username, password)
 
     this.http
-      .post(this.loginUrl, {username: username, password: password}, { observe: 'response' })
+      .post(this.loginUrl , null, {  withCredentials: true  })
       .subscribe(
         response => {
             console.log('Request successful. Status code: 200');

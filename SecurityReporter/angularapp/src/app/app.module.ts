@@ -67,7 +67,7 @@ import { AfterLoginPageComponent } from './after-login-page/after-login-page.com
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
+    MatFormFieldModule,MatSnackBarModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
