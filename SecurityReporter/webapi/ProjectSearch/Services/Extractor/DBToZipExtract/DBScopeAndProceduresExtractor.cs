@@ -3,9 +3,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBScopeAndProceduresExtractor
+    public class DbScopeAndProceduresExtractor
     {
-        public byte[] extractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
+        public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
         {
 			var inScope = new List<string>();
 			if (scopeAndProcedures.InScope != null)

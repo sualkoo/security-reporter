@@ -3,9 +3,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBProjectInformationExtractor
+    public class DbProjectInformationExtractor
     {
-        public byte[] extractProjectInformation(ProjectInformation projectInformation)
+        public static byte[] ExtractProjectInformation(ProjectInformation projectInformation)
         {
 			var technicalContactsParsed = new List<string>();
 			if (projectInformation.TechnicalContacts != null) {

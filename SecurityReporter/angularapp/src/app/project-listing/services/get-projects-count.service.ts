@@ -8,7 +8,7 @@ export class GetProjectsCountService {
   private getCountEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.getCountEndPointURL = 'https://localhost:7075/Project/count';
+    this.getCountEndPointURL = '/Project/count';
   }
 
   public getNumberOfProjects(): Promise<any> {

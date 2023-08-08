@@ -3,9 +3,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBTestingMethodologyExtractor
+    public class DbTestingMethodologyExtractor
     {
-        public byte[] extractTestingMethodology(TestingMethodology testingMethodology)
+        public static byte[] ExtractTestingMethodology(TestingMethodology testingMethodology)
         {
 
             var toolsUsed = new List<string>();

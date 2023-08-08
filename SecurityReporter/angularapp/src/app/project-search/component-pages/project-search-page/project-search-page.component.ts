@@ -360,7 +360,7 @@ export class ProjectSearchPageComponent implements OnInit {
       for (let selectedGf of this.selectedProjects) {
         this.loadedFindings = this.loadedFindings.filter(lf => lf.projectReportId !== selectedGf.projectId);
         this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId !== selectedGf.projectId);
-        this.totalRecords = this.totalRecords! - selectedGf.findings.length;
+        this.totalRecords = this.loadedFindings.length;
       }
       this.groupFindings();
       this.selectedProjects = [];

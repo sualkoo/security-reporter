@@ -2,10 +2,11 @@
     height: 70px;
     width: 100%;    
     font-size: 14px;
+    text-align: left;
+
 }
 
-/* mat-form-field {
-    .mat1-mdc-text-field-wrapper {
-        background-color: rgb(255, 255, 255);
-    }
-} */
+.error-message {
+  margin-left: -20px;
+  font-size: 15px;
+}

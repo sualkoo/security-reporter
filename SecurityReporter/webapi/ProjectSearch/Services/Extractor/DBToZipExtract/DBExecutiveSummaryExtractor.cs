@@ -3,9 +3,9 @@ using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
-    public class DBExecutiveSummaryExtractor
+    public class DbExecutiveSummaryExtractor
     {
-        public byte[] extractExecutiveSummary(string executiveSummary)
+        public static byte[] ExtractExecutiveSummary(string executiveSummary)
         {
             string executiveSummaryContent =
 @"%----------------------------------------------------------------------------------------

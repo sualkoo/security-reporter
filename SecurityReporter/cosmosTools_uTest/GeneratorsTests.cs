@@ -5,7 +5,6 @@ namespace cosmosTools_uTest
     public class GeneratorsTests
     {
         private Generators SubjectUnderTest { get; set; }
-
         [SetUp]
         public void Setup()
         {
@@ -16,7 +15,7 @@ namespace cosmosTools_uTest
         public void GenerateRandomEmail_ReturnsValidDomainEmail()
         {
             // Arrange
-            string name = "Any string";
+            string name = "Any name";
 
             // Act
             string email = SubjectUnderTest.GenerateRandomEmail(name);
@@ -26,7 +25,7 @@ namespace cosmosTools_uTest
         }
 
         [Test]
-        public void GenerateRandomEmail_ReturnsValidFormat()
+        public void GenerateRandomEmail_ReturnsValidNameFormat()
         {
             // Arrange
             var name = "John Doe";
@@ -35,21 +34,11 @@ namespace cosmosTools_uTest
             var result = SubjectUnderTest.GenerateRandomEmail(name);
 
             // Assert
-            Assert.IsTrue(result.EndsWith("@siemens-healthineers.com"));
+            Assert.That(result.Contains("johnDoe"));
         }
 
         [Test]
-        public void GenerateWorkingTeam_ReturnsNonNullList()
-        {
-            // Act
-            var result = SubjectUnderTest.GenerateWorkingTeam();
-
-            // Assert
-            Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void GenerateRandomString_ReturnsValidLength()
+        public void GenerateRandomString_ReturnsGivenStringLength()
         {
             // Arrange
             int length = 10;
@@ -58,19 +47,18 @@ namespace cosmosTools_uTest
             var result = SubjectUnderTest.GenerateRandomString(length);
 
             // Assert
-            Assert.AreEqual(length, result.Length);
+            Assert.AreEqual(length, result.Length, "The generated string has the correct length.");
         }
 
 
         [Test]
         public void GenerateRandomDateData_ReturnsValidDateRange()
         {
-
             // Act
             var result = SubjectUnderTest.GenerateRandomDateData();
 
             // Assert
-            Assert.IsTrue(result >= DateTime.Now.AddMonths(-12) && result <= DateTime.Now.AddMonths(12).Date);
+            Assert.That(result, Is.AtLeast(DateTime.Now.AddMonths(-12)).And.AtMost(DateTime.Now.AddMonths(12)));
         }
 
         [Test]
@@ -80,20 +68,7 @@ namespace cosmosTools_uTest
             var result = SubjectUnderTest.GenerateProjectName();
 
             // Assert
-            Assert.IsNotNull(result);
-        }
-
-        [Test]
-        public void GenerateRandomEmail_ReturnsNonEmptyString()
-        {
-            // Arrange
-            var name = "John Doe";
-
-            // Act
-            var result = SubjectUnderTest.GenerateRandomEmail(name);
-
-            // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
+            Assert.That(result.Count, Is.AtLeast(3));
         }
 
         [Test]
@@ -106,19 +81,8 @@ namespace cosmosTools_uTest
             var result = SubjectUnderTest.GenerateRandomString(length);
 
             // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
+            Assert.That(result.Count, Is.AtLeast(length));
         }
-
-        [Test]
-        public void GenerateRandomDateData_ReturnsValidDate()
-        {
-            // Act
-            var result = SubjectUnderTest.GenerateRandomDateData();
-
-            // Assert
-            Assert.IsTrue(result.Date >= DateTime.Now.AddMonths(-12).Date && result.Date <= DateTime.Now.AddMonths(12).Date);
-        }
-
 
         [Test]
         public void GenerateRandomElement_ReturnsValidElementFromArray()
@@ -130,38 +94,28 @@ namespace cosmosTools_uTest
             var result = SubjectUnderTest.GenerateRandomElement(array);
 
             // Assert
-            Assert.IsTrue(array.Contains(result));
+            Assert.Contains(result, array);
         }
 
         [Test]
-        public void GenerateProjectName_ReturnsNonEmptyString()
-        {
-            // Act
-            var result = SubjectUnderTest.GenerateProjectName();
-
-            // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
-        }
-        [Test]
-        public void GenerateReportStatus_ReturnsNonEmptyString()
-        { 
-            // Act
-            var result = SubjectUnderTest.GenerateReportStatus();
-
-            // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
-        }
-
-
-        [Test]
-        public void GenerateWorkingTeam_ReturnsNonEmptyTeamMembers()
+        public void GenerateWorkingTeam_ReturnsNonEmptyTeamMembersList()
         {
             // Act
             var result = SubjectUnderTest.GenerateWorkingTeam();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count > 0);
+            Assert.That(result.Count, Is.AtLeast(1));
+        }
+
+        [Test]
+        [Repeat(50)]
+        public void GenerateWorkingTeam_ReturnsTeamMembersInValidRange()
+        {
+            // Act
+            var result = SubjectUnderTest.GenerateWorkingTeam();
+
+            // Assert
+            Assert.That(result.Count, Is.AtLeast(SubjectUnderTest.MinRandomValue).And.AtMost(SubjectUnderTest.MaxRandomValue - 1));
         }
 
         [Test]
@@ -173,34 +127,35 @@ namespace cosmosTools_uTest
             DateTime result = SubjectUnderTest.GenerateRandomDateData(startDate, endDate);
 
             // Assert
-            Assert.IsTrue(result >= startDate && result <= endDate);
+            Assert.That(result, Is.AtLeast(startDate).And.AtMost(endDate));
         }
 
         [Test]
-        public void GenerateProjectName_ReturnsValidNameTest()
+        public void GenerateProjectName_ReturnsValidNameFromList()
         {
+            // Arrange
+            var projectNames = new List<string> { "eHealth", "Seamless Stroke Companion", "Syngo.share", "Syngo.via", "AI Rad", "Smart Connect", "IMS", "Aria Clinical Pathway", "HET", "Mobius", "Aria OS" };
+
             // Act
             string result = SubjectUnderTest.GenerateProjectName();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(new List<string> { "eHealth", "Seamless Stroke Companion", "Syngo.share", "Syngo.via", "AI Rad", "Smart Connect", "IMS", "Aria Clinical Pathway", "HET", "Mobius", "Aria OS" }.Contains(result));
+            Assert.That(projectNames.Contains(result));
         }
 
         [Test]
-        public void GenerateRandomElement_ReturnsValidElement()
+        public void GenerateRandomElement_ReturnsValidElementFromList()
         {
             // Arrange
-            var generators = new Generators();
             string[] testArray = { "Apple", "Banana", "Orange", "Mango", "Grapes" };
 
             // Act
-            string result = generators.GenerateRandomElement(testArray);
+            string result = SubjectUnderTest.GenerateRandomElement(testArray);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(testArray.Contains(result));
+            Assert.That(testArray.Contains(result));
         }
+
         [Test]
         public void GenerateRandomString_ReturnsStringWithSpecificLength()
         {
@@ -211,12 +166,11 @@ namespace cosmosTools_uTest
             string result = SubjectUnderTest.GenerateRandomString(length);
 
             // Assert
-            Assert.IsNotNull(result);
             Assert.AreEqual(length, result.Length);
         }
 
         [Test]
-        public void GenerateRandomDateData_WithEndDateBeforeStartDate_ReturnsRandomDateInRange()
+        public void GenerateRandomDate_StartDateBeforeEndDate_ReturnsRandomDateInRange()
         {
             // Arrange
             DateTime startDate = DateTime.Now.AddMonths(12);
@@ -226,38 +180,38 @@ namespace cosmosTools_uTest
             DateTime result = SubjectUnderTest.GenerateRandomDateData(startDate, endDate);
 
             // Assert
-            Assert.IsTrue(result >= endDate && result <= startDate);
+            Assert.That(result, Is.AtLeast(endDate).And.AtMost(startDate));
         }
 
-
         [Test]
-        public void GenerateProjectName_ReturnsNonEmptyName()
+        public void GenerateReportStatus_ReturnsValidStatusFromList()
         {
+            // Arrange
+            string[] testArray = {"Pending", "In Progress", "Completed",
+                                  "Approved", "Rejected", "On Hold",
+                                  "Cancelled", "Draft", "Error", "Awaiting Review" };
+
             // Act
-            string result = SubjectUnderTest.GenerateProjectName();
+            string result = Generators.GenerateReportStatus();
 
             // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
+            Assert.That(testArray.Contains(result));
         }
 
         [Test]
-        public void GenerateReportStatus_ReturnsNonEmptyStatus()
+        public void GeneratePentest_ReturnsValidPentestNameFromTheList()
         {
-            // Act
-            string result = SubjectUnderTest.GenerateReportStatus();
+            // Arrange
+            string[] testArray = { "Network Penetration Testing", "Web Application Penetration Testing",
+                                   "Mobile Application Penetration Testing", "Wireless Penetration Testing",
+                                   "Social Engineering", "Physical Security Assessment", "Red Team Exercises",
+                                   "Cloud Infrastructure Penetration Testing", "IoT Device Security Assessment" };
 
-            // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
-        }
-
-        [Test]
-        public void GeneratePentest_ReturnsNonEmptyPentest()
-        {
             // Act
             string result = SubjectUnderTest.GeneratePentest();
 
             // Assert
-            Assert.IsFalse(string.IsNullOrEmpty(result));
+            Assert.That(testArray.Contains(result));
         }
     }
 }
