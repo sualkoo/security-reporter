@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgFor } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,13 +36,17 @@ import { FiltersDatepickerComponent } from './project-listing/components/datepic
 import { SliderComponent } from './project-listing/components/slider/slider.component';
 import { ExpansionPanelComponent } from './project-listing/components/expansion-panel/expansion-panel.component';
 import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
-
-
+import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
+import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
+
+
 
 @NgModule({
   declarations: [
@@ -50,10 +54,12 @@ import { Roles } from './roles/roles';
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     LandingPageComponent,   
-    
-    HighlighterPipe,
-
+    HighlighterPipe, LoginPageComponent,
     LandingPageComponent,    
+    LandingPageComponent,
+    HighlighterPipe,
+    DefaultPageComponentComponent,
+    AfterLoginPageComponent
   ],
   imports: [
     AddProjectComponent,
@@ -63,12 +69,14 @@ import { Roles } from './roles/roles';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
     ProjectEditingPageComponent,
     NgFor,
     MatSelectModule,
     MatRadioModule,
+    MatCardModule,
     DatepickerComponent,
     SelectComponentComponent,
     InputComponentComponent,
