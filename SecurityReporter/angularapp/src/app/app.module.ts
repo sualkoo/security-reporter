@@ -94,7 +94,7 @@ import { AfterLoginPageComponent } from './after-login-page/after-login-page.com
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule, MatSnackBarModule
   ],
   providers: [Roles],
   bootstrap: [AppComponent],
