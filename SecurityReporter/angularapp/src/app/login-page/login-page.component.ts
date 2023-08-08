@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoginService } from './services/login.service';
+import { error } from 'cypress/types/jquery';
+
 
 @Component({
   selector: 'app-login-page',
@@ -10,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private loginService: LoginService) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -25,7 +28,7 @@ export class LoginPageComponent implements OnInit {
       const password = this.loginForm.value.password;
 
       //DUMMY TEMPORARY LOGIN
-      if (username === "admin" && password === "admin") {
+      if (this.loginService.sendLoginInfo(username, password)) {
         window.location.href = 'after-login';
       } else {
         this.snackBar.open('Error logging in.', 'Close', {
