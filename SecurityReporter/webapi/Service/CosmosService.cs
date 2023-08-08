@@ -163,7 +163,7 @@ namespace webapi.Service
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                if (this.roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
+                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
                     client = true;
                 }
             }

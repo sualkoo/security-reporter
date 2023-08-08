@@ -1,20 +1,35 @@
-﻿using webapi.Login;
+﻿using Microsoft.AspNetCore.Http;
+using webapi.Login;
 using webapi.Login.Models;
+using webapi.Service;
 
 namespace webapi.Login.Services
 {
     public class RoleService
     {
-        public string GetUserRoleBySubjectId(string subjectId)
-        {
-            User user = Users.Data.FirstOrDefault(u => u.SubjectId == subjectId);
+        private readonly ClientMailService clientMailService;
+        private readonly CosmosRolesService cosmosRolesService;
 
-            if (user != null)
+        public RoleService(ClientMailService clientMailService, CosmosRolesService cosmosRolesService)
+        {
+            this.clientMailService = clientMailService;
+            this.cosmosRolesService = cosmosRolesService;
+        }
+        public async Task<string> GetUserRoleBySubjectId(string subjectId)
+        {
+            var mail = clientMailService.GetClientMail(subjectId);
+
+            if (mail != null)
             {
-                return user.Role;
+                var role = await cosmosRolesService.GetRole(mail);
+
+                if (role != null)
+                {
+                    return role;
+                }
             }
 
-            return null;
+            return "default";
         }
     }
 }
