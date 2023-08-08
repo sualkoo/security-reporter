@@ -10,6 +10,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { ProjectInterface } from 'src/app/project-management/interfaces/project-interface';
 import { DeleteProjectsServiceService } from '../../services/delete-projects-service.service';
 import { Location } from '@angular/common';
+import { AlertService } from '../../../project-management/services/alert.service';
 
 @Component({
   selector: 'app-delete-popup-component',
@@ -30,10 +31,12 @@ import { Location } from '@angular/common';
 export class DeletePopupComponentComponent {
   displayedColumns: string[] = ['projectName', 'projectStatus', 'startDate', 'endDate'];
   dataSource = new MatTableDataSource<ProjectInterface>();
+  deleteFlag = true;
 
   constructor(
     public dialog: MatDialogRef<DeletePopupComponentComponent>,
     private router: Router,
+    private alertService: AlertService,
     private service: DeleteProjectsServiceService,
     private location: Location,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -52,10 +55,15 @@ export class DeletePopupComponentComponent {
         console.log('Items deleted successfully.');
       },
       (error) => {
+        this.deleteFlag = false;
         console.error('Error deleting items:', error);
       }
     );
-
+    if (this.deleteFlag) {
+      this.alertService.showSnackbar('Deletion successful.', 'Close', 'green-alert');
+    } else {
+      this.alertService.showSnackbar('Error occured during deletion.', 'Close', 'red-alert');
+ }
     window.location.reload();
   }
 
