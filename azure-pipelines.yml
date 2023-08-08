@@ -65,6 +65,12 @@ steps:
 
 - task: CmdLine@2
   inputs:
+    script: 'ng serve --configuration=production'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'Start Angular server'
+
+- task: CmdLine@2
+  inputs:
     script: 'npx cypress run'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
   displayName: 'Run Cypress Tests'
