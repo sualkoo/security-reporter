@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chart from 'chart.js';
 import { DashboardService } from './providers/dashboard-service';
+import {switchMap} from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -19,16 +20,17 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.dashboardService.getCriticality()
-      .subscribe((data: any[]) => {
-        this.criticality = data;
-        this.updateCriticalityChart();
-        this.dashboardService.getVulnerability().subscribe(
-          (data: any[]) => {
-            this.vulnerability = data;
-            this.updateVulnerabilityChart();
-          }
-        )
-      })
+      .pipe(
+        switchMap((criticalityData: any[]) => {
+          this.criticality = criticalityData;
+          this.updateCriticalityChart();
+          return this.dashboardService.getVulnerability();
+        })
+      )
+      .subscribe((vulnerabilityData: any[]) => {
+        this.vulnerability = vulnerabilityData;
+        this.updateVulnerabilityChart();
+      });
   }
 
   updateCriticalityChart(): void {
@@ -106,5 +108,9 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  updateCWEChart(): void {
+    console.log('updateCWEChart')
   }
 }
