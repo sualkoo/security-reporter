@@ -26,6 +26,7 @@ namespace webapi
             services.AddSingleton<IProjectDataParser, ProjectDataParser>();
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<RoleService>();
+            services.AddSingleton<ClientMailService>();
 
             services.AddSwaggerGen(c =>
             {

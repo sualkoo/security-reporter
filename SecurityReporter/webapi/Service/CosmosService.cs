@@ -4,12 +4,15 @@ using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Text;
 using System.Net;
 using System.Text;
+using webapi.Login.Services;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using Microsoft.AspNetCore.Http;
 
 namespace webapi.Service
 {
@@ -19,12 +22,19 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
+
+        private ClientMailService clientMailService;
+
+        private RoleService roleService;
+
+        private readonly IHttpContextAccessor httpContextAccessor;
+
         private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
 
-        public CosmosService(IConfiguration configuration)
+        public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ClientMailService clientMailService, RoleService roleService)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
@@ -32,6 +42,9 @@ namespace webapi.Service
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+            this.clientMailService = clientMailService;
+            this.roleService = roleService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public CosmosService(string primaryKey, string databaseId, string containerId, string cosmosEndpoint)
@@ -146,7 +159,21 @@ namespace webapi.Service
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
+
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (this.roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
+                    client = true;
+                }
+            }
+
             var queryString = "SELECT * FROM c";
+            if (client) {
+                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
+            }
+
             var queryParameters = new Dictionary<string, object>();
 
             var filterConditions = new List<string>();
