@@ -7,12 +7,20 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using webapi.Login;
+using webapi.Login.Services;
 
 namespace webapi.Login.Controllers
 {
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private readonly RoleService roleService;
+
+        public LoginController(RoleService roleService)
+        {
+            this.roleService = roleService;
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(string name, string password)
         {
@@ -46,6 +54,18 @@ namespace webapi.Login.Controllers
                 return Ok("Signed out!");
             }
             return BadRequest("Not signed in!");
+
+        }
+
+        [HttpGet("role")]
+        public async Task<IActionResult> GetUserRole()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok(this.roleService.GetUserRoleBySubjectId(HttpContext.User?.FindFirst("sub")?.Value));
+            }
+
+            return Ok("Not signed in!");
 
         }
     }

@@ -63,7 +63,6 @@ namespace webapi
                 {
                     policy.Requirements.Add(new RoleRequirement("default"));
                 });
-
             });
 
             services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
@@ -71,6 +70,11 @@ namespace webapi
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

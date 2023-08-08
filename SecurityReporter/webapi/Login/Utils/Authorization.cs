@@ -29,8 +29,7 @@ namespace webapi.Login.Utils.Authorization
             if (requirement.RequiredRoles.Contains(this.roleService.GetUserRoleBySubjectId(context.User?.FindFirst("sub")?.Value)))
             {
                 context.Succeed(requirement);
-            } //  todo add else here deleted later ak nic neprejde predosle
-
+            }
 
             return Task.CompletedTask;
         }

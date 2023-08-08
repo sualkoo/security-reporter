@@ -7,7 +7,7 @@ namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
     [Route("project-reports")]
-    [Authorize(Policy = "AdminPentesterPolicy")]
+    // [Authorize(Policy = "AdminPentesterPolicy")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }
