@@ -1,4 +1,4 @@
-﻿namespace webapi.ProjectSearch.Services
+﻿namespace webapi.Dashboard.Services
 {
     public interface IDashboardService
     {

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using webapi.Dashboard.Services;
+using webapi.ProjectSearch.Controllers;
 using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
 
-namespace webapi.ProjectSearch.Controllers
+namespace webapi.Dashboard.Controllers
 {
     [ApiController]
     [Route("dashboard")]

@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Services;
 using webapi.Service;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.Dashboard.Services
 {
     public class DashboardService : IDashboardService
     {
@@ -23,7 +24,7 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetCriticalityData();
         }
 
-        public async Task<List<Tuple<int, int>>> GetVulnerabilityData() 
+        public async Task<List<Tuple<int, int>>> GetVulnerabilityData()
         {
             Logger.LogInformation($"Fetching Vulnerability data");
 
