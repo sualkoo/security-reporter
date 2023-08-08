@@ -271,8 +271,6 @@ namespace webapi.Service
             queryParameters["@skipCount"] = skipCount;
             queryParameters["@itemCount"] = itemCount;
 
-            Console.WriteLine(queryString);
-
             var items = new List<ProjectData>();
             var queryDefinition = new QueryDefinition(queryString);
             foreach (var param in queryParameters)
