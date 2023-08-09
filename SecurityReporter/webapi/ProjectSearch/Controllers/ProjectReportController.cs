@@ -73,7 +73,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger.LogInformation("Received GET request for downloading PDF of report by ID");
             return await HandleExceptionAsync(async () =>
             {
-                throw new NotImplementedException();
+                return await ProjectReportService.GetPDFByProjectId(id);
             });
         }
 

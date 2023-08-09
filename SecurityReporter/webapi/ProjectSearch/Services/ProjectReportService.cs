@@ -20,7 +20,8 @@ namespace webapi.ProjectSearch.Services
         private IPDFBuilder PdfBuilder { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportService(IProjectDataParser parser,IDBProjectDataParser dbParser, IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder)
+        public ProjectReportService(IProjectDataParser parser, IDBProjectDataParser dbParser,
+            IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder)
         {
             Validator = validator;
             Parser = parser;
@@ -44,7 +45,8 @@ namespace webapi.ProjectSearch.Services
 
             if (Path.GetExtension(file.FileName)?.ToLower() != ".zip")
             {
-                throw new CustomException(StatusCodes.Status406NotAcceptable, "Invalid file type. Only .zip files are allowed.");
+                throw new CustomException(StatusCodes.Status406NotAcceptable,
+                    "Invalid file type. Only .zip files are allowed.");
             }
             else
             {
@@ -64,25 +66,44 @@ namespace webapi.ProjectSearch.Services
 
             if (!result)
             {
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
+                throw new CustomException(StatusCodes.Status500InternalServerError,
+                    "Failed to save ProjectReport to database.");
             }
-            
-            await this.createPDF(file.OpenReadStream(), "Report-" + newReportData?.DocumentInfo?.ProjectReportName?.Replace(" ", "_") ?? "Report-Untitled");
-            
+
+            bool pdfGenerated = false;
+            try
+            {
+                pdfGenerated = await createPDF(file.OpenReadStream(),
+                    "Report-" + newReportData?.DocumentInfo?.ProjectReportName?.Replace(" ", "_") ?? "Report-Untitled",
+                    newReportData.Id.ToString());
+            }
+            finally
+            {
+                if (!pdfGenerated)
+                {
+                    Logger.LogInformation("PDF generation failed, deleting project report...");
+                    await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
+                }
+            }
+
             return newReportData;
         }
 
-        async Task<PagedDBResults<List<FindingResponse>>> IProjectReportService.GetReportFindingsAsync(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
+        async Task<PagedDBResults<List<FindingResponse>>> IProjectReportService.GetReportFindingsAsync(
+            string? projectName, string? details, string? impact, string? repeatability, string? references,
+            string? cWE, int page)
         {
             Logger.LogInformation($"Fetching project reports by keywords");
-            if (!string.IsNullOrEmpty(projectName) && !string.IsNullOrEmpty(details) && 
-                !string.IsNullOrEmpty(impact) && !string.IsNullOrEmpty(repeatability) && !string.IsNullOrEmpty(references) && 
+            if (!string.IsNullOrEmpty(projectName) && !string.IsNullOrEmpty(details) &&
+                !string.IsNullOrEmpty(impact) && !string.IsNullOrEmpty(repeatability) &&
+                !string.IsNullOrEmpty(references) &&
                 !string.IsNullOrEmpty(cWE))
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
             }
 
-            return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability, references, cWE, page);
+            return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability,
+                references, cWE, page);
         }
 
         async Task<bool> IProjectReportService.DeleteReportAsync(List<string> ids)
@@ -99,18 +120,39 @@ namespace webapi.ProjectSearch.Services
             return zip;
         }
 
-        public async Task<bool> createPDF(Stream zipFileStream, string outputPDFname)
+        // Todo: Store the PDF in blob storage
+        public async Task<bool> createPDF(Stream zipFileStream, string outputPDFname, string projectReportId)
         {
             FileContentResult generatedPdf = await PdfBuilder.GeneratePDFFromZip(zipFileStream, outputPDFname);
-            
+
+            // Store the PDF inside working directory
             string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
-            string filePath = Path.Combine(workingDirectory, $"{outputPDFname}-{Guid.NewGuid()}.pdf");
+            string filePath = Path.Combine(workingDirectory, $"{projectReportId}.pdf");
 
             Directory.CreateDirectory(workingDirectory);
             File.WriteAllBytes(filePath, generatedPdf.FileContents);
 
             Console.WriteLine($"Content saved to {filePath}");
             return true;
+        }
+
+        public async Task<FileContentResult> GetPDFByProjectId(Guid id)
+        {
+            string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
+            string fileNameToSearch = $"{id}.pdf"; // Assuming the ID is used in the filename
+
+            string filePath = Path.Combine(workingDirectory, fileNameToSearch);
+
+            if (!File.Exists(filePath))
+            {
+                throw new CustomException(StatusCodes.Status404NotFound, "PDF was not found for this project.");
+            }
+
+            byte[] fileContent = await File.ReadAllBytesAsync(filePath);
+            return new FileContentResult(fileContent, "application/pdf")
+            {
+                FileDownloadName = id.ToString()
+            };
         }
     }
 }

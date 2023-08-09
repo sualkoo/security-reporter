@@ -91,7 +91,7 @@ namespace webapi.ProjectSearch.Services
 
                 Logger.LogDebug("Compiling sources...");
                 ProcessStartInfo compileSourcesInfo = new ProcessStartInfo("docker",
-                    $"exec -i {containerName} pdflatex /data/Main -interaction=nonstopmode");
+                    $"exec -i {containerName} sh -c \"printf '\\n' | pdflatex /data/Main -interaction=batchmode\"");
                 compileSourcesInfo.UseShellExecute = false;
                 Process compileSourcesProcess = Process.Start(compileSourcesInfo);
                 compileSourcesProcess.WaitForExit();
@@ -103,11 +103,17 @@ namespace webapi.ProjectSearch.Services
                 extractPdfInfo.UseShellExecute = false;
                 Process extractPdfProcess = Process.Start(extractPdfInfo);
                 extractPdfProcess.WaitForExit();
+                
+                if (extractPdfProcess.ExitCode != 0)
+                {
+                    throw new CustomException(StatusCodes.Status500InternalServerError, "Latex sources cannot be compiled due to errors.");
+                }
 
                 // Step 8: Read the PDF content
                 byte[] pdfBytes = await File.ReadAllBytesAsync(Path.Combine(tempDirectory, "Main.pdf"));
 
                 Logger.LogDebug("Returning PDF");
+                
                 return new FileContentResult(pdfBytes, "application/pdf")
                 {
                     FileDownloadName = $"{outputPDFname}.pdf"

@@ -10,6 +10,7 @@ namespace webapi.ProjectSearch.Services
         public Task<ProjectReportData> SaveReportFromZip(IFormFile file);
         public Task<bool> DeleteReportAsync(List<string> ids);
         public Task<FileContentResult> GetReportSourceByIdAsync(Guid id);
-        public Task<bool> createPDF(Stream zipFileStream, string outputPDFname);
+        public Task<bool> createPDF(Stream zipFileStream, string outputPDFname, string projectReportId);
+        public Task<FileContentResult> GetPDFByProjectId(Guid id);
     }
 }
