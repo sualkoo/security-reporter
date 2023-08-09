@@ -1,3 +1,4 @@
+import { ChartOptions } from 'chart.js'
 export const CriticalityConfig = {
   type: 'pie',
   label: '% of found Criticality',
@@ -9,4 +10,35 @@ export const CriticalityConfig = {
     'rgb(153,102,255)',
   ],
   borderWidth: 0,
+  options: {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Overall Findings Criticality',
+        color: 'black',
+        align: 'center',
+        font: {
+          size: 20,
+        }
+      },
+      legend: {
+        display: true, // Hide the default legend,
+        align: 'center',
+        position: 'right'as 'right',
+
+        labels: {
+          color: 'black',
+          font: {
+            size: 14,
+            weight: 'bold'
+
+          },
+          usePointStyle: true,
+          boxWidth: 10,
+          padding: 20
+
+        },
+      },
+    },
+  } as ChartOptions,
 };

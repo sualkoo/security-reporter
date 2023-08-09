@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Chart} from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
-import {switchMap} from "rxjs";
+import { switchMap } from "rxjs";
+import { CriticalityConfig } from './providers/graph-config'
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -39,12 +41,12 @@ export class DashboardComponent implements OnInit {
     let labels = this.criticality.map((item) => item.item1);
     const data = this.criticality.map((item) => item.item2);
     let number = 0;
-    let percentage =[];
+    let percentage = [];
     for (let i = 0; i < data.length; i++) {
       number += data[i];
     }
     for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i]/number)*100);
+      percentage[i] = Math.round((data[i] / number) * 100);
       labels[i] = "Level: " + labels[i];
     }
 
@@ -54,60 +56,24 @@ export class DashboardComponent implements OnInit {
       this.criticalityChart.update();
     } else {
       let ctx = (document.getElementById('criticalityChart') as HTMLCanvasElement).getContext('2d');
-      if(ctx){
+      if (ctx) {
         // @ts-ignore
         this.criticalityChart = new Chart(ctx, {
-          type: 'pie',
+          type: 'doughnut',
           data: {
             labels: labels,
             datasets: [{
               label: "# of Votes",
               data: percentage,
-
-              backgroundColor: [
-                'rgb(217,0,45)',
-                'rgb(0,151,255)',
-                'rgb(253,179,0)',
-                'rgb(102,255,0)',
-                'rgb(153,102,255)',
-              ],
+              backgroundColor: CriticalityConfig.backgroundColors,
               borderWidth: 0,
             }],
-
           },
-          options: {
-            plugins: {
-              title: {
-                display: true,
-                text: 'Overall Findings Criticality',
-                color: 'black',
-                align: 'center',
-                font: {
-                  size: 20,
-                }
-              },
-              legend: {
-                display: true, // Hide the default legend,
-                align: 'center',
-                position: 'right',
-
-                labels: {
-                  color: 'black',
-                  font: {
-                    size: 14,
-                    weight: 'bold'
-
-                  },
-                  usePointStyle: true,
-                  boxWidth: 10,
-                  padding: 20
-
-                }
-              },
-            }
-          }
+          options: CriticalityConfig.options, // Move options out of the data object
         });
-      }}
+      }
+    }
+  
   }
 
 
