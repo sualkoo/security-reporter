@@ -11,6 +11,7 @@ namespace webapi.Login
 
         public async Task AssignRoles(RoleService roleService)
         {
+            Data.Clear();
             Data.Add(new User { SubjectId = "1", Username = "admin@admin.sk", Password = "admin", Role = await roleService.GetUserRoleBySubjectId("1") });
             Data.Add(new User { SubjectId = "2", Username = "pentester@pentester.sk", Password = "pentester", Role = await roleService.GetUserRoleBySubjectId("2") });
             Data.Add(new User { SubjectId = "3", Username = "coordinator@coordinator.sk", Password = "coordinator", Role = await roleService.GetUserRoleBySubjectId("3") });

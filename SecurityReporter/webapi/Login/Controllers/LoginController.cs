@@ -1,12 +1,6 @@
 ﻿using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using webapi.Login;
 using webapi.Login.Services;
 
 namespace webapi.Login.Controllers
@@ -28,7 +22,7 @@ namespace webapi.Login.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return BadRequest("Already signed in!");
+                return Conflict("Already signed in!");
             }
 
             users.AssignRoles(roleService);

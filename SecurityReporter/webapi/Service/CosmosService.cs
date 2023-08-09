@@ -145,7 +145,24 @@ namespace webapi.Service
 
         public async Task<int> GetNumberOfProjects()
         {
-            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client")
+                {
+                    client = true;
+                }
+            }
+
+            var queryString = "SELECT VALUE COUNT(1) FROM c";
+            if (client)
+            {
+                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                queryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
+            }
+
+            QueryDefinition query = new QueryDefinition(queryString);
             FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
 
             if (queryResultIterator.HasMoreResults)
@@ -164,7 +181,6 @@ namespace webapi.Service
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
-
 
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)

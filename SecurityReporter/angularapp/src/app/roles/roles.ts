@@ -14,6 +14,8 @@ export class Roles implements CanActivate {
       userRole = 'admin';
     }
 
+    console.log(userRole)
+
     if (allowedRoles.includes(userRole)) {
       return true;
     } else {

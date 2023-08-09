@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
+import { GetRoleService } from '../../../shared/services/get-role.service';
  
 @Component({
   selector: 'app-data-grid-component',
@@ -33,8 +34,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   filterError = false;
   selectedItems: any[] = [];
   noItemsFound = false;
-
-  userRole: string = 'admin'; // there will be some service for getting userRole
 
   displayedColumns: string[] = [
     'select',
@@ -60,11 +59,23 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   length: number | undefined;
 
-  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog) { }
+  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private getRoleService: GetRoleService) { }
+
+  userRole: string = 'admin';
 
   ngOnInit(): void {
+
+    this.getRole();
     this.getInitItems();
     this.getLength();
+  }
+
+  async getRole() {
+    this.userRole = await this.getRoleService.getRole();
+
+    if (this.userRole == 'Not signed in!') {
+      this.userRole = 'admin';
+    }
   }
 
   async getLength() {
