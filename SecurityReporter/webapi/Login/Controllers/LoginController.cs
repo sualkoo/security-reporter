@@ -9,10 +9,12 @@ namespace webapi.Login.Controllers
     public class LoginController : ControllerBase
     {
         private readonly RoleService roleService;
+        private readonly Users users;
 
-        public LoginController(RoleService roleService)
+        public LoginController(RoleService roleService, Users users)
         {
             this.roleService = roleService;
+            this.users = users;
         }
 
         [HttpPost("login")]
@@ -23,7 +25,8 @@ namespace webapi.Login.Controllers
                 return Conflict("Already signed in!");
             }
 
-            var testUsers = Users.Data;
+            users.AssignRoles(roleService);
+            var testUsers = users.Data;
 
             var user = testUsers.SingleOrDefault(u => u.Username == name);
 
@@ -56,7 +59,7 @@ namespace webapi.Login.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return Ok(this.roleService.GetUserRoleBySubjectId(HttpContext.User?.FindFirst("sub")?.Value));
+                return Ok(await roleService.GetUserRoleBySubjectId(HttpContext.User?.FindFirst("sub")?.Value));
             }
 
             return Ok("Not signed in!");

@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
+using webapi.Login;
 using webapi.Login.Services;
 using webapi.Login.Utils.Authorization;
 using webapi.ProjectSearch.Services;
 using webapi.Service;
+
 namespace webapi
 {
     public class Startup
@@ -24,6 +28,10 @@ namespace webapi
             services.AddSingleton<IProjectDataParser, ProjectDataParser>();
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<RoleService>();
+            services.AddSingleton<ClientMailService>();
+            services.AddSingleton<Users>();
+            services.AddSingleton<CosmosRolesService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
