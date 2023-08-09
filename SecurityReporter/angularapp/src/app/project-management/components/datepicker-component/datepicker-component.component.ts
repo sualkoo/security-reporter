@@ -56,7 +56,7 @@ export class DatepickerComponent {
   @Output() valueChanged = new EventEmitter<Date>();
 
   onDateChange() {
-    this.inputValue.setDate(this.inputValue.getDate() + 1);
+    this.inputValue.setDate(this.inputValue.getDate());
     this.valueChanged.emit(this.inputValue);
   }
 }

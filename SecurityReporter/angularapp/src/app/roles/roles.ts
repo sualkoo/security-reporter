@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { GetRoleService } from '../shared/services/get-role.service';
 
 @Injectable()
 export class Roles implements CanActivate {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private getRoleService: GetRoleService) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const allowedRoles: string[] = route.data.allowedRoles;
-    const userRole = 'admin'; // there will be some service for getting userRole
+    var userRole = await this.getRoleService.getRole();
+
+    if (userRole == 'Not signed in!') {
+      userRole = 'admin';
+    }
 
     if (allowedRoles.includes(userRole)) {
       return true;

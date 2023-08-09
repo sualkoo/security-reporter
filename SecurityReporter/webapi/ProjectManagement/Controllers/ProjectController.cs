@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
@@ -16,6 +17,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("add")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -34,7 +36,9 @@ public class ProjectController : ControllerBase
         return StatusCode(201, project);
     }
 
+
     [HttpPost("delete")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(List<string> ids)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -52,6 +56,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpDelete("delete")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(string id)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -69,6 +74,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("count")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetNumberOfProjects()
     {
         int count = await CosmosService.GetNumberOfProjects();
@@ -82,6 +88,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
         var items = new List<ProjectData>();
@@ -123,6 +130,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("update")]
+    // [Authorize(Policy = "AdminPAdminCoordinatorPolicy")]
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
@@ -140,6 +148,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("getProject")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> GetProjectById(string id)
     {
         Console.ForegroundColor = ConsoleColor.Green;
