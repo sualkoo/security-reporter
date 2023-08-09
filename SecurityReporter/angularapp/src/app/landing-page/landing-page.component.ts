@@ -10,4 +10,8 @@ export class LandingPageComponent {
   navigateToPage(page: string): void {
     this.router.navigate([page]);
   }
+
+  openLoginLink(): void {
+    window.open("https://agar.io/#ffa", "_blank");
+  }
 }
