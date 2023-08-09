@@ -37,6 +37,12 @@ namespace webapi.Service
         public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ClientMailService clientMailService, RoleService roleService)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
+            if (string.IsNullOrEmpty(PrimaryKey))
+            {
+                EndpointUri = "https://security-reporter.documents.azure.com:443";
+                PrimaryKey = "6sDm3pLgxLV7WnQqYkYPBmoyapf91CHvD1OpTJVBxNvYh6wRgmTEqJBy7kAR11MiTEEne6QV5G9dACDbdbjQSg==";
+            }
+            
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
@@ -389,7 +395,7 @@ namespace webapi.Service
                 results.TotalRecords = totalResults;
                 results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
 
-                UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports");
+                UriBuilder uriBuilder = new UriBuilder("/project-reports");
                 string queryPage = uriBuilder.Query;
                 if (results.TotalPages > page)
                 {
@@ -531,7 +537,7 @@ namespace webapi.Service
             results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
 
             //Building URL for next page
-            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
+            UriBuilder uriBuilder = new UriBuilder("/project-reports/findings");
             string queryPage = uriBuilder.Query;
             if (results.TotalPages > page)
             {
