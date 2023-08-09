@@ -53,7 +53,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'ng build --configuration=production'
+    script: 'ng build'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'Angular build'   
 
@@ -63,11 +63,6 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
   displayName: 'Cypress installation' 
 
-- task: CmdLine@2
-  inputs:
-    script: 'ng serve --configuration=production'
-    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
-  displayName: 'Start Angular server'
 
 - task: CmdLine@2
   inputs:
