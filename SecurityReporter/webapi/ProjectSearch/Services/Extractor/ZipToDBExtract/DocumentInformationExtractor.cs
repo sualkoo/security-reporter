@@ -1,6 +1,8 @@
 ﻿using latexparse_csharp;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Globalization;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 using System.Xml;
 using webapi.Models.ProjectReport;
 
@@ -27,9 +29,36 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 using (StreamReader reader = new StreamReader(documentEntry.Open()))
                 {
+                    string fileContent = reader.ReadToEnd();
+                    string regexPattern = @"\\(newcommand|renewcommand)\s*\{\\([a-zA-Z]*)\}\s*\{((?>[^{}]+|\{(?<DEPTH>)|\}(?<-DEPTH>))*(?(DEPTH)(?!)))\}";
+
+                    MatchCollection matches = Regex.Matches(fileContent, regexPattern);
                     string line;
                     char[] delimiters = { '{', '}' };
-                    while ((line = reader.ReadLine()) != null)
+                    
+                    foreach(Match match in matches)
+                    {
+                        if (match.Groups[2].Value == "ReportDocumentHistory")
+                        {
+                            string reportRegex = @"\\ReportVersionEntry{(\d{4}-\d{2}-\d{2})}{(.*?)}{([\w\s]*?)}{([\w\s]*?)}";
+                            MatchCollection reportVersionMatches = Regex.Matches(fileContent, reportRegex);
+                            foreach(Match reportMatch in reportVersionMatches)
+                            {
+                                string[] inBracketContents = new string[5];
+                                for(int i = 0; i < reportMatch.Groups.Count; i++)
+                                {
+                                    inBracketContents[i] = reportMatch.Groups[i].Value;
+                                }
+                                newDocumentInfo.ReportDocumentHistory.Add(readReport(inBracketContents));
+                            }
+                        }
+                        else
+                        {
+                            List<string> result = ReadInlineContents(match.Groups[3].Value);
+                            assignNewData(match.Groups[2].Value, result, newDocumentInfo);
+                        } 
+                    }
+                    /*while ((line = reader.ReadLine()) != null)
                     {
                         if (!string.IsNullOrEmpty(line))
                         {
@@ -50,8 +79,9 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             }
                         }
                     }
+                }*/
+                    return newDocumentInfo;
                 }
-                return newDocumentInfo;
             }
         }
 
@@ -98,7 +128,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         {
             if (data != null && data.Count > 0)
             {
-                switch (command)
+                switch ('\\' + command)
                 {
                     case "\\ReportProjectName":
                         newDocumentInfo.ProjectReportName = data[0];
