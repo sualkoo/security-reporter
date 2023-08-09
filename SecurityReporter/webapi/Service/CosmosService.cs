@@ -169,7 +169,7 @@ namespace webapi.Service
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                if (this.roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
+                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
                     client = true;
                 }
             }
@@ -243,7 +243,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -251,7 +251,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -263,7 +263,14 @@ namespace webapi.Service
 
             if (filterConditions.Count > 0)
             {
-                queryString += " WHERE " + string.Join(" AND ", filterConditions);
+                if (client)
+                {
+                    queryString += " AND " + string.Join(" AND ", filterConditions);
+                }
+                else
+                {
+                    queryString += " WHERE " + string.Join(" AND ", filterConditions);
+                }
             }
 
             queryString += " OFFSET @skipCount LIMIT @itemCount";

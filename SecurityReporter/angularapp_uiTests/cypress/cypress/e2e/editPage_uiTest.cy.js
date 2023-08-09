@@ -51,7 +51,6 @@ describe('Item Management Test', () => {
 
     // Step 5: Modify the item's information accurately using input fields or controls
     function editPageActions() {
-
         cy.get('#mat-input-8').click({ force: true });
         cy.get('#mat-input-8').clear().type('dataNow', { force: true });
         cy.get('#mat-radio-3-input').click();
@@ -73,7 +72,6 @@ describe('Item Management Test', () => {
     // Step 7: Verify that real-time feedback and validation messages are provided for errors or missing information
 
     function feedbackWindow() {
-
         cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
     }
 });

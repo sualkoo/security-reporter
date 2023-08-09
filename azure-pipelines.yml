@@ -28,11 +28,13 @@ steps:
       **/*Test.csproj
     arguments: '--configuration $(buildConfiguration)'
     workingDirectory: 'SecurityReporter'
-  displayName: 'dotnet tests'
+  displayName: '.NET Tests'
 
 - task: CmdLine@2
   inputs:
-    script: 'npm install'
+    script: |      
+      npm install
+      npm install -g @angular/cli
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
   displayName: 'npm install'
 
@@ -49,9 +51,26 @@ steps:
     Contents: '**'
     TargetFolder: '$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot'
 
-- task: AzureWebApp@1
+- task: CmdLine@2
   inputs:
-    azureSubscription: 'sda-2023-service-connection'
-    appType: 'webAppLinux'
-    appName: 'sda-projectmanagement'
-    package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
+    script: 'ng build --configuration=production'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'Angular build'   
+
+- task: CmdLine@2
+  inputs:
+    script: 'npm install cypress --save-dev --force'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+  displayName: 'Cypress installation' 
+
+- task: CmdLine@2
+  inputs:
+    script: 'ng serve --configuration=production'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'Start Angular server'
+
+- task: CmdLine@2
+  inputs:
+    script: 'npx cypress run'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
+  displayName: 'Run Cypress Tests'
