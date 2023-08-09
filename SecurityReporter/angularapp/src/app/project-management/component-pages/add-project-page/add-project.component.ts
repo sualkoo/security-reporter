@@ -30,6 +30,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { max } from 'rxjs';
+import { LogoutService } from '../../../services/logout.service';
+import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
   selector: 'app-project-management',
@@ -79,7 +81,7 @@ export class AddProjectComponent {
   editedIKO: Date;
   editedTKO: Date;
 
-  constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {
+    constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService, public autoLogoutService: AutoLogoutService) {
     this.editedStartDate = this.projectClass.StartDate;
     this.editedEndDate = this.projectClass.EndDate;
     this.editedReportDueDate = this.projectClass.ReportDueDate;
@@ -87,6 +89,10 @@ export class AddProjectComponent {
     this.editedTKO = this.projectClass.TKO;
 }
   @ViewChild('commentInput') commentInput?: ElementRef;
+
+  ngOnInit() {
+    this.autoLogoutService.startTimer();
+  }
 
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
