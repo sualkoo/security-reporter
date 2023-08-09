@@ -9,7 +9,7 @@ describe('Landing page to listing projects page', () => {
     });
 
     function navigateToAddProjectPage() {
-        cy.get('.buttons-container > div > .mdc-button > .mdc-button__label').click();
+        cy.get(':nth-child(2) > .mdc-button > .mdc-button__label').click();
         cy.url().should('include', '/project-search');
     }
 });
