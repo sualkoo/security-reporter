@@ -6,6 +6,7 @@ using webapi.Login.Utils;
 using System.Data;
 using Microsoft.OpenApi.Models;
 using webapi.Login.Services;
+using webapi.Login;
 
 namespace webapi
 {
@@ -27,6 +28,8 @@ namespace webapi
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<RoleService>();
             services.AddSingleton<ClientMailService>();
+            services.AddSingleton<Users>();
+            services.AddSingleton<CosmosRolesService>();
 
             services.AddSwaggerGen(c =>
             {
