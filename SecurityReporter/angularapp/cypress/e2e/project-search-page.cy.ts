@@ -167,7 +167,6 @@ describe('template spec', () => {
     )
 
   it('Should upload Zip file', () => {
-
     cy.get('input[type="file"]').attachFile({
       filePath: 'dobre.zip',
       fileName: 'dobre.zip',
