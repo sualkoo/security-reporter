@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -6,6 +7,7 @@ namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
     [Route("project-reports")]
+    // [Authorize(Policy = "AdminPentesterPolicy")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }

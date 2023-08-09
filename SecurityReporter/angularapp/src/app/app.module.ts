@@ -44,6 +44,7 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
+import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { AutoLogoutService } from './services/auto-logout.service';
 
 
@@ -58,7 +59,7 @@ import { AutoLogoutService } from './services/auto-logout.service';
     LandingPageComponent,
     HighlighterPipe,
     DefaultPageComponentComponent,
- 
+    AfterLoginPageComponent
   ],
   imports: [
     MatSnackBarModule,
@@ -67,9 +68,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
+    MatFormFieldModule,MatSnackBarModule,
     MatInputModule,
-    MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
     ProjectEditingPageComponent,
@@ -82,14 +82,12 @@ import { AutoLogoutService } from './services/auto-logout.service';
     InputComponentComponent,
     RadioButtonComponentComponent,
     AppRoutingModule,
-    MatSnackBarModule,
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
     ScrollingModule,
-    MatSnackBarModule,
     MatIconModule,
     CommonModule,
     ListProjectsPageComponent,

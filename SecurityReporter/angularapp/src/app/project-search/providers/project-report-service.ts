@@ -13,7 +13,7 @@ export class ProjectReportService {
   private apiUrl: string;
 
   constructor(private http: HttpClient) {
-    this.apiUrl = 'https://localhost:7075/project-reports';
+    this.apiUrl = '/project-reports';
   }
 
   public postZipFile(file: any) {

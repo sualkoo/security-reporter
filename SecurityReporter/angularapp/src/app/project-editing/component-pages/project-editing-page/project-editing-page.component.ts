@@ -53,6 +53,7 @@ import { AutoLogoutService } from '../../../services/auto-logout.service';
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
+
   constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
     router: Router, alertService: AlertService,
     private updateProjectService: UpdateProjectService,
@@ -92,13 +93,18 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
     ProjectLead: jsonData.projectLead,
     ReportStatus: jsonData.reportStatus,
-    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : []
+    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : [],
   };
 }
 
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
     this.projectClass = this.mapJsonToProjectInterface(projectData);
+    this.editedStartDate = this.projectClass.StartDate;
+    this.editedEndDate = this.projectClass.EndDate;
+    this.editedReportDueDate = this.projectClass.ReportDueDate;
+    this.editedIKO = this.projectClass.IKO;
+    this.editedTKO = this.projectClass.TKO;
     this.isProjectNameEmpty = false;
     console.log(this.projectClass);
   }
@@ -196,4 +202,5 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       }
     );
   }
+
 }

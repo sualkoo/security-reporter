@@ -12,6 +12,7 @@ import { LogoutService } from '../services/logout.service';
 export class LandingPageComponent {
   constructor(private router: Router, private alertService: AlertService, private logOut: LogoutService) { }
 
+
   navigateToPage(page: string): void {
     this.router.navigate([page]);
   }
