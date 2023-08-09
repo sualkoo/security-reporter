@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Chart} from "chart.js/auto";
+import { Chart } from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
 import { switchMap } from "rxjs";
 import {CriticalityConfig, VulnerabilityConfig} from "./providers/graph-config";

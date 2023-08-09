@@ -130,7 +130,14 @@
                 </div>
                 <div class="mt-3">
 
-                  <button class="btn btn-dark" (click)="onGetSource(project.projectId)">Get Source</button>
+                  <button class="btn btn-dark" (click)="onGetSource(project.projectId)">
+                    <mat-icon>download</mat-icon>
+                    Get Source
+                  </button>
+                  <button class="btn btn-dark" style="margin-left: 5px" (click)="onGetSource(project.projectId)">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    Get PDF
+                  </button>
                 </div>
               </div>
             </div>

@@ -370,4 +370,5 @@ export class ProjectSearchPageComponent implements OnInit {
     this.showSidebar = !this.showSidebar;
   }
 
+  showCSAPopup: boolean = false;
 }
