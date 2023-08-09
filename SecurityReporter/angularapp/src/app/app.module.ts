@@ -44,7 +44,7 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
-
+import { AutoLogoutService } from './services/auto-logout.service';
 
 
 @NgModule({
@@ -57,9 +57,11 @@ import { DefaultPageComponentComponent } from './default-page/component-pages/de
     LandingPageComponent,    
     LandingPageComponent,
     HighlighterPipe,
-    DefaultPageComponentComponent
+    DefaultPageComponentComponent,
+ 
   ],
   imports: [
+    MatSnackBarModule,
     AddProjectComponent,
     BrowserModule,
     HttpClientModule,
@@ -95,9 +97,9 @@ import { DefaultPageComponentComponent } from './default-page/component-pages/de
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-    MatSnackBarModule,
+    MatSnackBarModule
   ],
-  providers: [Roles],
+  providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

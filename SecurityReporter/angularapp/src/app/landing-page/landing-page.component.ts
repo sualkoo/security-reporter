@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { AutoLogoutService } from '../services/auto-logout.service';
+import { AlertService } from '../project-management/services/alert.service';
+import { LogoutService } from '../services/logout.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -8,20 +10,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent {
-  constructor(private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private router: Router, private alertService: AlertService, private logOut: LogoutService) { }
 
   navigateToPage(page: string): void {
     this.router.navigate([page]);
   }
 
   logoutPage() {
-    // Show snackbar message
-    this.snackBar.open('You are being logged out.', 'Close', {
-      duration: 5000, 
-      panelClass: 'red-alert'
-    });
-    setTimeout(() => {
-      window.location.href = 'https://localhost:4200';
-    }, 1000);
+    if (this.logOut.logout()) {
+      this.alertService.showSnackbar('You are being logged out', 'Close', 'red-alert', 5000);
+    }
+    else {
+      this.alertService.showSnackbar('Error happened during logout', 'Close', 'red-alert', 5000);
+    }
   }
 }
