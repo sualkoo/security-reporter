@@ -23,7 +23,7 @@ namespace webapi.Service
     {
         private string PrimaryKey { get; set; }
         private string EndpointUri { get; } = "https://localhost:8081";
-        private string DatabaseName { get; } = "ProjectRolesDatabase";
+        private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectRolesContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
 
