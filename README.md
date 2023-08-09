@@ -48,8 +48,7 @@ TODO: Enable secret storage on your machine and set Primary Key of your cosmos D
    - In Container id: ProjectContainer
    - In Partition Key: id
 
-4. Create comsos DB Emulator Container and Database with name ProjectRolesDatabase and ProjectRolesContainer. Paste following items.
-   - In Database id: ProjectRolesDatabase
+4. Add to cosmos DB Emulator ProjectDatabase new container:
    - In Container id: ProjectRolesContainer
    - In Partition Key: id
 
