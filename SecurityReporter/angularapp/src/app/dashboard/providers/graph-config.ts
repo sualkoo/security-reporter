@@ -1,3 +1,4 @@
+import {TitleOptions, ChartOptions, ChartType} from 'chart.js';
 export const CriticalityConfig = {
   type: 'pie',
   label: '% of found Criticality',
@@ -9,4 +10,61 @@ export const CriticalityConfig = {
     'rgb(153,102,255)',
   ],
   borderWidth: 0,
+};
+
+
+export const VulnerabilityConfig = {
+  type: 'pie' as ChartType,
+  label: '% of found Vulnerability',
+  backgroundColors: [
+    'rgb(217,0,45)',
+    'rgb(0,151,255)',
+    'rgb(253,179,0)',
+    'rgb(102,255,0)',
+    'rgb(153,102,255)',
+  ],
+  borderWidth: 0,
+
+  title: {
+    display: true,
+    text: 'Most Reported Vulnerabilities',
+    color: 'black',
+    align: 'center',
+    font: {
+      size: 20,
+    }
+  } as TitleOptions,
+
+
+  options: {
+    plugins: {
+
+      title: {
+        display: true,
+        text: 'Most Reported Vulnerabilities',
+        color: 'black',
+        align: 'center',
+        font: {
+          size: 20,
+        }
+      },
+      legend: {
+        display: true, // Hide the default legend,
+        align: 'center',
+        position: 'right',
+
+        labels: {
+          color: 'black',
+          font: {
+            size: 14,
+            weight: 'bold'
+
+          },
+          usePointStyle: true,
+          boxWidth: 10,
+          padding: 20
+        }
+      },
+    }
+  }as ChartOptions
 };
