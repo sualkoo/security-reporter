@@ -13,18 +13,20 @@ namespace webapi.ProjectSearch.Services
 {
     public class ProjectReportService : IProjectReportService
     {
-        public IProjectDataValidator Validator { get; set; }
-        public IProjectDataParser Parser { get; set; }
-        public IDBProjectDataParser DBParser { get; set; }
-        public ICosmosService CosmosService { get; set; }
+        private IProjectDataValidator Validator { get; }
+        private IProjectDataParser Parser { get; set; }
+        private IDBProjectDataParser DBParser { get; }
+        private ICosmosService CosmosService { get; }
+        private IPDFBuilder PdfBuilder { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportService(IProjectDataParser parser,IDBProjectDataParser dbParser, IProjectDataValidator validator, ICosmosService cosmosService)
+        public ProjectReportService(IProjectDataParser parser,IDBProjectDataParser dbParser, IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder)
         {
             Validator = validator;
             Parser = parser;
             DBParser = dbParser;
             CosmosService = cosmosService;
+            PdfBuilder = pdfBuilder;
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
@@ -53,7 +55,6 @@ namespace webapi.ProjectSearch.Services
                 catch (Exception ex)
                 {
                     throw new CustomException(StatusCodes.Status406NotAcceptable, ex.Message);
-                    throw new CustomException(StatusCodes.Status406NotAcceptable, "Zip file has some missing files/missing information in the template.");
                 }
             }
 
@@ -65,6 +66,9 @@ namespace webapi.ProjectSearch.Services
             {
                 throw new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
             }
+            
+            await this.createPDF(file.OpenReadStream(), "Report-" + newReportData?.DocumentInfo?.ProjectReportName?.Replace(" ", "_") ?? "Report-Untitled");
+            
             return newReportData;
         }
 
@@ -93,6 +97,20 @@ namespace webapi.ProjectSearch.Services
             ProjectReportData data = await CosmosService.GetProjectReport(id.ToString());
             FileContentResult zip = DBParser.Extract(data);
             return zip;
+        }
+
+        public async Task<bool> createPDF(Stream zipFileStream, string outputPDFname)
+        {
+            FileContentResult generatedPdf = await PdfBuilder.GeneratePDFFromZip(zipFileStream, outputPDFname);
+            
+            string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
+            string filePath = Path.Combine(workingDirectory, $"{outputPDFname}-{Guid.NewGuid()}.pdf");
+
+            Directory.CreateDirectory(workingDirectory);
+            File.WriteAllBytes(filePath, generatedPdf.FileContents);
+
+            Console.WriteLine($"Content saved to {filePath}");
+            return true;
         }
     }
 }

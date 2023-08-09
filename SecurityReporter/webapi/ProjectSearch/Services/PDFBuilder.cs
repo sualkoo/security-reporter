@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
@@ -13,14 +14,17 @@ namespace webapi.ProjectSearch.Services
     public class PDFBuilder : IPDFBuilder
     {
         private ILogger<PDFBuilder> Logger;
-        
+        private readonly string imageName = "reportbuilder";
+
         public PDFBuilder(ILogger<PDFBuilder> logger)
         {
             Logger = logger;
         }
-        
-        public async Task<FileContentResult> GeneratePDFFromZip(FileContentResult zipFile, string outputPDFname)
+
+        public async Task<FileContentResult> GeneratePDFFromZip(Stream zipFileStream, string outputPDFname)
         {
+            string containerName = "reportbuilder-instance-" + Guid.NewGuid();
+            
             Logger.LogDebug("Creating temporary directory for source files");
             string workingDirectory = Directory.GetCurrentDirectory();
             string pdfDirectory = Path.Combine(workingDirectory, "temp");
@@ -29,33 +33,54 @@ namespace webapi.ProjectSearch.Services
             Logger.LogDebug("Extracting zip source files to temporary directory");
             string tempDirectory = Path.Combine(pdfDirectory, Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempDirectory);
-            ZipArchive zipArchive = new ZipArchive(new MemoryStream(zipFile.FileContents));
+            ZipArchive zipArchive = new ZipArchive(zipFileStream);
             zipArchive.ExtractToDirectory(tempDirectory);
-
-            var containerName = "reportbuilder-" + Guid.NewGuid();
 
             try
             {
-                Logger.LogDebug("Checking if reportbuilder image exists...");
-                ProcessStartInfo checkImageExistsInfo = new ProcessStartInfo("docker", "images reportbuilder");
+                Logger.LogDebug($"Checking if '{imageName}' image exists...");
+                ProcessStartInfo checkImageExistsInfo = new ProcessStartInfo("docker", $"images {imageName}");
                 checkImageExistsInfo.RedirectStandardOutput = true;
                 checkImageExistsInfo.UseShellExecute = false;
                 using (Process checkImageExistsProcess = Process.Start(checkImageExistsInfo))
                 {
                     string output = await checkImageExistsProcess.StandardOutput.ReadToEndAsync();
-                    if (!output.Contains("reportbuilder"))
+                    if (!output.Contains(imageName))
                     {
-                        throw new CustomException(StatusCodes.Status500InternalServerError, "Docker image 'reportbuilder' not found.");
+                        throw new CustomException(StatusCodes.Status500InternalServerError,
+                            $"Docker image '{imageName}' not found.");
                     }
+
                     Logger.LogDebug("Image found.");
                 }
 
-                Logger.LogDebug("Building docker container - " + containerName);
-                ProcessStartInfo buildContainerInfo =
-                    new ProcessStartInfo("docker", $"run -itd --name {containerName} reportbuilder");
-                buildContainerInfo.UseShellExecute = false;
-                Process buildContainerProcess = Process.Start(buildContainerInfo);
-                buildContainerProcess.WaitForExit();
+                Logger.LogDebug($"Checking if '{containerName}' container exists...");
+                ProcessStartInfo checkContainerExistsInfo =
+                    new ProcessStartInfo("docker", $"ps -a -f name={containerName}");
+                checkContainerExistsInfo.RedirectStandardOutput = true;
+                checkContainerExistsInfo.UseShellExecute = false;
+                using (Process checkContainerExistsProcess = Process.Start(checkContainerExistsInfo))
+                {
+                    string output = await checkContainerExistsProcess.StandardOutput.ReadToEndAsync();
+                    if (output.Contains(imageName))
+                    {
+                        Logger.LogDebug("Starting docker container - " + containerName);
+                        ProcessStartInfo startContainerInfo =
+                            new ProcessStartInfo("docker", $"start {containerName}");
+                        startContainerInfo.UseShellExecute = false;
+                        Process startContainerProcess = Process.Start(startContainerInfo);
+                        startContainerProcess.WaitForExit();
+                    }
+                    else
+                    {
+                        Logger.LogDebug("Building docker container - " + containerName);
+                        ProcessStartInfo buildContainerInfo =
+                            new ProcessStartInfo("docker", $"run -itd --name {containerName} {imageName}");
+                        buildContainerInfo.UseShellExecute = false;
+                        Process buildContainerProcess = Process.Start(buildContainerInfo);
+                        buildContainerProcess.WaitForExit();
+                    }
+                }
 
                 Logger.LogDebug("Copying source files to docker container");
                 ProcessStartInfo copyFilesToContainerInfo =
@@ -65,21 +90,22 @@ namespace webapi.ProjectSearch.Services
                 copyFilesToContainerProcess.WaitForExit();
 
                 Logger.LogDebug("Compiling sources...");
-                string shellCommand = "pdflatex /data/Main";
-                ProcessStartInfo compileSourcesInfo =
-                    new ProcessStartInfo("docker", $"exec -it {containerName} sh -c \"{shellCommand}\"");
+                ProcessStartInfo compileSourcesInfo = new ProcessStartInfo("docker",
+                    $"exec -i {containerName} pdflatex /data/Main -interaction=nonstopmode");
                 compileSourcesInfo.UseShellExecute = false;
                 Process compileSourcesProcess = Process.Start(compileSourcesInfo);
                 compileSourcesProcess.WaitForExit();
 
+
                 Logger.LogDebug("Getting compiled PDF from docker container...");
-                ProcessStartInfo extractPdfInfo = new ProcessStartInfo("docker", $"cp {containerName}:/data/Main.pdf {tempDirectory}");
+                ProcessStartInfo extractPdfInfo =
+                    new ProcessStartInfo("docker", $"cp {containerName}:/data/Main.pdf {tempDirectory}");
                 extractPdfInfo.UseShellExecute = false;
                 Process extractPdfProcess = Process.Start(extractPdfInfo);
                 extractPdfProcess.WaitForExit();
 
                 // Step 8: Read the PDF content
-                byte[] pdfBytes = File.ReadAllBytes(Path.Combine(tempDirectory, "Main.pdf"));
+                byte[] pdfBytes = await File.ReadAllBytesAsync(Path.Combine(tempDirectory, "Main.pdf"));
 
                 Logger.LogDebug("Returning PDF");
                 return new FileContentResult(pdfBytes, "application/pdf")
@@ -87,23 +113,28 @@ namespace webapi.ProjectSearch.Services
                     FileDownloadName = $"{outputPDFname}.pdf"
                 };
             }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message, ex);
+                throw new CustomException(StatusCodes.Status500InternalServerError, "An error occurred while generating a PDF file.");
+            }
             finally
             {
                 Logger.LogDebug("Cleaning up");
-                
+
                 Directory.Delete(tempDirectory, true);
-                
+
+                Logger.LogDebug($"Stopping container {containerName}");
                 ProcessStartInfo stopContainerInfo = new ProcessStartInfo("docker", $"stop {containerName}");
                 stopContainerInfo.UseShellExecute = false;
                 Process stopContainerProcess = Process.Start(stopContainerInfo);
                 stopContainerProcess.WaitForExit();
                 
-                ProcessStartInfo deleteContainerInfo = new ProcessStartInfo("docker", $"rm {containerName}");
-                deleteContainerInfo.UseShellExecute = false;
-                Process deleteContainerProcess = Process.Start(deleteContainerInfo);
-                deleteContainerProcess.WaitForExit();
-                
-                
+                Logger.LogDebug($"Removing container {containerName}");
+                ProcessStartInfo removeContainerInfo = new ProcessStartInfo("docker", $"rm {containerName}");
+                removeContainerInfo.UseShellExecute = false;
+                Process removeContainerProcess = Process.Start(removeContainerInfo);
+                removeContainerProcess.WaitForExit();
             }
         }
     }

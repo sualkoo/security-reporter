@@ -4,5 +4,5 @@ namespace webapi.ProjectSearch.Services;
 
 public interface IPDFBuilder
 {   
-    Task<FileContentResult> GeneratePDFFromZip(FileContentResult zipFile, string outputPDFname);
+    Task<FileContentResult> GeneratePDFFromZip(Stream zipFileStream, string outputPDFname);
 }

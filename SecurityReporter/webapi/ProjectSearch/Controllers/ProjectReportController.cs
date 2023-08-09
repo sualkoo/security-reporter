@@ -73,8 +73,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger.LogInformation("Received GET request for downloading PDF of report by ID");
             return await HandleExceptionAsync(async () =>
             {
-                FileContentResult zip = await ProjectReportService.GetReportSourceByIdAsync(id);
-                return await PDFBuilder.GeneratePDFFromZip(zip, "Report-Cyber_Security_Assesment");
+                throw new NotImplementedException();
             });
         }
 
