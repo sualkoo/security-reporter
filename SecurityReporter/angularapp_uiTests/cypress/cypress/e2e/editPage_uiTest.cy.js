@@ -1,7 +1,7 @@
 describe('Item Management Test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200');
+        cy.visit('https://sda-projectmanagement.azurewebsites.net/');
         // Assuming the user is already logged in and on the homepage or item management section.
     });
 

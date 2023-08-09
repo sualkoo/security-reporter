@@ -1,7 +1,7 @@
 describe('Add incorrect item test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200/');
+        cy.visit('https://sda-projectmanagement.azurewebsites.net/');
     });
   it('passes', () => {
       testProjectName()
