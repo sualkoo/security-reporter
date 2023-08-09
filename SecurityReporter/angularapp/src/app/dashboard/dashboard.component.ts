@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Chart} from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
 import { switchMap } from "rxjs";
-import { CriticalityConfig } from './providers/graph-config'
+import {CriticalityConfig, VulnerabilityConfig} from "./providers/graph-config";
 
 @Component({
   selector: 'app-dashboard',
@@ -78,9 +78,7 @@ export class DashboardComponent implements OnInit {
 
 
   updateVulnerabilityChart(): void {
-    //sort from smallest to largest
     this.vulnerability.sort((a, b) => a.item1 - b.item1);
-
     let labels = this.vulnerability.map((item) => item.item1);
     const data = this.vulnerability.map((item) => item.item2);
     let number = 0;
@@ -100,57 +98,18 @@ export class DashboardComponent implements OnInit {
     } else {
       let ctx = (document.getElementById('vulnerabilityChart') as HTMLCanvasElement).getContext('2d');
       if(ctx){
-      // @ts-ignore
         this.vulnerabilityChart = new Chart(ctx, {
-        type: 'pie',
+        type: VulnerabilityConfig.type,
         data: {
           labels: labels,
           datasets: [{
-            label: "# of Votes",
+            label: VulnerabilityConfig.label,
             data: percentage,
-
-            backgroundColor: [
-              'rgb(217,0,45)',
-              'rgb(0,151,255)',
-              'rgb(253,179,0)',
-              'rgb(102,255,0)',
-              'rgb(153,102,255)',
-            ],
-            borderWidth: 0,
+            backgroundColor: VulnerabilityConfig.backgroundColors,
+            borderWidth: VulnerabilityConfig.borderWidth,
           }],
-
         },
-          options: {
-          plugins: {
-
-            title: {
-              display: true,
-              text: 'Most Reported Vulnerabilities',
-              color: 'black',
-              align: 'center',
-              font: {
-                size: 20,
-              }
-            },
-            legend: {
-              display: true, // Hide the default legend,
-              align: 'center',
-              position: 'right',
-
-              labels: {
-                color: 'black',
-                font: {
-                  size: 14,
-                  weight: 'bold'
-
-                },
-              usePointStyle: true,
-              boxWidth: 10,
-              padding: 20
-              }
-            },
-          }
-        }
+          options: VulnerabilityConfig.options,
       });
     }}
   }
