@@ -9,7 +9,7 @@ export class GetRoleService {
   private getRoleEndpointURL: string;
 
   constructor(private http: HttpClient) {
-    this.getRoleEndpointURL = 'https://localhost:7075/role';
+    this.getRoleEndpointURL = '/role';
   }
 
   public getRole(): Promise<any> {
