@@ -23,6 +23,8 @@ import { AlertService } from '../../../project-management/services/alert.service
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
+import { LogoutService } from '../../../services/logout.service';
+import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -55,12 +57,14 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     router: Router, alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    autoLogoutService: AutoLogoutService) {
 
-    super(addProjectService, router, alertService);
+    super(addProjectService, router, alertService, autoLogoutService);
   }
 
   ngOnInit() {
+    this.autoLogoutService.startTimer();
     this.route.params.subscribe(params => {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
