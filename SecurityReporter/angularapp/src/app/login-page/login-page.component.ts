@@ -28,14 +28,19 @@ export class LoginPageComponent implements OnInit {
       const password = this.loginForm.value.password;
 
       //DUMMY TEMPORARY LOGIN
-      if (this.loginService.sendLoginInfo(username, password)) {
-        window.location.href = 'after-login';
-      } else {
-        this.snackBar.open('Error logging in.', 'Close', {
-          duration: 5000,
-          panelClass: 'red-alert'
-        });
-      }
+      this.loginService.sendLoginInfo(username, password).then(data => {
+        if ( data.status == 200) {
+          console.log("login prebiehol uspesne")
+          window.location.href = 'after-login';
+        } 
+
+        else if(data.status == 400){
+          this.snackBar.open('Bad credentials.', 'Close', {
+            duration: 5000,
+            panelClass: 'red-alert'
+          });
+        }
+      })
     }
   }
 }

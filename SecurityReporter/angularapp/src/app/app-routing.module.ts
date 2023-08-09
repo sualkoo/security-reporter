@@ -10,6 +10,8 @@ import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
+import { loginGuard } from './login-page/guards/login.guard';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -19,13 +21,9 @@ const routes: Routes = [
   { path: 'add-project', component: AddProjectComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'list-projects', component: ListProjectsPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator', 'client'] } },
   { path: 'edit-project/:id', component: ProjectEditingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
-  { path: 'login', component: LoginPageComponent },
+  { path: 'log-in', component: LoginPageComponent , canActivate: [loginGuard]},
   { path: 'after-login', component: AfterLoginPageComponent },
-  { path: 'project-search', component: ProjectSearchPageComponent },
-  { path: 'project-management', component: AddProjectComponent },
-  { path: 'add-project', component: AddProjectComponent },
-  { path: 'list-projects', component: ListProjectsPageComponent },
-  { path: 'default-page', component: DefaultPageComponentComponent },
+  { path: 'default-page', component: DefaultPageComponentComponent,  },
 ];
 
 @NgModule({

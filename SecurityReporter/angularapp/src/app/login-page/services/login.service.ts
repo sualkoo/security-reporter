@@ -8,30 +8,18 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoginService {
-  private loginUrl = "/login?name=admin&password=admin";
+  private loginUrl = "/login";
 
   constructor(private http: HttpClient) {  }
+  status_code = 0;
 
 
-  public sendLoginInfo(username: string, password: string): boolean {
-    console.log("Poslal login", username, password)
-
-    this.http
-      .post(this.loginUrl , null, {  withCredentials: true  })
-      .subscribe(
-        response => {
-            console.log('Request successful. Status code: 200');
-            // Additional handling for a successful response here
-            return true;
-        },
-        error => {
-          console.error('An error occurred:', error);
-          // Additional error handling here
-          return false;
-
-        }
-      );
-
-      return false;
+  public sendLoginInfo(username: string, password: string): Promise<any> {
+    return new Promise ((resolve, reject) => { this.http
+      .post(this.loginUrl + `?name=${username}&password=${password}`, null, {  withCredentials: true  })
+      .subscribe(response => resolve(response), error => {
+        resolve(error)
+      })
+    })
   }
 }
