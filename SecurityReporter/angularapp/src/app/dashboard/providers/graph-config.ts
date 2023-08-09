@@ -1,6 +1,6 @@
 import {TitleOptions, ChartOptions, ChartType} from 'chart.js';
 export const CriticalityConfig = {
-  type: 'pie',
+  type: 'pie' as ChartType,
   label: '% of found Criticality',
   backgroundColors: [
     'rgb(217,0,45)',
@@ -55,18 +55,6 @@ export const VulnerabilityConfig = {
     'rgb(153,102,255)',
   ],
   borderWidth: 0,
-
-  title: {
-    display: true,
-    text: 'Most Reported Vulnerabilities',
-    color: 'black',
-    align: 'center',
-    font: {
-      size: 20,
-    }
-  } as TitleOptions,
-
-
   options: {
     plugins: {
 

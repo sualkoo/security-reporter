@@ -59,14 +59,14 @@ export class DashboardComponent implements OnInit {
       if (ctx) {
         // @ts-ignore
         this.criticalityChart = new Chart(ctx, {
-          type: 'doughnut',
+          type: CriticalityConfig.type,
           data: {
             labels: labels,
             datasets: [{
-              label: "# of Votes",
+              label: CriticalityConfig.label,
               data: percentage,
               backgroundColor: CriticalityConfig.backgroundColors,
-              borderWidth: 0,
+              borderWidth: CriticalityConfig.borderWidth,
             }],
           },
           options: CriticalityConfig.options, // Move options out of the data object
