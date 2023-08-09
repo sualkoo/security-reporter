@@ -17,19 +17,6 @@ namespace webapi.Login.Services
         }
         public async Task<string> GetUserRoleBySubjectId(string subjectId)
         {
-
-            // REMOVE ME IN PRODUCTION VERSION
-            try
-            {
-                cosmosRolesService.AddRole("client@client.sk", "client");
-                cosmosRolesService.AddRole("admin@admin.sk", "admin");
-                cosmosRolesService.AddRole("pentester@pentester.sk", "pentester");
-                cosmosRolesService.AddRole("coordinator@coordinator.sk", "coordinator");
-                cosmosRolesService.AddRole("default@default.sk", "default");
-            }
-            catch { }
-
-
             var mail = clientMailService.GetClientMail(subjectId);
 
             if (mail != null)
