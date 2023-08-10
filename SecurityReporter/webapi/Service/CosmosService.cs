@@ -9,11 +9,11 @@ namespace webapi.Service
 {
     public class CosmosService : ICosmosService
     {
-        private string PrimaryKey { get; set; }
-        private string EndpointUri { get; set; }
+        private string PrimaryKey { get; set; } = "";
+        private string EndpointUri { get; } = "";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private string ReportContainerName { get; } = "ProjectReportContainer";
+        private string ReportContainerName { get; } = "ReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
@@ -22,6 +22,12 @@ namespace webapi.Service
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
             EndpointUri = configuration["DB:EndpointUri"];
+            if (string.IsNullOrEmpty(PrimaryKey))
+            {
+                EndpointUri = "https://security-reporter.documents.azure.com:443";
+                PrimaryKey = "6sDm3pLgxLV7WnQqYkYPBmoyapf91CHvD1OpTJVBxNvYh6wRgmTEqJBy7kAR11MiTEEne6QV5G9dACDbdbjQSg==";
+            }
+            
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
@@ -263,7 +269,7 @@ namespace webapi.Service
             Logger.LogInformation("Adding project report to database.");
             try
             {
-                data.Id = Guid.NewGuid();
+                // data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
                 Logger.LogInformation("Project Report was successfuly saved to DB");
                 return true;
