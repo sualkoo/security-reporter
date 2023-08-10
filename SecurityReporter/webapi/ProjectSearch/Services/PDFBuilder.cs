@@ -5,17 +5,17 @@ using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services
 {
-    public class PDFBuilder : IPDFBuilder
+    public class PdfBuilder : IPdfBuilder
     {
-        private ILogger<PDFBuilder> Logger;
+        private ILogger<PdfBuilder> Logger;
         private readonly string imageName = "reportbuilder";
 
-        public PDFBuilder(ILogger<PDFBuilder> logger)
+        public PdfBuilder(ILogger<PdfBuilder> logger)
         {
             Logger = logger;
         }
 
-        public async Task<FileContentResult> GeneratePDFFromZip(Stream zipFileStream, string outputPDFname)
+        public async Task<FileContentResult> GeneratePdfFromZip(Stream zipFileStream, Guid projectReportId)
         {
             string containerName = "reportbuilder-instance-" + Guid.NewGuid();
             
@@ -102,15 +102,16 @@ namespace webapi.ProjectSearch.Services
                 {
                     throw new CustomException(StatusCodes.Status500InternalServerError, "Latex sources cannot be compiled due to errors.");
                 }
+                
 
                 // Step 8: Read the PDF content
                 byte[] pdfBytes = await File.ReadAllBytesAsync(Path.Combine(tempDirectory, "Main.pdf"));
 
                 Logger.LogDebug("Returning PDF");
-                
+
                 return new FileContentResult(pdfBytes, "application/pdf")
                 {
-                    FileDownloadName = $"{outputPDFname}.pdf"
+                    FileDownloadName = $"{projectReportId}.pdf"
                 };
             }
             catch (Exception ex)

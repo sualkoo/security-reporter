@@ -17,7 +17,7 @@ builder.Services.AddSingleton<IProjectDataValidator, ProjectDataValidator>();
 builder.Services.AddSingleton<IProjectDataParser, ProjectDataParser>();
 builder.Services.AddSingleton<IDBProjectDataParser, DbProjectDataParser>();
 builder.Services.AddSingleton<IProjectReportService, ProjectReportService>();
-builder.Services.AddSingleton<IPDFBuilder, PDFBuilder>();
+builder.Services.AddSingleton<IPdfBuilder, PdfBuilder>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
 
 var app = builder.Build();

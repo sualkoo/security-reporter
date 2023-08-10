@@ -9,11 +9,11 @@ namespace webapi.Service
 {
     public class CosmosService : ICosmosService
     {
-        private string PrimaryKey { get; set; }
-        private string EndpointUri { get; } = "https://localhost:8081";
+        private string PrimaryKey { get; set; } = "";
+        private string EndpointUri { get; } = "";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private string ReportContainerName { get; } = "ProjectReportContainer";
+        private string ReportContainerName { get; } = "ReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
@@ -21,6 +21,7 @@ namespace webapi.Service
         public CosmosService(IConfiguration configuration)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
+            EndpointUri = configuration["DB:EndpointUri"];
             if (string.IsNullOrEmpty(PrimaryKey))
             {
                 EndpointUri = "https://security-reporter.documents.azure.com:443";
@@ -268,7 +269,7 @@ namespace webapi.Service
             Logger.LogInformation("Adding project report to database.");
             try
             {
-                data.Id = Guid.NewGuid();
+                // data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
                 Logger.LogInformation("Project Report was successfuly saved to DB");
                 return true;

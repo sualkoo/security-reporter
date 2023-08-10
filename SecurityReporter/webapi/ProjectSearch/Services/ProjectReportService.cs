@@ -18,11 +18,12 @@ namespace webapi.ProjectSearch.Services
         private IDBProjectDataParser DBParser { get; }
         private ICosmosService CosmosService { get; }
         private IAzureBlobService AzureBlobService { get; }
-        private IPDFBuilder PdfBuilder { get; }
+        private IPdfBuilder PdfBuilder { get; }
         private readonly ILogger Logger;
+        private IProjectReportService projectReportServiceImplementation;
 
         public ProjectReportService(IProjectDataParser parser, IDBProjectDataParser dbParser,
-            IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder, IAzureBlobService azureBlobService)
+            IProjectDataValidator validator, ICosmosService cosmosService, IPdfBuilder pdfBuilder, IAzureBlobService azureBlobService)
         {
             Validator = validator;
             Parser = parser;
@@ -64,6 +65,7 @@ namespace webapi.ProjectSearch.Services
 
             Validator.Validate(newReportData);
 
+            newReportData.Id = Guid.NewGuid();
             bool result = await CosmosService.AddProjectReport(newReportData);
 
             if (!result)
@@ -71,21 +73,17 @@ namespace webapi.ProjectSearch.Services
                 throw new CustomException(StatusCodes.Status500InternalServerError,
                     "Failed to save ProjectReport to database.");
             }
-
-            bool pdfGenerated = false;
+            
             try
             {
-                pdfGenerated = await createPDF(file.OpenReadStream(),
-                    "Report-" + newReportData?.DocumentInfo?.ProjectReportName?.Replace(" ", "_") ?? "Report-Untitled",
-                    newReportData.Id.ToString());
+                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id);
             }
-            finally
+            catch (Exception)
             {
-                if (!pdfGenerated)
-                {
-                    Logger.LogInformation("PDF generation failed, deleting project report...");
-                    await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
-                }
+                Logger.LogInformation("PDF generation failed, deleting project report...");
+                await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
+                throw;
             }
 
             return newReportData;
@@ -122,39 +120,9 @@ namespace webapi.ProjectSearch.Services
             return zip;
         }
 
-        // Todo: Store the PDF in blob storage
-        public async Task<bool> createPDF(Stream zipFileStream, string outputPDFname, string projectReportId)
+        public async Task<FileContentResult> GetPdfByProjectId(Guid id)
         {
-            FileContentResult generatedPdf = await PdfBuilder.GeneratePDFFromZip(zipFileStream, outputPDFname);
-
-            // Store the PDF inside working directory
-            string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
-            string filePath = Path.Combine(workingDirectory, $"{projectReportId}.pdf");
-
-            Directory.CreateDirectory(workingDirectory);
-            File.WriteAllBytes(filePath, generatedPdf.FileContents);
-
-            Console.WriteLine($"Content saved to {filePath}");
-            return true;
-        }
-
-        public async Task<FileContentResult> GetPDFByProjectId(Guid id)
-        {
-            string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
-            string fileNameToSearch = $"{id}.pdf"; // Assuming the ID is used in the filename
-            
-            string filePath = Path.Combine(workingDirectory, fileNameToSearch);
-            
-            if (!File.Exists(filePath))
-            {
-                throw new CustomException(StatusCodes.Status404NotFound, "PDF was not found for this project.");
-            }
-            
-            byte[] fileContent = await File.ReadAllBytesAsync(filePath);
-            return new FileContentResult(fileContent, "application/pdf")
-            {
-                FileDownloadName = id.ToString()
-            };
+            return await AzureBlobService.GetReportPdf(id);
         }
     }
 }

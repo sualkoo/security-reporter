@@ -11,10 +11,10 @@ namespace webapi.ProjectSearch.Controllers
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }
-        private IPDFBuilder PDFBuilder { get; }
+        private IPdfBuilder PDFBuilder { get; }
         private readonly ILogger Logger;
 
-        public ProjectReportController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService, IPDFBuilder pdfBuilder) :base(baseLogger)
+        public ProjectReportController(ILogger<ProjectReportController> logger, ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService, IPdfBuilder pdfBuilder) :base(baseLogger)
         {
             ProjectReportService = projectReportService;
             PDFBuilder = pdfBuilder;
@@ -22,7 +22,7 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> addProjectReport(IFormFile file)
+        public async Task<IActionResult> AddProjectReport(IFormFile file)
         {
             Logger.LogInformation("Received POST request for saving new report");
             return await HandleExceptionAsync(async () =>
@@ -34,7 +34,7 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> getProjectReportById(Guid id)
+        public async Task<IActionResult> GetProjectReportById(Guid id)
         {
             Logger.LogInformation("Received GET request for fetching report by ID");
             return await HandleExceptionAsync(async () =>
@@ -45,7 +45,7 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet("findings")]
-        public async Task<IActionResult> getProjectReportFindings(string? ProjectName, string? Details, string? Impact, string? Repeatability, string? References, string? CWE, int page)
+        public async Task<IActionResult> GetProjectReportFindings(string? ProjectName, string? Details, string? Impact, string? Repeatability, string? References, string? CWE, int page)
         {
             Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
                 $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}))");
@@ -58,7 +58,7 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet("{id}/download")]
-        public async Task<IActionResult> downloadProjectZip(Guid id)
+        public async Task<IActionResult> DownloadProjectZip(Guid id)
         {
             Logger.LogInformation("Received GET request for download report by ID");
             return await HandleExceptionAsync(async () =>
@@ -68,17 +68,17 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpGet("{id}/download/pdf")]
-        public async Task<IActionResult> downloadProjectPdf(Guid id)
+        public async Task<IActionResult> DownloadProjectPdf(Guid id)
         {
             Logger.LogInformation("Received GET request for downloading PDF of report by ID");
             return await HandleExceptionAsync(async () =>
             {
-                return await ProjectReportService.GetPDFByProjectId(id);
+                return await ProjectReportService.GetPdfByProjectId(id);
             });
         }
 
         [HttpDelete]
-        public async Task<IActionResult> deleteProjectReports([FromBody] List<string> ids)
+        public async Task<IActionResult> DeleteProjectReports([FromBody] List<string> ids)
         {
             Logger.LogInformation("Recieved DELETE request for deleting reports by id.");
 
