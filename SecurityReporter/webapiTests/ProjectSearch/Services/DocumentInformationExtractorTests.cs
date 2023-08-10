@@ -52,6 +52,18 @@ namespace webapi.ProjectSearch.Services.Tests
             report2.WholeName = "Katarina Amrichova";
             report2.ReportStatus = "Review";
             testObject.ReportDocumentHistory.Add(report2);
+            ReportVersionEntry report3 = new ReportVersionEntry();
+            report3.VersionDate = new DateTime(2023, 6, 8);
+            report3.Version = "";
+            report3.WholeName = "";
+            report3.ReportStatus = "";
+            testObject.ReportDocumentHistory.Add(report3);
+            ReportVersionEntry report4 = new ReportVersionEntry();
+            report4.ReportStatus = "Release";
+            report4.VersionDate = new DateTime(2023, 6, 9);
+            report4.WholeName = "Lukas Nad";
+            report4.Version = "";
+            testObject.ReportDocumentHistory.Add(report4);
 
 
             DocumentInformation parsedObject = new DocumentInformation();

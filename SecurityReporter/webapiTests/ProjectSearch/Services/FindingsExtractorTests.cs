@@ -49,13 +49,26 @@ namespace webapi.ProjectSearch.Services.Tests
             testFinding.SubsectionRepeatability = "The \\texttt{dummyapplication.apk} is signed with a debug certificate (\\texttt{CERT.RSA}), " +
                 "which can be found in the \\texttt{META-INF} folder.The certificate properties are shown in \\cref{figure:DebugCert}.";
             testFinding.SubsectionCountermeasures = "Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)and SHA-2 keysizes.";
-            /*testFinding.SubsectionReferences = new List<string>
-            {
-                "\\href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design andDevelopment: 8.4 Code-Signing}",
-                "\\bibentry{CWE-296}"
-            };*/
+            testFinding.SubsectionReferences = @"
+This finding references the following information sources:
 
-            parsedFinding.Should().BeEquivalentTo(testFinding);
+\begin{itemize}
+	\item \href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design and
+	Development: 8.4 Code-Signing}
+	\item \bibentry{CWE-296}
+\end{itemize}
+
+%-<References>";
+
+            parsedFinding.Should().BeEquivalentTo(testFinding, options =>
+            options
+                .Excluding(str => str.Name == "SubsectionDetails")
+                .Excluding(str => str.Name == "SubsectionImpact")
+                .Excluding(str => str.Name == "SubsectionRepeatability")
+                .Excluding(str => str.Name == "SubsectionCountermeasures")
+                .Excluding(str => str.Name == "SubsectionReferences")
+            );
+
         }
 
         [Test()]

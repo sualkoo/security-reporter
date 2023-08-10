@@ -24,6 +24,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             string line;
             newProjectInfo.PentestTeam = new List<ProjectInformationParticipant>();
             newProjectInfo.TechnicalContacts = new List<ProjectInformationParticipant>();
+
             if (projectInfoEntry == null)
             {
                 throw new ArgumentNullException();
@@ -32,7 +33,31 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 using (StreamReader reader = new StreamReader(projectInfoEntry.Open()))
                 {
-                    char[] delimiters = { '{', '}' };
+                    string fileContent = reader.ReadToEnd();
+                    string regexPattern = @"\\(newcommand|renewcommand)\s*\{\\([a-zA-Z]*)\}\s*\{((?>[^{}]+|\{(?<DEPTH>)|\}(?<-DEPTH>))*(?(DEPTH)(?!)))\}";
+
+                    MatchCollection matches = Regex.Matches(fileContent, regexPattern);
+                    foreach (Match match in matches)
+                    {
+                        if (match.Groups[2].Value == "PentestTeamMember" || match.Groups[2].Value == "TechnicalContacts")
+                        {
+                            string memberPattern = @"\s*[\w\W]*?(?<=\s|[\\&])$";
+
+                            MatchCollection memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
+                            foreach(Match member in memberMatches)
+                            {
+                                if(!String.IsNullOrWhiteSpace(member.Value))
+                                {
+                                    AssignNewData(match.Groups[2].Value.Trim(), member.Value);
+                                }
+                            }
+                        } else
+                        {
+                            AssignNewData(match.Groups[2].Value, match.Groups[3].Value);
+                        }
+                    }
+
+                    /*char[] delimiters = { '{', '}' };
                     string[] listsDelimiter = { "\\\\" };
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -71,7 +96,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             }
 
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -111,7 +136,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         {
             if (data != null && command != null)
             {
-                switch (command)
+                switch ("\\" + command)
                 {
                     case "\\ApplicationManager":
                         newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
