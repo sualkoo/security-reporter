@@ -34,37 +34,30 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  forLoopInjection(data:any, number: any, percentage:any, labels:any){
-    number = data.reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0);
+  forLoopInjection(data: any, sumOfValues: any, percentage:any, labels:any){
+    sumOfValues = data.reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0);
     for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i] / number) * 100);
+      percentage[i] = Math.round((data[i] / sumOfValues) * 100);
       labels[i] = labels[i];
     }
-    return {percentage, labels, number}
+    return { percentage, labels, sumOfValues }
   }
 
   updateCriticalityChart(): void {
-    //sort from smallest to largest
     this.criticality.sort((a, b) => a.item3 - b.item3);
 
     let labels = this.criticality.map((item) => item.item1);
     const data = this.criticality.map((item) => item.item2);
-    let number = 0;
+    let sumOfValues = 0;
     let percentage = [null];
 
-    let object = this.forLoopInjection(data, number, percentage, labels)
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
     labels = object.labels;
     percentage = object.percentage;
-    number = object.number;
+    sumOfValues = object.sumOfValues;
 
-    if (this.criticalityChart) {
-      this.criticalityChart.data.labels = labels;
-      this.criticalityChart.data.datasets[0].data = percentage;
-      this.criticalityChart.update();
-    } else {
       let ctx = (document.getElementById('criticalityChart') as HTMLCanvasElement).getContext('2d');
       if (ctx) {
-        // @ts-ignore
         this.criticalityChart = new Chart(ctx, {
           type: CriticalityConfig.type,
           data: {
@@ -76,10 +69,10 @@ export class DashboardComponent implements OnInit {
               borderWidth: CriticalityConfig.borderWidth,
             }],
           },
-          options: CriticalityConfig.options, // Move options out of the data object
+          options: CriticalityConfig.options,
         });
       }
-    }
+    
 
   }
 
@@ -88,19 +81,14 @@ export class DashboardComponent implements OnInit {
     this.vulnerability.sort((a, b) => a.item3 - b.item3);
     let labels = this.vulnerability.map((item) => item.item1);
     const data = this.vulnerability.map((item) => item.item2);
-    let number = 0;
+    let sumOfValues = 0;
     let percentage =[null];
 
-    let object = this.forLoopInjection(data, number, percentage, labels)
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
     labels = object.labels;
     percentage = object.percentage;
-    number = object.number;
+    sumOfValues = object.sumOfValues;
 
-    if (this.vulnerabilityChart) {
-      this.vulnerabilityChart.data.labels = labels;
-      this.vulnerabilityChart.data.datasets[0].data = percentage;
-      this.vulnerabilityChart.update();
-    } else {
       let ctx = (document.getElementById('vulnerabilityChart') as HTMLCanvasElement).getContext('2d');
       if(ctx){
         this.vulnerabilityChart = new Chart(ctx, {
@@ -116,10 +104,6 @@ export class DashboardComponent implements OnInit {
         },
           options: VulnerabilityConfig.options,
       });
-    }}
-  }
-
-  updateCWEChart(): void {
-    console.log('updateCWEChart')
+    }
   }
 }
