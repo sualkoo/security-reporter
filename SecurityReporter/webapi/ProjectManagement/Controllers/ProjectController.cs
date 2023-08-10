@@ -113,7 +113,7 @@ public class ProjectController : ControllerBase
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Info: No data found matching the filter criteria.");
+                Console.WriteLine("Info: No data available.");
                 Console.ResetColor();
 
                 return StatusCode(204, "No data available.");
