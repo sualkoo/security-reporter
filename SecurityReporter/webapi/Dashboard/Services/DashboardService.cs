@@ -17,14 +17,14 @@ namespace webapi.Dashboard.Services
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
 
-        public async Task<List<Tuple<int, int>>> GetCriticalityData()
+        public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
         {
             Logger.LogInformation($"Fetching Criticality data");
 
             return await CosmosService.GetCriticalityData();
         }
 
-        public async Task<List<Tuple<int, int>>> GetVulnerabilityData()
+        public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
         {
             Logger.LogInformation($"Fetching Vulnerability data");
 

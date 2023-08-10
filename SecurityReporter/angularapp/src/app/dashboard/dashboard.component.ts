@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
-import {switchMap} from "rxjs";
+import { switchMap } from "rxjs";
+import {CriticalityConfig, VulnerabilityConfig} from "./providers/graph-config";
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -32,164 +34,76 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  forLoopInjection(data: any, sumOfValues: any, percentage:any, labels:any){
+    sumOfValues = data.reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0);
+    for (let i = 0; i < data.length; i++) {
+      percentage[i] = Math.round((data[i] / sumOfValues) * 100);
+      labels[i] = labels[i];
+    }
+    return { percentage, labels, sumOfValues }
+  }
+
   updateCriticalityChart(): void {
-    //sort from smallest to largest
-    this.criticality.sort((a, b) => a.item1 - b.item1);
+    this.criticality.sort((a, b) => a.item3 - b.item3);
 
     let labels = this.criticality.map((item) => item.item1);
     const data = this.criticality.map((item) => item.item2);
-    let number = 0;
-    let percentage =[];
-    for (let i = 0; i < data.length; i++) {
-      number += data[i];
-    }
-    for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i]/number)*100);
-      labels[i] = "Level: " + labels[i];
-    }
+    let sumOfValues = 0;
+    let percentage = [null];
 
-    if (this.criticalityChart) {
-      this.criticalityChart.data.labels = labels;
-      this.criticalityChart.data.datasets[0].data = percentage;
-      this.criticalityChart.update();
-    } else {
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    sumOfValues = object.sumOfValues;
+
       let ctx = (document.getElementById('criticalityChart') as HTMLCanvasElement).getContext('2d');
-      if(ctx){
-        // @ts-ignore
+      if (ctx) {
         this.criticalityChart = new Chart(ctx, {
-          type: 'pie',
+          type: CriticalityConfig.type,
           data: {
             labels: labels,
             datasets: [{
-              label: "# of Votes",
+              label: CriticalityConfig.label,
               data: percentage,
-
-              backgroundColor: [
-                'rgb(217,0,45)',
-                'rgb(0,151,255)',
-                'rgb(253,179,0)',
-                'rgb(102,255,0)',
-                'rgb(153,102,255)',
-              ],
-              borderWidth: 0,
+              backgroundColor: CriticalityConfig.backgroundColors,
+              borderWidth: CriticalityConfig.borderWidth,
             }],
-
           },
-          options: {
-            plugins: {
-              title: {
-                display: true,
-                text: 'Overall Findings Criticality',
-                color: 'black',
-                align: 'center',
-                font: {
-                  size: 20,
-                }
-              },
-              legend: {
-                display: true, // Hide the default legend,
-                align: 'center',
-                position: 'right',
-
-                labels: {
-                  color: 'black',
-                  font: {
-                    size: 14,
-                    weight: 'bold'
-
-                  },
-                  usePointStyle: true,
-                  boxWidth: 10,
-                  padding: 20
-
-                }
-              },
-            }
-          }
+          options: CriticalityConfig.options,
         });
-      }}
+      }
+    
+
   }
 
 
   updateVulnerabilityChart(): void {
-    //sort from smallest to largest
-    this.vulnerability.sort((a, b) => a.item1 - b.item1);
-
+    this.vulnerability.sort((a, b) => a.item3 - b.item3);
     let labels = this.vulnerability.map((item) => item.item1);
     const data = this.vulnerability.map((item) => item.item2);
-    let number = 0;
-    let percentage =[];
-    for (let i = 0; i < data.length; i++) {
-      number += data[i];
-    }
-    for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i]/number)*100);
-      labels[i] = "Level: " + labels[i];
-    }
+    let sumOfValues = 0;
+    let percentage =[null];
 
-    if (this.vulnerabilityChart) {
-      this.vulnerabilityChart.data.labels = labels;
-      this.vulnerabilityChart.data.datasets[0].data = percentage;
-      this.vulnerabilityChart.update();
-    } else {
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    sumOfValues = object.sumOfValues;
+
       let ctx = (document.getElementById('vulnerabilityChart') as HTMLCanvasElement).getContext('2d');
       if(ctx){
-      // @ts-ignore
         this.vulnerabilityChart = new Chart(ctx, {
-        type: 'pie',
+        type: VulnerabilityConfig.type,
         data: {
           labels: labels,
           datasets: [{
-            label: "# of Votes",
+            label: VulnerabilityConfig.label,
             data: percentage,
-
-            backgroundColor: [
-              'rgb(217,0,45)',
-              'rgb(0,151,255)',
-              'rgb(253,179,0)',
-              'rgb(102,255,0)',
-              'rgb(153,102,255)',
-            ],
-            borderWidth: 0,
+            backgroundColor: VulnerabilityConfig.backgroundColors,
+            borderWidth: VulnerabilityConfig.borderWidth,
           }],
-
         },
-          options: {
-          plugins: {
-
-            title: {
-              display: true,
-              text: 'Most Reported Vulnerabilities',
-              color: 'black',
-              align: 'center',
-              font: {
-                size: 20,
-              }
-            },
-            legend: {
-              display: true, // Hide the default legend,
-              align: 'center',
-              position: 'right',
-
-              labels: {
-                color: 'black',
-                font: {
-                  size: 14,
-                  weight: 'bold'
-
-                },
-              usePointStyle: true,
-              boxWidth: 10,
-              padding: 20
-              }
-            },
-          }
-        }
+          options: VulnerabilityConfig.options,
       });
-    }}
-  }
-
-  updateCWEChart(): void {
-    console.log('updateCWEChart')
+    }
   }
 }

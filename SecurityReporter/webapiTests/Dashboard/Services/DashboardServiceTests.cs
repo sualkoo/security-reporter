@@ -32,7 +32,7 @@ namespace webapi.Dashboard.Services.Tests
         public async Task GetCriticalityDataTest_ReturnsData()
         {
             //Arrange
-            var data = new List<Tuple<int, int>>();
+            var data = new List<Tuple<string, int, int>>();
 
             // Mock the CosmosService's behavior to return the expected project report
             mockCosmosService.Setup((cosmos) => cosmos.GetCriticalityData()).ReturnsAsync(data);
@@ -50,7 +50,7 @@ namespace webapi.Dashboard.Services.Tests
         public void GetCriticalityDataTest_ReturnsError()
         {
             //Arrange
-            var data = new List<Tuple<int, int>>();
+            var data = new List<Tuple<string, int, int>>();
 
             // Mock the CosmosService's behavior to return the expected project report
             mockCosmosService.Setup((cosmos) => cosmos.GetCriticalityData()).ThrowsAsync(new CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));
@@ -64,7 +64,7 @@ namespace webapi.Dashboard.Services.Tests
         public async Task GetVulnerabilityDataTest_ReturnsData()
         {
             //Arrange
-            var data = new List<Tuple<int, int>>();
+            var data = new List<Tuple<string, int, int>>();
 
             // Mock the CosmosService's behavior to return the expected project report
             mockCosmosService.Setup((cosmos) => cosmos.GetVulnerabilityData()).ReturnsAsync(data);
@@ -80,7 +80,7 @@ namespace webapi.Dashboard.Services.Tests
         public void GetVulnerabilityDataTest_ReturnsError()
         {
             //Arrange
-            var data = new List<Tuple<int, int>>();
+            var data = new List<Tuple<string, int, int>>();
 
             // Mock the CosmosService's behavior to return the expected project report
             mockCosmosService.Setup((cosmos) => cosmos.GetVulnerabilityData()).ThrowsAsync(new CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));

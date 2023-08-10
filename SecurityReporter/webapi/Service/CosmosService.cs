@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.Xml;
+using webapi.Enums;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -299,84 +300,6 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
-        {
-            int limit = 24;
-            if (page < 1)
-            {
-                page = 1;
-            }
-            int offset = limit * (page - 1);
-            int totalResults;
-            List<ProjectReportData> data = new List<ProjectReportData>();
-
-
-            string query = "SELECT * FROM c WHERE ";
-            string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-                queryCount = $"{queryCount} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
-            }
-            else
-            {
-                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-                queryCount = $"{queryCount} LOWER(c[@keyword]) LIKE LOWER(@value)";
-            }
-
-            try
-            {
-                Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
-                                                                            .WithParameter("@value", $"%{value}%")
-                                                                            .WithParameter("@keyword", $"{keyword}")
-                                                                            .WithParameter("@offset", offset)
-                                                                            .WithParameter("@limit", limit);
-                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
-                while (queryResultSetIterator.HasMoreResults)
-                {
-                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    data.AddRange(currentResultSet.ToList());
-                }
-                Logger.LogInformation("Returning found reports");
-
-
-                QueryDefinition queryDefinitioCount = new QueryDefinition(queryCount).WithParameter("@subcategory", $"{subcategory}")
-                                                                                     .WithParameter("@value", $"%{value}%")
-                                                                                     .WithParameter("@keyword", $"{keyword}");
-
-                FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitioCount);
-                FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
-                totalResults = response.FirstOrDefault();
-
-                PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
-                results.TotalRecords = totalResults;
-                results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
-                UriBuilder uriBuilder = new UriBuilder("/project-reports");
-                string queryPage = uriBuilder.Query;
-                if (results.TotalPages > page)
-                {
-                    if (!string.IsNullOrEmpty(subcategory))
-                    {
-                        queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
-                    }
-                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
-
-                    uriBuilder.Query = queryPage.TrimStart('?');
-                    results.NextPage = uriBuilder.Uri;
-                }
-
-                return results;
-            }
-            catch (Exception exception)
-            {
-                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
-            }
-        }
-
         public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
         {
             int limit = 24;
@@ -576,9 +499,9 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<Tuple<int, int>>> GetCriticalityData()
+        public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
         {
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             string query = "SELECT f.Criticality, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -589,15 +512,17 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Criticality, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
+                ((Criticality)Enum.ToObject(typeof(Criticality), (int)f.Criticality)).ToString(),
+                (int)f.Count, (int)f.Criticality)));
             }
             Logger.LogInformation("Returning found reports");
             return data;
         }
 
-        public async Task<List<Tuple<int, int>>> GetVulnerabilityData()
+        public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
         {
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             string query = "SELECT f.Exploitability, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -608,7 +533,10 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
+                ((Exploitability)Enum.ToObject(typeof(Exploitability), (int)f.Exploitability)).ToString(),
+                (int)f.Count, (int)f.Exploitability)));
             }
             Logger.LogInformation("Returning found reports");
             return data;

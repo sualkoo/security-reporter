@@ -38,7 +38,7 @@ namespace webapi.Dashboard.Controllers.Tests
         public void getCriticalityDataTest_ReturnsOkResult()
         {
             // Arange
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             mockDashboardService.Setup(service => service.GetCriticalityData()).ReturnsAsync(data);
 
             // Act
@@ -73,7 +73,7 @@ namespace webapi.Dashboard.Controllers.Tests
         public void getVulnerabilityDataTest_ReturnsOkResult()
         {
             // Arange
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             mockDashboardService.Setup(service => service.GetVulnerabilityData()).ReturnsAsync(data);
 
             // Act
