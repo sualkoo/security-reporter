@@ -99,7 +99,7 @@ namespace webapi.ProjectSearch.Services.Extractor
 
                 foreach (var imageData in resultFinding.Item2)
                 {
-                    string imageEntryName = Path.Combine(entryFolderName, imageData.FileName);
+                    string imageEntryName = entryFolderName + "/" + imageData.FileName;
                     ZipArchiveEntry entry = zipArchive.CreateEntry(imageEntryName);
                     using (Stream entryStream = entry.Open())
                     {
