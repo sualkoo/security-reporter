@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginService } from './services/login.service';
 import { error } from 'cypress/types/jquery';
+import { GetRoleService } from '../shared/services/get-role.service';
+
 
 
 @Component({
@@ -13,7 +15,7 @@ import { error } from 'cypress/types/jquery';
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private loginService: LoginService) { }
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private loginService: LoginService, private roleService: GetRoleService) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -31,7 +33,14 @@ export class LoginPageComponent implements OnInit {
       this.loginService.sendLoginInfo(username, password).then(data => {
         if ( data.status == 200) {
           console.log("login prebiehol uspesne")
-          window.location.href = 'after-login';
+
+          this.roleService.getRole().then(role => {
+            if (role === 'default') {
+              window.location.href = 'default-page';
+            } else {
+              window.location.href = 'welcome';
+            }
+          });
         } 
 
         else if(data.status == 400){

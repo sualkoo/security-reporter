@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'edit-project/:id', component: ProjectEditingPageComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'log-in', component: LoginPageComponent , canActivate: [loginGuard]},
   { path: 'after-login', component: AfterLoginPageComponent },
-  { path: 'default-page', component: DefaultPageComponentComponent,  },
+  { path: 'default-page', component: DefaultPageComponentComponent, canActivate: [Roles], data: { allowedRoles: ['default'] } },
 ];
 
 @NgModule({
