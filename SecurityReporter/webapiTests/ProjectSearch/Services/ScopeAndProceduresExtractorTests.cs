@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapi.ProjectSearch.Services.Tests
@@ -87,20 +88,43 @@ namespace webapi.ProjectSearch.Services.Tests
                 "test user credentials."
             };
 
-            // testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>();
+            testScope.WorstCaseScenariosReport = @"\newcommand{\WorstCaseScenariosReport}{
 
-            List<bool> row1 = new List<bool> { true, true, false, false };
-            List<bool> row2 = new List<bool> { true, true, true, false };
-            List<bool> row3 = new List<bool> { false, false, true, true };
-            List<bool> row4 = new List<bool> { true, true, true, false };
-            List<bool> row5 = new List<bool> { false, false, false, false };
-            List<bool> row6 = new List<bool> { false, false, false, false };
-            List<bool> row7 = new List<bool> { false, false, false, false };
+\begin{xltabular}{\textwidth}{|l|X|c|c|c|c|c|c|c|}
+	\hline 
+	\cellcolor{grey230}  \textbf{Finding \#} &	 \cellcolor{grey230} \textbf{Description} & \cellcolor{grey230}
+	
+	\textbf{WS1} & \cellcolor{grey230} \textbf{WS2} & \cellcolor{grey230} \textbf{WS3} & \cellcolor{grey230} \textbf{WS4}\\
+    \hline 
+	1		&	ePHI is stored on device without encryption   & \Huge $\cdotp$ & \Huge $\cdotp$ & \Huge \phantom{} & \Huge \phantom{} \\
+	\hline
+	2		&	Sensitive Information Disclosure via Logging   & \Huge $\cdotp$ & \Huge $\cdotp$ & \Huge $\cdotp$  & \Huge \phantom{} \\
+	\hline
+	3		&	Weak Application Signature   & \Huge \phantom{} & \Huge \phantom{} & \Huge $\cdotp$  & \Huge $\cdotp$ \\
+	\hline
+	4		&	Heap Inspection of Sensitive Memory   & \Huge $\cdotp$ & \Huge $\cdotp$ & \Huge $\cdotp$  & \Huge \phantom{} \\
+	\hline
+	5		&	Outdated Components   & \Huge \phantom{} & \Huge \phantom{} & \Huge \phantom{}  & \Huge \phantom{} \\
+	\hline
+	6		&	DummyApplication Signed with a Debug Certificate   & \Huge \phantom{} & \Huge \phantom{} & \Huge \phantom{} & \Huge \phantom{} \\
+	\hline
+	7		&	Missing Enforced Updating   & \Huge \phantom{} & \Huge \phantom{} & \Huge \phantom{} & \Huge \phantom{} \\
+	\hline
+	
+	\caption{Findings case scenarios} \label{table:FindingCaseScenarios}
+\end{xltabular}
 
-            // testScope.WorstCaseScenariosReport.WorstCaseReport = new List<List<bool>>{ row1, row2, row3, row4, row5, row6, row7 };
+}
+";
 
+            parsedScope.Should().BeEquivalentTo(testScope, options =>
+            options
+                .Excluding(str => str.Name == "WorstCaseScenariosReport")
+            );
 
-            parsedScope.Should().BeEquivalentTo(testScope);
+            string normalizedExpected = String.Join("", parsedScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)).ToLowerInvariant();
+            string normalizedActual = String.Join("", testScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)).ToLowerInvariant();
+            normalizedActual.Should().Be(normalizedExpected);
         }
     }
 }

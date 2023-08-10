@@ -59,6 +59,34 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }
 
+        private void extractScope(string command, string contents)
+        {
+            string[] splitString = contents.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+            string[] componentSplit;
+            foreach(string splitLine in splitString)
+            {
+                componentSplit = splitLine.Split('&', StringSplitOptions.RemoveEmptyEntries);
+                if (componentSplit.Length >= 2)
+                {
+                    ScopeProcedure scopeProcedure = new ScopeProcedure();
+                    scopeProcedure.Component = componentSplit[0];
+                    scopeProcedure.Detail = componentSplit[1];
+                    switch (command)
+                    {
+                        case "InScope":
+                            newScopeAndProcedures.InScope.Add(scopeProcedure);
+                            break;
+                        case "WorstCaseScenariosScope":
+                            newScopeAndProcedures.WorstCaseScenarios.Add(componentSplit[1]);
+                            break;
+                        case "OutOfScope":
+                            newScopeAndProcedures.OutOfScope.Add(scopeProcedure);
+                            break;
+                    }
+                }
+            }
+        }
+
         private void extractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
             List<ScopeProcedure> newScopeProcedureList = new List<ScopeProcedure>();
