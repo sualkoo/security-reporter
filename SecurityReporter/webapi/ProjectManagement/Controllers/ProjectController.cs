@@ -116,7 +116,7 @@ public class ProjectController : ControllerBase
                 Console.WriteLine("Info: No data found matching the filter criteria.");
                 Console.ResetColor();
 
-                return StatusCode(404, "No data found matching the filter criteria.");
+                return StatusCode(204, "No data available.");
             }
         }
         catch (Exception ex)
