@@ -130,7 +130,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("update")]
-    // [Authorize(Policy = "AdminPAdminCoordinatorPolicy")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
