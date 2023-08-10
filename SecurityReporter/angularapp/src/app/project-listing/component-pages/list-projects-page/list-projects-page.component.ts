@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import { DataGridComponentComponent } from '../../components/data-grid-component/data-grid-component.component';
+import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
   selector: 'app-list-projects-page',
@@ -8,8 +9,10 @@ import { DataGridComponentComponent } from '../../components/data-grid-component
   imports: [DataGridComponentComponent],
   standalone: true
 })
+export class ListProjectsPageComponent implements OnInit { // Implement OnInit interface
+  constructor(private autoLogoutService: AutoLogoutService) { }
 
-export class ListProjectsPageComponent implements OnInit {
-  ngOnInit() {
+  ngOnInit(): void {
+    this.autoLogoutService.startTimer();
   }
 }

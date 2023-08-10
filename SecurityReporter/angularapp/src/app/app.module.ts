@@ -45,7 +45,7 @@ import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
-
+import { AutoLogoutService } from './services/auto-logout.service';
 
 
 @NgModule({
@@ -62,6 +62,7 @@ import { AfterLoginPageComponent } from './after-login-page/after-login-page.com
     AfterLoginPageComponent
   ],
   imports: [
+    MatSnackBarModule,
     AddProjectComponent,
     BrowserModule,
     HttpClientModule,
@@ -93,9 +94,10 @@ import { AfterLoginPageComponent } from './after-login-page/after-login-page.com
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule, MatSnackBarModule
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+    MatSnackBarModule
   ],
-  providers: [Roles],
+  providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
