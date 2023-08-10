@@ -50,22 +50,18 @@ export class DeletePopupComponentComponent {
 
   async DeleteItems() {
     const idList = this.dataSource.data.map(item => item.id);
-    await this.service.deletePMProjects(idList).subscribe(
-      (response) => {
-        console.log('Items deleted successfully.');
-      },
-      (error) => {
-        this.deleteFlag = false;
-        console.error('Error deleting items:', error);
-      }
-    );
-    if (this.deleteFlag) {
+
+    try {
+      await this.service.deletePMProjects(idList);
+      console.log('Items deleted successfully.');
       this.alertService.showSnackbar('Deletion successful.', 'Close', 'green-alert');
-    } else {
-      this.alertService.showSnackbar('Error occured during deletion.', 'Close', 'red-alert');
- }
-    window.location.reload();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting items:', error);
+      this.alertService.showSnackbar('Error occurred during deletion.', 'Close', 'red-alert');
+    }
   }
+
 
   getStatusString(status: number): string {
     switch (status) {
