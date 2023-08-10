@@ -13,7 +13,7 @@ describe('Item Management Test', () => {
         errorHandling();
         feedbackWindow();
     });
-
+                                                                        
     // Step 1: View the list or overview of items
     function navigateToListingProjects() {
         cy.get('.buttons-container > :nth-child(1) > .mdc-button__label').click();
