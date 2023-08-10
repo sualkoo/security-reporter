@@ -24,7 +24,7 @@ namespace webapi.Dashboard.Controllers
             Logger.LogInformation("Received Get request for getting Criticality data for graph");
             return await HandleExceptionAsync(async () =>
             {
-                List<Tuple<int, int>> data = await DashboardService.GetCriticalityData();
+                List<Tuple<string, int>> data = await DashboardService.GetCriticalityData();
                 return Ok(data);
             });
 
@@ -36,7 +36,7 @@ namespace webapi.Dashboard.Controllers
             Logger.LogInformation("Received Get request for getting Vulnerability data for graph");
             return await HandleExceptionAsync(async () =>
             {
-                List<Tuple<int, int>> data = await DashboardService.GetVulnerabilityData();
+                List<Tuple<string, int>> data = await DashboardService.GetVulnerabilityData();
                 return Ok(data);
             });
 

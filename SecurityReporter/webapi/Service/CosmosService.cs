@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.Xml;
+using webapi.Enums;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -576,9 +577,9 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<Tuple<int, int>>> GetCriticalityData()
+        public async Task<List<Tuple<string, int>>> GetCriticalityData()
         {
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int>> data = new List<Tuple<string, int>>();
             string query = "SELECT f.Criticality, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -589,15 +590,17 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Criticality, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int>(
+                ((Criticality)Enum.ToObject(typeof(Criticality), (int)f.Criticality)).ToString(),
+                (int)f.Count)));
             }
             Logger.LogInformation("Returning found reports");
             return data;
         }
 
-        public async Task<List<Tuple<int, int>>> GetVulnerabilityData()
+        public async Task<List<Tuple<string, int>>> GetVulnerabilityData()
         {
-            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<string, int>> data = new List<Tuple<string, int>>();
             string query = "SELECT f.Exploitability, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -608,7 +611,10 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int>(
+                ((Exploitability)Enum.ToObject(typeof(Exploitability), (int)f.Exploitability)).ToString(),
+                (int)f.Count)));
             }
             Logger.LogInformation("Returning found reports");
             return data;
