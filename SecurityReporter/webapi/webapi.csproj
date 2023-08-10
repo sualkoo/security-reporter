@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0-beta.1" />
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="latexparse-csharp" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
