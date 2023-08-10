@@ -1,11 +1,5 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Compression;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
-using Docker.DotNet;
-using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 

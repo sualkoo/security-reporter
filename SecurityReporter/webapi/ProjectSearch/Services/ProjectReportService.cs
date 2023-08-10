@@ -17,17 +17,19 @@ namespace webapi.ProjectSearch.Services
         private IProjectDataParser Parser { get; set; }
         private IDBProjectDataParser DBParser { get; }
         private ICosmosService CosmosService { get; }
+        private IAzureBlobService AzureBlobService { get; }
         private IPDFBuilder PdfBuilder { get; }
         private readonly ILogger Logger;
 
         public ProjectReportService(IProjectDataParser parser, IDBProjectDataParser dbParser,
-            IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder)
+            IProjectDataValidator validator, ICosmosService cosmosService, IPDFBuilder pdfBuilder, IAzureBlobService azureBlobService)
         {
             Validator = validator;
             Parser = parser;
             DBParser = dbParser;
             CosmosService = cosmosService;
             PdfBuilder = pdfBuilder;
+            AzureBlobService = azureBlobService;
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
         }
@@ -140,14 +142,14 @@ namespace webapi.ProjectSearch.Services
         {
             string workingDirectory = Path.Combine(Environment.CurrentDirectory, "temp", "pdf");
             string fileNameToSearch = $"{id}.pdf"; // Assuming the ID is used in the filename
-
+            
             string filePath = Path.Combine(workingDirectory, fileNameToSearch);
-
+            
             if (!File.Exists(filePath))
             {
                 throw new CustomException(StatusCodes.Status404NotFound, "PDF was not found for this project.");
             }
-
+            
             byte[] fileContent = await File.ReadAllBytesAsync(filePath);
             return new FileContentResult(fileContent, "application/pdf")
             {
