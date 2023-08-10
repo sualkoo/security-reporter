@@ -333,6 +333,30 @@ export class ProjectSearchPageComponent implements OnInit {
       });
   }
 
+  onGetPdf  (projectId: string, projectName: string): void {
+    this.notificationService.displayMessage("Downloading source...", "info");
+    const url = `${this.projectReportService.apiUri}/${projectId}/download/pdf`;
+
+    fetch(url)
+        .then(response => {
+          // Clone the response before consuming it as a blob
+          return response.blob().then(blob => {
+            // Now you can safely read the text from the cloned response
+            const sanitizedProjectName = projectName.replace(/\s/g, "_");
+            const fullFilename = `Report-${sanitizedProjectName}.pdf`;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = fullFilename;
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href); // Clean up the object URL
+          });
+        })
+        .catch(error => {
+          console.error('Error downloading the file:', error);
+        });
+  }
+
   onSelectionCheckboxChange(event: Event) {
     const target = event.target as HTMLInputElement;
 
