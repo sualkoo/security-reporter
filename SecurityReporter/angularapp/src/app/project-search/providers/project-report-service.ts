@@ -10,18 +10,18 @@ import { FindingResponse } from '../interfaces/finding-response.model';
 })
 export class ProjectReportService {
 
-  public readonly apiUrl: string;
+  public readonly apiUri: string;
 
   constructor(private http: HttpClient) {
-    this.apiUrl = 'https://localhost:7075/project-reports';
+    this.apiUri = '/project-reports';
   }
 
   public postZipFile(file: any) {
-    return this.http.post<ProjectReport>(this.apiUrl, file)
+    return this.http.post<ProjectReport>(this.apiUri, file)
   }
 
   public getProjectReport(id: string) {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.apiUri}/${id}`);
   }
 
   public getProjectReportFindings(page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
@@ -55,11 +55,11 @@ export class ProjectReportService {
       params = params.set('cwe', cwe);
     }
 
-    return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUrl}/findings`, { params: params });
+    return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUri}/findings`, { params: params });
   }
 
   public deleteProjectReport(ids: string[]) {
-    return this.http.delete<string[]>(this.apiUrl,  { body: ids });
+    return this.http.delete<string[]>(this.apiUri,  { body: ids });
   }
 
   async validateZipFile(file: File): Promise<boolean> {

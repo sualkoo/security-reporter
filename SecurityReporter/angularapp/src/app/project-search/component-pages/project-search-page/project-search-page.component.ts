@@ -311,7 +311,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   onGetSource(projectId: string, projectName: string): void {
     this.notificationService.displayMessage("Downloading source...", "info");
-    const url = `${this.projectReportService.apiUrl}/${projectId}/download`;
+    const url = `${this.projectReportService.apiUri}/${projectId}/download`;
 
     fetch(url)
       .then(response => {
