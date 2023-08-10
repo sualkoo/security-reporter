@@ -42,9 +42,7 @@ export class DashboardComponent implements OnInit {
     const data = this.criticality.map((item) => item.item2);
     let number = 0;
     let percentage = [];
-    for (let i = 0; i < data.length; i++) {
-      number += data[i];
-    }
+    number = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     for (let i = 0; i < data.length; i++) {
       percentage[i] = Math.round((data[i] / number) * 100);
       labels[i] = "Level: " + labels[i];

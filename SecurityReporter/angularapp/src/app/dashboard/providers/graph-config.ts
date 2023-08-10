@@ -3,13 +3,14 @@ export const CriticalityConfig = {
   type: 'pie' as ChartType,
   label: '% of found Criticality',
   backgroundColors: [
-    'rgb(217,0,45)',
-    'rgb(0,151,255)',
-    'rgb(253,179,0)',
-    'rgb(102,255,0)',
-    'rgb(153,102,255)',
+    "#ec6602", // Healthy Orange
+    "#009999", // Siemens Petrol
+    "#9ddff6", // SH Cyan(50)
+    "#c69b9e", // SH Berry(50)
+    "#9592c1", // SH Blue(50)
+    "#666666", // SH Black(60)
   ],
-  borderWidth: 0,
+  borderWidth: 1,
   options: {
     plugins: {
       title: {
