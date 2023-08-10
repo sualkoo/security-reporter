@@ -34,6 +34,15 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  forLoopInjection(data:any, number: any, percentage:any, labels:any){
+    number = data.reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0);
+    for (let i = 0; i < data.length; i++) {
+      percentage[i] = Math.round((data[i] / number) * 100);
+      labels[i] = "Level: " + labels[i];
+    }
+    return {percentage, labels, number}
+  }
+
   updateCriticalityChart(): void {
     //sort from smallest to largest
     this.criticality.sort((a, b) => a.item1 - b.item1);
@@ -41,12 +50,12 @@ export class DashboardComponent implements OnInit {
     let labels = this.criticality.map((item) => item.item1);
     const data = this.criticality.map((item) => item.item2);
     let number = 0;
-    let percentage = [];
-    number = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i] / number) * 100);
-      labels[i] = "Level: " + labels[i];
-    }
+    let percentage = [null];
+
+    let object = this.forLoopInjection(data, number, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    number = object.number;
 
     if (this.criticalityChart) {
       this.criticalityChart.data.labels = labels;
@@ -71,7 +80,7 @@ export class DashboardComponent implements OnInit {
         });
       }
     }
-  
+
   }
 
 
@@ -80,14 +89,12 @@ export class DashboardComponent implements OnInit {
     let labels = this.vulnerability.map((item) => item.item1);
     const data = this.vulnerability.map((item) => item.item2);
     let number = 0;
-    let percentage =[];
-    for (let i = 0; i < data.length; i++) {
-      number += data[i];
-    }
-    for (let i = 0; i < data.length; i++) {
-      percentage[i] = Math.round((data[i]/number)*100);
-      labels[i] = "Level: " + labels[i];
-    }
+    let percentage =[null];
+
+    let object = this.forLoopInjection(data, number, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    number = object.number;
 
     if (this.vulnerabilityChart) {
       this.vulnerabilityChart.data.labels = labels;
