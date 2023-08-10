@@ -8,12 +8,13 @@
         </button>
       </div>
     </div>
-   </div>
+  </div>
 
-
-    <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
-      Add project
-    </button>
+    <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
+      <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
+        Add project
+      </button>
+    </div>
   </div>
 
   <div class="expansion-panel">
