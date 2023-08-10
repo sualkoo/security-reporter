@@ -177,7 +177,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter)
+        public async Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter)
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
@@ -293,13 +293,13 @@ namespace webapi.Service
             queryParameters["@skipCount"] = skipCount;
             queryParameters["@itemCount"] = itemCount;
 
-            var items = new List<ProjectData>();
+            var items = new List<ProjectList>();
             var queryDefinition = new QueryDefinition(queryString);
             foreach (var param in queryParameters)
             {
                 queryDefinition.WithParameter(param.Key, param.Value);
             }
-            var resultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
+            var resultSetIterator = Container.GetItemQueryIterator<ProjectList>(queryDefinition);
             try
             {
                 while (resultSetIterator.HasMoreResults)

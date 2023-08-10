@@ -74,7 +74,7 @@ public class ProjectController : ControllerBase
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
-        var items = new List<ProjectData>();
+        var items = new List<ProjectList>();
 
         try
         {

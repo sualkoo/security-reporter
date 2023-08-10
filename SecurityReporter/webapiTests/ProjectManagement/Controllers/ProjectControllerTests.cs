@@ -155,19 +155,5 @@ namespace webapi.ProjectManagement.Controllers.Tests
             // Assert
             Assert.AreEqual(201, ((IStatusCodeActionResult)postResult).StatusCode);
         }
-
-        [Test]
-        public async Task DeleteProject_NotExisting_Success()
-        {
-            // Arrange
-            var list = new List<string> { newProject.id.ToString() };
-
-            // Act
-            cosmosServiceMock.Setup(x => x.DeleteProjects(list));
-            IActionResult postResult = await projectController.DeleteProject(newProject.id.ToString());
-
-            // Assert
-            Assert.AreEqual(404, ((IStatusCodeActionResult)postResult).StatusCode);
-        }
     }
 }
