@@ -52,26 +52,9 @@ public class ProjectController : ControllerBase
         {
             return StatusCode(404, result);
         }
-        return StatusCode(200, "Ok");
+        return StatusCode(200);
     }
 
-    [HttpDelete("delete")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
-    public async Task<IActionResult> DeleteProject(string id)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write("DELETE");
-        Console.ResetColor();
-        Console.WriteLine("\t /Project/delete");
-
-        var result = await CosmosService.DeleteProject(id);
-
-        if (!result)
-        {
-            return StatusCode(404, $"{id}, Not found.");
-        }
-        return StatusCode(200, "Ok");
-    }
 
     [HttpGet("count")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
