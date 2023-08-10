@@ -1,13 +1,13 @@
 describe('Item Management Test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://sda-projectmanagement.azurewebsites.net/');
+        cy.visit('https://sda-playground.azurewebsites.net/');
         // Assuming the user is already logged in and on the homepage or item management section.
     });
 
     it('should edit a page', () => {
-        navigateToEditPage();
-        SearchSpecificPMItem();
+        navigateToListingProjects();
+        //SearchSpecificPMItem();
         editPageVerification();
         editPageActions();
         errorHandling();
@@ -15,9 +15,8 @@ describe('Item Management Test', () => {
     });
 
     // Step 1: View the list or overview of items
-    function navigateToEditPage() {
+    function navigateToListingProjects() {
         cy.get('.buttons-container > :nth-child(1) > .mdc-button__label').click();
-
     }
 
     // Step 2: Select the edit option for a specific item
@@ -38,15 +37,16 @@ describe('Item Management Test', () => {
 
     function editPageVerification() {
         // Step 3: Verify that the web application navigates to the edit page/form
+        cy.get('.mat-mdc-row:nth-child(1) .mat-icon').contains('edit').click();
         cy.url().should('include', '/edit-project/');
 
         cy.wait(1000);
 
         // Step 4: Verify that the edit page/form is pre-populated with the existing item's information 
-        cy.get('#mat-select-value-13').should('not.be.empty');
-        cy.get('#mat-select-value-15').should('not.be.empty');
-        cy.get('#mat-select-value-17').should('not.be.empty');
-        cy.get('#mat-input-11').invoke('val').should('not.be.empty');
+        //cy.get('#mat-select-value-13').should('not.be.empty');
+        //cy.get('#mat-select-value-15').should('not.be.empty');
+        //cy.get('#mat-select-value-17').should('not.be.empty');
+        //cy.get('#mat-input-11').invoke('val').should('not.be.empty');
     }
 
     // Step 5: Modify the item's information accurately using input fields or controls

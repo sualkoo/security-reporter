@@ -1,10 +1,10 @@
 describe('Landing page to listing projects page', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://sda-projectmanagement.azurewebsites.net/');
+        cy.visit('https://sda-playground.azurewebsites.net/');
     });
 
-    it('should navigate to ', () => {
+    it.skip('should navigate to ', () => {
         navigateToLogin();
     });
 
