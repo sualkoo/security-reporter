@@ -23,7 +23,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockLogger = new Mock<ILogger<ProjectReportController>>();
             mockLoggerBase = new Mock<ILogger<ExceptionHandlingControllerBase>>();
             mockProjectReportService = new Mock<IProjectReportService>();
-            projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
+            // projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ReturnsAsync(data);
 
             // Act
-            var result = projectReportController.addProjectReport(formFile).Result;
+            var result = projectReportController.AddProjectReport(formFile).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -58,7 +58,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.addProjectReport(formFile).Result;
+            var result = projectReportController.AddProjectReport(formFile).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -79,7 +79,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.addProjectReport(formFile).Result;
+            var result = projectReportController.AddProjectReport(formFile).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -98,7 +98,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.GetReportByIdAsync(expectedId)).ReturnsAsync(data);
 
             // Act
-            var result = projectReportController.getProjectReportById(expectedId).Result;
+            var result = projectReportController.GetProjectReportById(expectedId).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -116,7 +116,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.GetReportByIdAsync(expectedId)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.getProjectReportById(expectedId).Result;
+            var result = projectReportController.GetProjectReportById(expectedId).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -152,7 +152,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.GetReportFindingsAsync(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page).Result;
+            var result = projectReportController.GetProjectReportFindings(searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -172,7 +172,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, page)).ThrowsAsync(expectedException);
 
             // Act
-            var result = projectReportController.getProjectReportFindings(null, null, null, null, null, null, page).Result;
+            var result = projectReportController.GetProjectReportFindings(null, null, null, null, null, null, page).Result;
 
             // Assert
             Assert.IsNotNull(result);
@@ -187,7 +187,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).ReturnsAsync(true);
 
             // Act
-            var task = projectReportController.deleteProjectReports(ids);
+            var task = projectReportController.DeleteProjectReports(ids);
 
             var result = task.Result as OkObjectResult;
 
@@ -206,7 +206,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.DeleteReportAsync(ids)).Throws(expectedException);
 
             // Act
-            var result = projectReportController.deleteProjectReports(ids).Result;
+            var result = projectReportController.DeleteProjectReports(ids).Result;
 
             // Assert
 

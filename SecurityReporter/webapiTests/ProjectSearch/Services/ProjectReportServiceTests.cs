@@ -28,7 +28,7 @@ namespace webapi.ProjectSearch.Services.Tests
             mockParser = new Mock<IProjectDataParser>();
             mockDBParser = new Mock<IDBProjectDataParser>();
             mockValidator = new Mock<IProjectDataValidator>();
-            projectReportService = new ProjectReportService(mockParser.Object, mockDBParser.Object, mockValidator.Object, mockCosmosService.Object);
+            // projectReportService = new ProjectReportService(mockParser.Object, mockDBParser.Object, mockValidator.Object, mockCosmosService.Object);
         }
 
         [Test]
