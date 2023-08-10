@@ -32,6 +32,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   isLoading = false;
   databaseError = false;
   filterError = false;
+  filterMessageFlag = false;
   selectedItems: any[] = [];
   noItemsFound = false;
 
@@ -186,8 +187,14 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1,'');
-      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      const response = await this.getProjectsService.getProjects(15, 1, '');
+
+      if (response === "No data available.") {
+        this.databaseError = false;
+      } else {
+        this.projects = response;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      }
     } catch (error) {
       this.databaseError = true;
     } finally {
@@ -206,8 +213,14 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
-      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
+
+      if (response === "No data available.") {
+        this.databaseError = false;
+      } else {
+        this.projects = response;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      }
     } catch (error) {
       this.databaseError = true;
     } finally {
@@ -228,8 +241,16 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.isLoading = true;
 
     try {
-      this.projects = await this.getProjectsService.getProjects(15, 1, filters);
-      this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      const response = await this.getProjectsService.getProjects(15, 1, filters);
+
+      if (response === "No data available.") {
+        this.filterError = true;
+        this.filterMessageFlag = true;
+        this.dataSource.data = [];
+      } else {
+        this.projects = response;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      }
     } catch (error) {
       this.filterError = true;
       this.databaseError = true;
@@ -238,6 +259,7 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
+
 
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
