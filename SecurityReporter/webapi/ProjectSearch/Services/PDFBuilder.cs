@@ -17,6 +17,40 @@ namespace webapi.ProjectSearch.Services
 
         public async Task<FileContentResult> GeneratePdfFromZip(Stream zipFileStream, Guid projectReportId)
         {
+            Logger.LogDebug("Extracting LateX source to temporary directory");
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string latexSourceDir = Path.Combine(workingDirectory, "temp", projectReportId.ToString());
+            Directory.CreateDirectory(latexSourceDir);
+            ZipArchive zipArchive = new ZipArchive(zipFileStream);
+            zipArchive.ExtractToDirectory(latexSourceDir);
+    
+            Console.WriteLine(latexSourceDir + "/Main");
+
+            ProcessStartInfo generatePdfInfo = new ProcessStartInfo("pdflatex",
+                $" -halt-on-error -interaction=batchmode Main");
+            generatePdfInfo.WorkingDirectory = latexSourceDir;
+            generatePdfInfo.UseShellExecute = false;
+            Process generatePdfProcess = Process.Start(generatePdfInfo);
+            generatePdfProcess.WaitForExit();
+            if (generatePdfProcess.ExitCode != 0)
+            {
+                throw new CustomException(StatusCodes.Status500InternalServerError, "Latex sources cannot be compiled to PDF due to errors.");
+            }
+            
+            byte[] pdfBytes = await File.ReadAllBytesAsync(Path.Combine(latexSourceDir, "Main.pdf"));
+            
+            Directory.Delete(latexSourceDir, true);
+            
+            Logger.LogDebug("Returning PDF");
+            
+            return new FileContentResult(pdfBytes, "application/pdf")
+            {
+                FileDownloadName = $"{projectReportId}.pdf"
+            };
+        }
+        
+        public async Task<FileContentResult> GeneratePdfFromZipDocker(Stream zipFileStream, Guid projectReportId)
+        {
             string containerName = "reportbuilder-instance-" + Guid.NewGuid();
             
             Logger.LogDebug("Creating temporary directory for source files");

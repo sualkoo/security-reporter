@@ -77,7 +77,7 @@ namespace webapi.ProjectSearch.Services
             try
             {
                 var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id);
+                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
             }
             catch (Exception)
             {
@@ -109,8 +109,14 @@ namespace webapi.ProjectSearch.Services
         async Task<bool> IProjectReportService.DeleteReportAsync(List<string> ids)
         {
             Logger.LogInformation($"Deleting items from database");
+            
+            await CosmosService.DeleteProjectReports(ids);
+            foreach (var id in ids)
+            {
+                await AzureBlobService.DeleteReportFolder(new Guid(id));
+            }
 
-            return await CosmosService.DeleteProjectReports(ids);
+            return true;
         }
 
         public async Task<FileContentResult> GetReportSourceByIdAsync(Guid id)

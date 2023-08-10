@@ -1,5 +1,6 @@
 using Azure.Storage;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 
@@ -35,11 +36,11 @@ public class AzureBlobService : IAzureBlobService
     }
 
 
-    public async Task SaveReportPdf(byte[] pdfContent, Guid projectReportId)
+    public async Task SaveReportPdf(byte[] pdfContent, Guid projectReportId, string projectReportName)
     {
         _logger.LogInformation("Saving generated PDF for report " + projectReportId);
         
-        string filePath = $"{projectReportId}/Main.pdf";
+        string filePath = $"{projectReportId}/{projectReportName.Replace(" ", "_")}.pdf";
         
         
         var pdfBlob = projectReportContainerClient.GetBlobClient(filePath);
@@ -51,22 +52,52 @@ public class AzureBlobService : IAzureBlobService
     public async Task<FileContentResult> GetReportPdf(Guid projectReportId)
     {
         _logger.LogInformation("Fetching PDF for report " + projectReportId);
-        var pdfBlob = projectReportContainerClient.GetBlobClient($"{projectReportId}/Main.pdf");
-
-        var pdfStream = await pdfBlob.OpenReadAsync();
-
-        if (pdfStream == null)
+    
+        // List the blobs in the specified directory
+        List<BlobItem> blobs = new List<BlobItem>();
+        await foreach (BlobHierarchyItem blob in projectReportContainerClient.GetBlobsByHierarchyAsync(
+                           delimiter: "/",
+                           prefix: $"{projectReportId}/"))
+        {
+            if (blob.IsBlob)
+            {
+                blobs.Add(blob.Blob);
+            }
+        }
+    
+        // Find the first PDF blob in the list
+        var pdfBlob = blobs.FirstOrDefault(blob => blob.Name.EndsWith(".pdf"));
+    
+        if (pdfBlob == null)
         {
             throw new CustomException(StatusCodes.Status404NotFound, "PDF file not found.");
         }
+
+        var pdfBlobClient = projectReportContainerClient.GetBlobClient(pdfBlob.Name);
+        BlobDownloadInfo pdfDownloadInfo = await pdfBlobClient.DownloadAsync();
+    
         using var memoryStream = new MemoryStream();
-        await pdfStream.CopyToAsync(memoryStream);
+        await pdfDownloadInfo.Content.CopyToAsync(memoryStream);
         memoryStream.Seek(0, SeekOrigin.Begin);
         var pdfBytes = memoryStream.ToArray();
-
+        
         return new FileContentResult(pdfBytes, "application/pdf")
         {
-            FileDownloadName = $"Main.pdf"
+            FileDownloadName = pdfBlobClient.Name.Substring(37)
         };
+    }
+
+    public async Task DeleteReportFolder(Guid projectReportId)
+    {
+        _logger.LogInformation("Deleting files for report " + projectReportId);
+        await foreach (BlobHierarchyItem blob in projectReportContainerClient.GetBlobsByHierarchyAsync(
+                           delimiter: "/",
+                           prefix: $"{projectReportId}/"))
+        {
+            if (blob.IsBlob)
+            {
+                projectReportContainerClient.DeleteBlob(blob.Blob.Name);
+            }
+        }
     }
 }

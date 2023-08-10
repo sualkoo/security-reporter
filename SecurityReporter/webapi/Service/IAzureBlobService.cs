@@ -5,7 +5,8 @@ namespace webapi.Service;
 
 public interface IAzureBlobService
 {
-    Task SaveReportPdf(byte[] pdfContent, Guid projectReportId);
+    Task SaveReportPdf(byte[] pdfContent, Guid projectReportId, string projectReportName);
     Task<FileContentResult> GetReportPdf(Guid projectReportId);
+    Task DeleteReportFolder(Guid projectReportId);
 
 }
