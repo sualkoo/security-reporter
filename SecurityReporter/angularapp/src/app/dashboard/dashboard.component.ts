@@ -38,14 +38,14 @@ export class DashboardComponent implements OnInit {
     number = data.reduce((accumulator:any, currentValue:any) => accumulator + currentValue, 0);
     for (let i = 0; i < data.length; i++) {
       percentage[i] = Math.round((data[i] / number) * 100);
-      labels[i] = "Level: " + labels[i];
+      labels[i] = labels[i];
     }
     return {percentage, labels, number}
   }
 
   updateCriticalityChart(): void {
     //sort from smallest to largest
-    this.criticality.sort((a, b) => a.item1 - b.item1);
+    this.criticality.sort((a, b) => a.item3 - b.item3);
 
     let labels = this.criticality.map((item) => item.item1);
     const data = this.criticality.map((item) => item.item2);
@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit {
 
 
   updateVulnerabilityChart(): void {
-    this.vulnerability.sort((a, b) => a.item1 - b.item1);
+    this.vulnerability.sort((a, b) => a.item3 - b.item3);
     let labels = this.vulnerability.map((item) => item.item1);
     const data = this.vulnerability.map((item) => item.item2);
     let number = 0;

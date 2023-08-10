@@ -577,9 +577,9 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<Tuple<string, int>>> GetCriticalityData()
+        public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
         {
-            List<Tuple<string, int>> data = new List<Tuple<string, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             string query = "SELECT f.Criticality, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -590,17 +590,17 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<string, int>(
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
                 ((Criticality)Enum.ToObject(typeof(Criticality), (int)f.Criticality)).ToString(),
-                (int)f.Count)));
+                (int)f.Count, (int)f.Criticality)));
             }
             Logger.LogInformation("Returning found reports");
             return data;
         }
 
-        public async Task<List<Tuple<string, int>>> GetVulnerabilityData()
+        public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
         {
-            List<Tuple<string, int>> data = new List<Tuple<string, int>>();
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
             string query = "SELECT f.Exploitability, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -612,9 +612,9 @@ namespace webapi.Service
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                 //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
-                data.AddRange(currentResultSet.Select(f => new Tuple<string, int>(
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
                 ((Exploitability)Enum.ToObject(typeof(Exploitability), (int)f.Exploitability)).ToString(),
-                (int)f.Count)));
+                (int)f.Count, (int)f.Exploitability)));
             }
             Logger.LogInformation("Returning found reports");
             return data;
