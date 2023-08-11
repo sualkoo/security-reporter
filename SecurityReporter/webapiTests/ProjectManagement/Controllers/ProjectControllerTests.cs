@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Assert = NUnit.Framework.Assert;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Collections;
 
 namespace webapi.ProjectManagement.Controllers.Tests
 {
@@ -52,6 +53,25 @@ namespace webapi.ProjectManagement.Controllers.Tests
             ContactForClients = new List<string> { "client1@example.com", "client2@example.com" },
         };
 
+        public ProjectList projectListData = new ProjectList
+        {
+            id = Guid.NewGuid(),
+            ProjectName = "Sample Project",
+            ProjectStatus = ProjectStatus.InProgress,
+            ProjectQuestionare = ProjectQuestionare.TBS,
+            ProjectScope = ProjectScope.TBS,
+            PentestDuration = 5,
+            StartDate = new DateOnly(2023, 8, 1),
+            EndDate = new DateOnly(2023, 8, 10),
+            IKO = new DateOnly(2023, 7, 20),
+            TKO = new DateOnly(2023, 8, 5),
+            Comments = new List<Comment>
+                {
+                    new Comment { Text = "Comment 1", Author = "User1", CreatedAt = DateTime.Now },
+                    new Comment { Text = "Comment 2", Author = "User2", CreatedAt = DateTime.Now },
+                },
+        };
+
         [SetUp]
         public void Setup()
         {
@@ -66,9 +86,6 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var projectData = newProject;
 
             // Act
-            cosmosServiceMock.Setup(x => x.AddProject(projectData)).ReturnsAsync(true);
-            IActionResult postResult = await projectController.PostProject(projectData);
-
             cosmosServiceMock.Setup(x => x.GetProjectById(projectData.id.ToString())).ReturnsAsync(projectData);
             var getResult = await projectController.GetProjectById(projectData.id.ToString());
 
@@ -114,9 +131,6 @@ namespace webapi.ProjectManagement.Controllers.Tests
             updatedProject.ProjectName = newName;
 
             // Act
-            cosmosServiceMock.Setup(x => x.AddProject(newProject)).ReturnsAsync(true);
-            IActionResult postResult = await projectController.PostProject(newProject);
-
             cosmosServiceMock.Setup(x => x.UpdateProject(updatedProject)).ReturnsAsync(true);
             IActionResult updateResult = await projectController.UpdateProject(updatedProject);
 
@@ -151,9 +165,231 @@ namespace webapi.ProjectManagement.Controllers.Tests
             cosmosServiceMock.Setup(x => x.AddProject(newProject)).ReturnsAsync(true);
             IActionResult postResult = await projectController.PostProject(newProject);
 
-
             // Assert
             Assert.AreEqual(201, ((IStatusCodeActionResult)postResult).StatusCode);
+        }
+
+        [Test]
+        public async Task DeleteProject_Existing_Success()
+        {
+            // Arrange
+            List<string> idList = new List<string>() { newProject.id.ToString() };
+
+            // Act
+            cosmosServiceMock.Setup(x => x.DeleteProjects(idList)).ReturnsAsync(new List<string>());
+            IActionResult postResult = await projectController.DeleteProject(idList);
+
+            // Assert
+            Assert.AreEqual(200, ((IStatusCodeActionResult)postResult).StatusCode);
+        }
+
+        [Test]
+        public async Task DeleteProject_NotExisting_Fail()
+        {
+            // Arrange
+            List<string> idList = new List<string>() { newProject.id.ToString() };
+
+            // Act
+            cosmosServiceMock.Setup(x => x.DeleteProjects(idList))
+                            .ReturnsAsync(new List<string> { $"{newProject.id}, Not found." }); // Mock failed deletion
+
+            IActionResult postResult = await projectController.DeleteProject(idList);
+
+            // Assert
+            Assert.AreEqual(404, ((IStatusCodeActionResult)postResult).StatusCode);
+        }
+
+        [Test]
+        public async Task GetNumberOfProjects_NonEmpty_Success()
+        {
+            // Arrange
+
+            // Act
+            cosmosServiceMock.Setup(x => x.GetNumberOfProjects()).ReturnsAsync(1);
+            IActionResult postResult = await projectController.GetNumberOfProjects();
+
+            // Assert
+            Assert.AreEqual(200, ((IStatusCodeActionResult)postResult).StatusCode);
+            
+            var resultContent = (postResult as ObjectResult)?.Value?.ToString();
+            Assert.AreEqual(resultContent, "1");
+        }
+
+        [Test]
+        public async Task GetNumberOfProjects_Empty_Success()
+        {
+            // Arrange
+
+            // Act
+            cosmosServiceMock.Setup(x => x.GetNumberOfProjects()).ReturnsAsync(0);
+            IActionResult postResult = await projectController.GetNumberOfProjects();
+
+            // Assert
+            Assert.AreEqual(200, ((IStatusCodeActionResult)postResult).StatusCode);
+
+            var resultContent = (postResult as ObjectResult)?.Value?.ToString();
+            Assert.AreEqual(resultContent, "0");
+        }
+
+        [Test]
+        public async Task GetProjectById_Existing_Success()
+        {
+            // Arrange
+
+            // Act
+            cosmosServiceMock.Setup(x => x.GetProjectById(newProject.id.ToString())).ReturnsAsync(newProject);
+            IActionResult postResult = await projectController.GetProjectById(newProject.id.ToString());
+
+            // Assert
+            Assert.AreEqual(200, ((IStatusCodeActionResult)postResult).StatusCode);
+
+            var resultContent = (postResult as ObjectResult)?.Value?.ToString();
+            Assert.AreEqual(resultContent, newProject.ToString());
+        }
+
+        [Test]
+        public async Task GetProjectById_NotExisting_Fail()
+        {
+            // Arrange
+
+            // Act
+            cosmosServiceMock.Setup(x => x.GetProjectById(newProject.id.ToString())).ReturnsAsync((ProjectData)null);
+            IActionResult postResult = await projectController.GetProjectById(newProject.id.ToString());
+
+            // Assert
+            Assert.AreEqual(404, ((IStatusCodeActionResult)postResult).StatusCode);
+
+            var resultContent = (postResult as ObjectResult)?.Value?.ToString();
+            Assert.AreEqual(resultContent, $"Project with ID '{newProject.id.ToString()}' not found.");
+        }
+
+        [Test]
+        public async Task GetItems_WithData_Returns200AndData()
+        {
+            // Arrange
+            var pageSize = 10;
+            var pageNumber = 1;
+            var filter = new FilterData();
+
+            var mockItems = new List<ProjectList>
+            {
+                projectListData
+            };
+
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+                            .ReturnsAsync(mockItems);
+
+            // Act
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+
+            Assert.AreEqual(200, objectResult.StatusCode);
+            Assert.AreEqual(mockItems, objectResult.Value);
+        }
+
+        [Test]
+        public async Task GetItems_NoData_Returns204AndMessage()
+        {
+            // Arrange
+            var pageSize = 10;
+            var pageNumber = 1;
+            var filter = new FilterData();
+
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+                            .ReturnsAsync(new List<ProjectList>());
+
+            // Act
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+
+            Assert.AreEqual(204, objectResult.StatusCode);
+            Assert.AreEqual("No data available.", objectResult.Value);
+        }
+
+        [Test]
+        public async Task GetItems_Exception_Returns400AndErrorMessage()
+        {
+            // Arrange
+            var pageSize = 10;
+            var pageNumber = 1;
+            var filter = new FilterData();
+
+            var errorMessage = "An error occurred.";
+
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+                            .ThrowsAsync(new Exception(errorMessage));
+
+            // Act
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+
+            Assert.AreEqual(400, objectResult.StatusCode);
+            Assert.AreEqual($"Error retrieving data: {errorMessage}", objectResult.Value);
+        }
+
+        [Test]
+        public async Task GetItems_Existing_Returns200AndAppliedFilter()
+        {
+            // Arrange
+            var pageSize = 10;
+            var pageNumber = 1;
+            var filter = new FilterData();
+            filter.FilteredProjectName = "Sample Project";
+
+            var mockItems = new List<ProjectList>
+            {
+                projectListData
+            };
+
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+                            .ReturnsAsync(mockItems);
+
+            // Act
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+
+            Assert.AreEqual(200, objectResult.StatusCode);
+            Assert.AreEqual(mockItems, objectResult.Value);
+        }
+
+        [Test]
+        public async Task GetItems_NonEmpty_Returns204AndMessageWithFilterApplied()
+        {
+            // Arrange
+            var pageSize = 10;
+            var pageNumber = 1;
+            var filter = new FilterData();
+            filter.FilteredProjectStatus = ProjectStatus.Finished;
+
+            var mockItems = new List<ProjectList>
+            {
+                projectListData
+            };
+
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+                            .ReturnsAsync(new List<ProjectList>());
+
+            // Act
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+
+            // Assert
+            Assert.IsInstanceOf<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+
+            Assert.AreEqual(204, objectResult.StatusCode);
+            Assert.AreEqual("No data available.", objectResult.Value);
         }
     }
 }
