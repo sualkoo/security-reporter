@@ -32,13 +32,13 @@ export class LoginPageComponent implements OnInit {
       //DUMMY TEMPORARY LOGIN
       this.loginService.sendLoginInfo(username, password).then(data => {
         if ( data.status == 200) {
-          console.log("login prebiehol uspesne")
+          console.log("Login successful")
 
           this.roleService.getRole().then(role => {
             if (role === 'default') {
               window.location.href = 'default-page';
             } else {
-              window.location.href = 'welcome';
+              window.location.href = 'after-login';
             }
           });
         } 

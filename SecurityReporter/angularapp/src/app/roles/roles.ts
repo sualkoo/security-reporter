@@ -19,7 +19,7 @@ export class Roles implements CanActivate {
     if (allowedRoles.includes(userRole)) {
       return true;
     } else {
-      this.router.navigate(['']);
+      this.router.navigate(['after-login']);
       return false;
     }
   }
