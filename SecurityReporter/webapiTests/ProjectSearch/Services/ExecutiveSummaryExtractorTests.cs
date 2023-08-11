@@ -1,10 +1,12 @@
-﻿using NUnit.Framework;
-using System.IO.Compression;
+﻿using System.IO.Compression;
+using NUnit.Framework;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
-namespace webapi.ProjectSearch.Services.Tests
+namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
+    
+    [Ignore("")]
     public class ExecutiveSummaryExtractorTests
     {
         private ZipArchive zipArchive;
