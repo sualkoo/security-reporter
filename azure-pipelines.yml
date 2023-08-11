@@ -71,8 +71,8 @@ steps:
   displayName: 'Run Cypress Tests'
 
 - task: AzureWebApp@1
-inputs:
-  azureSubscription: 'sda-2023-service-connection'
-  appType: 'webAppLinux'
-  appName: 'sda-projectmanagement'
-  package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
+  inputs:
+    azureSubscription: 'sda-2023-service-connection'
+    appType: 'webAppLinux'
+    appName: 'sda-projectmanagement'
+    package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
