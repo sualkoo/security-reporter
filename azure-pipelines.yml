@@ -67,5 +67,5 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'npx cypress run'
-    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests/cypress'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
   displayName: 'Run Cypress Tests'
