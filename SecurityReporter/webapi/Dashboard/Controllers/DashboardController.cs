@@ -41,5 +41,17 @@ namespace webapi.Dashboard.Controllers
             });
 
         }
+
+        [HttpGet("CWE")]
+        public async Task<IActionResult> getCWEData()
+        {
+            Logger.LogInformation("Received Get request for getting CWE data for graph");
+            return await HandleExceptionAsync(async () =>
+            {
+                List<Tuple<int, int>> data = await DashboardService.GetCWEData();
+                return Ok(data);
+            });
+
+        }
     }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
 import { switchMap } from "rxjs";
-import {CriticalityConfig, VulnerabilityConfig} from "./providers/graph-config";
+import {CriticalityConfig, CWEConfig, VulnerabilityConfig} from "./providers/graph-config";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +15,9 @@ export class DashboardComponent implements OnInit {
 
   vulnerability: any[] = [];
   vulnerabilityChart: any;
+
+  cwe: any[] = [];
+  cweChart: any;
   constructor(private dashboardService: DashboardService) {
 
   }
@@ -26,12 +29,19 @@ export class DashboardComponent implements OnInit {
           this.criticality = criticalityData;
           this.updateCriticalityChart();
           return this.dashboardService.getVulnerability();
-        })
-      )
-      .subscribe((vulnerabilityData: any[]) => {
-        this.vulnerability = vulnerabilityData;
-        this.updateVulnerabilityChart();
-      });
+        }),
+        switchMap((vulnerabilityData: any[]) => {
+          this.vulnerability = vulnerabilityData;
+          this.updateVulnerabilityChart();
+          return this.dashboardService.getCWE();
+        }
+      ))
+      .subscribe((cwe: any[]) => {
+        this.cwe = cwe;
+        this.updateCWEChart();
+      })
+
+
   }
 
   forLoopInjection(data: any, sumOfValues: any, percentage:any, labels:any){
@@ -72,7 +82,7 @@ export class DashboardComponent implements OnInit {
           options: CriticalityConfig.options,
         });
       }
-    
+
 
   }
 
@@ -105,5 +115,39 @@ export class DashboardComponent implements OnInit {
           options: VulnerabilityConfig.options,
       });
     }
+  }
+
+
+  updateCWEChart(): void {
+    this.cwe.sort((a, b) => a.item2 - b.item2);
+
+    let labels = this.cwe.map((item) => item.item2);
+    const data = this.cwe.map((item) => item.item1);
+    let sumOfValues = 0;
+    let percentage = [null];
+
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    sumOfValues = object.sumOfValues;
+
+    let ctx = (document.getElementById('CWEChart') as HTMLCanvasElement).getContext('2d');
+    if (ctx) {
+      this.criticalityChart = new Chart(ctx, {
+        type: CWEConfig.type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label:"CWE contains",
+            data: data,
+            backgroundColor: CWEConfig.backgroundColors,
+            borderWidth: CWEConfig.borderWidth,
+          }],
+        },
+        options: CWEConfig.options,
+      });
+    }
+
+
   }
 }

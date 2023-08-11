@@ -17,4 +17,8 @@ export class DashboardService {
   public getVulnerability() {
     return this.http.get<number[]>(`${this.apiUrl}/Vulnerability`);
   }
+
+  public getCWE() {
+    return this.http.get<number[]>(`${this.apiUrl}/CWE`);
+  }
 }

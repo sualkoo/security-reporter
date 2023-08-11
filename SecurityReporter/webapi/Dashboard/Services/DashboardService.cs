@@ -30,5 +30,12 @@ namespace webapi.Dashboard.Services
 
             return await CosmosService.GetVulnerabilityData();
         }
+
+        public async Task<List<Tuple<int, int>>> GetCWEData()
+        {
+            Logger.LogInformation($"Fetching CWE data");
+
+            return await CosmosService.GetCWEData();
+        }
     }
 }
