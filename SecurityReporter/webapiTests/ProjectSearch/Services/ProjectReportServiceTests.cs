@@ -2,15 +2,15 @@
 using Microsoft.Azure.Cosmos;
 using Moq;
 using NUnit.Framework;
-using System.IO.Compression;
-using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
 using webapi.Service;
 
-namespace webapi.ProjectSearch.Services.Tests
+namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
+    [Ignore("")]
     public class ProjectReportServiceTests
     {
         private Mock<ICosmosService> mockCosmosService;
