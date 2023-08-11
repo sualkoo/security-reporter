@@ -54,7 +54,7 @@ namespace webapi.ProjectSearch.Services
 
             newReportData = Parser.Extract(file.OpenReadStream());
             
-            // Validator.Validate(newReportData);
+            // Validator.Validate(newReportData); 
 
             newReportData.Id = Guid.NewGuid();
             bool result = await CosmosService.AddProjectReport(newReportData);
