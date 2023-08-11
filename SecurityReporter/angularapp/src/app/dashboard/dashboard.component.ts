@@ -133,7 +133,7 @@ export class DashboardComponent implements OnInit {
 
     let ctx = (document.getElementById('CWEChart') as HTMLCanvasElement).getContext('2d');
     if (ctx) {
-      this.criticalityChart = new Chart(ctx, {
+      this.cweChart = new Chart(ctx, {
         type: CWEConfig.type,
         data: {
           labels: labels,
