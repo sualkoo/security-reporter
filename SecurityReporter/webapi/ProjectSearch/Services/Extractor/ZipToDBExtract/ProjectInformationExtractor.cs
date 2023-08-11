@@ -29,35 +29,34 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 throw new ArgumentNullException();
             }
-            else
+
+            using (StreamReader reader = new StreamReader(projectInfoEntry.Open()))
             {
-                using (StreamReader reader = new StreamReader(projectInfoEntry.Open()))
+                string fileContent = reader.ReadToEnd();
+                string regexPattern = @"\\(newcommand|renewcommand)\s*\{\\([a-zA-Z]*)\}\s*\{((?>[^{}]+|\{(?<DEPTH>)|\}(?<-DEPTH>))*(?(DEPTH)(?!)))\}";
+
+                MatchCollection matches = Regex.Matches(fileContent, regexPattern);
+                foreach (Match match in matches)
                 {
-                    string fileContent = reader.ReadToEnd();
-                    string regexPattern = @"\\(newcommand|renewcommand)\s*\{\\([a-zA-Z]*)\}\s*\{((?>[^{}]+|\{(?<DEPTH>)|\}(?<-DEPTH>))*(?(DEPTH)(?!)))\}";
-
-                    MatchCollection matches = Regex.Matches(fileContent, regexPattern);
-                    foreach (Match match in matches)
+                    if (match.Groups[2].Value == "PentestTeamMember" || match.Groups[2].Value == "TechnicalContacts")
                     {
-                        if (match.Groups[2].Value == "PentestTeamMember" || match.Groups[2].Value == "TechnicalContacts")
-                        {
-                            string memberPattern = @"\s*[\w\W]*?(?<=\s|[\\&])$";
+                        string memberPattern = @"\s*[\w\W]*?(?<=\s|[\\&])$";
 
-                            MatchCollection memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
-                            foreach(Match member in memberMatches)
+                        MatchCollection memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
+                        foreach(Match member in memberMatches)
+                        {
+                            if(!String.IsNullOrWhiteSpace(member.Value))
                             {
-                                if(!String.IsNullOrWhiteSpace(member.Value))
-                                {
-                                    AssignNewData(match.Groups[2].Value.Trim(), member.Value);
-                                }
+                                AssignNewData(match.Groups[2].Value.Trim(), member.Value);
                             }
-                        } else
-                        {
-                            AssignNewData(match.Groups[2].Value, match.Groups[3].Value);
                         }
+                    } else
+                    {
+                        AssignNewData(match.Groups[2].Value, match.Groups[3].Value);
                     }
+                }
 
-                    /*char[] delimiters = { '{', '}' };
+                /*char[] delimiters = { '{', '}' };
                     string[] listsDelimiter = { "\\\\" };
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -97,7 +96,6 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
                         }
                     }*/
-                }
             }
 
             return newProjectInfo;

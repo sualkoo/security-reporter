@@ -19,47 +19,45 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 throw new ArgumentNullException();
             }
-            else
+
+            using (StreamReader reader = new StreamReader(currentEntry.Open()))
             {
-                using (StreamReader reader = new StreamReader(currentEntry.Open()))
+                char[] delimiters = { '{', '}' };
+                while ((line = reader.ReadLine()) != null)
                 {
-                    char[] delimiters = { '{', '}' };
-                    while ((line = reader.ReadLine()) != null)
+                    if (!string.IsNullOrEmpty(line) && line.Length > 0)
                     {
-                        if (!string.IsNullOrEmpty(line) && line.Length > 0)
+                        string[] splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                        if (splitLine.Length >= 2)
                         {
-                            string[] splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            if (splitLine.Length >= 2)
+                            if (splitLine[1] == "\\InScope")
                             {
-                                if (splitLine[1] == "\\InScope")
-                                {
-                                    extractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
-                                }
-                                else if (splitLine[1] == "\\OutOfScope")
-                                {
-                                    extractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
-                                }
-                                else if (splitLine[1] == "\\WorstCaseScenariosReport")
-                                {
-                                    extractWorstCaseReport(reader, newScopeAndProcedures);
-                                }
-                                else if (splitLine[1] == "\\WorstCaseScenariosScope")
-                                {
-                                    extractScopeAndWorstCase(false, true, reader, newScopeAndProcedures);
-                                }
-                                else if (splitLine[1] == "\\Environment")
-                                {
-                                    extractEnvironment(reader, newScopeAndProcedures);
-                                }
+                                ExtractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "\\OutOfScope")
+                            {
+                                ExtractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "\\WorstCaseScenariosReport")
+                            {
+                                ExtractWorstCaseReport(reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "\\WorstCaseScenariosScope")
+                            {
+                                ExtractScopeAndWorstCase(false, true, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "\\Environment")
+                            {
+                                ExtractEnvironment(reader, newScopeAndProcedures);
                             }
                         }
                     }
                 }
-                return newScopeAndProcedures;
             }
+            return newScopeAndProcedures;
         }
 
-        private void extractScope(string command, string contents)
+        private void ExtractScope(string command, string contents)
         {
             string[] splitString = contents.Split('\\', StringSplitOptions.RemoveEmptyEntries);
             string[] componentSplit;
@@ -87,7 +85,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }
 
-        private void extractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
+        private static void ExtractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
             List<ScopeProcedure> newScopeProcedureList = new List<ScopeProcedure>();
             string line;
@@ -139,7 +137,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 }
             }
         }
-        private void extractWorstCaseReport(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
+        private static void ExtractWorstCaseReport(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
             string line;
             bool read = true;
@@ -161,7 +159,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             newScopeAndProcedures.WorstCaseScenariosReport = newReport;
         }
 
-        private void extractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
+        private static void ExtractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
         {
             string line;
             bool read = true;

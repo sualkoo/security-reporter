@@ -4,7 +4,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class ExecutiveSummaryExtractor
     {
-        private ZipArchiveEntry execSumEntry;
+        private readonly ZipArchiveEntry execSumEntry;
         public ExecutiveSummaryExtractor(ZipArchiveEntry execSumEntry)
         {
             this.execSumEntry = execSumEntry;
@@ -20,35 +20,33 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 throw new ArgumentNullException();
             }
-            else
+
+            using (StreamReader reader = new StreamReader(execSumEntry.Open()))
             {
-                using (StreamReader reader = new StreamReader(execSumEntry.Open()))
+                while ((line = reader.ReadLine()) != null)
                 {
-                    while ((line = reader.ReadLine()) != null)
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        if (!string.IsNullOrEmpty(line))
+                        if (line == "%-<ExecSum>")
                         {
-                            if (line == "%-<ExecSum>")
-                            {
-                                readingExecSum = false;
-                            }
+                            readingExecSum = false;
+                        }
 
-                            if (readingExecSum)
-                            {
-                                resultString += line;
-                            }
+                        if (readingExecSum)
+                        {
+                            resultString += line;
+                        }
 
-                            if (line == "%-<ExecSum>->")
-                            {
-                                readingExecSum = true;
-                            }
-
+                        if (line == "%-<ExecSum>->")
+                        {
+                            readingExecSum = true;
                         }
 
                     }
+
                 }
-                return resultString;
             }
+            return resultString;
         }
     }
 }

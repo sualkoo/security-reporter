@@ -51,19 +51,10 @@ namespace webapi.ProjectSearch.Services
                 throw new CustomException(StatusCodes.Status406NotAcceptable,
                     "Invalid file type. Only .zip files are allowed.");
             }
-            else
-            {
-                try
-                {
-                    newReportData = Parser.Extract(file.OpenReadStream());
-                }
-                catch (Exception ex)
-                {
-                    throw new CustomException(StatusCodes.Status406NotAcceptable, ex.Message);
-                }
-            }
 
-            Validator.Validate(newReportData);
+            newReportData = Parser.Extract(file.OpenReadStream());
+            
+            // Validator.Validate(newReportData);
 
             newReportData.Id = Guid.NewGuid();
             bool result = await CosmosService.AddProjectReport(newReportData);

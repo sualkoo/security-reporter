@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml;
 using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
@@ -49,13 +50,13 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                                 {
                                     inBracketContents[i] = reportMatch.Groups[i].Value;
                                 }
-                                newDocumentInfo.ReportDocumentHistory.Add(readReport(inBracketContents));
+                                newDocumentInfo.ReportDocumentHistory.Add(ReadReport(inBracketContents));
                             }
                         }
                         else
                         {
                             List<string> result = ReadInlineContents(match.Groups[3].Value);
-                            assignNewData(match.Groups[2].Value, result, newDocumentInfo);
+                            AssignNewData(match.Groups[2].Value, result, newDocumentInfo);
                         } 
                     }
                     /*while ((line = reader.ReadLine()) != null)
@@ -103,19 +104,18 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return contents;
         }
 
-        private ReportVersionEntry readReport(string[] inBracketContents)
+        private static ReportVersionEntry ReadReport(string[] inBracketContents)
         {
             ReportVersionEntry newReport = new ReportVersionEntry();
             try
             {
                 newReport.VersionDate = DateTime.ParseExact(inBracketContents[1].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-                Console.WriteLine("Incorrect ReportVersionEntry Version Date format, correct format" +
-                    "is yyyy-MM-dd. " +
-                    "Or incorrect format of ReportVersionEntry itself " +
-                    "String found: " + inBracketContents[1].Trim());
+                throw new CustomException(StatusCodes.Status400BadRequest,
+                    "Incorrect ReportVersionEntry Version Date format, correct format" +
+                    "is yyyy-MM-dd.");
             }
             newReport.Version = inBracketContents[2];
             newReport.WholeName = inBracketContents[3];
@@ -124,7 +124,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return newReport;
         }
 
-        private void assignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
+        private static void AssignNewData(string command, List<string> data, DocumentInformation newDocumentInfo)
         {
             if (data != null && data.Count > 0)
             {
@@ -167,7 +167,8 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         }
                         catch (FormatException ex)
                         {
-                            Console.WriteLine("Incorrect format of ReportDate, the correct format is MMMM d yyyy");
+                            throw new CustomException(StatusCodes.Status400BadRequest,
+                                "Incorrect format of ReportDate, the correct format is MMMM d yyyy");
                         }
                         break;
                 }

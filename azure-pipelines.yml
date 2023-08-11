@@ -19,15 +19,15 @@ steps:
     displayName: "dotnet build $(buildConfiguration)"
     workingDirectory: "SecurityReporter"
 
-#  - task: DotNetCoreCLI@2
-#    inputs:
-#      command: "test"
-#      projects: |
-#        **/*Tests.csproj
-#        **/*Test.csproj
-#      arguments: "--configuration $(buildConfiguration)"
-#      workingDirectory: "SecurityReporter"
-#    displayName: "dotnet tests"
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "test"
+      projects: |
+        **/*Tests.csproj
+        **/*Test.csproj
+      arguments: "--configuration $(buildConfiguration)"
+      workingDirectory: "SecurityReporter"
+    displayName: "dotnet tests"
 
   - task: CmdLine@2
     inputs:

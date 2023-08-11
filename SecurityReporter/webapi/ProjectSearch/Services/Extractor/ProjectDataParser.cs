@@ -30,7 +30,7 @@ namespace webapi.ProjectSearch.Services
                 if(zipStream != null) {
                     ZipArchiveEntry currentEntry = archive.GetEntry("Static/PentestTeam.tex");
                     PentestTeamExtractor pte = new PentestTeamExtractor(currentEntry);
-                    Dictionary<string, ProjectInformationParticipant> pentestTeamDict = pte.extractPentestTeam();
+                    Dictionary<string, ProjectInformationParticipant> pentestTeamDict = pte.ExtractPentestTeam();
                     currentEntry = archive.GetEntry("Config/Document_Information.tex");
                     DocumentInformationExtractor die = new DocumentInformationExtractor(currentEntry);
                     newProjectReportData.DocumentInfo = die.ExtractDocumentInformation();
@@ -39,14 +39,15 @@ namespace webapi.ProjectSearch.Services
                     newProjectReportData.ExecutiveSummary = ese.ExtractExecutiveSummary();
                     currentEntry = archive.GetEntry("Config/Project_Information.tex");
                     ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry, pentestTeamDict);
-                    newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+                    // newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+                    newProjectReportData.ProjectInfo = new ProjectInformation();
                     currentEntry = archive.GetEntry("Config/Scope_and_Procedures.tex");
                     ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(currentEntry);
                     newProjectReportData.ScopeAndProcedures = sape.ExtractScopeAndProcedures();
                     currentEntry = archive.GetEntry("Config/Testing_Methodology.tex");
                     TestingMethodologyExtractor tme = new TestingMethodologyExtractor(currentEntry);
                     newProjectReportData.TestingMethodology = tme.ExtractTestingMethodology();
-                    newProjectReportData.Findings = extractFindings(archive);
+                    newProjectReportData.Findings = ExtractFindings(archive);
                     currentEntry = archive.GetEntry("Config/Findings_Database/Findings_Database.tex");
                     if(currentEntry != null)
                     {
@@ -69,7 +70,7 @@ namespace webapi.ProjectSearch.Services
             return newProjectReportData;
         }
 
-        private List<Finding> extractFindings(ZipArchive archive)
+        private List<Finding> ExtractFindings(ZipArchive archive)
         {
             FindingsExtractor fe = new FindingsExtractor();
             Dictionary<string, List<ZipArchiveEntry>> findingDictionary = new Dictionary<string, List<ZipArchiveEntry>>(); 
