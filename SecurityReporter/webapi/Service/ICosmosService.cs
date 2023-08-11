@@ -19,5 +19,7 @@ namespace webapi.Service
         Task<bool> DeleteProjectReports(List<string> projectReportIds);
         Task<List<Tuple<string, int, int>>> GetCriticalityData();
         Task<List<Tuple<string, int, int>>> GetVulnerabilityData();
+
+        Task<List<Tuple<int, int>>> GetCWEData();
     }
 }

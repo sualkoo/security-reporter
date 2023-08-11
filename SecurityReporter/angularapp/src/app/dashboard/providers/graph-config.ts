@@ -89,3 +89,38 @@ export const VulnerabilityConfig = {
     }
   }as ChartOptions
 };
+
+
+export const CWEConfig = {
+  type: 'bar' as ChartType,
+  label:{
+    display: false,
+  },
+  backgroundColors: [
+    "#ec6602", // Healthy Orange
+    "#009999", // Siemens Petrol
+    "#9ddff6", // SH Cyan(50)
+    "#c69b9e", // SH Berry(50)
+    "#9592c1", // SH Blue(50)
+    "#666666", // SH Black(60)
+  ],
+  borderWidth: 0,
+  options: {
+    plugins: {
+      responsive: true,
+      title: {
+        display: true,
+        text: 'CWEs leaderboard',
+        color: 'black',
+        align: 'center',
+        font: {
+          size: 20,
+        }
+      },
+      legend: {
+        display: false, // Hide the default legend,
+
+      },
+    }
+  }as ChartOptions
+};

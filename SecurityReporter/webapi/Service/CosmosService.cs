@@ -541,5 +541,27 @@ namespace webapi.Service
             Logger.LogInformation("Returning found reports");
             return data;
         }
+
+
+        public async Task<List<Tuple< int, int>>> GetCWEData()
+        {
+            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            string query = "SELECT f.CWE, Count(1) AS Count " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "GROUP BY f.CWE";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>(
+                (int)f.Count, (int)f.CWE)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
+        }
     }
 }
