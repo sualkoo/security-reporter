@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import {Chart} from "chart.js/auto";
-import {CriticalityConfig} from "../dashboard/providers/graph-config";
+import {CriticalityConfig, VulnerabilityConfig} from "../dashboard/providers/graph-config";
 import {switchMap} from "rxjs";
 import {DashboardService} from "../dashboard/providers/dashboard-service";
 @Component({
@@ -13,15 +13,24 @@ export class LandingPageComponent implements OnInit{
 
   criticality: any[] = [];
   criticalityChart: any;
+
+  vulnerability: any[] = [];
+  vulnerabilityChart: any;
   constructor(private router: Router, private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
-    this.dashboardService.getCriticality().subscribe((data) => {
-      this.criticality = data;
-      this.updateCriticalityChart();
-
-    }
-    );
+    this.dashboardService.getCriticality()
+      .pipe(
+        switchMap((criticalityData: any[]) => {
+          this.criticality = criticalityData;
+          this.updateCriticalityChart();
+          return this.dashboardService.getVulnerability();
+        })
+      )
+      .subscribe((vulnerabilityData: any[]) => {
+        this.vulnerability = vulnerabilityData;
+        this.updateVulnerabilityChart();
+      });
   }
 
   forLoopInjection(data: any, sumOfValues: any, percentage:any, labels:any){
@@ -64,6 +73,37 @@ export class LandingPageComponent implements OnInit{
     }
 
 
+  }
+
+
+  updateVulnerabilityChart(): void {
+    this.vulnerability.sort((a, b) => a.item3 - b.item3);
+    let labels = this.vulnerability.map((item) => item.item1);
+    const data = this.vulnerability.map((item) => item.item2);
+    let sumOfValues = 0;
+    let percentage =[null];
+
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    sumOfValues = object.sumOfValues;
+
+    let ctx = (document.getElementById('vulnerabilityChart') as HTMLCanvasElement).getContext('2d');
+    if(ctx){
+      this.vulnerabilityChart = new Chart(ctx, {
+        type: VulnerabilityConfig.type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: VulnerabilityConfig.label,
+            data: percentage,
+            backgroundColor: VulnerabilityConfig.backgroundColors,
+            borderWidth: VulnerabilityConfig.borderWidth,
+          }],
+        },
+        options: VulnerabilityConfig.options,
+      });
+    }
   }
 
 
