@@ -1,0 +1,17 @@
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.out
+*.sum
+*.toc
+*.gz
+*.log
+*.vuln
+*.summary
+*.sum
+*~
+*.swp
+*.xml
+*.bib

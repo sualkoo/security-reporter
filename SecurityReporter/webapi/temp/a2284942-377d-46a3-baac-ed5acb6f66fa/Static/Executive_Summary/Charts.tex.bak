@@ -1,0 +1,44 @@
+%
+%		File:		Charts.tex
+%		Author: 	Eugen Reznicenko (SHS IT IN CYS ART)
+%		Date:		17/03/2020
+%
+%
+\def\printonlypositive#1{\ifnum#1>0 
+#1 
+\fi}
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{.5\textwidth}
+    \centering
+    \OverallThreatExposureImage
+    \captionof{figure}{Overall Threat Exposure}
+    \label{fig:OverallThreatExposure}
+  \end{minipage}%
+  \begin{minipage}{.5\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.54]
+        \pie[
+            color = {
+                dark-red-shs!100!black,
+                red-shs!100!black,
+                orange-shs!100!black,
+                yellow-shs!100,
+                gray!100!white}, 
+            sum = auto,
+            text = legend,
+            before number=\printonlypositive
+        ]{\FindingsCountCritical/\textbf{Critical},
+          \FindingsCountHigh/\textbf{High},
+        \FindingsCountMedium/\textbf{Medium},
+        \FindingsCountLow/\textbf{Low},
+        \FindingsCountInfo/\textbf{Info}
+        }
+        
+        \end{tikzpicture}
+    
+    \label{figure:BreakdownCriticality}
+    \caption{Breakdown of finding criticality}
+  \end{minipage}
+  \end{figure}

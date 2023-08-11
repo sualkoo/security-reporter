@@ -40,7 +40,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 {
                     if (match.Groups[2].Value == "PentestTeamMember" || match.Groups[2].Value == "TechnicalContacts")
                     {
-                        string memberPattern = @"\s*[\w\W]*?(?<=\s|[\\&])$";
+                        string memberPattern = @"\s*[\w\W]*?(?<=\s|[\\\s&])$";
 
                         MatchCollection memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
                         foreach(Match member in memberMatches)
@@ -190,7 +190,12 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     case "\\TechnicalContacts":
                         if (data[0] == '\\')
                         {
-                            newProjectInfo.TechnicalContacts.Add(pentestTeamDictionary[data]);
+                            string regPattern = @"\\(?=\w)\\?\w+";
+                            MatchCollection collection = Regex.Matches(data, regPattern);
+                            foreach (Match match in collection)
+                            {
+                                newProjectInfo.PentestTeam.Add(pentestTeamDictionary[match.Value]);
+                            }
                         }
                         else
                         {
@@ -242,9 +247,14 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         }
                         break;
                     case "\\PentestTeamMember":
-                        if (data[0] == '\\')
+                        if (data.Trim()[0] == '\\')
                         {
-                            newProjectInfo.PentestTeam.Add(pentestTeamDictionary[data]);
+                            string regPattern = @"\\(?=\w)\\?\w+";
+                            MatchCollection collection = Regex.Matches(data, regPattern);
+                            foreach(Match match in collection)
+                            {
+                                newProjectInfo.PentestTeam.Add(pentestTeamDictionary[match.Value]);
+                            }
                         }
                         else
                         {

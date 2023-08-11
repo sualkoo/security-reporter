@@ -1,0 +1,198 @@
+%
+%		File:		TitlePage.tex
+%		Author: 	Dusan Repel (SHS TE DC CYS CSA)
+%		Date:		02/09/2020
+%
+%
+\documentclass[
+11pt, % The default document font size, options: 10pt, 11pt, 12pt
+%oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+english, % ngerman for German
+singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+%parskip, % Uncomment to add space between paragraphs
+%nohyperref, % Uncomment to not load the hyperref package
+headsepline, % Uncomment to get a line under the header
+%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+]{TitlePage} % The class file specifying the document structure
+
+\usepackage[utf8]{inputenc}
+\usepackage{tikz} % Proper graphics
+\usetikzlibrary{shapes.geometric,shapes.arrows,decorations.pathmorphing}
+\usetikzlibrary{matrix,chains,scopes,positioning,arrows,fit}
+\usetikzlibrary{arrows}
+\usepackage{array} % For custom columns in tabular
+\newcolumntype{M}[1]{@{}>{\centering\arraybackslash}m{#1}@{}}
+\usepackage{arydshln} % Dashed lines in tabular
+
+\usepackage{amsmath}
+\usepackage{algorithm2e}
+
+\usepackage{tikz} % Proper graphics
+\usetikzlibrary{shapes.geometric,shapes.arrows,decorations.pathmorphing}
+\usetikzlibrary{matrix,chains,scopes,positioning,arrows,fit}
+\usetikzlibrary{arrows}
+\usepackage{array} % For custom columns in tabular
+\newcolumntype{M}[1]{@{}>{\centering\arraybackslash}m{#1}@{}}
+\usepackage{arydshln} % Dashed lines in tabular
+
+
+%\usepackage{changepage} 
+%\usepackage{enumerate}
+
+\usepackage{varioref}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{balance} 
+\usepackage{listings}
+
+
+
+% For commenting out paper sections to make it 13 pages
+\newif\ifshortPaper
+%\shortPapertrue % comment out to compile 18-page paper
+
+\graphicspath{{../Images/}{jpeg/}{}}
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.gif,.jpg}
+
+% Get rid of space after paragraph sign
+\crefformat{section}{\S#2#1#3}
+\crefmultiformat{section}{\S\S#2#1#3}{and~#2#1#3}{, #2#1#3}{, and~#2#1#3}
+\crefformat{figure}{Figure~#2#1#3}
+\crefformat{table}{Table~#2#1#3}
+
+%\usepackage{amsmath}%
+%\usepackage{MnSymbol}%
+\usepackage{wasysym}%
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{scopes}
+\usetikzlibrary{arrows,calc,shapes,decorations.pathreplacing}
+
+%\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+
+\usepackage{mathpazo} % Use the Palatino font by default
+
+\usepackage[backend=bibtex,style=numeric,natbib=false]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+\usepackage{tabulary}
+
+%----------------------------------------------------------------------------------------
+%	MARGIN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\geometry{
+	paper=a4paper, % Change to letterpaper for US letter
+	inner=0cm, % Inner margin
+	outer=0cm, % Outer margin
+	bindingoffset=0cm, % Binding offset
+	top=-2cm, % Top margin
+	bottom=0cm, % Bottom margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+
+\input{../Config.tex}
+\input{../Config/Project_Information.tex}
+\input{../Config/Document_Information.tex}
+%\input{../Static/Scope_Document/General_Scope.tex}
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} 
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+
+\noindent\includegraphics[scale=0.9]{../Images/Picture5.png}
+
+\definecolor{darkorange}{rgb}{1,0,0}
+
+
+
+\begin{minipage}{0.6\textwidth}
+\vspace*{.06\textheight}
+{\scshape \color{black}{\Huge{ \textsc{\textbf{\ReportProjectType}}}}\par}
+
+\vspace{0.7cm}
+
+%\HRule \\[0.4cm]
+
+\textsc{\LARGE \color{black}{\ReportProjectName}}\\[0.5cm]
+
+\end{minipage}
+
+\vspace{0.6cm}
+
+\begin{minipage}{0.6\textwidth}
+\begin{tabularx}{\linewidth}{lX}
+ %\hline \\ 
+ \textbf{Application Manager}\hspace{2.0cm} & \textbf{\ApplicationManager} \\
+
+
+ \hline \\
+ \textbf{Department}\hspace{2.0cm}           & \textbf{\ApplicationManagerDepartment} \\  
+ 
+ \hline \\
+ \textbf{Asset Type}\hspace{2.0cm}  & \textbf{\AssetType} \\    
+ 
+ %\hline \\
+\end{tabularx}
+\end{minipage}
+
+\vspace{3.0cm}
+
+\begin{minipage}{0.6\textwidth}
+\begin{flushright}
+SHS TE DC CYS CSA\\[0.4cm]
+Classification: \ReportDocumentClassification\\[0.4cm]
+Effective Date: \today\\[0.4cm]
+\end{flushright}
+\end{minipage}
+
+\vspace{0.5cm}
+\begin{minipage}{0.6\textwidth}
+\renewcommand{\arraystretch}{3}
+\SetTitlePageTable
+\end{minipage}
+
+
+% \begin{minipage}[t]{0.3\textwidth}
+% \begin{flushright} \large
+% \emph{Report Approver:} \\
+% \textsc{\ReportDocumentApprover}
+% \vspace{0.5cm}\\
+% \end{flushright}
+% \end{minipage}\\[2cm]
+ 
+% \vfill
+
+
+% {\large \today}\\[1cm] % Date
+ 
+\vfill
+\end{center}
+\end{titlepage}
+
+\end{document}  
+
+

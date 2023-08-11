@@ -1,0 +1,444 @@
+%
+%		File:		Header_Footer.tex
+%		Author: 	Dusan Repel (SHS TE DC CYS CSA)
+%		Date:		02/09/2020
+%
+%
+% Graphics & figures 
+\RequirePackage[pdftex]{graphicx} 
+\DeclareGraphicsExtensions{.pdf,.PDF,.jpg,.JPG,.png,.PNG,}
+\RequirePackage{tikz}
+\RequirePackage{pdfpages}                                   % Inclusion of PDF pages in the appendix
+
+% Language support
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+
+% Page manipulation
+\RequirePackage[margin=2cm]{geometry}                       % Uses smaller margins for more text per page
+\RequirePackage{lastpage}                                   % Gets the number of last page
+\RequirePackage{fancyhdr}                                   % Enables headers and footers
+\setcounter{tocdepth}{3}                                    % Set max. depth of TOC
+\RequirePackage{currfile}                                   % Get the name of the currently included file
+
+% Text manipulation
+\RequirePackage{varioref}                                   % Enable reference with automatic concatenation of strings 
+\RequirePackage{datetime}                                   % Enable date/time formating
+\newdateformat{ReportYear}{\THEYEAR}
+\RequirePackage[hyphens,spaces,obeyspaces]{url}             % Enable URL formatting
+\def\UrlBreaks{\do\.\do\@\do\\\do\/\do\!\do\|\do\;\do\>\do\[\do\]\do\$\do\^\do\(\do\)\do\,\do\?\do\'\do+\do\#\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z\do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9\do\-\do\*\do\-\do\~\do\'\do\"\do\-\do\=\do\_\do\:\do\&\do\\\do\%\do\{\do\}}
+\RequirePackage{rotating}                                   % Enables rotation of text
+\RequirePackage{pslatex}                                    % Sets style of fonts: Roman=Times,Serif=Helvetica,Mono=Courier
+\RequirePackage[]{titlesec}                                 % Enables manipulation of titles (chapter, section, etc)
+\titleformat{\chapter}
+{\normalfont\Huge\bfseries}
+{\thechapter}{5mm}{}
+\titlespacing{\chapter}
+{0mm}{-5mm}{0mm}[0mm]
+\RequirePackage{textcomp}                                   % For extended symbol support
+\RequirePackage{amsfonts}                                   % Set default fonts
+\renewcommand{\rmdefault}{phv}
+\renewcommand{\sfdefault}{pti}
+\RequirePackage{amssymb}                                    % math symbols
+\RequirePackage{pifont}                                     % Enables dingbats
+\RequirePackage{xspace}                                     % Enables dynamic placement of spaces, e.g. when defining custom macros 
+
+% Object manipulation
+\RequirePackage{float}                                      % Allows mandatory positioning of floats (figures, tables, ...)
+\RequirePackage{placeins}                                   % Prevents objects from floating into following sections
+\RequirePackage{fancyvrb}                                   % Enables the inclusion of verbatim environments in tables
+
+% Table manipulation
+\RequirePackage{multirow}                                   % Enables the aggregation of multiple rows
+\RequirePackage{multicol}                                   % Enables the aggregation of multiple columns
+\RequirePackage{colortbl}                                   % Enables colors in tables
+\RequirePackage{tabularx}                                   % Enhances table support
+\RequirePackage{longtable}                                  % Enables tables to exceed one page
+\RequirePackage{diagbox}                                    % Enables diagonally split cells in tables
+\RequirePackage{hhline}                                     % Enables pretty double lines 
+
+% Listings
+\RequirePackage{listings}
+\lstset{
+	basicstyle=\footnotesize\ttfamily, 
+	numbers=left,               
+	numberstyle=\footnotesize,
+	numbersep=7pt,              
+	tabsize=2,                  
+	extendedchars=true,         
+	breaklines=true,            
+	frame=tb,  
+	captionpos=b       
+	showspaces=false,           
+	showtabs=false,     
+	xleftmargin=20pt,
+	framexleftmargin=15pt,
+	framexrightmargin=-5pt,
+	framexbottommargin=2pt,
+	framextopmargin=2pt,
+	showstringspaces=false,
+	aboveskip=20pt
+}
+
+% Enumerate and Itemize
+\RequirePackage{enumitem}                                   % Enables customized setting of distances around enumerate and itemize
+
+\RequirePackage{framed} 
+\RequirePackage{xcolor} 
+\colorlet{shadecolor}{gray!25} 
+
+% Must be last package included
+\RequirePackage[pdftex,colorlinks=false,breaklinks=true,pdfborder={0 0 0}]{hyperref}
+
+
+\newcounter{ReportCounterFinding}
+\setcounter{ReportCounterFinding}{0} 
+\newcounter{ReportCounterAppendix}
+\setcounter{ReportCounterAppendix}{0} 
+
+% Symbol definition
+\newcommand{\xmark}{\ding{55}}                              % Defines checkmark
+
+% Color definitions
+% SHS Colors
+\definecolor{orangeshs236}{RGB}{236,102,2}
+\definecolor{orangeshs242}{RGB}{242,146,87}
+\definecolor{petrolshs122}{RGB}{122,22,45}
+\definecolor{petrolshs168}{RGB}{168,108,115}
+\definecolor{petrolsag}{RGB}{0,153,153}
+\definecolor{yellowshs}{RGB}{255,210,0}
+\definecolor{redshs}{RGB}{231,0,29}
+\definecolor{greenshs}{RGB}{0,154,56}
+\definecolor{grey64}{RGB}{0.64,0.64,0.64}
+\definecolor{grey128}{RGB}{128,128,128}
+\definecolor{grey191}{RGB}{0.191,0.191,0.191}
+\definecolor{grey230}{RGB}{230,230,230}
+\definecolor{blackshs}{RGB}{0,0,0}
+
+%SAG Colors
+\definecolor{siemenspetrol}{cmyk}{1.0,0.0,0.4,0.0}
+\definecolor{healthineerspetrol}{cmyk}{0.744,0.000,0.329,0.188} % RGB #35CF8B
+\definecolor{healthineersorange}{cmyk}{0.000,0.694,0.400,0.000} % RGB #FF4E00
+\definecolor{ctlightgray}{cmyk}{0.0,0.0,0.0,0.13}
+\definecolor{ctdarkgray}{cmyk}{0.0,0.0,0.0,0.35}
+\definecolor{ctred}{cmyk}{0.0,1.0,1.0,0.05}
+\definecolor{ctgreen}{cmyk}{1.0,0.0,1.0,0.0}
+\definecolor{Critical}{RGB}{192,0,0}
+\definecolor{High}{cmyk}{0.0,1.0,1.0,0.05}
+\definecolor{High+Compliance}{cmyk}{0.0,1.0,1.0,0.05}
+\definecolor{Medium}{cmyk}{0.0,0.6,1.0,0.0}
+\definecolor{Medium+Compliance}{cmyk}{0.0,0.6,1.0,0.0}
+\definecolor{Moderate}{cmyk}{0.0,0.6,1.0,0.0}
+\definecolor{Moderate+Compliance}{cmyk}{0.0,0.6,1.0,0.0}
+\definecolor{Low}{cmyk}{0.0,0.1,1.0,0.0}
+\definecolor{Low+Compliance}{cmyk}{0.0,0.1,1.0,0.0}
+\definecolor{Info}{cmyk}{0.0,0.0,0.0,0.35}
+\definecolor{Info+Compliance}{cmyk}{0.0,0.0,0.0,0.35}
+\definecolor{Pass}{cmyk}{0.92,0,0.87,0.09}
+\definecolor{Compliance}{cmyk}{0.85,0.45,0.0,0.0}
+\definecolor{CustomStatus}{cmyk}{1.0,1.0,1.0,1.0}
+
+%
+%	Added color definitions by dr
+%
+%\definecolor{Difficult}{cmyk}{0.0,1.0,1.0,0.05}
+\definecolor{Difficult}{RGB}{231,0,29}
+
+%\definecolor{Average}{cmyk}{0.0,0.6,1.0,0.0}
+\definecolor{Average}{RGB}{242,146,87}
+
+%\definecolor{Easy}{cmyk}{0.0,0.1,1.0,0.0}
+\definecolor{Easy}{RGB}{255,210,0}
+
+% \definecolor{TBR}{cmyk}{1.0,1.0,0.0,0.0}
+\definecolor{TBR}{RGB}{0,0,255}
+
+% Command used for cover pages
+\newcommand{\ReportCoverPage}[4]{
+	\par\noindent
+	\vbox to 0.8\vsize{
+		\hsize=0.1\hsize
+		\vspace{1.0\vsize}
+		\hbox to \hsize{\hfill#1\hfill}
+	}
+	\vbox to 0.8\vsize{
+		\hsize=0.9\hsize
+		\hbox{
+			\vbox to 0.35\vsize{\par\noindent#2\vfill}
+		}
+		\hbox{
+			\vbox to 0.55\vsize{\par\noindent#3\vfill}
+		}
+		\hbox{
+			\vbox to 0.1\vsize{\par\noindent#4\vfill}
+		}
+	}
+}
+
+% Command for resolving a criticality level to a textual representation
+\newcommand{\ReportResolveCriticalityText}[1]{%
+\ifthenelse{\equal{#1}{High}}{High}{}%
+\ifthenelse{\equal{#1}{High+Compliance}}{High (+Compliance)}{}%
+\ifthenelse{\equal{#1}{Medium}}{Medium}{}%
+\ifthenelse{\equal{#1}{Medium+Compliance}}{Medium (+Compliance)}{}%
+\ifthenelse{\equal{#1}{Moderate}}{Moderate}{}%
+\ifthenelse{\equal{#1}{Moderate+Compliance}}{Moderate (+Compliance)}{}%
+\ifthenelse{\equal{#1}{Low}}{Low}{}%
+\ifthenelse{\equal{#1}{Low+Compliance}}{Low (+Compliance)}{}%
+\ifthenelse{\equal{#1}{Info}}{Info}{}%
+\ifthenelse{\equal{#1}{Info+Compliance}}{Info (+Compliance)}{}%
+\ifthenelse{\equal{#1}{Compliance}}{Compliance}{}%
+\ifthenelse{\equal{#1}{Pass}}{Pass}{}%
+\ifthenelse{\equal{#1}{TBR}}{TBR}{}%
+}
+
+% Command for Finding sections
+\newcommand{\ReportFindingSection}[1]{	
+	\renewcommand{\ReportBoolIsFirstFindingInSection}{true}
+	\renewcommand{\ReportBoolUsesFindingSections}{true}
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{false}}{
+		\ifthenelse{\equal{\theReportCounterFinding}{0}}{}{
+			\FloatBarrier 
+			\clearpage
+		}
+		\immediate\write\outfileSummary{\noexpand\ReportFindingSection{\unexpanded{#1}}}
+	}{}
+	\section{#1}
+}
+
+% Command for Finding header
+
+\providecommand{\ReportCounterFindingautorefname}{Finding}
+\newcommand{\ReportFindingHeader}[1] {
+	
+
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{false}}{
+		% 
+		% Lukas
+		% conditionally inserting clear pages
+		% 
+		\ifthenelse {\equal{\ReportBoolIsFirstFindingInSection}{true}}{}{\clearpage}
+		
+		\renewcommand{\ReportFindingFileName}{\FindingName} % double check, was #1
+		\ifthenelse{\equal{\ReportBoolIsFirstFindingInSection}{false}}{\FloatBarrier}{}
+		\refstepcounter{ReportCounterFinding}
+		\label{\FindingName} % double check, was #1
+		\ifthenelse{\equal{\ReportBoolUsesFindingSections}{true}}{
+			\addcontentsline{toc}{subsection}{Finding \theReportCounterFinding: \FindingName} % double check, was #1
+		}{
+			\addcontentsline{toc}{section}{Finding \theReportCounterFinding: \FindingName} % double check, was #1
+		}				
+	}{
+		\ifthenelse{\equal{\ReportBoolIsFirstFindingInSection}{true}}{}{\vspace{11mm}}
+	}
+	
+	% Set Finding color boxes depending on the Finding status 
+	\renewcommand{\ReportFindingColor}{\Criticality}
+	
+	\renewcommand{\arraystretch}{1.5}
+
+	
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{false}} {
+		\begin{tabularx}{\textwidth}{ m{0.7cm}|ll@{\hskip 1in}lX| }
+		
+				\multirow{8}{*}
+				% {\cellcolor{\ReportFindingColor}} & \multicolumn{4}{l}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{Finding \FindingNumber: \FindingName}}}\\
+		
+				{\cellcolor{\ReportFindingColor}} & \cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{Finding \FindingNumber:}} & \multicolumn{3}{p{12.42cm}}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{\FindingName}}}\\
+				
+				\cellcolor{\ReportFindingColor} & \multicolumn{4}{r}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\small\textit{ID: \ReportProjectID}}}\\
+				
+				\cellcolor{\ReportFindingColor} & \textbf{Criticality:}    & \textcolor{\ReportFindingColor}{\textbf{\MakeUppercase{\Criticality}}}	& \textbf{Category:}  &  \Category \\ 
+			
+				\cellcolor{\ReportFindingColor} & \textbf{Detectability:}  &  \Detectability  &	\textbf{Exploitability:} &  \Exploitability\\
+				
+				\cellcolor{\ReportFindingColor} & \textbf{CWE / CVE:}  &  \href{https://cwe.mitre.org/data/definitions/\CWE.html}{CWE-\CWE}  & \textbf{CVSS Score:} &  \CVSS  \\
+				\cellcolor{\ReportFindingColor} & \textbf{CVSS Vector:} & \multicolumn{3}{p{.7\textwidth}|}{\CVSSvector}\\
+				
+				\cellcolor{\ReportFindingColor} & \textbf{Location:} & \multicolumn{3}{p{.7\textwidth}|}{\Location}\\
+				\cellcolor{\ReportFindingColor} & \textbf{Component:} & \multicolumn{3}{p{.7\textwidth}|}{\Component}\\
+				
+				\hline
+			\end{tabularx}
+		\vspace{0.5cm}
+		
+	}
+	
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{true}} {
+		\begin{tabularx}{\textwidth}{ m{0.7cm}|ll@{\hskip 1in}lX| }
+
+			%\hline
+		
+			\multirow{8}{*}
+			% {\cellcolor{\ReportFindingColor}} & \multicolumn{4}{l}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{Finding \FindingNumber: \FindingName}}}\\
+	
+			{\cellcolor{\ReportFindingColor}} & \cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{Finding \FindingNumber:}} & \multicolumn{3}{p{12.42cm}}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\Large\textbf{\FindingName}}}\\
+	
+			\cellcolor{\ReportFindingColor} & \multicolumn{4}{r}{\cellcolor{grey-shs-217}\textbf{\textcolor{black}}{\small\textit{ID: \ReportProjectID}}}\\
+			
+			\cellcolor{\ReportFindingColor} & \textbf{Criticality:}    & \textcolor{\ReportFindingColor}{\textbf{\MakeUppercase{\Criticality}}}	& \textbf{Category:}  &  \Category\\ 
+			
+			\cellcolor{\ReportFindingColor} & \textbf{Detectability:}  &  \Detectability  &	\textbf{Exploitability:} &  \Exploitability\\
+			
+			\cellcolor{\ReportFindingColor} & \textbf{CWE / CVE:}  &  \href{https://cwe.mitre.org/data/definitions/\CWE.html}{CWE-\CWE}  & \textbf{CVSS Score:} &  \CVSS  \\
+			\cellcolor{\ReportFindingColor} & \textbf{CVSS Vector:} & \multicolumn{3}{p{.7\textwidth}|}{\CVSSvector}\\
+			
+			\cellcolor{\ReportFindingColor} & \textbf{Location:} & \multicolumn{3}{p{.7\textwidth}|}{\Location}\\
+			\cellcolor{\ReportFindingColor} & \textbf{Component:} & \multicolumn{3}{p{.7\textwidth}|}{\Component}\\
+				
+			\hline
+			\cellcolor{\ReportFindingColor} & \multicolumn{4}{l|}{\textit{(Further details \vpageref{\FindingName}.)}}\\
+			\hline 							
+		
+		\end{tabularx}
+	}
+	
+	
+
+	% \ifthenelse{\equal{\ReportBoolWriteSummary}{true}}
+	% {
+	% 	\textbf{Details:}
+	% 	\FindingDetailsSummary
+	% 	\textit{(Further details \vpageref{\FindingName}}
+	% }
+	
+	%
+	% Remove extra space in non-summary pages
+	%
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{false}}
+		{
+			\vspace{-0.8cm}
+		}{}
+	
+	%
+	%	Write to outfile (Summary of Findings)
+	%
+	\ifthenelse{\equal{\ReportBoolWriteSummary}{false}} {
+	
+		\renewcommand{\FindingNumber}{\theReportCounterFinding}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\ReportFindingFileName}{\ReportFindingFileName}}
+		
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\FindingNumber}{\FindingNumber}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\FindingName}{\FindingName}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Criticality}{\Criticality}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Detectability}{\Detectability}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Exploitability}{\Exploitability}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Category}{\Category}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Location}{\Location}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\Component}{\Component}}
+		%\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\FindingDetailsSummary}{\FindingDetailsSummary}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\CVSS}{\CVSS}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\CVSSvector}{\CVSSvector}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\CWE}{\CWE}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\FoundWith}{\FoundWith}}
+		\immediate\write\outfileSummary{\noexpand\renewcommand{\noexpand\TestMethod}{\TestMethod}}
+		
+		\immediate\write\outfileSummary{\noexpand\ReportFindingHeader{\unexpanded{\FindingName}}}
+	}{}
+	\renewcommand{\ReportBoolIsFirstFindingInSection}{false}
+
+} %
+
+
+% Command for figure
+\newcommand{\ReportFigure}[3]{
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=#3\textwidth]{\ReportPathImages#1}
+		\end{center}
+		\vspace{-5mm} 
+		\caption{#2}
+		\label{#1}
+	\end{figure}
+}
+
+
+% Command for note
+\newcommand{\ReportNote}[1]{
+	\paragraph{Note:}	#1
+}
+
+% Command for re-test
+\newcommand{\ReTest}[1]{
+	\paragraph{Re-Test:} #1
+}
+
+% Command for document version entry
+\newcommand{\ReportVersionEntry}[4]{
+	% \renewcommand{\ReportDate}{#1}
+	\renewcommand{\ReportVersion}{#2}
+	\ifthenelse{\equal{\ReportBoolWriteHistory}{true}}{#1 & #2 & #3 & #4 \\\hline}{}
+}
+
+% Definition of autoref names
+\AtBeginDocument{%
+	\renewcommand{\sectionautorefname}{Section}
+	\renewcommand{\subsectionautorefname}{Section}
+	\renewcommand{\subsubsectionautorefname}{Section}
+	\renewcommand{\chapterautorefname}{Chapter}
+	\renewcommand{\partautorefname}{Part}
+	\renewcommand{\equationautorefname}{Equation}
+	\renewcommand{\figureautorefname}{Figure}
+	\providecommand{\subfigureautorefname}{}
+	\renewcommand{\subfigureautorefname}{Figure}
+	\renewcommand{\Itemautorefname}{Item}
+	\renewcommand{\tableautorefname}{Table}
+}
+
+\newcommand{\enquote}[1]{``#1''}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Already parse document version information once for use on the first report pages
+\renewcommand{\ReportBoolWriteHistory}{false}
+\ReportDocumentHistory
+\renewcommand{\ReportBoolWriteHistory}{true}
+
+
+% Define document style 
+\setlength{\topmargin}{-10mm}
+\setlength{\headheight}{10mm}
+\setlength{\textheight}{240mm}
+
+
+
+\fancypagestyle{plain}{
+	\lhead{\small \HeaderType \ReportProjectName \\ Version\ \ReportVersion ~- \ReportStatus}
+	\chead{}
+	%\rhead{\small \ReportAssessmentTeamLong~(\ReportAssessmentTeamShort) \\ X:\ \ReportDocumentClassification}
+	\rhead{\includegraphics[scale=0.2]{Images/shs-logo-4.png}}
+	\renewcommand{\headrulewidth}{.5pt}
+	%\lfoot{\small Project number:\ \ReportProjectNumber}
+	
+		% Footer
+		%\color{gray}
+		\lfoot{\small Classification: \ReportDocumentClassification}
+		\cfoot{\small Page \thepage\ of \pageref*{LastPage}}  % Use pageref{LastPage} for hyperlink
+		\rfoot{\small \monthdayyeardate\today}
+	
+	\renewcommand{\footrulewidth}{0.5pt}
+}
+\pagestyle{fancy}{
+	\lhead{\small \HeaderType \ReportProjectName \\ Version\ \ReportVersion ~- \ReportStatus}
+	\chead{}
+	%\rhead{\small \ReportAssessmentTeamLong~(\ReportAssessmentTeamShort) \\ X:\ \ReportDocumentClassification}
+	\rhead{\includegraphics[scale=0.2]{Images/shs-logo-4.png}}
+	
+	\renewcommand{\headrulewidth}{.5pt}
+	%\lfoot{\small Project number:\ \ReportProjectNumber}
+	
+	% Footer
+	\lfoot{\small Classification: \ReportDocumentClassification}
+	\cfoot{\small Page \thepage\ of \pageref*{LastPage}}
+	\rfoot{\small \monthdayyeardate\today}
+	\renewcommand{\footrulewidth}{0.5pt}
+}
+
+% Settings for reducing ocurrence of widows and orphans
+\widowpenalty10000
+\clubpenalty10000
+

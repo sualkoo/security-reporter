@@ -1,0 +1,167 @@
+%
+%		File:		Next_Steps.tex
+%		Author: 	Dusan Repel (SHS TE DC CYS CSA)
+%		Date:		02/09/2020
+%
+%
+% 		TODO: Check content of patch != root cause
+\clearpage
+
+\chapter{Next Steps}
+\label{chapter:NextSteps}
+
+%----------------------------------------------------------------------------------------
+%	FINDING REMEDIATION
+%----------------------------------------------------------------------------------------
+%\section{Finding Remediation}
+%\label{section:FindingRemediation}
+%Penetration Test findings are tracked with the web based tool VURIOUS.
+%VURIOUS is a centrally provided solution to track and handle cybersecurity vulnerabilities.
+%
+%After receiving the report, all pentest findings (High, Medium \& Low) will be uploaded to VURIOUS and a ticket will be assigned to the Application Manager.
+%
+%\begin{itemize}
+%	\item For more information about VURIOUS, visit the official \href{https://wiki.siemens.com/display/en/VURIOUS}{VURIOUS Wiki} and \href{https://wiki.siemens.com/pages/viewpage.action?pageId=175249926}{VURIOUS FAQ}
+%	\item Checkout the \href{https://wiki.siemens.com/display/en/VURIOUS?preview=/130884586/230922031/VURIOUS_Ticket_Essential_Actions_Cheatsheet.pdf}{VURIOUS Cheatsheet} to get guidance on how to process tickets
+%\end{itemize}
+
+%Upon receipt of the results in the Penetration Test report, the \PrintAssetApplicationManager is responsible for remediating any discovered vulnerabilities. Therefore, \PrintAssetApplicationManager must:
+%
+%\begin{itemize}
+%	\item	Remediate the vulnerabilities according to the Remediation Timelines (\cref{subsection:RemediationTimelines}),
+%	\item	Provide remediation evidences on each finding in VURIOUS
+%\end{itemize}
+%
+%
+%----------------------------------------------------------------------------------------
+%	REMEDIATION TIMELINES
+%----------------------------------------------------------------------------------------
+%\subsection{Remediation Timelines}
+%\label{subsection:RemediationTimelines}
+%\begin{tabularx}{\textwidth}{|l|l|l|X|} \hline
+%	\rowcolor{grey230} \bf{Severity} & \textbf{Priority}& \bf{Remediation period} & \bf{Comment} \\[3pt]\hline
+%	\cellcolor{dark-red-shs} \textbf{\textcolor{black}{Critical}} & 1 & Immediately & \PentestCoordinatorDepartment advises the next steps.  \\
+%	\hline
+%	\cellcolor{red-shs} \textbf{\textcolor{black}{High}} & 2 & 30 calendar days & \multirow{3}{=}{Any findings that need to be mitigated \textit{after} the specified time period must be approved via the \href{https://isec-workflow.siemens.com/}{\textbf{\textit{Siemens Exception Handling Tool}}}  and documented as Exception in VURIOUS. \newline See \cref{subsection:ExceptionManagement}} \\ \cline{1-3}
+%	\cellcolor{orange-shs} \textbf{\textcolor{black}{Medium}} & 3 & 60 calendar days &  \\ [18pt] \cline{1-3}
+%	\cellcolor{yellow-shs} \textbf{\textcolor{black}{Low}} & 4 & 90 calendar days & \\
+%	\hline
+%	\cellcolor{grey-shs} \textbf{\textcolor{black}{Information}} & 5 & n/a & These findings are considered potential risks, but should generally be treated as non-binding advisory information with respect to the ideal state and configuration of an asset.  \\\hline
+%\end{tabularx}
+%\label{table:RemediationTimelines}
+% \caption{RemediationTimelines}
+%
+%\paragraph{Remediation Period}
+%The Remediation Period is calculated in calendar days. This period begins, once the \PrintAssetApplicationManager receives the corresponding tickets from VURIOUS.
+%This rule applies to every production system or any system handling production data.
+%
+%
+%\pagebreak
+%
+%----------------------------------------------------------------------------------------
+%	REMEDIATION PLAN
+%----------------------------------------------------------------------------------------
+%\subsection{Remediation Plan}
+%\label{subsection:RemediationPlan}
+
+%The \PrintAssetApplicationManager must review the Penetration Test report and develop a Remediation Plan to remediate the vulnerabilities as soon as possible.
+
+%\paragraph{Remediation Planning}  Planning requires addressing the following points: 
+
+%\begin{itemize}
+%	\item		Defining roles and responsibilities and actions to be taken,
+%	\item		Checking resource availability,
+%	\item		Setting up a meeting with the required experts,
+%	\item		Determining the required level of effort: patch development requires time from developers, as well as time from Quality Assurance to confirm that \PrintAssetName has not been impeded in its functionality as a result of the patch,
+%	\item		Analysis of precisely which systems are affected (e.g., Production Server, Test systems, QA, other installations and instances),
+%	\item		Agreeing on the appropriate remediation actions,
+%	\item		Analysis of which vulnerabilities cannot be remediated within the specified timeframe.
+%\end{itemize}
+
+%\pagebreak
+
+%----------------------------------------------------------------------------------------
+%	EXCEPTION MANAGEMENT
+%----------------------------------------------------------------------------------------
+%\subsection{Exception Management}
+%\label{subsection:ExceptionManagement}
+%
+%While every effort must be made to correct discovered security issues as soon as possible in the specified time periods, some vulnerabilities cannot be remediated on time. In case of failure to remediate \textbf{High}, \textbf{Medium} or \textbf{Low} vulnerabilities on time, due to their impact and risk, an \textit{Exception Request} must be opened by the \PrintAssetApplicationManager.
+%
+%\subsubsection{Exception Management Tool}
+%\label{subsubsection:ExceptionManagementTool}
+%
+%Siemens Healthineers is utilizing the \href{https://isec-workflow.siemens.com/}{Siemens Exception Handling Tool} as the standard tool and process to manage risks when specific requirements from the Siemens Healthineers Information Security Framework~\cite{InfoSecFramework} cannot be fulfillied.
+%
+%\subsubsection{How to request a new exception}
+%\label{subsubsection:ExceptionNewRequest}
+%
+%\begin{enumerate}
+%	\item Go to \href{https://healthcare.service-now.com/serviceport}{SHARP ServicePort}
+%	\item Click on \textbf{"Create a Ticket"}
+%	\item In the \textbf{"Search for Service"} field, select \textbf{"InfoSec (CyberSec, Cybersecurity, ISEC, Information Security"}
+%	\item In the \textbf{"Service Area"} field, select \textbf{"Exception Request"}
+%\end{enumerate}
+%
+%Exceptions cannot be permanent. Each exception must be reviewed and extended using an expiration date. This ensures that no exceptions are either accidentally or negligently ignored indefinitely. \ExceptionManager reviews all posted exceptions regularly to validate that the exceptions are still appropriate. 
+%
+%It is ultimately the responsibility of the \PrintAssetApplicationManager to discuss with the \PrintBusinessOwner whether or not to accept unmitigated risk which still remains, or whether to define further mitigation measures to lower the risk to an acceptable level.
+%
+%\pagebreak
+
+
+%----------------------------------------------------------------------------------------
+%	TEST CLEANUP
+%----------------------------------------------------------------------------------------
+\section{Test Cleanup}
+\label{section:TestCleanup}
+
+Over the course of a security assessment it may be necessary to create testing accounts with the sole purpose of testing the various components of an \PrintAssetName. Additionally, firewall rules may be modified to enable tester access to the various components of the \PrintAssetName. These exceptions and testing accounts are no longer necessary after the end of an assessment and as such should be removed and/or revoked after testing has been completed. Note the following example scenarios:
+
+\begin{itemize}
+	\item	Code may be inserted into the application or server
+	\item	Escalation and/or modification of the user accounts
+	\item	Creation of additional user accounts within the application
+	\item	Modification of database content or other internal application information
+\end{itemize}
+
+In order to ensure that this penetration test will not negatively impact future developments, deployments or operations of the testing environment should be inspected and purged of all accounts and objects that have been tampered with or controlled by \ReportAssessmentTeamLong. Additionally, any exploits declared within this report should be inspected and addressed to ensure all payloads have been removed from the \PrintAssetName.
+
+
+%----------------------------------------------------------------------------------------
+%	FURTHER RECOMMENDATIONS
+%----------------------------------------------------------------------------------------
+\section{Further Recommendations}
+\label{section:FurtherRecommendations}
+
+This report contains a set of findings. Each finding describes a security issue found in the \PrintAssetName along with a recommendation about possible countermeasures.
+
+% Discuss (don't fully agree)
+However, while fixing the current issues is important keep in mind that it is just a reactive patch and does not necessarily address the root cause. Root cause analysis answers why this security issue was introduced into the product or service in the first place and why it was not detected by standard testing during the development phase. Therefore, root cause analysis may reveal weaknesses in the development process. Unless remediated, these weaknesses could result in the same or similar security issues in future versions of the target of evaluation.
+
+\subsection{Static Application Security Testing}
+\label{subsection:SAST}
+
+%\paragraph{Static Analysis} Our security experts are dedicated to support you beyond the snapshot of security status as provided by this report. Many security issues are already introduced in the development phase and are prime targets for attackers, such as Cross-Site Scripting (XSS) vulnerabilities, SQL Injection and Cross-Site Request Forgery (CSRF).
+Our security experts are dedicated to support you beyond the snapshot of security status as provided by this report. 
+Many security issues are already introduced in the development phase and are prime targets for attackers, 
+such as \textbf{Cross-Site Scripting (XSS)} vulnerabilities, \textbf{SQL Injection}, \textbf{Cross-Site Request Forgery (CSRF)}, \textbf{Buffer Overflow}, 
+\textbf{Security Misconfigurations} and \textbf{Cryptographic Failures}.
+
+
+%\paragraph{Our Service} We offer an automated Static Application Security Test (SAST) Service that can detect automatically security vulnerabilities in uncompiled software code:
+\textbf{SAST} Service provides automated static source code analysis that enables you
+to find vulnerabilities in source code:
+
+\begin{itemize}
+	\item	Identification of thousands of known code vulnerabilities (SQL Injection, Cross-Site Scripting, Code Injection, Buffer Overflow, Unvalidated Input, Log Forgery, etc.)
+	\item	Ensures coverage of security standards (OWASP Top 10, SANS 25, CWE and more)
+	\item	Provides overview of GD41 compliance 
+	\item	SDLC integration into CI/CD pipelines \& plugins for IDEs
+	\item	To achieve maximum benefit from security testing, SAST should be utilized during the development phase, when the cost of fixing a security weakness is lower than in later stages of the product lifecycle (saves at least 50\% remediation costs) 
+	\item	With the support of SAST, developers are empowered to deliver secure code
+\end{itemize}
+
+
+E-mail: \href{mailto:SASTservice@siemens-healthineers.com}{SASTservice@siemens-healthineers.com}
+

@@ -39,8 +39,7 @@ namespace webapi.ProjectSearch.Services
                     newProjectReportData.ExecutiveSummary = ese.ExtractExecutiveSummary();
                     currentEntry = archive.GetEntry("Config/Project_Information.tex");
                     ProjectInformationExtractor pie = new ProjectInformationExtractor(currentEntry, pentestTeamDict);
-                    // newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
-                    newProjectReportData.ProjectInfo = new ProjectInformation();
+                    newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
                     currentEntry = archive.GetEntry("Config/Scope_and_Procedures.tex");
                     ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(currentEntry);
                     newProjectReportData.ScopeAndProcedures = sape.ExtractScopeAndProcedures();

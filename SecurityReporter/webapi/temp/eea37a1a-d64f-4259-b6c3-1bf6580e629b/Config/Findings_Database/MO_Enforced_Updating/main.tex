@@ -1,0 +1,101 @@
+%
+%
+%		Finding: Template
+%		Author: the DR
+%
+%
+\renewcommand{\FindingAuthor}{Michal Olencin}
+% DO NOT USE \par, \newline or any other line breaking command in FindingName => report will not build
+\renewcommand{\FindingName}{Missing Enforced Updating}
+\renewcommand{\Location}{dummyapplication.apk, dummyapplication.ipa}
+\renewcommand{\Component}{Multiple}
+\renewcommand{\FoundWith}{Manual Testing}
+\renewcommand{\TestMethod}{Manual}
+\renewcommand{\CVSS}{N/A}
+\renewcommand{\CVSSvector}{N/A}
+\renewcommand{\CWE}{691}
+% Poor-man's combo boxes:
+% High, Medium, Low, Info, TBR (To Be Rated)
+\renewcommand{\Criticality}{Info}
+% Easy, Average, Hard, TBR (To Be Rated)
+\renewcommand{\Exploitability}{Hard}
+% Access control, Application Design, Information Disclosure, Outdated Software, Security Configuration
+\renewcommand{\Category}{Undefined}
+% Easy, Average, Difficult, TBR (To Be Rated)
+\renewcommand{\Detectability}{Easy}
+
+
+\ReportFindingHeader{\FindingName}
+
+
+%-------------------------------------------
+%	Details                                |
+%-------------------------------------------
+
+\subsection*{Details}
+
+The both applications, Android ans iOS, are missing enforced updating, which assures running updated and fully patched application.
+
+
+%-<Details>
+%-------------------------------------------
+%	Impact                                 |
+%-------------------------------------------
+
+
+
+\subsection*{Impact}
+
+The missing enforced updating poses the risk of exploitation of known vulnerabilities, increases the attack surface of outdated app, and may result in compliance violations.
+
+%-<Impact>
+%-------------------------------------------
+%	Repeatability                          |
+%-------------------------------------------
+
+
+
+\subsection*{Repeatability}
+
+Try to change version of the application to an older version.
+Rebuild the application and run it.
+User is able to interact with the older version of the application.
+
+ 
+%-<Repeatability>
+%-------------------------------------------
+%	Countermeasures                        |
+%-------------------------------------------
+
+
+
+\subsection*{Countermeasures}
+
+When the app is opened, check whether any new updates have been released for the application.
+If the app is outdated, do not allow the user to interact with the application until it is updated.
+
+To check for new updates, the \texttt{\href{https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateManager}{AppUpdateManager}} for Android applications can be used.
+
+For iOS applications, the \texttt{http://itunes.apple.com/lookup?id=<BundleId>} API call can be used.
+
+%-<Countermeasures>
+%-------------------------------------------
+%	References - pulls bib entries         |
+%-------------------------------------------
+\pagebreak
+
+
+\subsection*{References}
+
+This finding references the following information sources:
+
+\begin{itemize}
+    \item \href{https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateManager}{AppUpdateManager Documentation}
+    \item \href{https://performance-partners.apple.com/search-api}{iTunes Search API}
+	\item \bibentry{CWE-691}
+\end{itemize}
+
+
+%-<References>
+
+

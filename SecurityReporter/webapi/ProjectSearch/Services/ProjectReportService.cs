@@ -65,7 +65,7 @@ namespace webapi.ProjectSearch.Services
                     "Failed to save ProjectReport to database.");
             }
             
-            try
+            /*try
             {
                 var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
                 await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
@@ -75,7 +75,7 @@ namespace webapi.ProjectSearch.Services
                 Logger.LogInformation("PDF generation failed, deleting project report...");
                 await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
                 throw;
-            }
+            }*/
 
             return newReportData;
         }

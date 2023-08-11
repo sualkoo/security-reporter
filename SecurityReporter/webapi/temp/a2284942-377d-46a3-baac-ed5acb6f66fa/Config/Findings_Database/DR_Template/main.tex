@@ -1,0 +1,105 @@
+%
+%
+%		Finding: Template
+%		Author: the DR
+%
+%
+\renewcommand{\FindingAuthor}{DR}
+% DO NOT USE \par, \newline or any other line breaking command in FindingName => report will not build
+\renewcommand{\FindingName}{TODOTODO}
+\renewcommand{\Location}{TODOTODO}
+\renewcommand{\Component}{TODOTODO}
+\renewcommand{\FoundWith}{TODOTODO}
+\renewcommand{\TestMethod}{TODOTODO}
+\renewcommand{\CVSS}{$\infty$}
+\renewcommand{\CVSSvector}{TODOTODO}
+\renewcommand{\CWE}{655}
+% Poor-man's combo boxes:
+% High, Medium, Low, Info, TBR (To Be Rated)
+\renewcommand{\Criticality}{TBR}
+% Easy, Average, Hard, TBR (To Be Rated)
+\renewcommand{\Exploitability}{TBR}
+% Access control, Application Design, Information Disclosure, Outdated Software, Security Configuration
+\renewcommand{\Category}{Application Design}
+% Easy, Average, Difficult, TBR (To Be Rated)
+\renewcommand{\Detectability}{TBR}
+
+
+\ReportFindingHeader{\FindingName}
+
+
+%-------------------------------------------
+%	Details                                |
+%-------------------------------------------
+
+\subsection*{Details}
+
+TODOTODO.
+
+
+%-<Details>
+%-------------------------------------------
+%	Impact                                 |
+%-------------------------------------------
+
+\subsection*{Impact}
+
+TODOTODO \emph{TODOTODO}.
+
+%-<Impact>
+%-------------------------------------------
+%	Repeatability                          |
+%-------------------------------------------
+
+\subsection*{Repeatability}
+
+TODOTODO. Picture reference example: \cref{figure:SuperDuperPictureLabel}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.0,frame]{./Config/Findings_Database/DR_Template/ProperScreenshot}
+\caption{TODOTODO.}
+\label{figure:SuperDuperPictureLabel}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{subfigure}{0.5\textwidth}
+	\includegraphics[width=0.9\linewidth]{./Config/Findings_Database/DR_Template/ProperScreenshot} 
+	\caption{TODOTODO.}
+	\label{fig:SuperDuperSubfigureLabel1}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+	\includegraphics[width=0.9\linewidth]{./Config/Findings_Database/DR_Template/ProperScreenshot}
+	\caption{TODOTODO.}
+	\label{fig:SuperDuperSubfigureLabel2}
+	\end{subfigure}
+	\caption{TODOTODO.}
+	\label{fig:SuperDuperFigureLabel}
+\end{figure}
+
+ 
+%-<Repeatability>
+%-------------------------------------------
+%	Countermeasures                        |
+%-------------------------------------------
+
+\subsection*{Countermeasures}
+
+TODOTODO.
+
+%-<Countermeasures>
+%-------------------------------------------
+%	References - pulls bib entries         |
+%-------------------------------------------
+
+\subsection*{References}
+
+This finding references the following information sources:
+
+\begin{itemize}
+	\item \href{https://healthineers.sharepoint.com/sites/Cybersec/Shared%20Documents/Forms/Sorted%20by%20Systems.aspx?FolderCTID=0x012000ED5B594E8968A843965BAF67795EC3FF&FilterField1=System&FilterValue1=&FilterType1=Text&id=%2Fsites%2FCybersec%2FShared%20Documents%2FCYSMS%2FIT%20Security%20Regulations%2FSHS%20Information%20Security%20Controls%2FSHS%5FISEC%5FC%5F01%2Epdf&parent=%2Fsites%2FCybersec%2FShared%20Documents%2FCYSMS%2FIT%20Security%20Regulations%2FSHS%20Information%20Security%20Controls}{Siemens Healthineers Specific Information Security Policies}
+	\item \href{https://healthineers.sharepoint.com/sites/Cybersec/Shared%20Documents/Forms/Sorted%20by%20Systems.aspx?id=%2Fsites%2FCybersec%2FShared%20Documents%2FCYSMS%2FIT%20Security%20Regulations%2FSHS%20Information%20Security%20Standards%2FSHS%5FISEC%5FS%5F05%5FSecure%5FSoftware%5FDevelopment%2Epdf&parent=%2Fsites%2FCybersec%2FShared%20Documents%2FCYSMS%2FIT%20Security%20Regulations%2FSHS%20Information%20Security%20Standards}{Siemens Healthineers Information Security Standard - Secure Software Development}
+	\item \bibentry{CWE-655}
+\end{itemize}
+
+%-<References>
