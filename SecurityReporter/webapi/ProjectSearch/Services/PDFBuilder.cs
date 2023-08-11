@@ -27,7 +27,7 @@ namespace webapi.ProjectSearch.Services
             Console.WriteLine(latexSourceDir + "/Main");
 
             ProcessStartInfo generatePdfInfo = new ProcessStartInfo("pdflatex",
-                $" -halt-on-error -interaction=batchmode Main");
+                $"-interaction=batchmode Main");
             generatePdfInfo.WorkingDirectory = latexSourceDir;
             generatePdfInfo.UseShellExecute = false;
             Process generatePdfProcess = Process.Start(generatePdfInfo);
