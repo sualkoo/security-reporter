@@ -7,7 +7,6 @@ using webapi.ProjectSearch.Services;
 namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
-    [Ignore("")]
     public class TestingMethodologyExtractorTests
     {
         private ZipArchive zipArchive;

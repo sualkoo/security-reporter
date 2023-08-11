@@ -7,7 +7,6 @@ using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
-    [Ignore("")]
     public class ScopeAndProceduresExtractorTests
     {
         ZipArchive zipArchive;

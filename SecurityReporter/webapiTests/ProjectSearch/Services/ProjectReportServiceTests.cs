@@ -10,7 +10,6 @@ using webapi.Service;
 namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
-    [Ignore("")]
     public class ProjectReportServiceTests
     {
         private Mock<ICosmosService> mockCosmosService;

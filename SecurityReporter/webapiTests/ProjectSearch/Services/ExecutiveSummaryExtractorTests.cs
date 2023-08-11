@@ -6,7 +6,6 @@ namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
     
-    [Ignore("")]
     public class ExecutiveSummaryExtractorTests
     {
         private ZipArchive zipArchive;
