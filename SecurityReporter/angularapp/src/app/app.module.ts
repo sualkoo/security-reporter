@@ -39,19 +39,22 @@ import { HighlighterPipe } from './project-search/providers/highlighter.pipe';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FooterComponent } from './footer/footer.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,   
-    
+    LandingPageComponent,
     HighlighterPipe,
+    FooterComponent,
 
-    LandingPageComponent,    
+    LandingPageComponent,
+      DashboardComponent,    
   ],
   imports: [
     AddProjectComponent,

@@ -1,19 +1,155 @@
-<div class="container">
-  <h1>Welcome to Project Management</h1>
-  <h3>Choose a page:</h3>
-
-  <div class="buttons-container">
-
-
-    <button mat-flat-button color="primary" (click)="navigateToPage('/list-projects')">
-      PROJECT LISTING
-    </button>
-
-    <div>
-      <button mat-flat-button color="primary" (click)="navigateToPage('/project-search')">
-        PROJECT SEARCH
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4 col-lg-2 col-xl-2 offset-1 d-flex align-items-end">
+      <img class="img-fluid" src="assets\images\siemens-healthineers-logo.png" />
+    </div>
+    <div class="col-2 offset-3 offset-lg-7 d-flex align-items-end">
+      <button class="btn btn-link d-flex align-items-center login" (click)="navigateToWebsite('https://www.google.com')">
+        <i class="bi bi-box-arrow-in-right me-2"></i>
+        Login
       </button>
     </div>
   </div>
+
+  <div class="row">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="navbar-toggler offset-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="offset-1 navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link" href="#">About us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link" href="#">How to order a pentest</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled link" href="#">TO BE DELETED-> </a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-link" (click)="navigateToPage('/list-projects')">
+              PROJECT LISTING
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-link" (click)="navigateToPage('/project-search')">
+              PROJECT SEARCH
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-link" (click)="navigateToPage('/dashboard')">
+              DASHBOARD
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <!--Hero content-->
+  <div class="row">
+    <section class="hero-block overflow-hidden width-100">
+      <div class="width-100 bg-color-black">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12 col-lg-6 order-lg-2">
+                  <div class="aspect-ratio-16x9 aspect-ratio--cover">
+                    <div>
+                      <div>
+                        <img src="assets\images\siemens-healthineers_Services_Value-Partnerships.jpg" class="img-fluid" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="hero-block__panel order-lg-1 col-12 col-lg-6">
+                  <div class="hero-block__content">
+                    <div class="hero-block-pulse">
+                      <div class="row justify-content-end">
+                        <div class="col-sm-8 offset-sm-0 col-10 offset-1">
+                          <div class="dot-pulse">
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                            <div class="dot-pulse__item"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row headlines">
+                      <div class="col">
+                        <div class="hero-block__headings">
+                          <h1>
+                            <span class="hero-block__title display-block">Cybersecurity Assesment</span>
+                            <span class="h5 hero-block__subtitle display-block is-sm-white">(1337 Pentesters)</span>
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="row pt-4 mt-4">
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+      <img src="assets\images\random-pic-1.png" class="img-fluid" />
+    </div>
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+      <h2>What is pentest?</h2>
+      <p>
+        Pentest, short for penetration testing, is a proactive cybersecurity assessment aimed at identifying vulnerabilities within computer systems,
+        networks, or applications. Ethical hackers, also known as penetration testers,
+        simulate the actions of malicious hackers to uncover security weaknesses before they can be exploited.
+        By employing various techniques and tools, these experts meticulously evaluate networks, applications,
+        and even physical security measures to provide organizations with valuable insights.
+        The results of a pentest enable businesses to fortify their defenses,
+        ensuring robust protection against potential cyber threats.
+      </p>
+    </div>
+  </div>
+  <div class="row pt-4 mt-4 mb-4">
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+      <h2> What is criticality?</h2>
+      <p>
+        In the realm of cybersecurity, criticality refers to the degree of severity assigned to potential risks.
+        This concept plays a crucial role in assessing the possible impact of security issues on systems, networks, or data.
+        A higher criticality indicates a more serious and potentially damaging threat that demands immediate attention and mitigation efforts.
+        By categorizing issues based on criticality levels, cybersecurity professionals can effectively prioritize their response, allocate resources efficiently,
+        and fortify defenses against the most significant risks, ensuring a resilient and proactive security posture.
+      </p>
+    </div>
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+        <canvas style="max-height: 300px; width: auto" id="criticalityChart"></canvas>
+    </div>
+  </div>
+  <div class="row pt-4 mt-4 mb-4">
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+      <canvas style="max-height: 300px; width: auto" id="vulnerabilityChart"></canvas>
+    </div>
+    <div class="offset-1 col-11 col-xl-4 col-lg-4">
+      <h2> What is Vulnerability?</h2>
+      <p>
+        In the realm of cybersecurity, a vulnerability represents a weakness within a system or application that could be exploited by malicious actors.
+        The scenario of missing enforced updating exacerbates this risk, as it opens the door to potential exploitation of well-known vulnerabilities.
+        This situation not only enlarges the attack surface of outdated applications but also raises the specter of non-compliance, leading to severe violations.
+        Recognizing and addressing vulnerabilities is paramount in maintaining a robust security posture and safeguarding against potential breaches.
+      </p>
+    </div>
+  </div>
 </div>
+<app-footer></app-footer>
 

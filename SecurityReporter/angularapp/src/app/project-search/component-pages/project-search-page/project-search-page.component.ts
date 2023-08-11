@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
@@ -9,7 +9,7 @@ import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 @Component({
   selector: 'app-project-search',
   templateUrl: './project-search-page.component.html',
-  styleUrls: ['./project-search-page.component.css', '../../project-search.css'],
+  styleUrls: ['./project-search-page.component.css', '../../../project-search.css'],
 })
 export class ProjectSearchPageComponent implements OnInit {
   constructor(private projectReportService: ProjectReportService, private notificationService: NotificationService) { }
@@ -414,4 +414,5 @@ export class ProjectSearchPageComponent implements OnInit {
     this.showSidebar = !this.showSidebar;
   }
 
+  showCSAPopup: boolean = false;
 }
