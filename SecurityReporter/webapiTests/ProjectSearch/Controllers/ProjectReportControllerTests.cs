@@ -16,6 +16,7 @@ namespace webapi.ProjectReportControllers.Tests
         private Mock<ILogger<ProjectReportController>> mockLogger;
         private Mock<ILogger<ExceptionHandlingControllerBase>> mockLoggerBase;
         private ProjectReportController projectReportController;
+        private Mock<IPdfBuilder> mockPdfBuilder;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +24,8 @@ namespace webapi.ProjectReportControllers.Tests
             mockLogger = new Mock<ILogger<ProjectReportController>>();
             mockLoggerBase = new Mock<ILogger<ExceptionHandlingControllerBase>>();
             mockProjectReportService = new Mock<IProjectReportService>();
-            // projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object);
+            mockPdfBuilder = new Mock<IPdfBuilder>();
+            projectReportController = new ProjectReportController(mockLogger.Object, mockLoggerBase.Object, mockProjectReportService.Object, mockPdfBuilder.Object);
         }
 
         [Test]
