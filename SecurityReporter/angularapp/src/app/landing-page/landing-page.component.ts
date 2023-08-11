@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AutoLogoutService } from '../services/auto-logout.service';
+import { AlertService } from '../project-management/services/alert.service';
+import { LogoutService } from '../services/logout.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -7,9 +10,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private alertService: AlertService, private logOut: LogoutService) { }
+
 
   navigateToPage(page: string): void {
     this.router.navigate([page]);
+  }
+
+  logoutPage() {
+    if (this.logOut.logout()) {
+      this.alertService.showSnackbar('You are being logged out', 'Close', 'red-alert', 5000);
+    }
+    else {
+      this.alertService.showSnackbar('Error happened during logout', 'Close', 'red-alert', 5000);
+    }
   }
 }

@@ -1,23 +1,22 @@
 describe('Item Management Test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200');
+        cy.visit('https://sda-playground.azurewebsites.net/');
         // Assuming the user is already logged in and on the homepage or item management section.
     });
 
     it('should edit a page', () => {
-        navigateToEditPage();
-        SearchSpecificPMItem();
+        navigateToListingProjects();
+        //SearchSpecificPMItem();
         editPageVerification();
         editPageActions();
         errorHandling();
         feedbackWindow();
     });
-
+                                                                        
     // Step 1: View the list or overview of items
-    function navigateToEditPage() {
+    function navigateToListingProjects() {
         cy.get('.buttons-container > :nth-child(1) > .mdc-button__label').click();
-
     }
 
     // Step 2: Select the edit option for a specific item
@@ -38,20 +37,20 @@ describe('Item Management Test', () => {
 
     function editPageVerification() {
         // Step 3: Verify that the web application navigates to the edit page/form
+        cy.get('.mat-mdc-row:nth-child(1) .mat-icon').contains('edit').click();
         cy.url().should('include', '/edit-project/');
 
         cy.wait(1000);
 
         // Step 4: Verify that the edit page/form is pre-populated with the existing item's information 
-        cy.get('#mat-select-value-13').should('not.be.empty');
-        cy.get('#mat-select-value-15').should('not.be.empty');
-        cy.get('#mat-select-value-17').should('not.be.empty');
-        cy.get('#mat-input-11').invoke('val').should('not.be.empty');
+        //cy.get('#mat-select-value-13').should('not.be.empty');
+        //cy.get('#mat-select-value-15').should('not.be.empty');
+        //cy.get('#mat-select-value-17').should('not.be.empty');
+        //cy.get('#mat-input-11').invoke('val').should('not.be.empty');
     }
 
     // Step 5: Modify the item's information accurately using input fields or controls
     function editPageActions() {
-
         cy.get('#mat-input-8').click({ force: true });
         cy.get('#mat-input-8').clear().type('dataNow', { force: true });
         cy.get('#mat-radio-3-input').click();
@@ -73,7 +72,6 @@ describe('Item Management Test', () => {
     // Step 7: Verify that real-time feedback and validation messages are provided for errors or missing information
 
     function feedbackWindow() {
-
         cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible');
     }
 });

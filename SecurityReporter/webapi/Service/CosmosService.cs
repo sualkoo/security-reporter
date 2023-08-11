@@ -4,12 +4,15 @@ using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Text;
 using System.Net;
 using System.Text;
+using webapi.Login.Services;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+using Microsoft.AspNetCore.Http;
 
 namespace webapi.Service
 {
@@ -19,12 +22,19 @@ namespace webapi.Service
         private string EndpointUri { get; } = "https://localhost:8081";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
+
+        private ClientMailService clientMailService;
+
+        private RoleService roleService;
+
+        private readonly IHttpContextAccessor httpContextAccessor;
+
         private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
 
-        public CosmosService(IConfiguration configuration)
+        public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ClientMailService clientMailService, RoleService roleService)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
             if (string.IsNullOrEmpty(PrimaryKey))
@@ -38,6 +48,9 @@ namespace webapi.Service
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+            this.clientMailService = clientMailService;
+            this.roleService = roleService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public CosmosService(string primaryKey, string databaseId, string containerId, string cosmosEndpoint)
@@ -132,7 +145,24 @@ namespace webapi.Service
 
         public async Task<int> GetNumberOfProjects()
         {
-            QueryDefinition query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c");
+
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client")
+                {
+                    client = true;
+                }
+            }
+
+            var queryString = "SELECT VALUE COUNT(1) FROM c";
+            if (client)
+            {
+                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                queryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
+            }
+
+            QueryDefinition query = new QueryDefinition(queryString);
             FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
 
             if (queryResultIterator.HasMoreResults)
@@ -147,12 +177,25 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter)
+        public async Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter)
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
+                    client = true;
+                }
+            }
+
             var queryString = "SELECT * FROM c";
+            if (client) {
+                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
+            }
+
             var queryParameters = new Dictionary<string, object>();
 
             var filterConditions = new List<string>();
@@ -216,7 +259,7 @@ namespace webapi.Service
                 {
                     filterConditions.Add("IS_NULL(c.IKO)");
                 }
-                else if (filter.FilteredIKO.Value == 2) 
+                else if (filter.FilteredIKO.Value == 2)
                 {
                     filterConditions.Add("NOT IS_NULL(c.IKO)");
                 }
@@ -224,7 +267,7 @@ namespace webapi.Service
 
             if (filter.FilteredTKO.HasValue)
             {
-                if (filter.FilteredTKO.Value == 1) 
+                if (filter.FilteredTKO.Value == 1)
                 {
                     filterConditions.Add("IS_NULL(c.TKO)");
                 }
@@ -236,20 +279,27 @@ namespace webapi.Service
 
             if (filterConditions.Count > 0)
             {
-                queryString += " WHERE " + string.Join(" AND ", filterConditions);
+                if (client)
+                {
+                    queryString += " AND " + string.Join(" AND ", filterConditions);
+                }
+                else
+                {
+                    queryString += " WHERE " + string.Join(" AND ", filterConditions);
+                }
             }
 
             queryString += " OFFSET @skipCount LIMIT @itemCount";
             queryParameters["@skipCount"] = skipCount;
             queryParameters["@itemCount"] = itemCount;
 
-            var items = new List<ProjectData>();
+            var items = new List<ProjectList>();
             var queryDefinition = new QueryDefinition(queryString);
             foreach (var param in queryParameters)
             {
                 queryDefinition.WithParameter(param.Key, param.Value);
             }
-            var resultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
+            var resultSetIterator = Container.GetItemQueryIterator<ProjectList>(queryDefinition);
             try
             {
                 while (resultSetIterator.HasMoreResults)
