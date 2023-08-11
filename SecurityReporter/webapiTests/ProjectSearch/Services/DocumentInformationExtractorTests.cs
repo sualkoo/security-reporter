@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.IO.Compression;
+using FluentAssertions;
 using NUnit.Framework;
-using System.IO.Compression;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
-namespace webapi.ProjectSearch.Services.Tests
+namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
     public class DocumentInformationExtractorTests
@@ -92,6 +92,7 @@ namespace webapi.ProjectSearch.Services.Tests
 
         }
         [Test()]
+        
         public void fileEmpty()
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/Empty/Document_Information.tex");
@@ -106,6 +107,7 @@ namespace webapi.ProjectSearch.Services.Tests
         }
 
         [Test()]
+        
         public void fullInformation()
         {
             ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/FullInformation/Document_Information.tex");

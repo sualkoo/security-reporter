@@ -1,16 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO.Compression;
-using webapi.Models.ProjectReport;
+﻿using System.IO.Compression;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
+using NUnit.Framework;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
-namespace webapi.ProjectSearch.Services.Tests
+namespace webapiTests.ProjectSearch.Services
 {
     [TestFixture()]
     public class ScopeAndProceduresExtractorTests
