@@ -1,6 +1,7 @@
 using System.Configuration;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Azure;
+using webapi.Dashboard.Services;
 using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
 using webapi.Service;
@@ -19,6 +20,7 @@ builder.Services.AddSingleton<IDBProjectDataParser, DbProjectDataParser>();
 builder.Services.AddSingleton<IProjectReportService, ProjectReportService>();
 builder.Services.AddSingleton<IPdfBuilder, PdfBuilder>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
+builder.Services.AddSingleton<IDashboardService, DashboardService>();
 
 var app = builder.Build();
 
