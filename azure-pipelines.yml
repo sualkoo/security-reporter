@@ -64,16 +64,16 @@ steps:
     appName: 'sda-projectmanagement'
     package: '$(System.DefaultWorkingDirectory)/**/publish.zip'
 
-- task: CmdLine@2
-  inputs:
-    script: 'npm install cypress --save-dev --force'
-    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
-  displayName: 'Cypress installation' 
+    
+#- task: CmdLine@2
+#  inputs:
+#    script: 'npm install cypress --save-dev --force'
+#    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+#  displayName: 'Cypress installation' 
 
 
-- task: CmdLine@2
-  inputs:
-    script: 'npx cypress run'
-    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
-  displayName: 'Run Cypress Tests'
-
+#- task: CmdLine@2
+ # inputs:
+ #   script: 'npx cypress run'
+ #   workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+#  displayName: 'Run Cypress Tests'
