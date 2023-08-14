@@ -88,5 +88,17 @@ namespace webapi.ProjectSearch.Controllers
                 return Ok(test);
             });
         }
+
+        [HttpDelete("all")]
+        public async Task<IActionResult> DeleteProjectReportsALL()
+        {
+            Logger.LogInformation("Recieved DELETE request for deleting ALL reports.");
+
+            return await HandleExceptionAsync(async () =>
+            {
+                bool test = await ProjectReportService.DeleteReportALLAsync();
+                return Ok(test);
+            });
+        }
     }
 }
