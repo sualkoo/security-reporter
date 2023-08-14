@@ -40,8 +40,6 @@ export class DashboardComponent implements OnInit {
         this.cwe = cwe;
         this.updateCWEChart();
       })
-
-
   }
 
   forLoopInjection(data: any, sumOfValues: any, percentage:any, labels:any){
@@ -147,7 +145,5 @@ export class DashboardComponent implements OnInit {
         options: CWEConfig.options,
       });
     }
-
-
   }
 }

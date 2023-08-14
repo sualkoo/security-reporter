@@ -7,7 +7,7 @@ using webapi.ProjectSearch.Services;
 namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
-    [Route("project-reports")]
+    [Route("api/project-reports")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }
