@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="height: 10vh">
+<nav class="navbar navbar-expand-lg navbar-light navbar-fixed-top">
   <div class="navbar" style="margin-left: 12px">
     <a class="navbar-brand" href="">
       <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" height="34">
@@ -27,18 +27,6 @@
           <a class="nav-link font-weight-bold" routerLink="/project-search" (click)="setNavItem('project-search')">
             <p *ngIf="actualNavItem !== 'project-search'">Project Search</p>
             <b class="text-decoration-underline" *ngIf="actualNavItem === 'project-search'">Project Search</b>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/manage-view" (click)="setNavItem('manage-view')">
-            <p *ngIf="actualNavItem !== 'manage-view'">Manage View</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === 'manage-view'">Manage View</b>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/template" (click)="setNavItem('template')">
-            <p *ngIf="actualNavItem !== 'template'">Template</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === 'template'">Template</b>
           </a>
         </li>
         <li class="nav-item">
