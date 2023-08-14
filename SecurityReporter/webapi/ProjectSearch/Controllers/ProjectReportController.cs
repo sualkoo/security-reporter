@@ -96,7 +96,7 @@ namespace webapi.ProjectSearch.Controllers
 
             return await HandleExceptionAsync(async () =>
             {
-                bool test = await ProjectReportService.DeleteReportALLAsync();
+                bool test = await ProjectReportService.DeleteReportAllAsync();
                 return Ok(test);
             });
         }

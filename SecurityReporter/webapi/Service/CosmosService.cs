@@ -566,7 +566,7 @@ namespace webapi.Service
             return data;
         }
 
-        public async Task<List<string>> DeleteAllReports()
+        public async Task<List<string>> DeleteAllReportsAsync()
         {
             List<string> projectReportIds = new List<string>();
             List<ProjectReportData> projectReports = new List<ProjectReportData>();
