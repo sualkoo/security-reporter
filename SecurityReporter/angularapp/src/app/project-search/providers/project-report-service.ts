@@ -4,6 +4,7 @@ import * as JSZip from 'jszip';
 import { ProjectReport } from '../interfaces/project-report.model';
 import { PagedResponse } from '../interfaces/paged-response.model';
 import { FindingResponse } from '../interfaces/finding-response.model';
+import {ApiPaths} from "../../api-paths.enum";
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class ProjectReportService {
   public readonly apiUri: string;
 
   constructor(private http: HttpClient) {
-    this.apiUri = '/project-reports';
+    this.apiUri = ApiPaths.ProjectReports;
   }
 
   public postZipFile(file: any) {
