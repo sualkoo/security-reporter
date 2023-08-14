@@ -66,6 +66,7 @@ namespace webapi.Service
         public async Task<bool> AddProject(ProjectData data)
         {
             data.RequestCreated = DateTime.Now;
+            data.ProjectNameLower = data.ProjectName.ToLower();
             if (data.Comments != null)
             {
                 data.Comments[0].CreatedAt = DateTime.Now;
