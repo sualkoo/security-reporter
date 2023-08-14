@@ -201,7 +201,7 @@ namespace webapi.Service
 
             var filterConditions = new List<string>();
 
-            if (sort != null) 
+            if (sort.SortingColumns != 0)
             {
                 switch (sort.SortingColumns)
                 {
@@ -324,6 +324,11 @@ namespace webapi.Service
                 {
                     queryString += " WHERE " + string.Join(" AND ", filterConditions);
                 }
+            }
+
+            if (sort.SortingColumns == 0 && filterConditions.Count == 0)
+            {
+                queryString += " ORDER BY c.RequestCreated DESC";
             }
 
             queryString += " OFFSET @skipCount LIMIT @itemCount";
