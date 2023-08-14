@@ -1,0 +1,18 @@
+
+describe('Client lands to project listing after login test', () => {
+    beforeEach(() => {
+        cy.viewport(1280, 720);
+        cy.visit('https://localhost:4200/');
+    });
+    it('passes', () => {
+        testLandingClient()
+    })
+
+    function testLandingClient() {
+        cy.get('.buttons-container > :nth-child(3) > .mdc-button > .mdc-button__label').click()
+        cy.get('#mat-input-0').click().type('client@client.sk')
+        cy.get('#mat-input-1').click().type('client')
+        cy.get('.login-form > :nth-child(3)').click()
+        cy.url().should('include', '/list-projects')
+    }
+})
