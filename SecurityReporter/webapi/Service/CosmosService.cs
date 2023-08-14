@@ -9,6 +9,7 @@ using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
 
 namespace webapi.Service
 {
@@ -18,7 +19,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private string ReportContainerName { get; } = "ReportContainer";
+        private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
@@ -548,6 +549,7 @@ namespace webapi.Service
         public async Task<List<Tuple< int, int>>> GetCWEData()
         {
             List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> sendingData = new List<Tuple<int, int>>();
             string query = "SELECT f.CWE, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -560,9 +562,23 @@ namespace webapi.Service
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
                 data.AddRange(currentResultSet.Select(f => new Tuple<int, int>(
                 (int)f.Count, (int)f.CWE)));
+
+               
             }
+            data.Sort();
+            data.Reverse();
+            int numberOfValues = 8;
+            if(numberOfValues > data.Count) {
+            numberOfValues = data.Count;
+            }
+
+            for (int i = 0; i < numberOfValues; i++)
+            {
+                sendingData.Add(data[i]);
+            }
+
             Logger.LogInformation("Returning found reports");
-            return data;
+            return sendingData;
         }
 
         public async Task<List<string>> DeleteAllReports()
@@ -587,10 +603,10 @@ namespace webapi.Service
             return projectReportIds;
         }
 
-        public async Task<List<Tuple<int, string>>> GetCVSSData()
+        public async Task<List<Tuple<float, string, string>>> GetCVSSData()
         {
-            List<Tuple<int, string>> data = new List<Tuple<int, string>>();
-            string query = "SELECT f.CVSS, Count(1) AS Count FROM c JOIN f IN c.Findings WHERE f.CVSS <> 'N/A' GROUP BY f.CVSS";
+            List<Tuple<float, string, string>> data = new List<Tuple<float, string, string>>();
+            string query = "SELECT SUBSTRING(c.uploadDate, 0, 4) AS UploadYear, SUBSTRING(c.uploadDate, 5, 2) AS UploadMonth, AVG(StringToNumber(f.CVSS)) AS CVSSAVG FROM c JOIN f IN c.Findings WHERE f.CVSS <> 'N/A' GROUP BY SUBSTRING(c.uploadDate, 0, 4), SUBSTRING(c.uploadDate, 5, 2)";
                            
             QueryDefinition queryDefinition = new QueryDefinition(query);
 
@@ -598,8 +614,9 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                data.AddRange(currentResultSet.Select(f => new Tuple<int, string>(
-                (int)f.Count, (string)f.CVSS)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<float, string, string>(
+
+                (float)f.CVSSAVG, (string)f.UploadMonth, (string)f.UploadYear)));
             }
             Logger.LogInformation("Returning found reports");
             return data;

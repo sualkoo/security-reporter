@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from "chart.js/auto";
 import { DashboardService } from './providers/dashboard-service';
 import { switchMap } from "rxjs";
-import {CriticalityConfig, CWEConfig, VulnerabilityConfig} from "./providers/graph-config";
+import {CriticalityConfig, CVSSConfig, CWEConfig, VulnerabilityConfig} from "./providers/graph-config";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +18,9 @@ export class DashboardComponent implements OnInit {
 
   cwe: any[] = [];
   cweChart: any;
+
+  cvss: any[] = [];
+  cvssChart: any;
   constructor(private dashboardService: DashboardService) {
 
   }
@@ -34,11 +37,16 @@ export class DashboardComponent implements OnInit {
           this.vulnerability = vulnerabilityData;
           this.updateVulnerabilityChart();
           return this.dashboardService.getCWE();
-        }
-      ))
-      .subscribe((cwe: any[]) => {
-        this.cwe = cwe;
-        this.updateCWEChart();
+        }),
+        switchMap((cweData: any[]) => {
+          this.cwe = cweData;
+          this.updateCWEChart();
+          return this.dashboardService.getCVSS();
+        }),
+      )
+      .subscribe((cvss: any[]) => {
+        this.cvss = cvss;
+        this.updateCVSSChart();
       })
   }
 
@@ -117,6 +125,7 @@ export class DashboardComponent implements OnInit {
 
 
   updateCWEChart(): void {
+
     this.cwe.sort((a, b) => a.item2 - b.item2);
 
     let labels = this.cwe.map((item) => item.item2);
@@ -143,6 +152,40 @@ export class DashboardComponent implements OnInit {
           }],
         },
         options: CWEConfig.options,
+      });
+    }
+  }
+
+  updateCVSSChart(): void {
+
+    this.cvss.sort((a, b) => a.item2 - b.item2);
+
+    let labels = this.cvss.map((item) => item.item2);
+    const data = this.cvss.map((item) => item.item1);
+
+    let sumOfValues = 0;
+    let percentage = [null];
+
+
+    let object = this.forLoopInjection(data, sumOfValues, percentage, labels)
+    labels = object.labels;
+    percentage = object.percentage;
+    sumOfValues = object.sumOfValues;
+
+    let ctx = (document.getElementById('CVSSChart') as HTMLCanvasElement).getContext('2d');
+    if (ctx) {
+      this.cvssChart = new Chart(ctx, {
+        type: CVSSConfig.type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label:"CVSS average",
+            data: data,
+            backgroundColor: CVSSConfig.backgroundColors,
+            borderWidth: CVSSConfig.borderWidth,
+          }],
+        },
+        options: CVSSConfig.options,
       });
     }
   }

@@ -60,7 +60,7 @@ namespace webapi.Dashboard.Controllers
             Logger.LogInformation("Received Get request for getting CVSS data for graph");
             return await HandleExceptionAsync(async () =>
             {
-                List<Tuple<int, string>> data = await DashboardService.GetCVSSData();
+                List<Tuple<float, string, string>> data = await DashboardService.GetCVSSData();
                 return Ok(data);
             });
 

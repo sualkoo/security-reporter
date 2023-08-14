@@ -8,6 +8,6 @@
 
         public Task<List<Tuple<int, int>>> GetCWEData();
 
-        public Task<List<Tuple<int, string>>> GetCVSSData();
+        public Task<List<Tuple<float, string, string>>> GetCVSSData();
     }
 }

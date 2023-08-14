@@ -55,6 +55,7 @@ namespace webapi.ProjectSearch.Services
                             newProjectReportData.FindingsDatabase = reader.ReadToEnd();
                         }
                     }
+                    newProjectReportData.uploadDate = DateTime.Now;
 
                 }
                 else if(zipStream == null)
