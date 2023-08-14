@@ -268,7 +268,6 @@ namespace webapi.Service
 
         }
 
-
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
             Logger.LogInformation("Adding project report to database.");
@@ -546,7 +545,6 @@ namespace webapi.Service
             return data;
         }
 
-
         public async Task<List<Tuple< int, int>>> GetCWEData()
         {
             List<Tuple<int, int>> data = new List<Tuple<int, int>>();
@@ -565,6 +563,28 @@ namespace webapi.Service
             }
             Logger.LogInformation("Returning found reports");
             return data;
+        }
+
+        public async Task<List<string>> DeleteAllReports()
+        {
+            List<string> projectReportIds = new List<string>();
+            List<ProjectReportData> projectReports = new List<ProjectReportData>();
+            string query = "SELECT VALUE c.id " +
+                           "FROM c";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<string> queryResultSetIterator = ReportContainer.GetItemQueryIterator<string>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<string> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                projectReportIds.AddRange(currentResultSet.ToList());
+            }
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+            Logger.LogInformation("Successfully deleted All Project Reports from database.");
+            return projectReportIds;
         }
 
         public async Task<List<Tuple<int, string>>> GetCVSSData()

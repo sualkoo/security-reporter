@@ -1,5 +1,5 @@
 export enum ApiPaths {
   Project = "/Project",
-  ProjectReports = "/project-reports",
-  Dashboard = "/dashboard"
+  ProjectReports = "/api/project-reports",
+  Dashboard = "/api/dashboard"
 }

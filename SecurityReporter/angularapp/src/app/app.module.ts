@@ -54,7 +54,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     FooterComponent,
 
     LandingPageComponent,
-      DashboardComponent,    
+    DashboardComponent,
   ],
   imports: [
     AddProjectComponent,
