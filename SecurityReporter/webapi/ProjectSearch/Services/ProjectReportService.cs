@@ -109,6 +109,17 @@ namespace webapi.ProjectSearch.Services
 
             return true;
         }
+        async Task<bool> IProjectReportService.DeleteReportALLAsync()
+        {
+            Logger.LogInformation($"Deleting all items from database");
+            List<string> deletedProjects = await CosmosService.DeleteAllReports();
+            foreach (var id in deletedProjects)
+            {
+                await AzureBlobService.DeleteReportFolder(new Guid(id));
+            }
+
+            return true;
+        }
 
         public async Task<FileContentResult> GetReportSourceByIdAsync(Guid id)
         {

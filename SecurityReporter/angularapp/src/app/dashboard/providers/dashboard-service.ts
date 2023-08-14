@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import {ApiPaths} from "../../api-paths.enum";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl: string;
+  private apiUrl: string = ApiPaths.Dashboard;
   constructor(private http: HttpClient) {
-    this.apiUrl = 'https://localhost:7075/dashboard';
 }
 
   public getCriticality() {
