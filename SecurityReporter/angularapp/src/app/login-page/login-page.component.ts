@@ -29,7 +29,6 @@ export class LoginPageComponent implements OnInit {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
-      //DUMMY TEMPORARY LOGIN
       this.loginService.sendLoginInfo(username, password).then(data => {
         if ( data.status == 200) {
           console.log("Login successful")
@@ -47,8 +46,7 @@ export class LoginPageComponent implements OnInit {
                 window.location.href = 'list-projects';
                 break;
               case 'admin':
-                // TODO Change redirection to /dashboard when ZA changes are brought to main
-                window.location.href = 'landing-page';
+                window.location.href = 'dashboard';
                 break;
             }
           });
