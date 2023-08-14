@@ -72,7 +72,7 @@ public class ProjectController : ControllerBase
 
     [HttpGet("retrieve")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
+    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter, [FromQuery] SortData sort)
     {
         var items = new List<ProjectList>();
 
@@ -83,7 +83,7 @@ public class ProjectController : ControllerBase
             Console.ResetColor();
             Console.WriteLine("\t /Project/retrieve");
 
-            items = await CosmosService.GetItems(pageSize, pageNumber, filter);
+            items = await CosmosService.GetItems(pageSize, pageNumber, filter, sort);
 
             if (items.Count > 0)
             {

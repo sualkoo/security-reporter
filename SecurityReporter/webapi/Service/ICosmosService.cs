@@ -11,7 +11,7 @@ namespace webapi.Service
         Task<bool> AddProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
-        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter);
+        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
         Task<int> GetNumberOfProjects();
 
         Task<bool> AddProjectReport(ProjectReportData data);
