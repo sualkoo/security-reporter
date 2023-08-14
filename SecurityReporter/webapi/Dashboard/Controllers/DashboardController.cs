@@ -53,5 +53,17 @@ namespace webapi.Dashboard.Controllers
             });
 
         }
+
+        [HttpGet("CVSS")]
+        public async Task<IActionResult> getCVSSData()
+        {
+            Logger.LogInformation("Received Get request for getting CVSS data for graph");
+            return await HandleExceptionAsync(async () =>
+            {
+                List<Tuple<int, string>> data = await DashboardService.GetCVSSData();
+                return Ok(data);
+            });
+
+        }
     }
 }

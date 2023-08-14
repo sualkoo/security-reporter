@@ -37,5 +37,12 @@ namespace webapi.Dashboard.Services
 
             return await CosmosService.GetCWEData();
         }
+        public async Task<List<Tuple<int, string>>> GetCVSSData()
+        {
+            Logger.LogInformation($"Fetching CVSS data");
+
+            return await CosmosService.GetCVSSData();
+        }
+
     }
 }

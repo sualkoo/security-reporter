@@ -560,9 +560,26 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
                 data.AddRange(currentResultSet.Select(f => new Tuple<int, int>(
                 (int)f.Count, (int)f.CWE)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
+        }
+
+        public async Task<List<Tuple<int, string>>> GetCVSSData()
+        {
+            List<Tuple<int, string>> data = new List<Tuple<int, string>>();
+            string query = "SELECT f.CVSS, Count(1) AS Count FROM c JOIN f IN c.Findings WHERE f.CVSS <> 'N/A' GROUP BY f.CVSS";
+                           
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<int, string>(
+                (int)f.Count, (string)f.CVSS)));
             }
             Logger.LogInformation("Returning found reports");
             return data;

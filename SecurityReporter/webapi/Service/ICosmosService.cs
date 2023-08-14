@@ -21,5 +21,7 @@ namespace webapi.Service
         Task<List<Tuple<string, int, int>>> GetVulnerabilityData();
 
         Task<List<Tuple<int, int>>> GetCWEData();
+
+        Task<List<Tuple<int, string>>> GetCVSSData();
     }
 }
