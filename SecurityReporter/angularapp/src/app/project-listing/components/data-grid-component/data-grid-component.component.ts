@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { GetRoleService } from '../../../shared/services/get-role.service';
+import { MatSort, MatSortModule } from '@angular/material/sort';
  
 @Component({
   selector: 'app-data-grid-component',
@@ -24,9 +25,10 @@ import { GetRoleService } from '../../../shared/services/get-role.service';
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
   imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
-    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent, MatSortModule],
 })
 export class DataGridComponentComponent implements AfterViewInit {
+  @ViewChild(MatSort) sort!: MatSort;
   projects: ProjectInterface[] = [];
   checkedRows: Set<any> = new Set<any>();
   isLoading = false;
@@ -84,6 +86,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
 
@@ -193,7 +196,7 @@ export class DataGridComponentComponent implements AfterViewInit {
         this.databaseError = false;
       } else {
         this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+        this.dataSource.data = this.projects;
       }
     } catch (error) {
       this.databaseError = true;
@@ -201,6 +204,7 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
+
 
   getSelectedItems(): void {
     for (const item of this.selection.selected) {

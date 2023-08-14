@@ -46,6 +46,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { AutoLogoutService } from './services/auto-logout.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -59,7 +61,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
     LandingPageComponent,
     HighlighterPipe,
     DefaultPageComponentComponent,
-    AfterLoginPageComponent
+    AfterLoginPageComponent,
+ 
   ],
   imports: [
     MatSnackBarModule,
@@ -68,7 +71,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,MatSnackBarModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -94,8 +98,16 @@ import { AutoLogoutService } from './services/auto-logout.service';
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-    MatSnackBarModule
+    MatDialogModule,
+    FiltersComponent,
+    FiltersDatepickerComponent,
+    SliderComponent,
+    ExpansionPanelComponent,
+    InputComponent,
+    RouterModule,
+    MatSnackBarModule,
+    MatTableModule,
+    MatSortModule,
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
