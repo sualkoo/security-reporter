@@ -31,4 +31,7 @@ public class ProjectList
     public DateOnly? IKO { get; set; }
     public DateOnly? TKO { get; set; }
     public List<Comment>? Comments { get; set; }
+
+    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
+    public DateOnly? ReportDueDate { get; set; }
 }
