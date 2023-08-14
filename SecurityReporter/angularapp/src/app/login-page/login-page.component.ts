@@ -35,10 +35,21 @@ export class LoginPageComponent implements OnInit {
           console.log("Login successful")
 
           this.roleService.getRole().then(role => {
-            if (role === 'default') {
-              window.location.href = 'default-page';
-            } else {
-              window.location.href = 'after-login';
+            switch (role) {
+              case 'default':
+                window.location.href = 'default-page';
+                break;
+              case 'pentester':
+                window.location.href = 'project-search';
+                break;
+              case 'client':
+              case 'coordinator':
+                window.location.href = 'list-projects';
+                break;
+              case 'admin':
+                // TODO Change redirection to /dashboard when ZA changes are brought to main
+                window.location.href = 'landing-page';
+                break;
             }
           });
         } 
