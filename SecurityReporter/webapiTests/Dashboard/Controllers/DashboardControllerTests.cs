@@ -103,5 +103,76 @@ namespace webapi.Dashboard.Controllers.Tests
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 500);
 
         }
+
+
+        [Test]
+        public void getCWEDataTest_ReturnsOkResult()
+        {
+            // Arange
+            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            mockDashboardService.Setup(service => service.GetCWEData()).ReturnsAsync(data);
+
+            // Act
+            var result = dashboardController.getCWEData().Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(OkObjectResult), result.GetType());
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
+
+        }
+
+
+        [Test]
+        public void getCWEDataTest_ReturnsErrorResult()
+        {
+            // Arange
+            CustomException expectedException = new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error while searching for data");
+            mockDashboardService.Setup(service => service.GetCWEData()).ThrowsAsync(expectedException);
+
+            // Act
+            var result = dashboardController.getCWEData().Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(ObjectResult), result.GetType());
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 500);
+
+        }
+
+        [Test]
+        public void getCVSSDataTest_ReturnsOkResult()
+        {
+            // Arange
+            List<Tuple<float, string, string>> data = new List<Tuple<float, string, string>>();
+            mockDashboardService.Setup(service => service.GetCVSSData()).ReturnsAsync(data);
+
+            // Act
+            var result = dashboardController.getCVSSData().Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(OkObjectResult), result.GetType());
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 200);
+
+        }
+
+
+        [Test]
+        public void getCVSSDataTest_ReturnsErrorResult()
+        {
+            // Arange
+            CustomException expectedException = new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error while searching for data");
+            mockDashboardService.Setup(service => service.GetCVSSData()).ThrowsAsync(expectedException);
+
+            // Act
+            var result = dashboardController.getCVSSData().Result;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(typeof(ObjectResult), result.GetType());
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 500);
+
+        }
     }
 }

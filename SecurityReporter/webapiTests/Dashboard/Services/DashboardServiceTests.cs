@@ -77,6 +77,7 @@ namespace webapi.Dashboard.Services.Tests
             Assert.AreSame(result, data);
         }
 
+        [Test()]
         public void GetVulnerabilityDataTest_ReturnsError()
         {
             //Arrange
@@ -88,6 +89,68 @@ namespace webapi.Dashboard.Services.Tests
 
             // Assert
             Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetVulnerabilityData());
+        }
+
+        [Test()]
+        public async Task GetCWEDataTest_ReturnsData()
+        {
+            //Arrange
+            var data = new List<Tuple<int, int>>();
+
+            // Mock the CosmosService's behavior to return the expected project report
+            mockCosmosService.Setup((cosmos) => cosmos.GetCWEData()).ReturnsAsync(data);
+
+            // Act
+            var result = await dashboardService.GetCWEData();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(result, data);
+        }
+
+        [Test()]
+        public void GetCWEDataTest_ReturnsError()
+        {
+            //Arrange
+            var data = new List<Tuple<int, int>>();
+
+            // Mock the CosmosService's behavior to return the expected project report
+            mockCosmosService.Setup((cosmos) => cosmos.GetCWEData()).ThrowsAsync(new CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));
+
+
+            // Assert
+            Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCWEData());
+        }
+
+        [Test()]
+        public async Task GetCVSSDataTest_ReturnsData()
+        {
+            //Arrange
+            var data = new List<Tuple<float, string, string>>();
+
+            // Mock the CosmosService's behavior to return the expected project report
+            mockCosmosService.Setup((cosmos) => cosmos.GetCVSSData()).ReturnsAsync(data);
+
+            // Act
+            var result = await dashboardService.GetCVSSData();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(result, data);
+        }
+
+        [Test()]
+        public void GetCVSSDataTest_ReturnsError()
+        {
+            //Arrange
+            var data = new List<Tuple<float, string, string>>();
+
+            // Mock the CosmosService's behavior to return the expected project report
+            mockCosmosService.Setup((cosmos) => cosmos.GetCVSSData()).ThrowsAsync(new CosmosException("Resource not found.", System.Net.HttpStatusCode.NotFound, 0, "", 0));
+
+
+            // Assert
+            Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCVSSData());
         }
     }
 }

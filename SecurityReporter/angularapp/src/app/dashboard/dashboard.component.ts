@@ -125,7 +125,6 @@ export class DashboardComponent implements OnInit {
 
 
   updateCWEChart(): void {
-
     this.cwe.sort((a, b) => a.item2 - b.item2);
 
     let labels = this.cwe.map((item) => item.item2);
@@ -155,9 +154,16 @@ export class DashboardComponent implements OnInit {
       });
     }
   }
-
+  private saveToJsonFile(data: any, filename: string) {
+    const jsonData = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
   updateCVSSChart(): void {
-
+    this.saveToJsonFile(this.cvss, "cwe");
     this.cvss.sort((a, b) => a.item2 - b.item2);
 
     let labels = this.cvss.map((item) => item.item2);
