@@ -11,7 +11,6 @@ public class DbExecutiveSummaryExtractorTests
     public void ExtractExecutiveSummaryTest()
     {
         // Arrange
-        var extractor = new DbExecutiveSummaryExtractor();
         var inputStr = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.";
 
         // Act
@@ -20,6 +19,6 @@ public class DbExecutiveSummaryExtractorTests
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\r\n%\tEXECUTIVE SUMMARY\r\n%----------------------------------------------------------------------------------------\r\n%-<ExecSum>->\r\n\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.\r\n\r\n%-<ExecSum>\r\n\\pagebreak\r\n\\section*{Overall Exposure}", resultDecoded);
+        StringAssert.Contains("%----------------------------------------------------------------------------------------\n%\tEXECUTIVE SUMMARY\n%----------------------------------------------------------------------------------------\n%-<ExecSum>->\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.\n\n%-<ExecSum>\n\\pagebreak\n\\section*{Overall Exposure}", resultDecoded);
     }
 }

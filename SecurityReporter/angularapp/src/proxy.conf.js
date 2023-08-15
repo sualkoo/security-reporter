@@ -2,7 +2,8 @@ const PROXY_CONFIG = [
   {
     context: [
       "/Project",
-      "/project-reports"
+      "/api/project-reports",
+      "/api/dashboard"
     ],
     target: "https://localhost:7075",
     secure: false
