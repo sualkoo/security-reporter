@@ -2,6 +2,7 @@
 {
     public enum SortingColumns
     {
+        Default = 0,
         ProjectName = 1,
         StartDate = 2,
         EndDate = 3,
