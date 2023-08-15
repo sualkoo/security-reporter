@@ -36,6 +36,22 @@ namespace webapi.Models.ProjectReport
         public string? SubsectionCountermeasures { get; set; }
         public string? SubsectionReferences { get; set; }
         public string? FolderName { get; set; }
-        public List<FileData>? imagesList { get; set; }
+        private List<FileData>? imagesList = new List<FileData>();
+        public List<FileData> getImages()
+        {
+            return this.imagesList;
+        }
+        public void addImage(string fileName, byte[] contents)
+        {
+            FileData newImage = new FileData();
+            newImage.FileName = fileName;
+            newImage.Content = contents;
+            this.imagesList.Add(newImage);
+        }
+
+        public void clearImageList()
+        {
+            this.imagesList = new List<FileData>();
+        }
     }
 }

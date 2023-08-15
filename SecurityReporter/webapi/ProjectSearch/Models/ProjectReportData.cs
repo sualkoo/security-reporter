@@ -21,5 +21,6 @@ namespace webapi.ProjectSearch.Models
         [Required(ErrorMessage = "TestingMethodology is required!")]
         public TestingMethodology? TestingMethodology { get; set; }
         public string? FindingsDatabase { get; set; }
+        public DateTime uploadDate { get; set; }
     }
 } 
