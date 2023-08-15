@@ -164,7 +164,7 @@
 
               </div>
               <div class="col col-lg-2">
-                <mat-icon id="confirmDeleteButton" class="icon delete-selected-findings-button" (click)="onDeleteSelectedProjects(); closePopup()">delete_outline</mat-icon>
+                <mat-icon id="confirm_delete_button" class="icon delete-selected-findings-button" (click)="onDeleteSelectedProjects(); closePopup()">delete_outline</mat-icon>
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@
     </div>
   </div>
 <div class="group-icons">
-  <mat-icon class="icon" id="upButton" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
+  <mat-icon class="icon" id="up_button" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
   <mat-icon class="icon" *ngIf="totalRecords" (click)="toggleSidebar()">menu</mat-icon>
-  <mat-icon class="icon" id="deleteButton" *ngIf="selectedProjects.length >= 1" (click)="openPopup()">delete_outline</mat-icon>
+  <mat-icon class="icon" id="delete_button" *ngIf="selectedProjects.length >= 1" (click)="openPopup()">delete_outline</mat-icon>
 </div>
