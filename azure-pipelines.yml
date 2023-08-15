@@ -4,53 +4,68 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-  - 1401-Downloading-Of-Zip
+- 1401-Downloading-Of-Zip
 
 pool:
-  name: "SDA1"
+  name: 'SDA1'
 
 variables:
-  solution: "**/*.sln"
-  buildPlatform: "Any CPU"
-  buildConfiguration: "Release"
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 steps:
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: "dotnet build $(buildConfiguration)"
-    workingDirectory: "SecurityReporter"
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: "test"
-      projects: |
-        **/*Tests.csproj
-        **/*Test.csproj
-      arguments: "--configuration $(buildConfiguration)"
-      workingDirectory: "SecurityReporter"
-    displayName: "dotnet tests"
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+  workingDirectory: 'SecurityReporter'
+    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: |
+      **/*Tests.csproj
+      **/*Test.csproj
+    arguments: '--configuration $(buildConfiguration)'
+    workingDirectory: 'SecurityReporter'
+  displayName: '.NET Tests'
 
-  - task: CmdLine@2
-    inputs:
-      script: "npm install"
-      workingDirectory: "$(Build.SourcesDirectory)/SecurityReporter/angularapp"
-    displayName: "npm install"
+- task: CmdLine@2
+  inputs:
+    script: |
+      npm install
+      npm install -g @angular/cli
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'npm install'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: "publish"
-      publishWebProjects: true
-      zipAfterPublish: true
-      workingDirectory: "SecurityReporter"
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: true
+    workingDirectory: 'SecurityReporter'
 
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: "$(Build.SourcesDirectory)/SecurityReporter/angularapp/dist/angularapp"
-      Contents: "**"
-      TargetFolder: "$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot"
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/SecurityReporter/angularapp/dist/angularapp'
+    Contents: '**'
+    TargetFolder: '$(Build.SourcesDirectory)/SecurityReporter/webapi/bin/Release/net7.0/wwwroot'
 
-  - task: AzureWebApp@1
-    inputs:
-      azureSubscription: "sda-2023-service-connection"
-      appType: "webAppLinux"
-      appName: "sda-playground"
-      package: "$(System.DefaultWorkingDirectory)/**/publish.zip"
+- task: CmdLine@2
+  inputs:
+    script: 'ng build'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
+  displayName: 'Angular build'
+
+- task: CmdLine@2
+  inputs:
+    script: 'npm install cypress --save-dev --force'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+  displayName: 'Cypress installation'
+
+
+- task: CmdLine@2
+  inputs:
+    script: 'npx cypress run'
+    workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
+  displayName: 'Run Cypress Tests'

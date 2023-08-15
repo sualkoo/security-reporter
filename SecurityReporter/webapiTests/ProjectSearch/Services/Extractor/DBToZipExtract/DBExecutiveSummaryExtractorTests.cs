@@ -11,7 +11,6 @@ public class DbExecutiveSummaryExtractorTests
     public void ExtractExecutiveSummaryTest()
     {
         // Arrange
-        var extractor = new DbExecutiveSummaryExtractor();
         var inputStr = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.";
 
         // Act

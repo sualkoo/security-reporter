@@ -215,5 +215,38 @@ namespace webapi.ProjectReportControllers.Tests
             Assert.IsNotNull(result);
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
         }
+
+        [Test]
+        public void DeleteProjectReportsALL_ReturnsOkResult()
+        {
+            // Arrange
+            mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).ReturnsAsync(true);
+
+            // Act
+            var task = projectReportController.DeleteProjectReportsALL();
+
+            var result = task.Result as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(true, result.Value);
+        }
+
+        [Test]
+        public void DeleteProjectReportsALL_WithException_ReturnsNotFoundResult()
+        {
+            //Arrange
+            CustomException expectedException = new CustomException(StatusCodes.Status404NotFound, "Container doesn't exists");
+            mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).Throws(expectedException);
+
+            // Act
+            var result = projectReportController.DeleteProjectReportsALL().Result;
+
+            // Assert
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 404);
+        }
     }
 }

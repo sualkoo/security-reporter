@@ -68,7 +68,10 @@ namespace webapi.ProjectSearch.Services
             try
             {
                 var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                Logger.LogInformation("Spravil som pdf");
                 await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+
+                Logger.LogInformation("Spravil som blob");
                 await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
             }
             catch (Exception)
@@ -104,6 +107,17 @@ namespace webapi.ProjectSearch.Services
             
             await CosmosService.DeleteProjectReports(ids);
             foreach (var id in ids)
+            {
+                await AzureBlobService.DeleteReportFolder(new Guid(id));
+            }
+
+            return true;
+        }
+        async Task<bool> IProjectReportService.DeleteReportAllAsync()
+        {
+            Logger.LogInformation($"Deleting all items from database");
+            List<string> deletedProjects = await CosmosService.DeleteAllReportsAsync();
+            foreach (var id in deletedProjects)
             {
                 await AzureBlobService.DeleteReportFolder(new Guid(id));
             }

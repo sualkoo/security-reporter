@@ -6,7 +6,7 @@ using webapi.ProjectSearch.Models;
 namespace webapi.Dashboard.Controllers
 {
     [ApiController]
-    [Route("dashboard")]
+    [Route("api/dashboard")]
     public class DashboardController : ExceptionHandlingControllerBase
     {
         private readonly ILogger Logger;

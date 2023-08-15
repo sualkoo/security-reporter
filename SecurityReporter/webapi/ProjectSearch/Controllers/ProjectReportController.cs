@@ -7,7 +7,7 @@ using webapi.ProjectSearch.Services;
 namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
-    [Route("project-reports")]
+    [Route("api/project-reports")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }
@@ -85,6 +85,18 @@ namespace webapi.ProjectSearch.Controllers
             return await HandleExceptionAsync(async () =>
             {
                 bool test = await ProjectReportService.DeleteReportAsync(ids);
+                return Ok(test);
+            });
+        }
+
+        [HttpDelete("all")]
+        public async Task<IActionResult> DeleteProjectReportsALL()
+        {
+            Logger.LogInformation("Recieved DELETE request for deleting ALL reports.");
+
+            return await HandleExceptionAsync(async () =>
+            {
+                bool test = await ProjectReportService.DeleteReportAllAsync();
                 return Ok(test);
             });
         }

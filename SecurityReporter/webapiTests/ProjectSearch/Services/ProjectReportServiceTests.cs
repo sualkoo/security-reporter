@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Castle.Core.Logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Moq;
 using NUnit.Framework;
+using System.IO.Compression;
+using System.Text;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
@@ -135,147 +140,282 @@ namespace webapiTests.ProjectSearch.Services
                     null, 1));
         }
 
-        // [Test]
-        // public async Task SaveReportFromZip_ValidZip_ReturnsProjectReportDataAsync()
-        // {
-        //     //  Arrange
-        //     var expectedReportData = new ProjectReportData
-        //     {
-        //         DocumentInfo = new DocumentInformation
-        //         {
-        //             ProjectReportName = "Dummy Project 1"
-        //         }
-        //     };
-        //
-        //     var fileName = "report.zip";
-        //     byte[] zipFileContent;
-        //
-        //     using (var zipStream = new MemoryStream())
-        //     {
-        //         zipFileContent = zipStream.ToArray();
-        //     }
-        //
-        //     var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
-        //
-        //     mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(expectedReportData);
-        //     mockValidator.Setup(validator => validator.Validate(expectedReportData)).Returns(true);
-        //     mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
-        //
-        //     // Act
-        //     var result = await ((IProjectReportService)projectReportService).SaveReportFromZip(file);
-        //
-        //     // Assert
-        //     Assert.IsNotNull(result);
-        //     Assert.AreSame(result, expectedReportData);
-        // }
-        //
-        // [Test()]
-        // public void SaveReportFromZip_ParserFail_MissingInformation_ThrowsCustomException()
-        // {
-        //     // Arrange
-        //     // Load sample zip file
-        //     var file = new Mock<IFormFile>();
-        //     var fileStream = new MemoryStream();
-        //
-        //     // Mock behaviour
-        //     file.Setup(f => f.OpenReadStream()).Returns(fileStream);
-        //     mockParser.Setup(parser => parser.Extract(fileStream)).Throws(new ArgumentNullException());
-        //
-        //     // Act
-        //     var result = ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object);
-        //
-        //     // Assert
-        //     Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object));
-        // }
-        //
-        // [Test()]
-        // public void SaveReportFromZip_ValidationFail_ThrowsCustomException()
-        // {
-        //     var extractedData = new ProjectReportData
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         DocumentInfo = new DocumentInformation
-        //         {
-        //             ProjectReportName = "Dummy Project 1"
-        //         }
-        //     };
-        //
-        //     // Create sample zip file
-        //     var fileName = "report.zip";
-        //     byte[] zipFileContent;
-        //
-        //     using (var zipStream = new MemoryStream())
-        //     {
-        //         using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-        //         {
-        //             // Create a dummy file named "data.txt" with some content in the zip archive
-        //             var entry = archive.CreateEntry("data.txt");
-        //             using (var entryStream = entry.Open())
-        //             using (var writer = new StreamWriter(entryStream))
-        //             {
-        //                 writer.Write("Sample content for testing.");
-        //             }
-        //         }
-        //
-        //         zipFileContent = zipStream.ToArray();
-        //     }
-        //
-        //     var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
-        //
-        //     // Mock
-        //     mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(extractedData);
-        //     mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(false);
-        //
-        //     // Act & Assert
-        //     Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
-        // }
-        //
-        // [Test()]
-        // public void SaveReportFromZip_SavingToDatabaseFailed_ThrowsCustomException()
-        // {
-        //     // Arrange
-        //
-        //     var extractedData = new ProjectReportData
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         DocumentInfo = new DocumentInformation
-        //         {
-        //             ProjectReportName = "Dummy Project 1"
-        //         }
-        //     };
-        //
-        //     // Create sample zip file
-        //     var fileName = "report.zip";
-        //     byte[] zipFileContent;
-        //
-        //     using (var zipStream = new MemoryStream())
-        //     {
-        //         using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-        //         {
-        //             // Create a dummy file named "data.txt" with some content in the zip archive
-        //             var entry = archive.CreateEntry("data.txt");
-        //             using (var entryStream = entry.Open())
-        //             using (var writer = new StreamWriter(entryStream))
-        //             {
-        //                 writer.Write("Sample content for testing.");
-        //             }
-        //         }
-        //
-        //         zipFileContent = zipStream.ToArray();
-        //     }
-        //
-        //     var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
-        //
-        //     // Mock sevices
-        //     mockParser.Setup(parser => parser.Extract(file.OpenReadStream())).Returns(extractedData);
-        //     mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(true);
-        //     mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database."));
-        //
-        //     // Act & Assert
-        //     Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
-        //
-        //     // Cleanup
-        //     File.Delete(fileName);
-        // }
+        [Test]
+        public void DeleteReportAllAsync_ReturnsListOfDeletedItems()
+        {
+            // Arange
+            var expectedResult = true;
+            var expectedDBResult = new List<string>();
+            mockCosmosService
+                .Setup(cosmos => cosmos.DeleteAllReportsAsync())
+                .ReturnsAsync(expectedDBResult);
+            // Act
+            var result = ((IProjectReportService)projectReportService)
+                .DeleteReportAllAsync().Result;
+
+            // Assert
+            Assert.AreEqual(expectedResult.GetType(), result.GetType());
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [Test]
+        public void DeleteReportAllAsync_ThrowsException()
+        {
+            // Arange
+            mockCosmosService
+                .Setup(cosmos => cosmos.DeleteAllReportsAsync())
+                .ThrowsAsync(new CustomException(StatusCodes.Status404NotFound, "Resource not Found"));
+
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () =>
+                await ((IProjectReportService)projectReportService).DeleteReportAllAsync());
+        }
+
+        [Test]
+        public async Task SaveReportFromZip_ValidZip_ReturnsProjectReportDataAsync()
+        {
+            //  Arrange
+            var expectedReportData = new ProjectReportData
+            {
+                Id = Guid.NewGuid(),
+                DocumentInfo = new DocumentInformation
+                {
+                    ProjectReportName = "Dummy Project 1"
+                }
+                
+            };
+
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            var mockPdfContent = Encoding.UTF8.GetBytes("Mocked PDF Content");
+
+            // Create the expected FileContentResult
+            var expectedFileContentResult = new FileContentResult(mockPdfContent, "application/pdf");
+
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(expectedReportData);
+            mockValidator.Setup(validator => validator.Validate(expectedReportData)).Returns(true);
+            mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
+            mockPdfBuilder.Setup(builder => builder.GeneratePdfFromZip(It.IsAny<Stream>(), It.IsAny<Guid>())).ReturnsAsync(expectedFileContentResult).Verifiable();
+            mockAzureBlobService.Setup(azure => azure.SaveReportPdf(expectedFileContentResult.FileContents, expectedReportData.Id, expectedReportData.DocumentInfo.ProjectReportName))
+                .Returns(Task.CompletedTask);
+
+            // Act   //zle argumenty v mockPDFBuilder?
+            var result = await ((IProjectReportService)projectReportService).SaveReportFromZip(file);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreSame(result, expectedReportData);
+
+            // Cleanup
+            File.Delete(fileName);
+        }
+
+        [Test()]
+        public void SaveReportFromZip_ParserFail_MissingInformation_ThrowsCustomException()
+        {
+            // Arrange
+            // Load sample zip file
+            var file = new Mock<IFormFile>();
+            var fileStream = new MemoryStream();
+
+            // Mock behaviour
+            file.Setup(f => f.OpenReadStream()).Returns(fileStream);
+            mockParser.Setup(parser => parser.Extract(fileStream)).Throws(new ArgumentNullException());
+
+            // Act
+            var result = ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object);
+
+            // Assert
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object));
+        }
+
+        [Test()]
+        public void SaveReportFromZip_ValidationFail_ThrowsCustomException()
+        {
+            var extractedData = new ProjectReportData
+            {
+                Id = Guid.NewGuid(),
+                DocumentInfo = new DocumentInformation
+                {
+                    ProjectReportName = "Dummy Project 1"
+                }
+            };
+
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            // Mock
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(extractedData);
+            mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(false);
+
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+        }
+
+        [Test()]
+        public void SaveReportFromZip_SavingToDatabaseFailed_ThrowsCustomException()
+        {
+            // Arrange
+
+            var extractedData = new ProjectReportData
+            {
+                Id = Guid.NewGuid(),
+                DocumentInfo = new DocumentInformation
+                {
+                    ProjectReportName = "Dummy Project 1"
+                }
+            };
+
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            // Mock sevices
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(extractedData);
+            mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(true);
+            mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database."));
+
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+
+            // Cleanup
+            File.Delete(fileName);
+        }
+
+        [Test()]
+        public void SaveReportFromZip_GeneratingPDFFailed_ThrowsCustomException()
+        {
+            // Arrange
+
+            var extractedData = new ProjectReportData
+            {
+                Id = Guid.NewGuid(),
+                DocumentInfo = new DocumentInformation
+                {
+                    ProjectReportName = "Dummy Project 1"
+                }
+            };
+
+            // Create sample zip file
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+                {
+                    // Create a dummy file named "data.txt" with some content in the zip archive
+                    var entry = archive.CreateEntry("data.txt");
+                    using (var entryStream = entry.Open())
+                    using (var writer = new StreamWriter(entryStream))
+                    {
+                        writer.Write("Sample content for testing.");
+                    }
+                }
+
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            // Mock sevices
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(extractedData);
+            mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(true);
+            mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).ReturnsAsync(true);
+            mockPdfBuilder.Setup(builder => builder.GeneratePdfFromZip(It.IsAny<Stream>(), It.IsAny<Guid>())).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to generate PDF"));
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+
+            // Cleanup
+            File.Delete(fileName);
+        }
+
+        [Test]
+        public async Task SaveReportFromZip_SavingToBlobStorageFailed_ThrowsCustomException()
+        {
+            //  Arrange
+            var expectedReportData = new ProjectReportData
+            {
+                Id = Guid.NewGuid(),
+                DocumentInfo = new DocumentInformation
+                {
+                    ProjectReportName = "Dummy Project 1"
+                }
+
+            };
+
+            var fileName = "report.zip";
+            byte[] zipFileContent;
+
+            using (var zipStream = new MemoryStream())
+            {
+                zipFileContent = zipStream.ToArray();
+            }
+
+            var file = new FormFile(new MemoryStream(zipFileContent), 0, zipFileContent.Length, "reportFile", fileName);
+
+            var mockPdfContent = Encoding.UTF8.GetBytes("Mocked PDF Content");
+
+            // Create the expected FileContentResult
+            var expectedFileContentResult = new FileContentResult(mockPdfContent, "application/pdf");
+
+            mockParser.Setup(parser => parser.Extract(It.IsAny<Stream>())).Returns(expectedReportData);
+            mockValidator.Setup(validator => validator.Validate(expectedReportData)).Returns(true);
+            mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(expectedReportData)).ReturnsAsync(true);
+            mockPdfBuilder.Setup(builder => builder.GeneratePdfFromZip(It.IsAny<Stream>(), It.IsAny<Guid>())).ReturnsAsync(expectedFileContentResult).Verifiable();
+            //mockAzureBlobService.Setup(azure => azure.SaveReportPdf(expectedFileContentResult.FileContents, expectedReportData.Id, expectedReportData.DocumentInfo.ProjectReportName)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save PDF to Azure Blob Storage"));
+            mockAzureBlobService.Setup(azure => azure.SaveReportPdf(It.IsAny<byte[]>(), It.IsAny<Guid>(), It.IsAny<string>()))
+            .Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save PDF to Azure Blob Storage"));
+            // Act & Assert
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+
+            // Cleanup
+            File.Delete(fileName);
+        }
     }
 }
