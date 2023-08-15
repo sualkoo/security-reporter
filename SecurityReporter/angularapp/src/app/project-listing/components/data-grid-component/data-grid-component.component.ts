@@ -18,6 +18,7 @@ import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { GetRoleService } from '../../../shared/services/get-role.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { SortData } from '../../interfaces/sort-data';
  
 @Component({
   selector: 'app-data-grid-component',
@@ -37,6 +38,8 @@ export class DataGridComponentComponent implements AfterViewInit {
   filterMessageFlag = false;
   selectedItems: any[] = [];
   noItemsFound = false;
+  sortingDirections: boolean = false;
+
 
   displayedColumns: string[] = [
     'select',
@@ -56,18 +59,21 @@ export class DataGridComponentComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
+
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   filters: string = '';
-
   length: number | undefined;
+  sortData: SortData = {
+      columnNumber: 0,
+      sortingDescDirection: false
+  };
 
   constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private getRoleService: GetRoleService) { }
 
   userRole: string = 'admin';
 
   ngOnInit(): void {
-
     this.getRole();
     this.getInitItems();
     this.getLength();
@@ -134,7 +140,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   handleCheckboxChange(row: ProjectInterface): void {
     this.selection.toggle(row);
     this.handleSelectedList(row);
-}
+  }
 
   getStatusString(status: number): string {
     switch (status) {
@@ -189,7 +195,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(15, 1, '');
+      const response = await this.getProjectsService.getProjects(15, 1, '', 0, false);
 
       if (response === "No data available.") {
         this.databaseError = false;
@@ -216,7 +222,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
+      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '', this.sortData.columnNumber, this.sortData.sortingDescDirection);
 
       if (response === "No data available.") {
         this.databaseError = false;
@@ -244,7 +250,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.isLoading = true;
 
     try {
-      const response = await this.getProjectsService.getProjects(15, 1, filters);
+      const response = await this.getProjectsService.getProjects(15, 1, filters, 0, true);
 
       if (response === "No data available.") {
         this.filterError = true;
@@ -315,6 +321,47 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   areNoBoxesChecked(): boolean {
+
     return this.selectedItems.length === 0;
   }
+
+
+  updateSelectedColumn(columnNumber: number) {
+    this.sortData.columnNumber = columnNumber;
+    switch (this.sortData.columnNumber) {
+      case 1:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 2:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 3:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 4:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 5:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 6:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+      case 7:
+        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
+        this.handlePageChange()
+        break;
+
+
+    }
+
+    
+  }
+
 }
