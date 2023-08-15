@@ -94,7 +94,7 @@ function NoInsertedFile(fileName: string) {
 }
 
 function ValidZipUploadRequest() {
-  cy.intercept('POST', '/project-reports', {
+  cy.intercept('POST', '/api/project-reports', {
     statusCode: 200,
     fixtures: 'valid-zip-response.json'
   }).as('valid_request');
@@ -105,7 +105,7 @@ function ValidZipUploadRequest() {
 }
 
 function InvalidZipUploadRequest() {
-  cy.intercept('POST', '/project-reports', {
+  cy.intercept('POST', '/api/project-reports', {
     statusCode: 500,
     body: {
       error: {

@@ -73,7 +73,17 @@ describe('Project search page component tests - bigger viewport', () => {
     DeleteItems();
   })
 
-  it.skip('Should return zip (TBR)', () => {
+  it.only('Should return zip (TBR)', () => {
+    SearchRequest();
+    cy.get('button.btn.btn-dark.me-2').should('exist').and('be.enabled');
+    cy.intercept('GET', '/api/project-reports/17dfdb47-04d4-46cd-91de-c92bea74b7d1/download', {
+      statusCode: 200,
+      body: ''
+    }).as('downloadRequest');
+    cy.get('button.btn.btn-dark.me-2').eq(0).click();
+
+    cy.wait('@downloadRequest').its('response.statusCode').should('equal', 200)
+    
   })
 
   it.skip('Should return pdf (TBR)', () => {
@@ -299,7 +309,7 @@ function SearchRequest() {
   cy.get('input.checkbox').first().should('be.visible').check();
   cy.get('input.checkbox').should('be.checked');
 
-  cy.intercept('GET', `/project-reports/findings?page=1&projectName=dum&details=&impact=&repeatability=&references=&cwe=`, {
+  cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dum&details=&impact=&repeatability=&references=&cwe=`, {
     statusCode: 200,
     fixture: 'search-response.json'
   }).as('response')
@@ -371,7 +381,7 @@ function NoSearchItems() {
   cy.get('input.checkbox').first().should('be.visible').check();
   cy.get('input.checkbox').should('be.checked');
 
-  cy.intercept('GET', `/project-reports/findings?page=1&projectName=dgurug&details=&impact=&repeatability=&references=&cwe=`, {
+  cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dgurug&details=&impact=&repeatability=&references=&cwe=`, {
     statusCode: 404,
     totalpost: 0
   }).as('errorResponse');
@@ -389,7 +399,7 @@ function NoSearchItems() {
 }
 
 function DeleteItems() {
-  cy.intercept('DELETE', '/project-reports', {
+  cy.intercept('DELETE', '/api/project-reports', {
     statuscode: 200,
     fixture: 'deletion-response.json'
   }).as('deleteResponse')

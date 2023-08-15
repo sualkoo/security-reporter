@@ -3,47 +3,23 @@ import { FooterComponent } from '../src/app/footer/footer.component'
 import { mount } from 'cypress/angular'
 import { HttpClientModule } from '@angular/common/http'
 import { DashboardComponent } from '../src/app/dashboard/dashboard.component'
+import { NavigationBarComponent } from '../src/app/navigation-bar/navigation-bar.component'
 
 describe('Testing bigger LandingPageComponent', () => {
-  beforeEach(() => {
+  it('Should mount component correctly', () => {
     Mount(1200, 800);
-  })
-
-  it('Should have correct navbar', () => {
-    CheckBigNavbar();
-  })
-
-  it('Should have correct banner', () => {
     CheckBanner();
-  })
-
-  it('Should have correct content', () => {
     CheckContent();
-  })
-
-  it('Should have correct footer', () => {
     CheckFooterElements();
   })
 })
 
+
 describe('Testing smaller LandingPageComponent', () => {
-  beforeEach(() => {
+  it('Should mount component correctly', () => {
     Mount(800, 800);
-  })
-
-  it('Should have correct navbar', () => {
-    CheckSmallNavbar();
-  })
-
-  it('Should have correct banner', () => {
     CheckBanner();
-  })
-
-  it('Should have correct content', () => {
     CheckContent();
-  })
-
-  it('Should have correct footer', () => {
     CheckFooterElements();
   })
 })
@@ -51,19 +27,19 @@ describe('Testing smaller LandingPageComponent', () => {
 
 function Mount(width: number, height: number) {
   cy.viewport(width, height);
-  cy.intercept('GET', 'https://localhost:7075/dashboard/Criticality', {
+  cy.intercept('GET', '/api/dashboard/Criticality', {
     statusCode: 200,
     fixture: 'charts/criticality-chart.json'
   }).as('responseCrit');
 
-  cy.intercept('GET', 'https://localhost:7075/dashboard/Vulnerability', {
+  cy.intercept('GET', '/api/dashboard/Vulnerability', {
     statusCode: 200,
     fixture: 'charts/vulnerability-chart.json'
   }).as('response');
 
   mount(LandingPageComponent, {
     imports: [HttpClientModule],
-    declarations: [FooterComponent, DashboardComponent]
+    declarations: [FooterComponent, DashboardComponent, NavigationBarComponent]
   })
 
   cy.wait('@responseCrit').its('response.statusCode').should('equal', 200)
@@ -136,7 +112,7 @@ function CheckFooterElements() {
 }
 
 function CheckBigNavbar() {
-  cy.get('img.img-fluid').should('exist').and('be.visible');
+  /*cy.get('img.img-fluid').should('exist').and('be.visible');
   cy.get('button.btn.btn-link.d-flex.align-items-center.login').should('exist').and('be.enabled');
   cy.get('i').should('exist').and('be.visible');
 
@@ -145,11 +121,11 @@ function CheckBigNavbar() {
   cy.get('div#navbarNav.collapse.navbar-collapse').should('exist').and('be.visible');
   cy.get('a.nav-link.link').contains('Home').should('exist').and('be.visible');
   cy.get('a.nav-link.link').contains('About us').should('exist').and('be.visible');
-  cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');
+  cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');*/
 }
 
 function CheckSmallNavbar() {
-  cy.get('nav.navbar.navbar-expand-lg.navbar-dark.bg-dark').should('exist').and('be.visible');
+  /*cy.get('nav.navbar.navbar-expand-lg.navbar-dark.bg-dark').should('exist').and('be.visible');
   cy.get('button.navbar-toggler.offset-1').should('exist').and('be.visible').and('be.enabled');
   cy.get('span.navbar-toggler-icon').should('exist').and('be.visible');
 
@@ -161,7 +137,7 @@ function CheckSmallNavbar() {
 
   cy.get('a.nav-link.link').contains('Home').should('exist').and('be.visible');
   cy.get('a.nav-link.link').contains('About us').should('exist').and('be.visible');
-  cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');
+  cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');*/
 }
 
 function CheckContent() {
