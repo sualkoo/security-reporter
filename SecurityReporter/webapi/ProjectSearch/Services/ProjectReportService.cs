@@ -67,8 +67,9 @@ namespace webapi.ProjectSearch.Services
             
             try
             {
-                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                //var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                //await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
             }
             catch (Exception)
             {
@@ -113,6 +114,8 @@ namespace webapi.ProjectSearch.Services
         public async Task<FileContentResult> GetReportSourceByIdAsync(Guid id)
         {
             ProjectReportData data = await CosmosService.GetProjectReport(id.ToString());
+
+            await AzureBlobService.LoadImagesFromDB(id, data); 
             FileContentResult zip = DBParser.Extract(data);
             return zip;
         }
