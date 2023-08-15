@@ -13,7 +13,6 @@ public class DbScopeAndProceduresExtractorTests
     public void ExtractScopeAndProceduresTest()
     {
         // Arrange
-        var extractor = new DbScopeAndProceduresExtractor();
         var scopeAndProcedures = new ScopeAndProcedures();
 
         // Scope Procedures - InScope
