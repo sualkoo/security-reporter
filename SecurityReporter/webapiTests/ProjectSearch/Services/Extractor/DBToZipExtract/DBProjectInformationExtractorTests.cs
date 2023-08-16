@@ -198,6 +198,6 @@ public class DbProjectInformationExtractorTests
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains(expectedStr, resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

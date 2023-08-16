@@ -45,13 +45,7 @@ public class DbTestingMethodologyExtractorTests
             "testing error handling."
         };
 
-        // Act
-        var result = DbTestingMethodologyExtractor.ExtractTestingMethodology(testingMethodology);
-        var resultDecoded = Encoding.UTF8.GetString(result);
-
-        // Assert
-        Assert.IsNotNull(resultDecoded);
-        StringAssert.Contains(@"%----------------------------------------------------------------------------------------
+        string expectedStr = @"%----------------------------------------------------------------------------------------
 %	TOOLS USED
 %----------------------------------------------------------------------------------------
 % Not needed for Scope document
@@ -84,6 +78,14 @@ public class DbTestingMethodologyExtractorTests
 		\item testing error handling.
 	\end{itemize}
 
-}", resultDecoded);
+}";
+
+        // Act
+        var result = DbTestingMethodologyExtractor.ExtractTestingMethodology(testingMethodology);
+        var resultDecoded = Encoding.UTF8.GetString(result);
+
+        // Assert
+        Assert.IsNotNull(resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

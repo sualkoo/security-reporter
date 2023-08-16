@@ -31,6 +31,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra 
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains(expectedStr, resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

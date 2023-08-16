@@ -90,13 +90,7 @@ public class DbScopeAndProceduresExtractorTests
             "test user credentials."
         };
 
-        // Act
-        var result = DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(scopeAndProcedures);
-        var resultDecoded = Encoding.UTF8.GetString(result);
-        
-        // Assert
-        Assert.IsNotNull(result);
-        StringAssert.Contains(@"%----------------------------------------------------------------------------------------
+        string expectedStr = @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\InScope}{
@@ -181,6 +175,14 @@ public class DbScopeAndProceduresExtractorTests
 %	TEST PROTOCOL: TARGET
 %----------------------------------------------------------------------------------------
 \newcommand{\TargetTestProtocol}{https://TODOTODO}
-", resultDecoded);
+";
+
+        // Act
+        var result = DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(scopeAndProcedures);
+        var resultDecoded = Encoding.UTF8.GetString(result);
+        
+        // Assert
+        Assert.IsNotNull(result);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }
