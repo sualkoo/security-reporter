@@ -362,3 +362,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /SecurityReporter/angularapp/.angular/
 */.vscode
+*/.vs
+
+/SecurityReporter/angularapp_uiTests\cypress\videos
