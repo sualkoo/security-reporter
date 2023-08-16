@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-white shadow-sm">
-    <div class="navbar-brand p-2">
-      <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" height="34">
+    <div class="navbar-brand pb-3">
+      <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" class="img-fluid col-3">
+      Cybersecurity Assasment
     </div>
     <button class="navbar-toggler"
             type="button"
@@ -42,5 +43,28 @@
         </li>
         <!-- Add more navigation items as needed -->
       </ul>
+      <ul class="navigation-list navbar-nav ms-auto">
+        <li class="nav-item row align-items-center">
+          <div class="col-2">
+            <div class="user-circle" style="background-color: green">
+              <div class="initials">
+                {{ initials }}
+              </div>
+            </div>
+          </div>
+          <div class="col-3 me-lg-5 offset-1">
+            <div class="user-details row align-items-start" style="color: slategray; font-weight: bold">
+              {{ mail }}
+            </div>
+            <div class="user-role row mt-0" style="color: slategray">
+              {{ role }}
+            </div>
+            <div class="row" style="text-decoration: underline">
+              Logout
+            </div>
+          </div>
+        </li>
+      </ul>
+
     </div>
 </nav>
