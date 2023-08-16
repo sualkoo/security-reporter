@@ -121,9 +121,10 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
         private string extractContact(string data)
         {
+            string[] delimiters = { "//", "}" };
             if (data != null)
             {
-                return data.Substring(9);
+                return data.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1];
             }
 
             return null;
