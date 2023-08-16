@@ -189,6 +189,15 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
+  resetSorting() {
+    this.sort.active = '';
+    this.sort.direction = '';
+    this.sort.sortChange.emit;
+    this.getInitItems();
+    window.location.reload(); //Reload Page
+    
+  }
+
   async getInitItems() {
     this.isLoading = true;
     this.databaseError = false;

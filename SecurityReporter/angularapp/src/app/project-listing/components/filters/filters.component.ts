@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild , Injectable, Inject} from '@angular/core';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
@@ -10,6 +10,7 @@ import { debounceTime } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
@@ -17,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   standalone: true,
   imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent, MatButtonModule, MatFormFieldModule]
 })
+
 export class FiltersComponent {
   constructor() {
     this.projectNameControl.valueChanges.pipe(debounceTime(500)).subscribe((inputValue) => {
