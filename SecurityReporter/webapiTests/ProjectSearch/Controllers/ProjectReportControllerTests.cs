@@ -36,7 +36,7 @@ namespace webapi.ProjectReportControllers.Tests
             ProjectReportData data = new ProjectReportData();
             data.Id = Guid.NewGuid();
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ReturnsAsync(data);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ReturnsAsync(data);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -57,7 +57,7 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status406NotAcceptable, "Invalid file type. Only .zip files are allowed.");
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ThrowsAsync(expectedException);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -78,7 +78,7 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ThrowsAsync(expectedException);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -214,6 +214,39 @@ namespace webapi.ProjectReportControllers.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 400);
+        }
+
+        [Test]
+        public void DeleteProjectReportsALL_ReturnsOkResult()
+        {
+            // Arrange
+            mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).ReturnsAsync(true);
+
+            // Act
+            var task = projectReportController.DeleteProjectReportsAll();
+
+            var result = task.Result as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(200, result.StatusCode);
+            Assert.AreEqual(true, result.Value);
+        }
+
+        [Test]
+        public void DeleteProjectReportsALL_WithException_ReturnsNotFoundResult()
+        {
+            //Arrange
+            CustomException expectedException = new CustomException(StatusCodes.Status404NotFound, "Container doesn't exists");
+            mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).Throws(expectedException);
+
+            // Act
+            var result = projectReportController.DeleteProjectReportsAll().Result;
+
+            // Assert
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result is ObjectResult objectResult && objectResult.StatusCode == 404);
         }
     }
 }

@@ -43,6 +43,7 @@ import { FooterComponent } from './footer/footer.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { AboutPentestsComponent } from './about-pentests/about-pentests.component';
 
 @NgModule({
@@ -57,6 +58,7 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     LandingPageComponent,
     DashboardComponent,
     AboutPentestsComponent,
+      NavigationBarComponent,    
   ],
   imports: [
     AddProjectComponent,

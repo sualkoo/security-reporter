@@ -55,6 +55,7 @@ namespace webapi.ProjectSearch.Services
                             newProjectReportData.FindingsDatabase = reader.ReadToEnd();
                         }
                     }
+                    newProjectReportData.uploadDate = DateTime.Now;
 
                 }
                 else if(zipStream == null)
@@ -73,7 +74,7 @@ namespace webapi.ProjectSearch.Services
         {
             FindingsExtractor fe = new FindingsExtractor();
             Dictionary<string, List<ZipArchiveEntry>> findingDictionary = new Dictionary<string, List<ZipArchiveEntry>>(); 
-            List<Finding> findingsList = new List<Finding> ();
+            List<Finding> findingsList = new List<Finding>();
             if (archive == null)
             {
                 throw new ArgumentNullException();
@@ -119,7 +120,6 @@ namespace webapi.ProjectSearch.Services
                                 if(entry.FullName.EndsWith("main.tex"))
                                 {
                                     newFinding = fe.extractFinding(entry);
-                                    newFinding.imagesList = new List<FileData>();
                                     processedMembers.Add(entry);
                                     string[] splitString = entry.FullName.Split('/', StringSplitOptions.RemoveEmptyEntries);
                                     newFinding.FolderName = splitString[2];
@@ -129,7 +129,7 @@ namespace webapi.ProjectSearch.Services
                             {
                                 if(!processedMembers.Contains(entry))
                                 {
-                                    newFinding.imagesList.Add(ProcessImages(entry));
+                                    newFinding.getImages().Add(ProcessImages(entry));
                                     processedMembers.Add(entry);
                                     count++;
                                 }

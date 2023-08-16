@@ -14,8 +14,6 @@ public class DbProjectInformationExtractorTests
     public void ExtractProjectInformationTest()
     {
         // Arrange
-        var extractor = new DbProjectInformationExtractor();
-
         var projectInformation = new ProjectInformation
         {
             ApplicationManager = new ProjectInformationParticipant
@@ -109,14 +107,97 @@ public class DbProjectInformationExtractorTests
         projectInformation.FindingsCountInfo = 2;
         projectInformation.FindingsCountTotal = 7;
 
+
+        string expectedStr = @"%----------------------------------------------------------------------------------------
+%	PROJECT INFORMATION
+%----------------------------------------------------------------------------------------
+\newcommand{\ApplicationManager}{Anakin Skywalker}
+\newcommand{\ApplicationManagerDepartment}{SHS DI DA CEC ITH EH-PLM}
+\newcommand{\ApplicationManagerContact}{\href{mailto://anakin.skywalker@siemens-healthineers.com}{anakin.skywalker\footnotemark[1]}}
+
+\newcommand{\BusinessOwnerName}{Padme Amidala}
+\newcommand{\BusinessOwnerDepartment}{SHS DI DA CEC EPE}
+\newcommand{\BusinessOwnerContact}{\href{mailto://padme.amidala@siemens-healthineers.com}{padme.amidala\footnotemark[1]}}
+
+\newcommand{\BusinessRepresentativeName}{Luke Skywalker}
+\newcommand{\BusinessRepresentativeDepartment}{SHS DI DA CEC ITH EH-PLM}
+\newcommand{\BusinessRepresentativeContact}{\href{mailto://luke.skywalker@siemens-healthineers.com}{luke.skywalker\footnotemark[1]}}
+
+\newcommand{\TechnicalContactsNumber}{2}
+\newcommand{\TechnicalContacts}{
+	Obi Wan Kenobi & SHS TE DC SVK D\&A DIG PTM & \href{mailto://obi-wan.kenobi@siemens-healthineers.com}{obi-wan.kenobi\footnotemark[1]} \\ &
+	Baby Yoda & SHS DI D\&A CEC ITH EH-R\&D & \href{mailto://baby.yoda@siemens-healthineers.com}{baby.yoda\footnotemark[1]} \\
+}
+
+% Not needed for Scope document
+% Required for Report document
+\newcommand{\PentestLeadName}{Lukas Nad}
+\newcommand{\PentestLeadDepartment}{SHS TE DC CYS CSA PPA}
+\newcommand{\PentestLeadContact}{\href{mailto://lukas.nad@siemens-healthineers.com}{lukas.nad\footnotemark[1]}}
+
+\newcommand{\PentestCoordinatorName}{Alzbeta Vojtusova}
+\newcommand{\PentestCoordinatorDepartment}{SHS TE DC CYS CSA\& P\&PA}
+\newcommand{\PentestCoordinatorContact}{\href{mailto://alzbeta.vojtusova@siemens-healthineers.com}{alzbeta.vojtusova\footnotemark[1]}}
+
+
+
+\newcommand{\PentestParticipantsNumber}{2} % Number of participants in ""Penetration Testing Team""
+\newcommand{\PentestTeamMember}{
+	Lukas Nad & SHS TE DC CYS CSA P\&PA & \href{mailto://lukas.nad@siemens-healthineers.com}{lukas.nad\footnotemark[1]} \\ &
+	Michal Olencin & SHS TE DC CYS CSA P\&PA & \href{mailto://michal.olencin@siemens-healthineers.com}{michal.olencin\footnotemark[1]} \\
+}
+
+%----------------------------------------------------------------------------------------
+%	TARGET INFORMATION
+%----------------------------------------------------------------------------------------
+\newcommand{\TargetInfoName}{\ReportProjectName} %% Asset Name
+\newcommand{\TargetInfoVersion}{12.1.1.2} %% Asset Version 	
+\newcommand{\TargetInfoType}{\AssetType} %% Asset Type
+\newcommand{\TargetInfoEnvironment}{Testing Environment}
+\newcommand{\TargetInfoInternetFacing}{Yes} %% Asset Internet Facing
+\newcommand{\TargetInfoSNXConnectivity}{No} %% SNX Connectivity
+\newcommand{\TargetInfoHostingLocation}{Special Network} %% Hosting Location
+\newcommand{\TargetInfoHostingProvider}{N/A} %% Hosting Provider
+\newcommand{\TargetInfoLifecyclePhase}{Pre-Production}
+\newcommand{\TargetInfoCriticality}{N/A}
+\newcommand{\TargetInfoAssetID}{N/A}
+\newcommand{\TargetInfoSHARPUUID}{N/A} %% SHARP UUID
+\newcommand{\TargetInfoDescription}{Lorem ipsum dolor sit amet, consectetur adipiscing elit.}
+
+%----------------------------------------------------------------------------------------
+%	AGREED TIMEFRAME
+%----------------------------------------------------------------------------------------
+\newcommand{\TimeframeTotal}{10 working days} 
+\newcommand{\TimeframeStart}{2023-05-29} 
+\newcommand{\TimeframeEnd}{2023-06-09} 
+\newcommand{\TimeframeReportDue}{2023-06-12} 
+\newcommand{\TimeframeComment}{-}
+
+%----------------------------------------------------------------------------------------
+%	FINDINGS COUNT AND OVERALL THREAT EXPOSURE
+%----------------------------------------------------------------------------------------
+% Not needed for Scope document
+% Required for Report document
+
+\newcommand{\OverallThreatExposureImage}{\includegraphics{Images/CriticalThreat.png}}
+% \includegraphics{Images/CriticalThreat.png}, 
+% \includegraphics{Images/HighThreat.png}, 
+% \includegraphics{Images/MediumThreat.png}, 
+% \includegraphics{Images/LowThreat.png}
+
+\newcommand{\FindingsCountCritical}{0}
+\newcommand{\FindingsCountHigh}{1}
+\newcommand{\FindingsCountMedium}{2}
+\newcommand{\FindingsCountLow}{2}
+\newcommand{\FindingsCountInfo}{2}
+\newcommand{\FindingsCountTotal}{7}";
+        
         // Act
         var result = DbProjectInformationExtractor.ExtractProjectInformation(projectInformation);
         var resultDecoded = Encoding.UTF8.GetString(result);
 
         // Assert
         Assert.IsNotNull(result);
-        
-        // Contains desired result
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\r\n%\tPROJECT INFORMATION\r\n%----------------------------------------------------------------------------------------\r\n\\newcommand{\\ApplicationManager}{Anakin Skywalker}\r\n\\newcommand{\\ApplicationManagerDepartment}{SHS DI DA CEC ITH EH-PLM}\r\n\\newcommand{\\ApplicationManagerContact}{\\href{mailto://anakin.skywalker@siemens-healthineers.com}{anakin.skywalker\\footnotemark[1]}}\r\n\r\n\\newcommand{\\BusinessOwnerName}{Padme Amidala}\r\n\\newcommand{\\BusinessOwnerDepartment}{SHS DI DA CEC EPE}\r\n\\newcommand{\\BusinessOwnerContact}{\\href{mailto://padme.amidala@siemens-healthineers.com}{padme.amidala\\footnotemark[1]}}\r\n\r\n\\newcommand{\\BusinessRepresentativeName}{Luke Skywalker}\r\n\\newcommand{\\BusinessRepresentativeDepartment}{SHS DI DA CEC ITH EH-PLM}\r\n\\newcommand{\\BusinessRepresentativeContact}{\\href{mailto://luke.skywalker@siemens-healthineers.com}{luke.skywalker\\footnotemark[1]}}\r\n\r\n\\newcommand{\\TechnicalContactsNumber}{2}\r\n\\newcommand{\\TechnicalContacts}{\r\n\tObi Wan Kenobi & SHS TE DC SVK D\\&A DIG PTM & \\href{mailto://obi-wan.kenobi@siemens-healthineers.com}{obi-wan.kenobi\\footnotemark[1]} \\\\ &\n\tBaby Yoda & SHS DI D\\&A CEC ITH EH-R\\&D & \\href{mailto://baby.yoda@siemens-healthineers.com}{baby.yoda\\footnotemark[1]} \\\\\r\n}\r\n\r\n% Not needed for Scope document\r\n% Required for Report document\r\n\\newcommand{\\PentestLeadName}{Lukas Nad}\r\n\\newcommand{\\PentestLeadDepartment}{SHS TE DC CYS CSA PPA}\r\n\\newcommand{\\PentestLeadContact}{\\href{mailto://lukas.nad@siemens-healthineers.com}{lukas.nad\\footnotemark[1]}}\r\n\r\n\\newcommand{\\PentestCoordinatorName}{Alzbeta Vojtusova}\r\n\\newcommand{\\PentestCoordinatorDepartment}{SHS TE DC CYS CSA\\& P\\&PA}\r\n\\newcommand{\\PentestCoordinatorContact}{\\href{mailto://alzbeta.vojtusova@siemens-healthineers.com}{alzbeta.vojtusova\\footnotemark[1]}}\r\n\r\n\r\n\r\n\\newcommand{\\PentestParticipantsNumber}{2} % Number of participants in \"Penetration Testing Team\"\r\n\\newcommand{\\PentestTeamMember}{\r\n\tLukas Nad & SHS TE DC CYS CSA P\\&PA & \\href{mailto://lukas.nad@siemens-healthineers.com}{lukas.nad\\footnotemark[1]} \\\\ &\n\tMichal Olencin & SHS TE DC CYS CSA P\\&PA & \\href{mailto://michal.olencin@siemens-healthineers.com}{michal.olencin\\footnotemark[1]} \\\\\r\n}\r\n\r\n%----------------------------------------------------------------------------------------\r\n%\tTARGET INFORMATION\r\n%----------------------------------------------------------------------------------------\r\n\\newcommand{\\TargetInfoName}{\\ReportProjectName} %% Asset Name\r\n\\newcommand{\\TargetInfoVersion}{12.1.1.2} %% Asset Version \t\r\n\\newcommand{\\TargetInfoType}{\\AssetType} %% Asset Type\r\n\\newcommand{\\TargetInfoEnvironment}{Testing Environment}\r\n\\newcommand{\\TargetInfoInternetFacing}{Yes} %% Asset Internet Facing\r\n\\newcommand{\\TargetInfoSNXConnectivity}{No} %% SNX Connectivity\r\n\\newcommand{\\TargetInfoHostingLocation}{Special Network} %% Hosting Location\r\n\\newcommand{\\TargetInfoHostingProvider}{N/A} %% Hosting Provider\r\n\\newcommand{\\TargetInfoLifecyclePhase}{Pre-Production}\r\n\\newcommand{\\TargetInfoCriticality}{N/A}\r\n\\newcommand{\\TargetInfoAssetID}{N/A}\r\n\\newcommand{\\TargetInfoSHARPUUID}{N/A} %% SHARP UUID\r\n\\newcommand{\\TargetInfoDescription}{Lorem ipsum dolor sit amet, consectetur adipiscing elit.}\r\n\r\n%----------------------------------------------------------------------------------------\r\n%\tAGREED TIMEFRAME\r\n%----------------------------------------------------------------------------------------\r\n\\newcommand{\\TimeframeTotal}{10 working days} \r\n\\newcommand{\\TimeframeStart}{2023-05-29} \r\n\\newcommand{\\TimeframeEnd}{2023-06-09} \r\n\\newcommand{\\TimeframeReportDue}{2023-06-12} \r\n\\newcommand{\\TimeframeComment}{-}\r\n\r\n%----------------------------------------------------------------------------------------\r\n%\tFINDINGS COUNT AND OVERALL THREAT EXPOSURE\r\n%----------------------------------------------------------------------------------------\r\n% Not needed for Scope document\r\n% Required for Report document\r\n\r\n\\newcommand{\\OverallThreatExposureImage}{\\includegraphics{Images/CriticalThreat.png}}\r\n% \\includegraphics{Images/CriticalThreat.png}, \r\n% \\includegraphics{Images/HighThreat.png}, \r\n% \\includegraphics{Images/MediumThreat.png}, \r\n% \\includegraphics{Images/LowThreat.png}\r\n\r\n\\newcommand{\\FindingsCountCritical}{0}\r\n\\newcommand{\\FindingsCountHigh}{1}\r\n\\newcommand{\\FindingsCountMedium}{2}\r\n\\newcommand{\\FindingsCountLow}{2}\r\n\\newcommand{\\FindingsCountInfo}{2}\r\n\\newcommand{\\FindingsCountTotal}{7}", resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

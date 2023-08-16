@@ -20,7 +20,6 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'coordinator'] } },
   { path: 'about-pentests', component: AboutPentestsComponent, canActivate: [Roles], data: { allowedRoles: ['admin', 'pentester', 'coordinator', 'client', 'default'] } },
 ];
-
 @NgModule({
   declarations: [],
   imports: [RouterModule.forRoot(routes), CommonModule],

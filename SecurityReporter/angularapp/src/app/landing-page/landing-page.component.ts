@@ -105,14 +105,4 @@ export class LandingPageComponent implements OnInit{
       });
     }
   }
-
-
-  navigateToPage(page: string): void {
-    this.router.navigate([page]);
-  }
-
-  navigateToWebsite(page: string): void {
-    window.open(page, '_blank');
-  }
-
 }
