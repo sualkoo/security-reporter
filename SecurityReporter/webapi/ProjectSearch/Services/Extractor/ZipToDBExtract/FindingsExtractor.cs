@@ -8,8 +8,8 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class FindingsExtractor
     {
-        string newCommandRegexPattern = @"\\(renew|new)command{\\([^}]+)}{([^}]+)}";
-        string subsectionRegex = @"\\subsection\*{([^}]+)}([\s\S]*)(?=\\subsection\*{[^}]+}|$)";
+        string newCommandRegexPattern = @"\\(?:renew|new)command{\\([^}]+)}{([^}]+)}";
+        string subsectionRegex = @"\\subsection\*{([^}]+)}([\s\S]*?)(?=\\subsection\*{[^}]+}|\\subsection\*|$)";
 
         List<Finding> findingsList = new List<Finding>();
         ZipArchiveEntry findingsDirectory;
@@ -23,7 +23,15 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 string fileContent = reader.ReadToEnd();
                 MatchCollection newCommandMatches = Regex.Matches(fileContent, newCommandRegexPattern);
                 MatchCollection subsectionMatches = Regex.Matches(fileContent, subsectionRegex);
-                while ((line = reader.ReadLine()) != null)
+                foreach(Match match in newCommandMatches)
+                {
+                    assignNewData(match.Groups[1].ToString(), match.Groups[2].ToString(), newFinding);
+                }
+                foreach(Match match in subsectionMatches)
+                {
+                    assignNewData(match.Groups[1].ToString(), match.Groups[2].ToString(), newFinding);
+                }
+                /*while ((line = reader.ReadLine()) != null)
                 {
                     if (!string.IsNullOrEmpty(line) && line.Trim().Length > 0 && line.Trim()[0] == '\\')
                     {
@@ -40,7 +48,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             }
                         }
                     }
-                }
+                }*/
 
                 return newFinding;
             }
@@ -50,34 +58,34 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         {
             switch (command)
             {
-                case "\\FindingAuthor":
+                case "FindingAuthor":
                     newFinding.FindingAuthor = data;
                     break;
-                case "\\FindingName":
+                case "FindingName":
                     newFinding.FindingName = data;
                     break;
-                case "\\Location":
+                case "Location":
                     newFinding.Location = extractLocation(data);
                     break;
-                case "\\Component":
+                case "Component":
                     newFinding.Component = data;
                     break;
-                case "\\FoundWith":
+                case "FoundWith":
                     newFinding.FoundWith = data;
                     break;
-                case "\\TestMethod":
+                case "TestMethod":
                     newFinding.TestMethod = data;
                     break;
-                case "\\CVSS":
+                case "CVSS":
                     newFinding.CVSS = data;
                     break;
-                case "\\CVSSvector":
+                case "CVSSvector":
                     newFinding.CVSSVector = data;
                     break;
-                case "\\CWE":
+                case "CWE":
                     newFinding.CWE = int.Parse(data);
                     break;
-                case "\\Criticality":
+                case "Criticality":
                     switch (data)
                     {
                         case "High":
@@ -97,7 +105,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             break;
                     }
                     break;
-                case "\\Exploitability":
+                case "Exploitability":
                     switch (data)
                     {
                         case "Easy":
@@ -114,7 +122,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             break;
                     }
                     break;
-                case "\\Category":
+                case "Category":
                     switch (data)
                     {
                         case "Access Control":
@@ -134,7 +142,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             break;
                     }
                     break;
-                case "\\Detectability":
+                case "Detectability":
                     switch (data)
                     {
                         case "Easy":
@@ -180,7 +188,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return result;
         }
 
-        private void extractSubsection(string command, StreamReader reader, Finding newFinding)
+        /*private void extractSubsection(string command, StreamReader reader, Finding newFinding)
         {
             string line;
             bool reading = true;
@@ -216,7 +224,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 assignNewData(command, result, newFinding);
             }
-        }
+        }*/
 
         /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
         {
