@@ -39,7 +39,3 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-alert button {
   color: black !important;
 }
-
-body {
-  padding-top: 11vh;
-}
