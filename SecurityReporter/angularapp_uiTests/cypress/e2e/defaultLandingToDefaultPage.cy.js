@@ -2,7 +2,7 @@
 describe('Client lands to project listing after login test', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://localhost:4200/');
+        cy.visit('https://sda-playground.azurewebsites.net/');
     });
     it('passes', () => {
         testLandingClient()
