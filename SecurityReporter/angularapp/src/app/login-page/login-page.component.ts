@@ -29,16 +29,25 @@ export class LoginPageComponent implements OnInit {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
-      //DUMMY TEMPORARY LOGIN
       this.loginService.sendLoginInfo(username, password).then(data => {
         if ( data.status == 200) {
           console.log("Login successful")
 
           this.roleService.getRole().then(role => {
-            if (role === 'default') {
-              window.location.href = 'default-page';
-            } else {
-              window.location.href = 'after-login';
+            switch (role) {
+              case 'default':
+                window.location.href = 'default-page';
+                break;
+              case 'pentester':
+                window.location.href = 'project-search';
+                break;
+              case 'client':
+              case 'coordinator':
+                window.location.href = 'list-projects';
+                break;
+              case 'admin':
+                window.location.href = 'dashboard';
+                break;
             }
           });
         } 
