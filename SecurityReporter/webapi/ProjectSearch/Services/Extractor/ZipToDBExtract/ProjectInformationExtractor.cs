@@ -10,8 +10,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         ZipArchiveEntry projectInfoEntry;
         Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary;
         ProjectInformation newProjectInfo = new ProjectInformation();
-        bool technicalContacts = false;
-        bool pentestTeamMember = false;
+
         public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry,
             Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary)
         {

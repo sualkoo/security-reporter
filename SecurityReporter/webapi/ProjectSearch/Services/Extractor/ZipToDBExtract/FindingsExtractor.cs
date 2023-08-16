@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
 
@@ -7,6 +8,9 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class FindingsExtractor
     {
+        string newCommandRegexPattern = @"\\(renew|new)command{\\([^}]+)}{([^}]+)}";
+        string subsectionRegex = @"\\subsection\*{([^}]+)}([\s\S]*)(?=\\subsection\*{[^}]+}|$)";
+
         List<Finding> findingsList = new List<Finding>();
         ZipArchiveEntry findingsDirectory;
         public Finding extractFinding(ZipArchiveEntry currentEntry)
@@ -16,6 +20,9 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             char[] delimiters = { '{', '}' };
             using (StreamReader reader = new StreamReader(currentEntry.Open()))
             {
+                string fileContent = reader.ReadToEnd();
+                MatchCollection newCommandMatches = Regex.Matches(fileContent, newCommandRegexPattern);
+                MatchCollection subsectionMatches = Regex.Matches(fileContent, subsectionRegex);
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (!string.IsNullOrEmpty(line) && line.Trim().Length > 0 && line.Trim()[0] == '\\')

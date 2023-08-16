@@ -67,9 +67,9 @@ namespace webapi.ProjectSearch.Services
             
             try
             {
-                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                Logger.LogInformation("Spravil som pdf");
-                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                //var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                //Logger.LogInformation("Spravil som pdf");
+                //await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
 
                 Logger.LogInformation("Spravil som blob");
                 await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
