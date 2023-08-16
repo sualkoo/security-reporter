@@ -36,7 +36,7 @@ namespace webapi.ProjectReportControllers.Tests
             ProjectReportData data = new ProjectReportData();
             data.Id = Guid.NewGuid();
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ReturnsAsync(data);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ReturnsAsync(data);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -57,7 +57,7 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status406NotAcceptable, "Invalid file type. Only .zip files are allowed.");
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ThrowsAsync(expectedException);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -78,7 +78,7 @@ namespace webapi.ProjectReportControllers.Tests
 
             CustomException expectedException = new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database.");
 
-            mockProjectReportService.Setup(service => service.SaveReportFromZip(formFile)).ThrowsAsync(expectedException);
+            mockProjectReportService.Setup(service => service.SaveReportFromZipAsync(formFile)).ThrowsAsync(expectedException);
 
             // Act
             var result = projectReportController.AddProjectReport(formFile).Result;
@@ -223,7 +223,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).ReturnsAsync(true);
 
             // Act
-            var task = projectReportController.DeleteProjectReportsALL();
+            var task = projectReportController.DeleteProjectReportsAll();
 
             var result = task.Result as OkObjectResult;
 
@@ -241,7 +241,7 @@ namespace webapi.ProjectReportControllers.Tests
             mockProjectReportService.Setup(service => service.DeleteReportAllAsync()).Throws(expectedException);
 
             // Act
-            var result = projectReportController.DeleteProjectReportsALL().Result;
+            var result = projectReportController.DeleteProjectReportsAll().Result;
 
             // Assert
 

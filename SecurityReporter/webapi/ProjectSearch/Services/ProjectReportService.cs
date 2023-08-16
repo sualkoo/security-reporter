@@ -41,7 +41,7 @@ namespace webapi.ProjectSearch.Services
             return await CosmosService.GetProjectReport(id.ToString());
         }
 
-        async Task<ProjectReportData> IProjectReportService.SaveReportFromZip(IFormFile file)
+        async Task<ProjectReportData> IProjectReportService.SaveReportFromZipAsync(IFormFile file)
         {
             Logger.LogInformation($"Saving new project report");
             ProjectReportData newReportData;
@@ -131,7 +131,7 @@ namespace webapi.ProjectSearch.Services
             return zip;
         }
 
-        public async Task<FileContentResult> GetPdfByProjectId(Guid id)
+        public async Task<FileContentResult> GetPdfByProjectIdAsync(Guid id)
         {
             return await AzureBlobService.GetReportPdf(id);
         }
