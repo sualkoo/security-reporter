@@ -53,6 +53,55 @@ public class DbDocumentInformationExtractorTests
         };
 
         documentInfo.ReportDate = new DateTime(2023, 6, 12);
+
+        string expectedStr = @"%----------------------------------------------------------------------------------------
+%	DOCUMENT TYPE
+%----------------------------------------------------------------------------------------
+
+% Use ""\ReportDocument"" & ""\TitlePageTableReport"" when writing Report 
+% Use ""\ScopeDocument"" & ""\TitlePageTableScope"" for creating Scope Document
+\newcommand{\DocumentType}{\ReportDocument}
+\renewcommand{\SetTitlePageTable}{\TitlePageTableReport}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportProjectName}{Dummy Project 1\xspace}
+\newcommand{\ReportProjectType}{Penetration Test Report\xspace}
+\newcommand{\AssetType}{Mobile Application\xspace}
+
+%----------------------------------------------------------------------------------------
+%	AUTHORS, REVIEWERS, APPROVERS
+%----------------------------------------------------------------------------------------
+\newcommand{\ReportDocumentMainAuthor}{Lukas Nad}
+\newcommand{\ReportDocumentAuthor}{Lukas Nad}
+\newcommand{\ReportDocumentReviewer}{Katarina Amrichova}
+\newcommand{\ReportDocumentApprover}{Filip Mrocek}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT VERSION HISTORY
+%----------------------------------------------------------------------------------------
+% Document version history. Copy the inner line for subsequent version entries.
+% Example: \ReportVersionEntry{DATE}{VERSION}{FIRSTNAME LASTNAME}{draft / review / released}{COMMENT}
+
+% TODO: investigate git version tags (automatic compilation of document history table)
+
+\newcommand{\ReportDocumentHistory}{
+	\ReportVersionEntry{2023-08-02}{0.1}{Lukas Nad}{Initial Draft}
+	\ReportVersionEntry{2023-08-02}{0.2}{Michal Olencin}{Added Findings}
+}
+
+
+%----------------------------------------------------------------------------------------
+%	GENERAL DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+\newcommand{\FiscalYear}{FY23}
+\newcommand{\ReportVersion}{Default}
+\newcommand{\ReportDate}{June 12, 2023}
+\newcommand{\ReportDocumentClassification}{CONFIDENTIAL}
+
+% \newcommand{\ReportStatus}{RELEASE} 
+\newcommand{\ReportStatus}{DRAFT}";
         // Act
         var result = DbDocumentInformationExtractor.ExtractDocumentInformation(documentInfo);
         var resultDecoded = Encoding.UTF8.GetString(result);
@@ -60,6 +109,6 @@ public class DbDocumentInformationExtractorTests
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\n%\tDOCUMENT TYPE\n%----------------------------------------------------------------------------------------\n\n% Use \"\\ReportDocument\" & \"\\TitlePageTableReport\" when writing Report \n% Use \"\\ScopeDocument\" & \"\\TitlePageTableScope\" for creating Scope Document\n\\newcommand{\\DocumentType}{\\ReportDocument}\n\\renewcommand{\\SetTitlePageTable}{\\TitlePageTableReport}\n\n%----------------------------------------------------------------------------------------\n%\tTITLE PAGE\n%----------------------------------------------------------------------------------------\n\\newcommand{\\ReportProjectName}{Dummy Project 1\\xspace}\n\\newcommand{\\ReportProjectType}{Penetration Test Report\\xspace}\n\\newcommand{\\AssetType}{Mobile Application\\xspace}\n\n%----------------------------------------------------------------------------------------\n%\tAUTHORS, REVIEWERS, APPROVERS\n%----------------------------------------------------------------------------------------\n\\newcommand{\\ReportDocumentMainAuthor}{Lukas Nad}\n\\newcommand{\\ReportDocumentAuthor}{Lukas Nad}\n\\newcommand{\\ReportDocumentReviewer}{Katarina Amrichova}\n\\newcommand{\\ReportDocumentApprover}{Filip Mrocek}\n\n%----------------------------------------------------------------------------------------\n%\tDOCUMENT VERSION HISTORY\n%----------------------------------------------------------------------------------------\n% Document version history. Copy the inner line for subsequent version entries.\n% Example: \\ReportVersionEntry{DATE}{VERSION}{FIRSTNAME LASTNAME}{draft / review / released}{COMMENT}\n\n% TODO: investigate git version tags (automatic compilation of document history table)\n\n\\newcommand{\\ReportDocumentHistory}{\n\t\\ReportVersionEntry{2023-08-02}{0.1}{Lukas Nad}{Initial Draft}\n\t\\ReportVersionEntry{2023-08-02}{0.2}{Michal Olencin}{Added Findings}\n}\n\n\n%----------------------------------------------------------------------------------------\n%\tGENERAL DOCUMENT INFORMATION\n%----------------------------------------------------------------------------------------\n\\newcommand{\\FiscalYear}{FY23}\n\\newcommand{\\ReportVersion}{Default}\n\\newcommand{\\ReportDate}{June 12, 2023}\n\\newcommand{\\ReportDocumentClassification}{CONFIDENTIAL}\n\n% \\newcommand{\\ReportStatus}{RELEASE} \n\\newcommand{\\ReportStatus}{DRAFT}",resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

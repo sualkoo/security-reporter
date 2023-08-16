@@ -46,9 +46,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
                     environment.Add("\t\t\\item " + env);
                 }
             }
-
-
-
+            
             string scopeAndProceduresContent =
 @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
