@@ -1,5 +1,4 @@
 <div class="button-container">
-
   <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
     <div matTooltip="No items selected" [matTooltipDisabled]="!areNoBoxesChecked()" matTooltipPosition="below">
       <div>
@@ -9,13 +8,16 @@
       </div>
     </div>
   </div>
-
     <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
       <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
         Add project
       </button>
     </div>
   </div>
+
+<div class="reset-filters">
+  <button mat-flat-button color="warn" (click)="resetSorting()"> Reset Sorting</button>
+</div>
 
   <div class="expansion-panel">
     <app-expansion-panel (filtersChangedEvent)="filtersChangedHandler($event)"></app-expansion-panel>
@@ -50,10 +52,9 @@
 
         <!-- Project Name Column -->
         <ng-container matColumnDef="projectName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="projectName"> Project Name </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="updateSelectedColumn(1)"> Project Name </th>
           <td mat-cell *matCellDef="let element"> {{ element.projectName }} </td>
         </ng-container>
-
 
         <!-- Edit Button Column -->
         <ng-container matColumnDef="edit">
@@ -136,9 +137,9 @@
 
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
-            (click)="handleRowClick(row)">
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
+          (click)="handleRowClick(row)">
         </tr>
 
 
