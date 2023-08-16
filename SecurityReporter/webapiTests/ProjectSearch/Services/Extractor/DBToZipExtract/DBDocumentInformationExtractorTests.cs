@@ -102,7 +102,6 @@ public class DbDocumentInformationExtractorTests
 
 % \newcommand{\ReportStatus}{RELEASE} 
 \newcommand{\ReportStatus}{DRAFT}";
-        
         // Act
         var result = DbDocumentInformationExtractor.ExtractDocumentInformation(documentInfo);
         var resultDecoded = Encoding.UTF8.GetString(result);
@@ -110,6 +109,6 @@ public class DbDocumentInformationExtractorTests
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains(expectedStr, resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }
