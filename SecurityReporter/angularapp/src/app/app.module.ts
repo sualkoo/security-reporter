@@ -48,8 +48,7 @@ import { AfterLoginPageComponent } from './after-login-page/after-login-page.com
 import { AutoLogoutService } from './services/auto-logout.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { MyProfileComponent } from './my-profile/my-profile.component';
-
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 
 
 @NgModule({
@@ -64,7 +63,6 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     HighlighterPipe,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
-    MyProfileComponent,
  
   ],
   imports: [
@@ -101,7 +99,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-    MatSnackBarModule
+MyProfileComponent,
+    MatSnackBarModule, 
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],

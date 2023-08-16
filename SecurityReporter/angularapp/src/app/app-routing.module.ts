@@ -11,7 +11,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { loginGuard } from './login-page/guards/login.guard';
-import { MyProfileComponent } from './my-profile/my-profile.component';
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 
 
 const routes: Routes = [
