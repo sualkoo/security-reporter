@@ -51,6 +51,39 @@ public class DbTestingMethodologyExtractorTests
 
         // Assert
         Assert.IsNotNull(resultDecoded);
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\n%\tTOOLS USED\n%----------------------------------------------------------------------------------------\n% Not needed for Scope document\n% Required for Report document\n\\newcommand{\\ToolsUsed}{\n\t\\hline \n\tadb & 1.0.41 & Android debugging & Bridge to Andorid device \\\\\n\t\\hline\n\tAndroid Studio & 2022.2.1 & Android Development, Emulator & Official integrated development environment for Google's Android operating system, with emulator capabilities. \\\\\n\t\\hline\n} \n\n\n%----------------------------------------------------------------------------------------\n%\tATTACK VECTORS AND PAYLOAD TYPES\n%----------------------------------------------------------------------------------------\n% Not needed for Scope document\n% Required for Report document\n\\newcommand{\\AttackVectors}{\n\n\tTests on \\ReportProjectName included, but were not limited to:\n\n\t\\begin{itemize}\n\t\t\\item static analysis,\n\t\t\\item file system analysis,\n\t\t\\item debugging,\n\t\t\\item workflow analysis,\n\t\t\\item client-side testing,\n\t\t\\item testing for weak cryptography,\n\t\t\\item testing error handling.\n\t\\end{itemize}\n\n}", resultDecoded);
+        StringAssert.Contains(@"%----------------------------------------------------------------------------------------
+%	TOOLS USED
+%----------------------------------------------------------------------------------------
+% Not needed for Scope document
+% Required for Report document
+\newcommand{\ToolsUsed}{
+	\hline 
+	adb & 1.0.41 & Android debugging & Bridge to Andorid device \\
+	\hline
+	Android Studio & 2022.2.1 & Android Development, Emulator & Official integrated development environment for Google's Android operating system, with emulator capabilities. \\
+	\hline
+} 
+
+
+%----------------------------------------------------------------------------------------
+%	ATTACK VECTORS AND PAYLOAD TYPES
+%----------------------------------------------------------------------------------------
+% Not needed for Scope document
+% Required for Report document
+\newcommand{\AttackVectors}{
+
+	Tests on \ReportProjectName included, but were not limited to:
+
+	\begin{itemize}
+		\item static analysis,
+		\item file system analysis,
+		\item debugging,
+		\item workflow analysis,
+		\item client-side testing,
+		\item testing for weak cryptography,
+		\item testing error handling.
+	\end{itemize}
+
+}", resultDecoded);
     }
 }

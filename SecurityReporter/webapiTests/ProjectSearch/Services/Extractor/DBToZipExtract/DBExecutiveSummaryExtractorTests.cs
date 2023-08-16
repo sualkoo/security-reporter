@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using NUnit.Framework;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+using StringAssert = Microsoft.VisualStudio.TestTools.UnitTesting.StringAssert;
 
 namespace webapiTests.ProjectSearch.Services.Extractor.DBToZipExtract;
 
@@ -13,12 +14,23 @@ public class DbExecutiveSummaryExtractorTests
         // Arrange
         var inputStr = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.";
 
+        string expectedStr = @"%----------------------------------------------------------------------------------------
+%	EXECUTIVE SUMMARY
+%----------------------------------------------------------------------------------------
+%-<ExecSum>->
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.
+
+%-<ExecSum>
+\pagebreak
+\section*{Overall Exposure}";
+        
         // Act
         var result = DbExecutiveSummaryExtractor.ExtractExecutiveSummary(inputStr);
         var resultDecoded = Encoding.UTF8.GetString(result);
 
         // Assert
         Assert.IsNotNull(result);
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\n%\tEXECUTIVE SUMMARY\n%----------------------------------------------------------------------------------------\n%-<ExecSum>->\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.\n\n%-<ExecSum>\n\\pagebreak\n\\section*{Overall Exposure}", resultDecoded);
+        StringAssert.Contains(expectedStr, resultDecoded);
     }
 }
