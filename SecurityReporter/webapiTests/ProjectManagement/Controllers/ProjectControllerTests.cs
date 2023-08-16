@@ -270,17 +270,18 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var pageSize = 10;
             var pageNumber = 1;
             var filter = new FilterData();
+            var sort = new SortData();
 
             var mockItems = new List<ProjectList>
             {
                 projectListData
             };
 
-            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter, sort))
                             .ReturnsAsync(mockItems);
 
             // Act
-            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter, sort);
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
@@ -297,12 +298,13 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var pageSize = 10;
             var pageNumber = 1;
             var filter = new FilterData();
+            var sort = new SortData();
 
-            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter, sort))
                             .ReturnsAsync(new List<ProjectList>());
 
             // Act
-            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter, sort);
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
@@ -319,14 +321,15 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var pageSize = 10;
             var pageNumber = 1;
             var filter = new FilterData();
+            var sort = new SortData();
 
             var errorMessage = "An error occurred.";
 
-            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter, sort))
                             .ThrowsAsync(new Exception(errorMessage));
 
             // Act
-            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter, sort);
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
@@ -344,17 +347,18 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var pageNumber = 1;
             var filter = new FilterData();
             filter.FilteredProjectName = "Sample Project";
+            var sort = new SortData();
 
             var mockItems = new List<ProjectList>
             {
                 projectListData
             };
 
-            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter, sort))
                             .ReturnsAsync(mockItems);
 
             // Act
-            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter, sort);
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
@@ -372,17 +376,18 @@ namespace webapi.ProjectManagement.Controllers.Tests
             var pageNumber = 1;
             var filter = new FilterData();
             filter.FilteredProjectStatus = ProjectStatus.Finished;
+            var sort = new SortData();
 
             var mockItems = new List<ProjectList>
             {
                 projectListData
             };
 
-            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter))
+            cosmosServiceMock.Setup(x => x.GetItems(pageSize, pageNumber, filter, sort))
                             .ReturnsAsync(new List<ProjectList>());
 
             // Act
-            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter);
+            IActionResult result = await projectController.GetItems(pageSize, pageNumber, filter, sort);
 
             // Assert
             Assert.IsInstanceOf<ObjectResult>(result);
