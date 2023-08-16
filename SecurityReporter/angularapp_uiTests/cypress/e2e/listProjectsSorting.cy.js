@@ -29,15 +29,31 @@ describe("Firestarter", () => {
         // Create a copied and sorted array for comparison
         const copiedprojectColumns = [...projectColumns];
 
-        if (sortDirection === "asc") {
-          copiedprojectColumns.sort((a, b) =>
-            a.toUpperCase().localeCompare(b.toUpperCase())
-          );
-        } else if (sortDirection === "desc") {
-          copiedprojectColumns.sort((a, b) =>
-            b.toUpperCase().localeCompare(a.toUpperCase())
-          );
+        if (column == "pentestDuration") {
+          if (sortDirection === "asc") {
+            copiedprojectColumns
+              .slice()
+              .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+          } else if (sortDirection === "desc") {
+            copiedprojectColumns
+              .slice()
+              .sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+          }
+        } else {
+          if (sortDirection === "asc") {
+            copiedprojectColumns.sort((a, b) =>
+              a.toLowerCase().localeCompare(b.toLowerCase())
+            );
+          } else if (sortDirection === "desc") {
+            copiedprojectColumns.sort((a, b) =>
+              b.toLowerCase().localeCompare(a.toLowerCase())
+            );
+          }
         }
+
+        console.log("sorted", projectColumns);
+        console.log("sorted", copiedprojectColumns);
+
         expect(projectColumns).to.deep.equal(copiedprojectColumns);
       });
   };
@@ -97,7 +113,6 @@ describe("Firestarter", () => {
     cy.get(`div.reset-filters`).click();
 
     cy.wait("@retrieve");
-    cy.wait(1000);
 
     cy.wait("@retrieve").then(() => {
       cy.get("table").as("newtable");
@@ -119,6 +134,8 @@ describe("Firestarter", () => {
             });
         })
         .then(() => {
+          console.log(oldColumns);
+
           console.log(arrayOfCollumns);
           expect(arrayOfCollumns).to.deep.equal(oldColumns);
         });
