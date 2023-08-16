@@ -144,7 +144,7 @@ export const CVSSConfig = {
       responsive: true,
       title: {
         display: true,
-        text: 'Average Report CVSS score',
+        text: 'Average Report CVSS score per month',
         color: 'black',
         align: 'center',
         font: {
