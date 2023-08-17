@@ -1,7 +1,7 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!--Sidebar-->
-    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height:100%; overflow-y: auto; overflow-x: hidden;">
+    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 90%; overflow-y: auto; overflow-x: hidden;">
       <div class="mt-2 pt-2">
         <div class="search-container">
           <mat-form-field class="search-field">
@@ -60,7 +60,7 @@
               <div class="card-body">
                 <div class="card-title">
                   <input class="projectSelectionCheckbox form-check-input me-2 mt-2" style="border: 2px solid black; box-sizing: border-box;" [checked]="project.checked" (click)="onSelectionCheckboxChange($event)" type="checkbox" [value]="project.projectId">
-                  <label class="form-check-label" for="flexCheckDefault">
+                  <label class="form-check-label">
                     <h3 *ngIf="!projectNameTest" class="mb-2">Project: {{project.projectName}}</h3>
                     <h3 *ngIf="projectNameTest" class="mb-2"
                         [innerHtml]="project.projectName | highlighter:highlightValue:'partial'">
