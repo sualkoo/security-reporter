@@ -41,6 +41,8 @@ export const CriticalityConfig = {
         },
       },
     },
+
+
   } as ChartOptions,
 };
 
@@ -86,7 +88,9 @@ export const VulnerabilityConfig = {
           padding: 20
         }
       },
-    }
+    },
+
+
   }as ChartOptions
 };
 
@@ -121,7 +125,28 @@ export const CWEConfig = {
         display: false, // Hide the default legend,
 
       },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'Count',
+        }
+      },
+      x: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'CWE',
+        }
+      }
+
     }
+
   }as ChartOptions
 };
 
@@ -144,7 +169,7 @@ export const CVSSConfig = {
       responsive: true,
       title: {
         display: true,
-        text: 'Average Report CVSS score per month',
+        text: 'Average Report CVSS score',
         color: 'black',
         align: 'center',
         font: {
@@ -155,6 +180,27 @@ export const CVSSConfig = {
         display: false, // Hide the default legend,
 
       },
+    },
+    scales: {
+
+
+      y: {
+        beginAtZero: true,
+       display: true,
+        title: {
+          display: true,
+          text: 'CVSS score',
+        }
+      },
+      x: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'Month',
+        }
+      },
+
     }
   }as ChartOptions
 };
