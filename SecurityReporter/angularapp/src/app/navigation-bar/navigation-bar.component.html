@@ -1,46 +1,47 @@
 <nav class="navbar navbar-expand-lg navbar-white shadow-sm">
-    <div class="navbar-brand p-2">
-      <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" height="34">
-    </div>
-    <button class="navbar-toggler"
-            type="button"
-            (click)="toggleNavigation()"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse p-3 bg-white" [ngClass]="{ 'show': showNavigation }" id="navbarNav">
-      <!--      <div class="collapse navbar-collapse" id="navbarNav">
-      -->
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/" (click)="setNavItem('home')">
-            <p *ngIf="actualNavItem !== 'home'">Home</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === 'home'">Home</b>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/dashboard" (click)="setNavItem('dashboard')">
-            <p *ngIf="actualNavItem !== 'dashboard'">Dashboard</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === 'dashboard'">Dashboard</b>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/project-search" (click)="setNavItem('project-search')">
-            <p *ngIf="actualNavItem !== 'project-search'">Project Search</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === 'project-search'">Project Search</b>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" routerLink="/project-management" (click)="setNavItem('/project-management')">
-            <p *ngIf="actualNavItem !== '/project-management'">Project Management</p>
-            <b class="text-decoration-underline" *ngIf="actualNavItem === '/project-management'">Project Management</b>
-          </a>
-        </li>
-        <!-- Add more navigation items as needed -->
-      </ul>
-    </div>
+  <div class="navbar-brand pb-3">
+    <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" class="img-fluid col-2">
+    Cybersecurity Assasment
+  </div>
+  <button class="navbar-toggler"
+          type="button"
+          (click)="toggleNavigation()"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse p-3 bg-white" [ngClass]="{ 'show': showNavigation }" id="navbarNav">
+    <!--      <div class="collapse navbar-collapse" id="navbarNav">
+    -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/" (click)="setNavItem('home')">
+          <p *ngIf="actualNavItem !== 'home'">Home</p>
+          <b class="text-decoration-underline" *ngIf="actualNavItem === 'home'">Home</b>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/dashboard" (click)="setNavItem('dashboard')">
+          <p *ngIf="actualNavItem !== 'dashboard'">Dashboard</p>
+          <b class="text-decoration-underline" *ngIf="actualNavItem === 'dashboard'">Dashboard</b>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/project-search" (click)="setNavItem('project-search')">
+          <p *ngIf="actualNavItem !== 'project-search'">Project Search</p>
+          <b class="text-decoration-underline" *ngIf="actualNavItem === 'project-search'">Project Search</b>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/project-management" (click)="setNavItem('/project-management')">
+          <p *ngIf="actualNavItem !== '/project-management'">Project Management</p>
+          <b class="text-decoration-underline" *ngIf="actualNavItem === '/project-management'">Project Management</b>
+        </a>
+      </li>
+      <!-- Add more navigation items as needed -->
+    </ul>
+  </div>
 </nav>
