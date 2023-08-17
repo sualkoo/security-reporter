@@ -66,6 +66,7 @@ namespace webapi.Service
         public async Task<bool> AddProject(ProjectData data)
         {
             data.RequestCreated = DateTime.Now;
+            data.ProjectNameLower = data.ProjectName.ToLower();
             if (data.Comments != null)
             {
                 data.Comments[0].CreatedAt = DateTime.Now;
@@ -177,7 +178,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter)
+        public async Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort)
         {
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
@@ -199,6 +200,42 @@ namespace webapi.Service
             var queryParameters = new Dictionary<string, object>();
 
             var filterConditions = new List<string>();
+
+            if (sort.SortingColumns != 0)
+            {
+                switch (sort.SortingColumns)
+                {
+                    case Enums.SortingColumns.ProjectName:
+                        queryString += " ORDER BY c.ProjectNameLower";
+                        break;
+                    case Enums.SortingColumns.StartDate:
+                        queryString += " ORDER BY c.StartDate";
+                        break;
+                    case Enums.SortingColumns.EndDate:
+                        queryString += " ORDER BY c.EndDate";
+                        break;
+                    case Enums.SortingColumns.ReportDueDate:
+                        queryString += " ORDER BY c.ReportDueDate";
+                        break;
+                    case Enums.SortingColumns.PentestDuration:
+                        queryString += " ORDER BY c.PentestDuration";
+                        break;
+                    case Enums.SortingColumns.IKO:
+                        queryString += " ORDER BY c.IKO";
+                        break;
+                    case Enums.SortingColumns.TKO:
+                        queryString += " ORDER BY c.TKO";
+                        break;
+                }
+
+                if (sort.SortingDescDirection)
+                {
+                    queryString += " DESC";
+                }
+                else {
+                    queryString += " ASC";
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
@@ -287,6 +324,11 @@ namespace webapi.Service
                 {
                     queryString += " WHERE " + string.Join(" AND ", filterConditions);
                 }
+            }
+
+            if (sort.SortingColumns == 0 && filterConditions.Count == 0)
+            {
+                queryString += " ORDER BY c.RequestCreated DESC";
             }
 
             queryString += " OFFSET @skipCount LIMIT @itemCount";
