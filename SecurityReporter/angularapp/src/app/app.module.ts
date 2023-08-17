@@ -47,6 +47,9 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { AutoLogoutService } from './services/auto-logout.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
@@ -65,7 +68,8 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     AboutPentestsComponent,
     NavigationBarComponent,
     DefaultPageComponentComponent,
-    AfterLoginPageComponent
+    AfterLoginPageComponent,
+ 
   ],
   imports: [
     MatSnackBarModule,
@@ -101,7 +105,8 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-    MatSnackBarModule
+MyProfileComponent,
+    MatSnackBarModule, 
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],

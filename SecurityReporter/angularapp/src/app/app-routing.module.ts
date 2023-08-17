@@ -11,6 +11,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { loginGuard } from './login-page/guards/login.guard';
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AboutPentestsComponent } from './about-pentests/about-pentests.component';
 
@@ -27,6 +29,7 @@ const routes: Routes = [
   { path: 'log-in', component: LoginPageComponent , canActivate: [loginGuard]},
   { path: 'after-login', component: AfterLoginPageComponent, canActivate: [Roles], data: { allowedRoles: ["admin", "pentester", "coordinator", "client", "default"] } },
   { path: 'default-page', component: DefaultPageComponentComponent, canActivate: [Roles], data: { allowedRoles: ['default'] } },
+  { path: 'my-profile', component: MyProfileComponent, canActivate: [Roles], data: { allowedRoles: ["admin", "pentester", "coordinator", "client"] } },
 ];
 @NgModule({
   declarations: [],
