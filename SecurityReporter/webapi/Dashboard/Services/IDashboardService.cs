@@ -7,5 +7,7 @@
         public Task<List<Tuple<string, int, int>>> GetVulnerabilityData();
 
         public Task<List<Tuple<int, int>>> GetCWEData();
+
+        public Task<List<Tuple<float, string, string>>> GetCVSSData();
     }
 }

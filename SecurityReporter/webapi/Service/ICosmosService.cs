@@ -22,5 +22,7 @@ namespace webapi.Service
 
         Task<List<Tuple<int, int>>> GetCWEData();
         Task<List<string>> DeleteAllReportsAsync();
+
+        Task<List<Tuple<float, string, string>>> GetCVSSData();
     }
 }

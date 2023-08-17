@@ -1,19 +1,10 @@
 ﻿using Microsoft.Azure.Cosmos;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Drawing.Text;
 using System.Net;
-using System.Security.Cryptography.Xml;
 using webapi.Enums;
-using System.Text;
 using webapi.Login.Services;
 using webapi.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
-using Microsoft.AspNetCore.Http;
 
 namespace webapi.Service
 {
@@ -599,6 +590,7 @@ namespace webapi.Service
         public async Task<List<Tuple< int, int>>> GetCWEData()
         {
             List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> sendingData = new List<Tuple<int, int>>();
             string query = "SELECT f.CWE, Count(1) AS Count " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
@@ -609,12 +601,25 @@ namespace webapi.Service
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
                 data.AddRange(currentResultSet.Select(f => new Tuple<int, int>(
                 (int)f.Count, (int)f.CWE)));
+
+               
             }
+            data.Sort();
+            data.Reverse();
+            int numberOfValues = 8;
+            if(numberOfValues > data.Count) {
+            numberOfValues = data.Count;
+            }
+
+            for (int i = 0; i < numberOfValues; i++)
+            {
+                sendingData.Add(data[i]);
+            }
+
             Logger.LogInformation("Returning found reports");
-            return data;
+            return sendingData;
         }
 
         public async Task<List<string>> DeleteAllReportsAsync()
@@ -637,6 +642,25 @@ namespace webapi.Service
             }
             Logger.LogInformation("Successfully deleted All Project Reports from database.");
             return projectReportIds;
+        }
+
+        public async Task<List<Tuple<float, string, string>>> GetCVSSData()
+        {
+            List<Tuple<float, string, string>> data = new List<Tuple<float, string, string>>();
+            string query = "SELECT SUBSTRING(c.uploadDate, 0, 4) AS UploadYear, SUBSTRING(c.uploadDate, 5, 2) AS UploadMonth, AVG(StringToNumber(f.CVSS)) AS CVSSAVG FROM c JOIN f IN c.Findings WHERE f.CVSS <> 'N/A' GROUP BY SUBSTRING(c.uploadDate, 0, 4), SUBSTRING(c.uploadDate, 5, 2)";
+                           
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<float, string, string>(
+
+                (float)f.CVSSAVG, (string)f.UploadMonth, (string)f.UploadYear)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
         }
     }
 }
