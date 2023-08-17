@@ -1,5 +1,6 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Unicode;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -8,6 +9,7 @@ namespace webapi.ProjectSearch.Controllers
 {
     [ApiController]
     [Route("api/project-reports")]
+    // [Authorize(Policy = "AdminPentesterPolicy")]
     public class ProjectReportController : ExceptionHandlingControllerBase
     {
         private IProjectReportService ProjectReportService { get; }

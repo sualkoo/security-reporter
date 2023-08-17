@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>Welcome to Project Management</h1>
+  <h3>Choose a page:</h3>
+
+  <div class="buttons-container">
+    <button mat-flat-button color="primary" (click)="navigateToPage('/list-projects')">
+      PROJECT LISTING
+    </button>
+
+    <div>
+      <button mat-flat-button color="primary" (click)="navigateToPage('/project-search')">
+        PROJECT SEARCH
+      </button>
+    </div>
+
+    <div>
+      <button mat-flat-button color="primary" (click)="logoutPage()">
+        LOGOUT
+      </button>
+    </div>
+  </div>
+</div>

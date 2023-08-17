@@ -20,7 +20,7 @@ namespace cosmosTools
             CosmosKey = primaryKey;
             DatabaseId = "ProjectDatabase";
             ContainerId = "ProjectContainer";
-            CosmosEndpoint = "https://localhost:8081";
+            CosmosEndpoint = "https://security-reporter.documents.azure.com:443";
             CosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
 
         }
