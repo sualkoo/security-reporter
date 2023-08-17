@@ -1,18 +1,9 @@
 <div class="container-fluid bg-light">
   <div class="row">
     <!--Sidebar-->
-    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 90vh; overflow-y: auto; overflow-x: hidden;">
+    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height:100%; overflow-y: auto; overflow-x: hidden;">
       <div class="mt-2 pt-2">
         <div class="search-container">
-          <div class="container-fluid">
-            <div class="row mb-2 mt-2">
-              <div class="col-auto">
-                <b>CSA</b>
-                <hr />
-              </div>
-              <h1 class="center">Search items</h1>
-            </div>
-          </div>
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
             <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()" (keyup.enter)="isFormValid && !isLoading ? onSearch() : null">
@@ -176,4 +167,5 @@
   <mat-icon class="icon" id="upButton" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
   <mat-icon class="icon" *ngIf="totalRecords" (click)="toggleSidebar()">menu</mat-icon>
   <mat-icon class="icon" id="deleteButton" *ngIf="selectedProjects.length >= 1" (click)="openPopup()">delete_outline</mat-icon>
+</div>
 </div>
