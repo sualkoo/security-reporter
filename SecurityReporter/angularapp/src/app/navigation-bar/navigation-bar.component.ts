@@ -19,6 +19,7 @@ export class NavigationBarComponent{
   public showIntitials = false;
   public initials: string = "";
   public role: string = "admin";
+  public isLoggedIn: boolean = true;
 
   ngOnInit() {
     this.createInitials();
@@ -29,5 +30,7 @@ export class NavigationBarComponent{
     this.initials = this.mail.charAt(0).toUpperCase();
   }
 
-
+  login() {
+    this.isLoggedIn = !this.isLoggedIn;
+  }
 }
