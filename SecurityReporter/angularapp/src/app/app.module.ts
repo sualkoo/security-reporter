@@ -44,6 +44,7 @@ import { ProjectEditingPageComponent } from './project-editing/component-pages/p
 import { Roles } from './roles/roles';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
+import { AboutPentestsComponent } from './about-pentests/about-pentests.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
     FooterComponent,
 
     LandingPageComponent,
-      DashboardComponent,
+    DashboardComponent,
+    AboutPentestsComponent,
       NavigationBarComponent,    
   ],
   imports: [
