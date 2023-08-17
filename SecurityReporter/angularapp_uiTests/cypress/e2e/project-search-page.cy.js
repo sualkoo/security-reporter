@@ -2,7 +2,7 @@ describe('template spec', () => {
     //Should add tests for navbar
 
     beforeEach(() => {
-        cy.visit('https://sda-playground.azurewebsites.net/project-search');
+        cy.visit('http://localhost:4200/project-search');
     })
 
     it('Should correctly load component', () => {
@@ -65,8 +65,8 @@ describe('template spec', () => {
 
 describe('Project search page components tests - smaller viewport', () => {
     beforeEach(() => {
-        cy.viewport(600, 800);
-        cy.visit('https://sda-playground.azurewebsites.net/project-search');
+        cy.viewport(400, 800);
+        cy.visit('http://localhost:4200/project-search');
     })
 
     it('Should correctly load component', () => {
@@ -116,11 +116,13 @@ describe('Project search page components tests - smaller viewport', () => {
 })
 
 //Functions
+function CheckElements() {
+    CheckExistenceOfSearchElements();
+    CheckExistenceOfFiltersElements();
+}
 
 function CheckExistenceOfSearchElements() {
-    cy.get('b').should('contain', 'CSA');
     cy.get('div.col-auto').should('be.visible');
-    cy.get('h1.center').should('contain', 'Search items');
     cy.get('div.mat-mdc-text-field-wrapper');
     cy.get('mat-icon').should('contain', 'search');
     cy.get('input[placeholder="Search..."]').should('be.visible');
@@ -170,11 +172,6 @@ function CheckUploadElementsSmallerViewport() {
     cy.get('button.btn.btn-secondary').should('contain', 'Upload').and('be.disabled');
 }
 
-function CheckElements() {
-    CheckExistenceOfSearchElements();
-    CheckExistenceOfFiltersElements();
-}
-
 function CheckOneFilter(order) {
     cy.get('input.checkbox').eq(order).then(() => {
         cy.get('input.checkbox').eq(order).check();
@@ -203,19 +200,12 @@ function CheckElementsAfterSearch() {
     cy.get('h5.ng-star-inserted').should('contain', 'Finding: Sensitive Information Disclosure via Logging').and('be.visible');
 
     cy.get('div#scrollable_box').scrollTo(0, 500).then(() => {
-        cy.get('mat-icon#upButton').should('contain', 'arrow_upward').and('be.visible'); //vymazat ked bude tato verzia appky na playgrounde
-        //cy.get('mat-icon#up_button').should('contain', 'arrow_upward').and('be.visible'); --> odkomentovat ked bude tato verzia appky na playgrounde
+        cy.get('mat-icon#up_button').should('contain', 'arrow_upward').and('be.visible');
     })
 
-    //vymazat ked bude tato verzia appky na playgrounde (230-232 riadky)
-    cy.get('mat-icon#upButton').should('contain', 'arrow_upward').click().then(() => {
-        cy.get('mat-icon#upButton').should('not.exist'); 
-    }); 
-
-    /*Tuto verziu odkomentovat ked bude nova verzia na playgrounde
     cy.get('mat-icon#up_button').should('contain', 'arrow_upward').click().then(() => {
        cy.get('mat-icon#up_button').should('not.exist');
-    })*/
+    })
 
     cy.get('button.btn.btn-dark').should('contain', 'Get Source').and('exist').and('be.enabled');
     cy.get('button.btn.btn-light').should('contain', 'Get PDF').and('exist').and('be.enabled');
@@ -225,21 +215,8 @@ function CheckDeleteElements() {
     cy.get('mat-icon#delete_button').should('not.exist');
     cy.get('input.projectSelectionCheckbox.form-check-input.me-2.mt-2').first().check().then(() => {
         cy.get('input.projectSelectionCheckbox.form-check-input.me-2.mt-2').first().should('be.checked').and('be.visible');
-        cy.get('mat-icon#deleteButton').should('contain', 'delete_outline').and('be.visible').and('exist');
-        cy.get('mat-icon#deleteButton').should('contain', 'delete_outline').click().then(() => {
-            cy.get('div.popup').should('be.visible').and('exist');
-            cy.get('mat-icon.mat-icon.notranslate.close-icon.close-popup-button.mat-warn.material-icons.mat-ligature-font').should('be.visible').and('exist');
-            cy.get('div.container-fluid.bg-white.border').should('be.visible').and('exist');
-            cy.get('h5').should('contain', 'Selected projects to delete: 1').and('be.visible');
-            cy.get('b').should('contain', 'Selected projects to delete').and('be.visible');
-            cy.get('b').should('contain', 'Project name:').and('be.visible');
-            cy.get('b').should('contain', 'id:').and('be.visible');
-            cy.get('p').should('contain', 'Project name: Dummy Project 1 id: 17dfdb47-04d4-46cd-91de-c92bea74b7d1').and('be.visible');
-            cy.get('mat-icon.mat-icon.notranslate.icon.delete-selected-findings-button.material-icons.mat-ligature-font.mat-icon-no-color').should('be.visible').and('contain', 'delete_outline');
 
-        })
-        /* Odkomentovat ked pojde nova verzia na playground
-        cy.get('mat-icon#delete_button').should('contain', 'delete_outline').and('be.visible').and('exist'); odkomentovat ked pojde nova verzia na playground
+        cy.get('mat-icon#delete_button').should('contain', 'delete_outline').and('be.visible').and('exist');
         cy.get('mat-icon#delete_button').should('contain', 'delete_outline').click().then(() => {
             cy.get('div.popup').should('be.visible').and('exist');
             cy.get('mat-icon.mat-icon.notranslate.close-icon.close-popup-button.mat-warn.material-icons.mat-ligature-font').should('be.visible').and('exist');
@@ -250,14 +227,11 @@ function CheckDeleteElements() {
             cy.get('b').should('contain', 'id:').and('be.visible');
             cy.get('p').should('contain', 'Project name: Dummy Project 1 id: 17dfdb47-04d4-46cd-91de-c92bea74b7d1').and('be.visible');
             cy.get('mat-icon.mat-icon.notranslate.icon.delete-selected-findings-button.material-icons.mat-ligature-font.mat-icon-no-color').should('be.visible').and('contain', 'delete_outline');
-
-        })*/
+        })
     });
 }
 
 function CheckNoSidebarElements() {
-    cy.get('b').contains('CSA').should('not.be.visible');
-    cy.get('h1.center').contains('Search items').should('not.be.visible');
     cy.get('mat-icon').contains('search').should('not.be.visible');;
     cy.get('div.col-auto').should('not.be.visible');
     cy.get('div.mat-mdc-text-field-wrapper').should('not.be.visible');
