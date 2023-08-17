@@ -11,7 +11,7 @@ namespace webapi.Service
         Task<bool> UpdateProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
-        Task<List<ProjectData>> GetItems(int pageSize, int pageNumber, FilterData filter);
+        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter);
         Task<int> GetNumberOfProjects();
         Task<bool> AddProjectReport(ProjectReportData data);
         Task<ProjectReportData> GetProjectReport(string projectId);
@@ -22,5 +22,7 @@ namespace webapi.Service
 
         Task<List<Tuple<int, int>>> GetCWEData();
         Task<List<string>> DeleteAllReportsAsync();
+
+        Task<List<Tuple<float, string, string>>> GetCVSSData();
     }
 }

@@ -48,4 +48,8 @@ TODO: Enable secret storage on your machine and set Primary Key of your cosmos D
    - In Container id: ProjectContainer
    - In Partition Key: id
 
+4. Add to cosmos DB Emulator ProjectDatabase new container:
+   - In Container id: ProjectRolesContainer
+   - In Partition Key: id
+
 - [ASP.NET Safe storage](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows)

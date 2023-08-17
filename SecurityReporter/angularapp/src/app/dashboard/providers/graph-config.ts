@@ -41,6 +41,8 @@ export const CriticalityConfig = {
         },
       },
     },
+
+
   } as ChartOptions,
 };
 
@@ -86,7 +88,9 @@ export const VulnerabilityConfig = {
           padding: 20
         }
       },
-    }
+    },
+
+
   }as ChartOptions
 };
 
@@ -121,6 +125,82 @@ export const CWEConfig = {
         display: false, // Hide the default legend,
 
       },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'Count',
+        }
+      },
+      x: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'CWE',
+        }
+      }
+
+    }
+
+  }as ChartOptions
+};
+
+export const CVSSConfig = {
+  type: 'bar' as ChartType,
+  label:{
+    display: false,
+  },
+  backgroundColors: [
+    "#ec6602", // Healthy Orange
+    "#009999", // Siemens Petrol
+    "#9ddff6", // SH Cyan(50)
+    "#c69b9e", // SH Berry(50)
+    "#9592c1", // SH Blue(50)
+    "#666666", // SH Black(60)
+  ],
+  borderWidth: 0,
+  options: {
+    plugins: {
+      responsive: true,
+      title: {
+        display: true,
+        text: 'Average Report CVSS score',
+        color: 'black',
+        align: 'center',
+        font: {
+          size: 20,
+        }
+      },
+      legend: {
+        display: false, // Hide the default legend,
+
+      },
+    },
+    scales: {
+
+
+      y: {
+        beginAtZero: true,
+       display: true,
+        title: {
+          display: true,
+          text: 'CVSS score',
+        }
+      },
+      x: {
+        beginAtZero: true,
+        display: true,
+        title: {
+          display: true,
+          text: 'Month',
+        }
+      },
+
     }
   }as ChartOptions
 };

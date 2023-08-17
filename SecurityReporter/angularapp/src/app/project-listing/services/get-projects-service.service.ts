@@ -14,18 +14,25 @@ export class GetProjectsServiceService {
     this.getProjectEndPointURL = '/Project/retrieve';
   }
 
-  public getProjects(pageSize: number, pageNumber: number, filters: string): Promise<any> {
-    this.getProjectEndPointURL = '/Project/retrieve' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber + filters;
-    return new Promise((resolve, reject) => {
-      this.http.get(this.getProjectEndPointURL).subscribe(
-        (response) => {
+ public getProjects(pageSize: number, pageNumber: number, filters: string): Promise<any> {
+  this.getProjectEndPointURL = '/Project/retrieve' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber + filters;
+  
+  return new Promise((resolve, reject) => {
+    this.http.get(this.getProjectEndPointURL).subscribe(
+      (response) => {
+        if (response !== null && response !== undefined) {
           resolve(response);
-        },
-        (error) => {
-          console.error(error);
-          reject(error);
+        } else {
+          const noDataResponse = "No data available.";
+          resolve(noDataResponse);
         }
-      );
-    });
-  }
+      },
+      (error) => {
+        console.error(error);
+        reject(error);
+      }
+    );
+  });
+}
+
 }

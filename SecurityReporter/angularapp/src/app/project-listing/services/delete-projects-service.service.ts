@@ -13,33 +13,15 @@ export class DeleteProjectsServiceService {
     this.deleteEndPointURL = '/Project/delete';
   }
 
-  public deletePMProjects(data: Array<string>): Observable<any> {
-    return this.http
-      .post(this.deleteEndPointURL, data, { observe: 'response' })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          const errorResponse = error.error;
-          const title = errorResponse.title;
-          const status = error.status;
-          const errors = errorResponse.errors;
-
-          return throwError({ title, status, errors });
-        })
-      );
-  }
-
-  public deletePMProject(id: string): Observable<any> {
-    return this.http
-      .delete(this.deleteEndPointURL + '?id=' + id, { observe: 'response' })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          const errorResponse = error.error;
-          const title = errorResponse.title;
-          const status = error.status;
-          const errors = errorResponse.errors;
-
-          return throwError({ title, status, errors });
-        })
-      );
+  public async deletePMProjects(data: Array<string>): Promise<any> {
+    try {
+      const response = await this.http
+        .post(this.deleteEndPointURL, data, { observe: 'response' })
+        .toPromise();
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }

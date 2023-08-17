@@ -1,3 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-2">
+  <div class="navbar-brand">
+    <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" style="max-height: 32px">
+  </div>
+  <button class="navbar-toggler"
+          type="button"
+          (click)="toggleNavigation()"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse bg-white p-1" [ngClass]="{ 'show': showNavigation }" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/about-pentests" routerLinkActive="active">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/project-search" routerLinkActive="active">Project Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" routerLink="/project-management" routerLinkActive="active">Project Management</a>
+      </li>
+    </ul>
+  </div>
 <nav class="navbar navbar-expand-lg navbar-white shadow-sm">
     <div class="navbar-brand pb-3">
       <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" class="img-fluid col-3">

@@ -4,12 +4,8 @@ import {Component, Input} from '@angular/core';
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.css']
 })
-export class NavigationBarComponent{
-  actualNavItem: string = "";
+export class NavigationBarComponent {
   showNavigation: boolean = false;
-  setNavItem(navItem: string): void {
-    this.actualNavItem = navItem;
-  }
   toggleNavigation() {
     this.showNavigation = !this.showNavigation;
   }

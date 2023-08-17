@@ -23,6 +23,8 @@ import { AlertService } from '../../../project-management/services/alert.service
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
+import { LogoutService } from '../../../services/logout.service';
+import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -51,16 +53,19 @@ import { ActivatedRoute } from '@angular/router';
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
+
   constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
     router: Router, alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    autoLogoutService: AutoLogoutService) {
 
-    super(addProjectService, router, alertService);
+    super(addProjectService, router, alertService, autoLogoutService);
   }
 
   ngOnInit() {
+    this.autoLogoutService.startTimer();
     this.route.params.subscribe(params => {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
@@ -88,13 +93,18 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
     ProjectLead: jsonData.projectLead,
     ReportStatus: jsonData.reportStatus,
-    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : []
+    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : [],
   };
 }
 
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
     this.projectClass = this.mapJsonToProjectInterface(projectData);
+    this.editedStartDate = this.projectClass.StartDate;
+    this.editedEndDate = this.projectClass.EndDate;
+    this.editedReportDueDate = this.projectClass.ReportDueDate;
+    this.editedIKO = this.projectClass.IKO;
+    this.editedTKO = this.projectClass.TKO;
     this.isProjectNameEmpty = false;
     console.log(this.projectClass);
   }
@@ -192,4 +202,5 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       }
     );
   }
+
 }
