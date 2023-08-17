@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using webapi.Models;
+﻿using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -20,5 +18,8 @@ namespace webapi.Service
 
         Task<ProjectData> GetProjectById(string id);
         Task<bool> UpdateProject(ProjectData data);
+        Task<Profile> ProfileItems(string email);
+
+        Task DeleteUsers();
     }
 }
