@@ -1,10 +1,19 @@
 ﻿using System.IO.Compression;
+using System.Text.RegularExpressions;
 using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
     public class ScopeAndProceduresExtractor
     {
+        string worstCaseScenariosReportRegex = @"\\newcommand{\\(WorstCaseScenariosReport)}(?=\{)[\s\S]*?\{([\s\S]*)\}";
+        string worstCaseScenariosScope = @"\\newcommand{\\(WorstCaseScenariosScope)}{([\s\S]*)\}";
+        string outOfScopeRegex = @"\\newcommand{\\(OutOfScope)}{([\s\S]*)\}";
+        string inScopeRegex = @"\\newcommand{\\(InScope)}{([\s\S]*)\}";
+        string environmentRegex = @"\\newcommand{\\(Environment)}\s*{([\s\S]*?)\n\s*}";
+
+
+
         private ZipArchiveEntry currentEntry;
         private ScopeAndProcedures newScopeAndProcedures = new ScopeAndProcedures();
         public ScopeAndProceduresExtractor(ZipArchiveEntry currentEntry)
@@ -22,42 +31,79 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
             using (StreamReader reader = new StreamReader(currentEntry.Open()))
             {
+                string fileContent = reader.ReadToEnd();
+                Match worstCaseScenarioReportMatch = Regex.Match(fileContent, worstCaseScenariosReportRegex);
+                Match worstCaseScenarioScope = Regex.Match(fileContent, worstCaseScenariosScope);
+                Match outOfScopeMatch = Regex.Match(fileContent, outOfScopeRegex);
+                Match inScopeMatch = Regex.Match(fileContent, inScopeRegex);
+                Match environmentMatch = Regex.Match(fileContent, environmentRegex);
+
+                AssignNewData(worstCaseScenarioReportMatch.Groups[1].ToString(), worstCaseScenarioReportMatch.Groups[2].ToString());
+                AssignNewData(worstCaseScenarioScope.Groups[1].ToString(), worstCaseScenarioScope.Groups[2].ToString());
+                AssignNewData(outOfScopeMatch.Groups[1].ToString(), outOfScopeMatch.Groups[2].ToString());
+                AssignNewData(inScopeMatch.Groups[1].ToString(), inScopeMatch.Groups[2].ToString());
+                AssignNewData(environmentMatch.Groups[1].ToString(), environmentMatch.Groups[2].ToString());
+
+                return newScopeAndProcedures;
+
+
                 char[] delimiters = { '{', '}' };
-                while ((line = reader.ReadLine()) != null)
+                /*while ((line = reader.ReadLine()) != null)
                 {
                     if (!string.IsNullOrEmpty(line) && line.Length > 0)
                     {
                         string[] splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                         if (splitLine.Length >= 2)
                         {
-                            if (splitLine[1] == "\\InScope")
+                            if (splitLine[1] == "InScope")
                             {
                                 ExtractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
                             }
-                            else if (splitLine[1] == "\\OutOfScope")
+                            else if (splitLine[1] == "OutOfScope")
                             {
                                 ExtractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
                             }
-                            else if (splitLine[1] == "\\WorstCaseScenariosReport")
+                            else if (splitLine[1] == "WorstCaseScenariosReport")
                             {
                                 ExtractWorstCaseReport(reader, newScopeAndProcedures);
                             }
-                            else if (splitLine[1] == "\\WorstCaseScenariosScope")
+                            else if (splitLine[1] == "WorstCaseScenariosScope")
                             {
                                 ExtractScopeAndWorstCase(false, true, reader, newScopeAndProcedures);
                             }
-                            else if (splitLine[1] == "\\Environment")
+                            else if (splitLine[1] == "Environment")
                             {
                                 ExtractEnvironment(reader, newScopeAndProcedures);
                             }
                         }
                     }
-                }
+                }*/
             }
-            return newScopeAndProcedures;
         }
 
-        private void ExtractScope(string command, string contents)
+        private void AssignNewData(string command, string contents)
+        {
+            switch (command)
+            {
+                case "InScope":
+                    newScopeAndProcedures.InScope = contents;
+                    break;
+                case "OutOfScope":
+                    newScopeAndProcedures.OutOfScope = contents;
+                    break;
+                case "WorstCaseScenariosReport":
+                    newScopeAndProcedures.WorstCaseScenariosReport = contents;
+                    break;
+                case "WorstCaseScenariosScope":
+                    newScopeAndProcedures.WorstCaseScenarios = contents;
+                    break;
+                case "Environment":
+                    newScopeAndProcedures.Environment = contents;
+                    break;
+            }
+        }
+
+        /*private void ExtractScope(string command, string contents)
         {
             string[] splitString = contents.Split('\\', StringSplitOptions.RemoveEmptyEntries);
             string[] componentSplit;
@@ -69,18 +115,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     ScopeProcedure scopeProcedure = new ScopeProcedure();
                     scopeProcedure.Component = componentSplit[0];
                     scopeProcedure.Detail = componentSplit[1];
-                    switch (command)
-                    {
-                        case "InScope":
-                            newScopeAndProcedures.InScope.Add(scopeProcedure);
-                            break;
-                        case "WorstCaseScenariosScope":
-                            newScopeAndProcedures.WorstCaseScenarios.Add(componentSplit[1]);
-                            break;
-                        case "OutOfScope":
-                            newScopeAndProcedures.OutOfScope.Add(scopeProcedure);
-                            break;
-                    }
+                    
                 }
             }
         }
@@ -202,5 +237,6 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 newScopeAndProcedures.Environment = newEnvironment;
             }
         }
+    }*/
     }
 }

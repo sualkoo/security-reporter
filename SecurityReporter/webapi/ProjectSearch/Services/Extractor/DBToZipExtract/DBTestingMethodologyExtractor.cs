@@ -9,7 +9,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
         {
 
             var toolsUsed = new List<string>();
-            if (testingMethodology.ToolsUsed != null) {
+            /*(if (testingMethodology.ToolsUsed != null) {
                 foreach(Tool tool in testingMethodology.ToolsUsed)
                 {
                     toolsUsed.Add("\t" + tool.ToolName + " & " + tool.Version + " & " + tool.TestType + " & " + tool.WorkType + " \\\\\n\t\\hline");
@@ -23,7 +23,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
                 {
                     attackVectors.Add("\t\t\\item " + attackVector);
                 }
-            }
+            }*/
 
             string testingMethodologyContent =
 @"%----------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 	Tests on \ReportProjectName included, but were not limited to:
 
 	\begin{itemize}
-" + string.Join(",\n" ,attackVectors) + @"
+" + /*string.Join(",\n" ,attackVectors) + */ @"
 	\end{itemize}
 
 }";

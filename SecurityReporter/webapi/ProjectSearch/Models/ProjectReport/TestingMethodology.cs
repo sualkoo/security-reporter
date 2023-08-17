@@ -5,10 +5,10 @@ namespace webapi.Models.ProjectReport
 {
     public class TestingMethodology : IEntity
     {
-        [MinLength(1, ErrorMessage = "ToolsUsed must have at least one item.")]
-        public List<Tool>? ToolsUsed { get; set; }
+        [Required(ErrorMessage = "ToolsUsed is required!")]
+        public string? ToolsUsed { get; set; }
 
-        [MinLength(1, ErrorMessage = "AttackVectors must have at least one item.")]
-        public List<string>? AttackVectors { get; set; }
+        [Required(ErrorMessage = "AttackVectors is required!")]
+        public string? AttackVectors { get; set; }
     }
 }

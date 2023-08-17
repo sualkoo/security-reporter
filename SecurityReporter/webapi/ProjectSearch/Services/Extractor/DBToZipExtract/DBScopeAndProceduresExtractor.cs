@@ -5,8 +5,10 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 {
     public class DbScopeAndProceduresExtractor
     {
+        /*
         public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
         {
+
 			var inScope = new List<string>();
 			if (scopeAndProcedures.InScope != null)
 			{
@@ -104,5 +106,6 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 			Console.WriteLine(scopeAndProceduresContent);
             return Encoding.UTF8.GetBytes(scopeAndProceduresContent);
         }
+        */
     }
 }

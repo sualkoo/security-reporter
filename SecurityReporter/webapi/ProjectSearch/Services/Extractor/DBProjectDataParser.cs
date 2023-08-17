@@ -32,7 +32,7 @@ namespace webapi.ProjectSearch.Services.Extractor
                     { "Config/Document_Information.tex", DbDocumentInformationExtractor.ExtractDocumentInformation(data!.DocumentInfo) },
                     { "Config/Executive_Summary.tex", DbExecutiveSummaryExtractor.ExtractExecutiveSummary(data!.ExecutiveSummary) },
                     { "Config/Project_Information.tex", DbProjectInformationExtractor.ExtractProjectInformation(data!.ProjectInfo) },
-                    { "Config/Scope_and_Procedures.tex", DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(data!.ScopeAndProcedures) },
+                    //{ "Config/Scope_and_Procedures.tex", DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(data!.ScopeAndProcedures) },
                     { "Config/Testing_Methodology.tex", DbTestingMethodologyExtractor.ExtractTestingMethodology(data!.TestingMethodology) },
                 };
 
