@@ -19,7 +19,7 @@ namespace webapi.Service
         private string EndpointUri { get; } = "";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
-        private string ReportContainerName { get; } = "ProjectReportContainer";
+        private string ReportContainerName { get; } = "ReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;

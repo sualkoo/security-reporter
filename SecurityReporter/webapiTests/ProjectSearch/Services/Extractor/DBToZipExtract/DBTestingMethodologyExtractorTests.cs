@@ -45,12 +45,47 @@ public class DbTestingMethodologyExtractorTests
             "testing error handling."
         };
 
+        string expectedStr = @"%----------------------------------------------------------------------------------------
+%	TOOLS USED
+%----------------------------------------------------------------------------------------
+% Not needed for Scope document
+% Required for Report document
+\newcommand{\ToolsUsed}{
+	\hline 
+	adb & 1.0.41 & Android debugging & Bridge to Andorid device \\
+	\hline
+	Android Studio & 2022.2.1 & Android Development, Emulator & Official integrated development environment for Google's Android operating system, with emulator capabilities. \\
+	\hline
+} 
+
+
+%----------------------------------------------------------------------------------------
+%	ATTACK VECTORS AND PAYLOAD TYPES
+%----------------------------------------------------------------------------------------
+% Not needed for Scope document
+% Required for Report document
+\newcommand{\AttackVectors}{
+
+	Tests on \ReportProjectName included, but were not limited to:
+
+	\begin{itemize}
+		\item static analysis,
+		\item file system analysis,
+		\item debugging,
+		\item workflow analysis,
+		\item client-side testing,
+		\item testing for weak cryptography,
+		\item testing error handling.
+	\end{itemize}
+
+}";
+
         // Act
         var result = DbTestingMethodologyExtractor.ExtractTestingMethodology(testingMethodology);
         var resultDecoded = Encoding.UTF8.GetString(result);
 
         // Assert
         Assert.IsNotNull(resultDecoded);
-        StringAssert.Contains("%----------------------------------------------------------------------------------------\r\n%\tTOOLS USED\r\n%----------------------------------------------------------------------------------------\r\n% Not needed for Scope document\r\n% Required for Report document\r\n\\newcommand{\\ToolsUsed}{\r\n\t\\hline \r\n\tadb & 1.0.41 & Android debugging & Bridge to Andorid device \\\\\n\t\\hline\n\tAndroid Studio & 2022.2.1 & Android Development, Emulator & Official integrated development environment for Google's Android operating system, with emulator capabilities. \\\\\n\t\\hline\r\n} \r\n\r\n\r\n%----------------------------------------------------------------------------------------\r\n%\tATTACK VECTORS AND PAYLOAD TYPES\r\n%----------------------------------------------------------------------------------------\r\n% Not needed for Scope document\r\n% Required for Report document\r\n\\newcommand{\\AttackVectors}{\r\n\r\n\tTests on \\ReportProjectName included, but were not limited to:\r\n\r\n\t\\begin{itemize}\r\n\t\t\\item static analysis,\n\t\t\\item file system analysis,\n\t\t\\item debugging,\n\t\t\\item workflow analysis,\n\t\t\\item client-side testing,\n\t\t\\item testing for weak cryptography,\n\t\t\\item testing error handling.\r\n\t\\end{itemize}\r\n\r\n}", resultDecoded);
+        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

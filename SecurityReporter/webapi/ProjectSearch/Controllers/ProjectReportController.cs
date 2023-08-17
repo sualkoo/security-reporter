@@ -27,7 +27,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger.LogInformation("Received POST request for saving new report");
             return await HandleExceptionAsync(async () =>
             {
-                ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
+                ProjectReportData savedReport = await ProjectReportService.SaveReportFromZipAsync(file);
                 return Ok(savedReport);
             });
 
@@ -73,7 +73,7 @@ namespace webapi.ProjectSearch.Controllers
             Logger.LogInformation("Received GET request for downloading PDF of report by ID");
             return await HandleExceptionAsync(async () =>
             {
-                return await ProjectReportService.GetPdfByProjectId(id);
+                return await ProjectReportService.GetPdfByProjectIdAsync(id);
             });
         }
 
@@ -90,14 +90,14 @@ namespace webapi.ProjectSearch.Controllers
         }
 
         [HttpDelete("all")]
-        public async Task<IActionResult> DeleteProjectReportsALL()
+        public async Task<IActionResult> DeleteProjectReportsAll()
         {
-            Logger.LogInformation("Recieved DELETE request for deleting ALL reports.");
+            Logger.LogInformation("Received DELETE request for deleting ALL reports.");
 
             return await HandleExceptionAsync(async () =>
             {
-                bool test = await ProjectReportService.DeleteReportAllAsync();
-                return Ok(test);
+                bool result = await ProjectReportService.DeleteReportAllAsync();
+                return Ok(result);
             });
         }
     }

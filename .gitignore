@@ -362,13 +362,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /SecurityReporter/angularapp/.angular/
 */.vscode
-
-# IDE files
-*.idea/
-*.vscode/
-
-# Macos
-*./DS_Store
-
-# Temporary files for generating PDFs
 /SecurityReporter/webapi/temp/

@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
+﻿using System.Text;
 using webapi.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
@@ -72,7 +70,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
         {
             List<(string FileName, byte[] Image)> result = new List<(string FileName, byte[] Image)>();
 
-            foreach (var image in finding.imagesList)
+            foreach (var image in finding.getImages())
             {
                 if (image != null)
                 {

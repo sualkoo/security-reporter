@@ -208,7 +208,7 @@ namespace webapiTests.ProjectSearch.Services
                 .Returns(Task.CompletedTask);
 
             // Act   //zle argumenty v mockPDFBuilder?
-            var result = await ((IProjectReportService)projectReportService).SaveReportFromZip(file);
+            var result = await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file);
 
             // Assert
             Assert.IsNotNull(result);
@@ -231,10 +231,10 @@ namespace webapiTests.ProjectSearch.Services
             mockParser.Setup(parser => parser.Extract(fileStream)).Throws(new ArgumentNullException());
 
             // Act
-            var result = ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object);
+            var result = ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file.Object);
 
             // Assert
-            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file.Object));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file.Object));
         }
 
         [Test()]
@@ -276,7 +276,7 @@ namespace webapiTests.ProjectSearch.Services
             mockValidator.Setup(validator => validator.Validate(extractedData)).Returns(false);
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file));
         }
 
         [Test()]
@@ -321,7 +321,7 @@ namespace webapiTests.ProjectSearch.Services
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save ProjectReport to database."));
 
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file));
 
             // Cleanup
             File.Delete(fileName);
@@ -369,7 +369,7 @@ namespace webapiTests.ProjectSearch.Services
             mockCosmosService.Setup(cosmos => cosmos.AddProjectReport(extractedData)).ReturnsAsync(true);
             mockPdfBuilder.Setup(builder => builder.GeneratePdfFromZip(It.IsAny<Stream>(), It.IsAny<Guid>())).Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to generate PDF"));
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file));
 
             // Cleanup
             File.Delete(fileName);
@@ -412,7 +412,7 @@ namespace webapiTests.ProjectSearch.Services
             mockAzureBlobService.Setup(azure => azure.SaveReportPdf(It.IsAny<byte[]>(), It.IsAny<Guid>(), It.IsAny<string>()))
             .Throws(new CustomException(StatusCodes.Status500InternalServerError, "Failed to save PDF to Azure Blob Storage"));
             // Act & Assert
-            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZip(file));
+            Assert.ThrowsAsync<CustomException>(async () => await ((IProjectReportService)projectReportService).SaveReportFromZipAsync(file));
 
             // Cleanup
             File.Delete(fileName);

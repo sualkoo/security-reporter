@@ -2,6 +2,7 @@ using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service;
@@ -98,6 +99,51 @@ public class AzureBlobService : IAzureBlobService
             {
                 projectReportContainerClient.DeleteBlob(blob.Blob.Name);
             }
+        }
+    }
+
+    public async Task LoadImagesFromDB(Guid projectReportId, ProjectReportData projectReportData)
+    {
+        _logger.LogInformation("Creating images for the ZIP file " + projectReportId);
+        
+        foreach(Finding finding in projectReportData.Findings)
+        {
+            await foreach (BlobHierarchyItem blob in projectReportContainerClient.GetBlobsByHierarchyAsync(
+                                       delimiter: "/",
+                                       prefix: $"{projectReportId}/Findings/{finding.FolderName}/"))
+            {
+                BlobClient blobClient = projectReportContainerClient.GetBlobClient(blob.Blob.Name);
+
+                BlobDownloadInfo download = await blobClient.DownloadAsync();
+
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    await download.Content.CopyToAsync(memoryStream);
+                    byte[] byteArray = memoryStream.ToArray();
+
+                    string blobName = blob.Blob.Name; 
+                    finding.addImage(blobName.Substring(($"{projectReportId}/Findings/{finding.FolderName}/").Length), byteArray);
+                }
+            }
+        }
+    }
+
+    public async Task SaveImagesFromZip(Guid projectReportId, List<Finding> findingsList)
+    {
+        _logger.LogInformation("Converting images into blobs " + projectReportId);
+        foreach(Finding finding in findingsList)
+        {
+            foreach(FileData imageData in finding.getImages())
+            {
+                string blobPath = $"{projectReportId}/Findings/{finding.FolderName}/{imageData.FileName}";
+                BlobClient blobClient = projectReportContainerClient.GetBlobClient(blobPath);
+                using(MemoryStream stream = new MemoryStream(imageData.Content))
+                {
+                    await blobClient.UploadAsync(stream);
+                    Console.WriteLine(blobClient.Uri);
+                }
+            }
+            finding.clearImageList();
         }
     }
 }
