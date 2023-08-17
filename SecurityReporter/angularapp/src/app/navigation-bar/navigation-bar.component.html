@@ -1,36 +1,3 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-2">
-  <div class="navbar-brand">
-    <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" style="max-height: 32px">
-  </div>
-  <button class="navbar-toggler"
-          type="button"
-          (click)="toggleNavigation()"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse bg-white p-1" [ngClass]="{ 'show': showNavigation }" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" routerLink="/">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" routerLink="/about-pentests" routerLinkActive="active">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" routerLink="/project-search" routerLinkActive="active">Project Search</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" routerLink="/project-management" routerLinkActive="active">Project Management</a>
-      </li>
-    </ul>
-  </div>
 <nav class="navbar navbar-expand-lg navbar-white shadow-sm">
     <div class="navbar-brand pb-3">
       <img src="../../assets/images/siemens-healthineers-logo.png" alt="Siemens Healthineers" class="img-fluid col-3">
@@ -117,13 +84,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-weight-bold" href="https://www.siemens-healthineers.com/" (click)="setNavItem('about pentest')">
+          <a class="nav-link font-weight-bold" routerLink="/about-pentests" (click)="setNavItem('about pentest')">
             <p *ngIf="actualNavItem !== 'about pentest'">About pentest</p>
             <b class="text-decoration-underline" *ngIf="actualNavItem === 'about pentest'">About pentest</b>
           </a>
         </li>
         <li class="nav-item" disabled>
-          <a class="nav-link font-weight-bold" href="https://www.siemens-healthineers.com/" (click)="setNavItem('order a pentest')" >
+          <a class="nav-link font-weight-bold disabled" href="https://www.siemens-healthineers.com/" (click)="setNavItem('order a pentest')">
             <p *ngIf="actualNavItem !== 'order a pentest'">Order a pentest</p>
             <b class="text-decoration-underline" *ngIf="actualNavItem === 'order a pentest'">Order a pentest</b>
           </a>

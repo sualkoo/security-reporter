@@ -16,6 +16,11 @@ export class NavigationBarComponent {
   public initials: string = "";
   public role: string = "admin";
   public isLoggedIn: boolean = true;
+  public actualNavItem: string = "/project-search";
+
+  setNavItem(name: string): void {
+    this.actualNavItem = name;
+  }
 
   ngOnInit() {
     this.createInitials();
