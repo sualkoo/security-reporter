@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using webapi.Dashboard.Services;
 using webapi.ProjectSearch.Controllers;
-using webapi.ProjectSearch.Models;
 
 namespace webapi.Dashboard.Controllers
 {
