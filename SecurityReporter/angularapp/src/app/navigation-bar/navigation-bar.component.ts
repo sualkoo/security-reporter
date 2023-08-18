@@ -10,14 +10,13 @@ export class NavigationBarComponent {
     this.showNavigation = !this.showNavigation;
   }
 
-  @Input() public mail: string = "samuelpopjak@outlook.sk";
+  @Input() public mail: string = "admin@admin.sk";
 
   public showInitials = true;
   public initials: string = "";
   public role: string = "admin";
   public isLoggedIn: boolean = false;
   public actualNavItem: string = "/project-search";
-  public circleColor: string = '#000000';
   
   setNavItem(name: string): void {
     this.actualNavItem = name;
@@ -50,7 +49,6 @@ export class NavigationBarComponent {
       }
     }
 
-
   private createInitials(): void {
     this.initials = this.mail.charAt(0).toUpperCase();
   }
@@ -82,14 +80,15 @@ export class NavigationBarComponent {
 
   pentesterMenuItems: { text: string, link: string, disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
+    { text: 'Project Search', link: '/project-search', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
-    { text: 'Order a pentest', link: '/in-development', disabled: true },
   ];
 
   coordinatorMenuItems: { text: string, link: string, disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
+    { text: 'Project Management', link: '/project-management', disabled: false },
+    { text: 'Dashboard', link: '/dashboard', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
-    { text: 'Order a pentest', link: '/in-development', disabled: true },
   ];
 
   clientMenuItems: { text: string, link: string, disabled?: boolean }[] = [
