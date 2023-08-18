@@ -1,21 +1,21 @@
-﻿using webapi.Models.ProjectReport;
-using webapi.ProjectSearch.Models;
+﻿using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services;
+
+public class ProjectDataValidator : IProjectDataValidator
 {
-    public class ProjectDataValidator : IProjectDataValidator
+    private readonly ILogger logger;
+
+    public ProjectDataValidator()
     {
-        private readonly ILogger Logger;
+        var loggerFactory = LoggerProvider.GetLoggerFactory();
+        logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+    }
 
-        public ProjectDataValidator()
-        {
-            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
-            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-        }
-
-        public bool Validate(ProjectReportData projectReport)
-        {
-            bool result = true;
+    public bool Validate(ProjectReportData projectReport)
+    {
+        var result = true;
 
             var validationResults = new EntityValidationResult[]
             {
@@ -39,30 +39,24 @@ namespace webapi.ProjectSearch.Services
                 //DataAnnotation.ValidateList<Tool>(projectReport.TestingMethodology.ToolsUsed),
             };
 
-            var errors = new List<string>();
+        var errors = new List<string>();
 
-            foreach ( var validationResult in validationResults )
+        foreach (var validationResult in validationResults)
+            if (validationResult.HasError)
             {
-                if (validationResult.HasError)
+                result = false;
+                foreach (var error in validationResult.ValidationErrors)
                 {
-                    result = false;
-                    foreach (var error in validationResult.ValidationErrors)
-                    {
-                        Logger.LogError(error.ErrorMessage);
-                        errors.Add(error.ErrorMessage);
-                    }
+                    logger.LogError(error.ErrorMessage);
+                    errors.Add(error.ErrorMessage);
                 }
             }
 
-            if (result)
-            {
-                Logger.LogInformation("Validation of Project Report successed!");
-            } else
-            {
-                throw new CustomException(StatusCodes.Status400BadRequest, "Validation fail", errors);
-            }
+        if (result)
+            logger.LogInformation("Validation of Project Report successed!");
+        else
+            throw new CustomException(StatusCodes.Status400BadRequest, "Validation fail", errors);
 
-            return result;
-        }
+        return result;
     }
 }

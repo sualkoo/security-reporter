@@ -1,14 +1,14 @@
 ﻿using System.Text;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public static class DbFindingsExtractor
 {
-    public class DbFindingsExtractor
+    public static Tuple<MemoryStream, List<(string FileName, byte[] image)>> ExtractFinding(Finding finding)
     {
-        public static Tuple<MemoryStream, List<(string FileName, byte[] image)>> ExtractFinding(Finding finding)
-        {
-            string findingContent =
-@"%
+        var findingContent =
+            @"%
 %
 %		Finding: Template
 %		Author: the DR
@@ -23,16 +23,16 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 \renewcommand{\TestMethod}{" + finding.TestMethod + @"}
 \renewcommand{\CVSS}{" + finding.CVSS + @"}
 \renewcommand{\CVSSvector}{" + finding.CVSSVector + @"}
-\renewcommand{\CWE}{" + finding.CWE.ToString() + @"}
+\renewcommand{\CWE}{" + finding.CWE + @"}
 % Poor-man's combo boxes:
 % High, Medium, Low, Info, TBR (To Be Rated)
-\renewcommand{\Criticality}{" + finding.Criticality.ToString() + @"}
+\renewcommand{\Criticality}{" + finding.Criticality + @"}
 % Easy, Average, Hard, TBR (To Be Rated)
-\renewcommand{\Exploitability}{" + finding.Exploitability.ToString() + @"}
+\renewcommand{\Exploitability}{" + finding.Exploitability + @"}
 % Access control, Application Design, Information Disclosure, Outdated Software, Security Configuration
-\renewcommand{\Category}{" + finding.Category.ToString() + @"}
+\renewcommand{\Category}{" + finding.Category + @"}
 % Easy, Average, Difficult, TBR (To Be Rated)
-\renewcommand{\Detectability}{" + finding.Detectability.ToString() + @"}
+\renewcommand{\Detectability}{" + finding.Detectability + @"}
 
 
 \ReportFindingHeader{\FindingName}
@@ -53,36 +53,31 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 \subsection*{References}
 " + finding.SubsectionReferences + @"
 ";
-            MemoryStream memoryStream = new MemoryStream();
-            byte[] bytes = Encoding.UTF8.GetBytes(findingContent);
-            memoryStream.Write(bytes, 0, bytes.Length);
-            memoryStream.Seek(0, SeekOrigin.Begin);
+        var memoryStream = new MemoryStream();
+        var bytes = Encoding.UTF8.GetBytes(findingContent);
+        memoryStream.Write(bytes, 0, bytes.Length);
+        memoryStream.Seek(0, SeekOrigin.Begin);
 
-            var imageList= CreateFindingImages(finding);
+        var imageList = CreateFindingImages(finding);
 
-            Tuple<MemoryStream, List<(string FileName, byte[] image)>> result = 
-                new Tuple<MemoryStream, List<(string FileName, byte[] image)>>(memoryStream, imageList);
+        var result =
+            new Tuple<MemoryStream, List<(string FileName, byte[] image)>>(memoryStream, imageList);
 
-            return result;
-        }
+        return result;
+    }
 
-        private static List<(string FileName, byte[] Image)> CreateFindingImages(Finding finding)
-        {
-            List<(string FileName, byte[] Image)> result = new List<(string FileName, byte[] Image)>();
+    private static List<(string FileName, byte[] Image)> CreateFindingImages(Finding finding)
+    {
+        var result = new List<(string FileName, byte[] Image)>();
 
-            foreach (var image in finding.getImages())
-            {
-                if (image != null)
+        foreach (var image in finding.GetImages())
+            if (image != null)
+                using (var memoryStream = new MemoryStream(image.Content))
                 {
-                    using (MemoryStream memoryStream = new MemoryStream(image.Content))
-                    {
-                        byte[] imageBytes = memoryStream.ToArray();
-                        result.Add((image.FileName, imageBytes));
-                    }
+                    var imageBytes = memoryStream.ToArray();
+                    result.Add((image.FileName, imageBytes));
                 }
-            }
 
-            return result;
-        }
+        return result;
     }
 }

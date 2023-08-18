@@ -1,16 +1,16 @@
-﻿namespace webapi.ProjectSearch.Models
+﻿namespace webapi.ProjectSearch.Models;
+
+public class PagedDbResults<T>
 {
-    public class PagedDBResults<T>
+    public PagedDbResults(T data, int pageNumber)
     {
-        public int PageNumber { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalRecords { get; set; }
-        public Uri NextPage { get; set; }
-        public T Data { get; set; }
-        public PagedDBResults(T data, int pageNumber)
-        {
-            this.PageNumber = pageNumber;
-            this.Data = data;
-        }
+        PageNumber = pageNumber;
+        Data = data;
     }
+
+    public int PageNumber { get; set; }
+    public int TotalPages { get; set; }
+    public int TotalRecords { get; set; }
+    public Uri NextPage { get; set; }
+    public T Data { get; set; }
 }

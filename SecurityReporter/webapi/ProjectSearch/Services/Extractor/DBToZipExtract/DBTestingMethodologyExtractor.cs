@@ -1,7 +1,9 @@
 ﻿using System.Text;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public static class DbTestingMethodologyExtractor
 {
     public class DbTestingMethodologyExtractor
     {
@@ -25,8 +27,8 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
                 }
             }*/
 
-            string testingMethodologyContent =
-@"%----------------------------------------------------------------------------------------
+        var testingMethodologyContent =
+            @"%----------------------------------------------------------------------------------------
 %	TOOLS USED
 %----------------------------------------------------------------------------------------
 % Not needed for Scope document
@@ -51,8 +53,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 	\end{itemize}
 
 }";
-            Console.WriteLine(testingMethodologyContent);
-            return Encoding.UTF8.GetBytes(testingMethodologyContent);
-        }
+        Console.WriteLine(testingMethodologyContent);
+        return Encoding.UTF8.GetBytes(testingMethodologyContent);
     }
 }

@@ -21,4 +21,8 @@ export class DashboardService {
   public getCWE() {
     return this.http.get<number[]>(`${this.apiUrl}/CWE`);
   }
+
+  public getCVSS() {
+    return this.http.get<number[]>(`${this.apiUrl}/CVSS`);
+  }
 }

@@ -1,8 +1,7 @@
-﻿namespace webapi.Models.ProjectReport
+﻿namespace webapi.ProjectSearch.Models.ProjectReport;
+
+public class FileData
 {
-    public class FileData
-    {
-        public string? FileName { get; set; }
-        public byte[]? Content { get; set; }
-    }
+    public string? FileName { get; set; }
+    public byte[]? Content { get; set; }
 }

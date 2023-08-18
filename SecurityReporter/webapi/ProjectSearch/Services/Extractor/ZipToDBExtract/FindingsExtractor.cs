@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webapi.Models;
 using webapi.Models.ProjectReport;
@@ -50,9 +49,9 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     }
                 }*/
 
-                return newFinding;
-            }
+            return newFinding;
         }
+    }
 
         private void assignNewData(string command, string data, Finding newFinding)
         {
@@ -177,16 +176,13 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }
 
-        private List<string> extractLocation(string data)
-        {
-            List<string> result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-            for (int i = 0; i < result.Count; i++)
-            {
-                result[i] = result[i].Trim();
-            }
+    private static List<string> extractLocation(string data)
+    {
+        var result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+        for (var i = 0; i < result.Count; i++) result[i] = result[i].Trim();
 
-            return result;
-        }
+        return result;
+    }
 
         /*private void extractSubsection(string command, StreamReader reader, Finding newFinding)
         {
@@ -226,46 +222,45 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }*/
 
-        /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
+    /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
+    {
+        string line;
+        string resultList = "";
+        string currentItem = "";
+        bool firstItem = true;
+
+        while ((line = reader.ReadLine()) != null)
         {
-            string line;
-            string resultList = "";
-            string currentItem = "";
-            bool firstItem = true;
-
-            while ((line = reader.ReadLine()) != null)
+            string trimmedLine = line.Trim();
+            if (trimmedLine.Length >= 13)
             {
-                string trimmedLine = line.Trim();
-                if (trimmedLine.Length >= 13)
+                if (trimmedLine.Substring(0, 13) == "\\end{itemize}")
                 {
-                    if (trimmedLine.Substring(0, 13) == "\\end{itemize}")
-                    {
-                        if (currentItem != "")
-                        {
-                            resultList = resultList + currentItem.Trim();
-                        }
-                        return resultList;
-                    }
-                }
-
-                if (trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
-                {
-                    if (!firstItem)
+                    if (currentItem != "")
                     {
                         resultList = resultList + currentItem.Trim();
-                        currentItem = "";
                     }
-
-                    currentItem += trimmedLine.Substring(5);
-                    firstItem = false;
-                }
-                else if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem)
-                {
-                    currentItem += trimmedLine;
+                    return resultList;
                 }
             }
 
-            return resultList;
-        }*/
-    }
+            if (trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
+            {
+                if (!firstItem)
+                {
+                    resultList = resultList + currentItem.Trim();
+                    currentItem = "";
+                }
+
+                currentItem += trimmedLine.Substring(5);
+                firstItem = false;
+            }
+            else if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem)
+            {
+                currentItem += trimmedLine;
+            }
+        }
+
+        return resultList;
+    }*/
 }

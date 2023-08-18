@@ -2,12 +2,12 @@
 using System.Text.RegularExpressions;
 using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
+
+public class TestingMethodologyExtractor
 {
-    public class TestingMethodologyExtractor
-    {
-        ZipArchiveEntry testMethodEntry;
-        TestingMethodology newTestingMethodology = new TestingMethodology();
+    private readonly TestingMethodology newTestingMethodology = new();
+    private readonly ZipArchiveEntry testMethodEntry;
 
         public TestingMethodologyExtractor(ZipArchiveEntry testMethodEntry) {
             this.testMethodEntry = testMethodEntry;
@@ -48,17 +48,17 @@ namespace webapi.ProjectSearch.Services
                             {
                                 inBracketContents = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
-                                if(inBracketContents.Length > 1)
-                                {
-                                    toolsUsed = (inBracketContents[1] == "\\ToolsUsed") ? true : false;
-                                    attackVectors = (inBracketContents[1] == "\\AttackVectors") ? true : false;
-                                }
-
-                            } else if(toolsUsed && !attackVectors) 
-                            {
-                                string trimmedLine = line.Trim();
-                                toolsUsed = trimmedLine.Contains('}') ? false : true;
-                                string[] lineContents = trimmedLine.Split(toolUsedDelimiters, StringSplitOptions.RemoveEmptyEntries);
+                        if (inBracketContents.Length > 1)
+                        {
+                            toolsUsed = inBracketContents[1] == "\\ToolsUsed" ? true : false;
+                            attackVectors = inBracketContents[1] == "\\AttackVectors" ? true : false;
+                        }
+                    }
+                    else if (toolsUsed && !attackVectors)
+                    {
+                        var trimmedLine = line.Trim();
+                        toolsUsed = trimmedLine.Contains('}') ? false : true;
+                        var lineContents = trimmedLine.Split(toolUsedDelimiters, StringSplitOptions.RemoveEmptyEntries);
 
                                 if(toolsUsed)
                                 {

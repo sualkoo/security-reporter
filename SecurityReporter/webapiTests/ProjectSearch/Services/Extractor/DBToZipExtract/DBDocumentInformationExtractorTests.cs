@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
 namespace webapiTests.ProjectSearch.Services.Extractor.DBToZipExtract;
@@ -54,7 +54,7 @@ public class DbDocumentInformationExtractorTests
 
         documentInfo.ReportDate = new DateTime(2023, 6, 12);
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        var expectedStr = @"%----------------------------------------------------------------------------------------
 %	DOCUMENT TYPE
 %----------------------------------------------------------------------------------------
 

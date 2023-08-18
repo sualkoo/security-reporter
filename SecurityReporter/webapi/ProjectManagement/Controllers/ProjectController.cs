@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
@@ -16,6 +17,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("add")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -34,7 +36,9 @@ public class ProjectController : ControllerBase
         return StatusCode(201, project);
     }
 
+
     [HttpPost("delete")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(List<string> ids)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -48,27 +52,12 @@ public class ProjectController : ControllerBase
         {
             return StatusCode(404, result);
         }
-        return StatusCode(200, "Ok");
+        return StatusCode(200);
     }
 
-    [HttpDelete("delete")]
-    public async Task<IActionResult> DeleteProject(string id)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write("DELETE");
-        Console.ResetColor();
-        Console.WriteLine("\t /Project/delete");
-
-        var result = await CosmosService.DeleteProject(id);
-
-        if (!result)
-        {
-            return StatusCode(404, $"{id}, Not found.");
-        }
-        return StatusCode(200, "Ok");
-    }
 
     [HttpGet("count")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetNumberOfProjects()
     {
         int count = await CosmosService.GetNumberOfProjects();
@@ -82,9 +71,10 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("retrieve")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
     {
-        var items = new List<ProjectData>();
+        var items = new List<ProjectList>();
 
         try
         {
@@ -106,10 +96,10 @@ public class ProjectController : ControllerBase
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Info: No data found matching the filter criteria.");
+                Console.WriteLine("Info: No data available.");
                 Console.ResetColor();
 
-                return StatusCode(404, "No data found matching the filter criteria.");
+                return StatusCode(204, "No data available.");
             }
         }
         catch (Exception ex)
@@ -123,6 +113,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("update")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
@@ -140,6 +131,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("getProject")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> GetProjectById(string id)
     {
         Console.ForegroundColor = ConsoleColor.Green;

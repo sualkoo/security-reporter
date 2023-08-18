@@ -2,8 +2,8 @@ using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Models.ProjectReport;
 
 namespace webapi.Service;
 
@@ -102,7 +102,7 @@ public class AzureBlobService : IAzureBlobService
         }
     }
 
-    public async Task LoadImagesFromDB(Guid projectReportId, ProjectReportData projectReportData)
+    public async Task LoadImagesFromDb(Guid projectReportId, ProjectReportData projectReportData)
     {
         _logger.LogInformation("Creating images for the ZIP file " + projectReportId);
         
@@ -122,7 +122,7 @@ public class AzureBlobService : IAzureBlobService
                     byte[] byteArray = memoryStream.ToArray();
 
                     string blobName = blob.Blob.Name; 
-                    finding.addImage(blobName.Substring(($"{projectReportId}/Findings/{finding.FolderName}/").Length), byteArray);
+                    finding.AddImage(blobName.Substring(($"{projectReportId}/Findings/{finding.FolderName}/").Length), byteArray);
                 }
             }
         }
@@ -133,7 +133,7 @@ public class AzureBlobService : IAzureBlobService
         _logger.LogInformation("Converting images into blobs " + projectReportId);
         foreach(Finding finding in findingsList)
         {
-            foreach(FileData imageData in finding.getImages())
+            foreach(FileData imageData in finding.GetImages())
             {
                 string blobPath = $"{projectReportId}/Findings/{finding.FolderName}/{imageData.FileName}";
                 BlobClient blobClient = projectReportContainerClient.GetBlobClient(blobPath);
@@ -143,7 +143,7 @@ public class AzureBlobService : IAzureBlobService
                     Console.WriteLine(blobClient.Uri);
                 }
             }
-            finding.clearImageList();
+            finding.ClearImageList();
         }
     }
 }

@@ -21,13 +21,10 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             this.currentEntry = currentEntry;
         }
 
-        public ScopeAndProcedures ExtractScopeAndProcedures()
-        {
-            string line;
-            if (currentEntry == null)
-            {
-                throw new ArgumentNullException();
-            }
+    public ScopeAndProcedures ExtractScopeAndProcedures()
+    {
+        string line;
+        if (currentEntry == null) throw new ArgumentNullException();
 
             using (StreamReader reader = new StreamReader(currentEntry.Open()))
             {
@@ -120,87 +117,83 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }
 
-        private static void ExtractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
-        {
-            List<ScopeProcedure> newScopeProcedureList = new List<ScopeProcedure>();
-            string line;
-            string[] delimiters = { "&", "\\\\" };
-            bool read = true;
+    private static void ExtractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader,
+        ScopeAndProcedures newScopeAndProcedures)
+    {
+        var newScopeProcedureList = new List<ScopeProcedure>();
+        string line;
+        string[] delimiters = { "&", "\\\\" };
+        var read = true;
 
-            while ((line = reader.ReadLine()) != null && read)
+        while ((line = reader.ReadLine()) != null && read)
+            if (!string.IsNullOrEmpty(line) && line.Length > 0)
             {
-                if (!string.IsNullOrEmpty(line) && line.Length > 0)
+                var trimmedLine = line.Trim();
+                if (trimmedLine[0] == '}')
                 {
-                    string trimmedLine = line.Trim();
-                    if (trimmedLine[0] == '}')
+                    if (newScopeProcedureList.Count() != 0)
                     {
-                        if (newScopeProcedureList.Count() != 0)
+                        if (inScope && !worstCase)
                         {
-                            if (inScope && !worstCase)
-                            {
-                                newScopeAndProcedures.InScope = newScopeProcedureList;
-                            }
-                            else if (!inScope && !worstCase)
-                            {
-                                newScopeAndProcedures.OutOfScope = newScopeProcedureList;
-                            }
-                            else if (!inScope && worstCase)
-                            {
-                                List<string> newWorstCaseList = new List<string>();
-                                foreach (ScopeProcedure procedure in newScopeProcedureList)
-                                {
-                                    newWorstCaseList.Add(procedure.Detail);
-                                }
-
-                                newScopeAndProcedures.WorstCaseScenarios = newWorstCaseList;
-                            }
+                            newScopeAndProcedures.InScope = newScopeProcedureList;
                         }
-                        read = false;
+                        else if (!inScope && !worstCase)
+                        {
+                            newScopeAndProcedures.OutOfScope = newScopeProcedureList;
+                        }
+                        else if (!inScope && worstCase)
+                        {
+                            var newWorstCaseList = new List<string>();
+                            foreach (var procedure in newScopeProcedureList) newWorstCaseList.Add(procedure.Detail);
+
+                            newScopeAndProcedures.WorstCaseScenarios = newWorstCaseList;
+                        }
                     }
-                    else if (trimmedLine[0] != '\\')
-                    {
-                        string[] splitLine = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                        if (splitLine.Length == 2)
-                        {
-                            ScopeProcedure newScopeProcedure = new ScopeProcedure();
-                            newScopeProcedure.Component = splitLine[0].Trim();
-                            newScopeProcedure.Detail = splitLine[1].Trim();
 
-                            newScopeProcedureList.Add(newScopeProcedure);
-                        }
+                    read = false;
+                }
+                else if (trimmedLine[0] != '\\')
+                {
+                    var splitLine = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                    if (splitLine.Length == 2)
+                    {
+                        var newScopeProcedure = new ScopeProcedure();
+                        newScopeProcedure.Component = splitLine[0].Trim();
+                        newScopeProcedure.Detail = splitLine[1].Trim();
+
+                        newScopeProcedureList.Add(newScopeProcedure);
                     }
                 }
             }
-        }
-        private static void ExtractWorstCaseReport(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
-        {
-            string line;
-            bool read = true;
-            string newReport = "\\newcommand{\\WorstCaseScenariosReport}{\n";
+    }
 
-            while ((line = reader.ReadLine()) != null && read)
+    private static void ExtractWorstCaseReport(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
+    {
+        string line;
+        var read = true;
+        var newReport = "\\newcommand{\\WorstCaseScenariosReport}{\n";
+
+        while ((line = reader.ReadLine()) != null && read)
+        {
+            newReport += line + "\n";
+            if (!string.IsNullOrEmpty(line) && line.Length > 0)
             {
-                newReport += (line + "\n");
-                if (!string.IsNullOrEmpty(line) && line.Length > 0)
-                {
-                    string trimmedLine = line.Trim();
-                    if (trimmedLine.Length >= 15)
-                    {
-                        read = trimmedLine == "\\end{xltabular}" ? false : true;
-                    }
-                }
+                var trimmedLine = line.Trim();
+                if (trimmedLine.Length >= 15) read = trimmedLine == "\\end{xltabular}" ? false : true;
             }
-            newReport += "\n}";
-            newScopeAndProcedures.WorstCaseScenariosReport = newReport;
         }
 
-        private static void ExtractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
-        {
-            string line;
-            bool read = true;
-            bool readItem = false;
-            string[] delimiters = { "\\item", "," };
-            List<string> newEnvironment = new List<string>();
+        newReport += "\n}";
+        newScopeAndProcedures.WorstCaseScenariosReport = newReport;
+    }
+
+    private static void ExtractEnvironment(StreamReader reader, ScopeAndProcedures newScopeAndProcedures)
+    {
+        string line;
+        var read = true;
+        var readItem = false;
+        string[] delimiters = { "\\item", "," };
+        var newEnvironment = new List<string>();
 
             while ((line = reader.ReadLine()) != null && read)
             {

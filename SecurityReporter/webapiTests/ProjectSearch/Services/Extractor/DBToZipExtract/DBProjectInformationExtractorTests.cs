@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
 namespace webapiTests.ProjectSearch.Services.Extractor.DBToZipExtract;
@@ -108,7 +108,7 @@ public class DbProjectInformationExtractorTests
         projectInformation.FindingsCountTotal = 7;
 
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        var expectedStr = @"%----------------------------------------------------------------------------------------
 %	PROJECT INFORMATION
 %----------------------------------------------------------------------------------------
 \newcommand{\ApplicationManager}{Anakin Skywalker}
@@ -191,7 +191,7 @@ public class DbProjectInformationExtractorTests
 \newcommand{\FindingsCountLow}{2}
 \newcommand{\FindingsCountInfo}{2}
 \newcommand{\FindingsCountTotal}{7}";
-        
+
         // Act
         var result = DbProjectInformationExtractor.ExtractProjectInformation(projectInformation);
         var resultDecoded = Encoding.UTF8.GetString(result);

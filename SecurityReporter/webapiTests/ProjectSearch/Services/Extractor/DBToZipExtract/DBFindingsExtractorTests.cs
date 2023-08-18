@@ -1,7 +1,4 @@
-﻿using System.IO;
-using NUnit.Framework;
-using webapi.ProjectSearch.Services;
-using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+﻿using NUnit.Framework;
 
 namespace webapiTests.ProjectSearch.Services.Extractor.DBToZipExtract;
 

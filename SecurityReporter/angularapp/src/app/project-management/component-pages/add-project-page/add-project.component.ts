@@ -30,6 +30,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { max } from 'rxjs';
+import { LogoutService } from '../../../services/logout.service';
+import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
   selector: 'app-project-management',
@@ -73,9 +75,24 @@ export class AddProjectComponent {
   isProjectNameWhitespace: boolean = false;
   isProjectNameEmpty: boolean = true;
   isPentestValueInvalid: boolean = false;
+  editedStartDate: Date;
+  editedEndDate: Date;
+  editedReportDueDate: Date;
+  editedIKO: Date;
+  editedTKO: Date;
 
-  constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService) {}
+    constructor(private addProjectService: AddProjectService, private router: Router, public alertService: AlertService, public autoLogoutService: AutoLogoutService) {
+    this.editedStartDate = this.projectClass.StartDate;
+    this.editedEndDate = this.projectClass.EndDate;
+    this.editedReportDueDate = this.projectClass.ReportDueDate;
+    this.editedIKO = this.projectClass.IKO;
+    this.editedTKO = this.projectClass.TKO;
+}
   @ViewChild('commentInput') commentInput?: ElementRef;
+
+  ngOnInit() {
+    this.autoLogoutService.startTimer();
+  }
 
   ProjectStatus: SelectInterface[] = [
     { value: 'Requested', viewValue: 'Requested' },
@@ -220,14 +237,22 @@ export class AddProjectComponent {
 
   onChildDateValueChanged(value: Date, id: string) {
     if (id === 'STR') {
-      this.projectClass.StartDate = value;
+      const date = new Date(value);
+      date.setDate(date.getDate() + 1);
+      this.projectClass.StartDate = date;
+      this.editedStartDate = this.correctDate(this.projectClass.StartDate);
+
       if (this.isEndDateSet() && this.projectClass.StartDate > this.projectClass.EndDate) {
         this.isInvalidStartDate = true;
       } else {
         this.isInvalidStartDate = false;
       }
     } else if (id === 'END') {
-      this.projectClass.EndDate = value;
+      const date = new Date(value);
+      date.setDate(date.getDate() + 1);
+      this.projectClass.EndDate = date;
+      this.editedEndDate = this.correctDate(this.projectClass.EndDate);
+
       const maxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
       const IKOmaxDate = this.isIKOSet() ? this.projectClass.IKO : this.defaultMaxDate;
       const TKOmaxDate = this.isTKOSet() ? this.projectClass.TKO : this.defaultMaxDate;
@@ -237,7 +262,11 @@ export class AddProjectComponent {
         this.isInvalidEndDate = false;
       }
     } else if (id === 'REP') {
-      this.projectClass.ReportDueDate = value;
+      const date = new Date(value);
+      date.setDate(date.getDate() + 1);
+      this.projectClass.ReportDueDate = date;
+      this.editedReportDueDate = this.correctDate(this.projectClass.ReportDueDate);
+
       const minDate = this.isEndDateSet() ? this.projectClass.EndDate : this.projectClass.StartDate;
       if (this.projectClass.ReportDueDate < minDate) {
         this.isInvalidReportDueDate = true;
@@ -245,7 +274,12 @@ export class AddProjectComponent {
         this.isInvalidReportDueDate = false;
       }
     } else if (id === 'IKO') {
-      this.projectClass.IKO = value;
+      const date = new Date(value);
+      date.setDate(date.getDate() + 1);
+      this.projectClass.IKO = date;
+      this.editedIKO = this.correctDate(this.projectClass.IKO);
+
+
       const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
       const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
       if (this.projectClass.IKO < this.projectClass.StartDate || this.projectClass.IKO > endMaxDate || this.projectClass.IKO > repMaxDate) {
@@ -254,7 +288,11 @@ export class AddProjectComponent {
         this.isInvalidIKO = false;
       }
     } else {
-      this.projectClass.TKO = value;
+      const date = new Date(value);
+      date.setDate(date.getDate() + 1);
+      this.projectClass.TKO = date;
+      this.editedTKO = this.correctDate(this.projectClass.TKO);
+
       const endMaxDate = this.isEndDateSet() ? this.projectClass.EndDate : this.defaultMaxDate;
       const repMaxDate = this.isRepDateSet() ? this.projectClass.ReportDueDate : this.defaultMaxDate;
 
@@ -436,5 +474,11 @@ export class AddProjectComponent {
 
   isTKOSet(): boolean {
     return this.projectClass.TKO! instanceof Date && this.projectClass.TKO!.getTime() !== new Date('0001-01-01').getTime();
+  }
+
+  correctDate(date: Date): Date {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() - 1);
+    return newDate;
   }
 }

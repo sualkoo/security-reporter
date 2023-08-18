@@ -32,7 +32,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: |
+    script: |      
       npm install
       npm install -g @angular/cli
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
@@ -55,13 +55,13 @@ steps:
   inputs:
     script: 'ng build'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp'
-  displayName: 'Angular build'
+  displayName: 'Angular build'   
 
 - task: CmdLine@2
   inputs:
     script: 'npm install cypress --save-dev --force'
     workingDirectory: '$(Build.SourcesDirectory)/SecurityReporter/angularapp_uiTests'
-  displayName: 'Cypress installation'
+  displayName: 'Cypress installation' 
 
 
 - task: CmdLine@2

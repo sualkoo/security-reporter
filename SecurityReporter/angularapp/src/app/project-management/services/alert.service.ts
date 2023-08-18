@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AlertService {
   constructor(private snackBar: MatSnackBar) { }
 
-  showSnackbar(message: string, action: string, cssClass: string, duration: number = 3000) {
+  showSnackbar(message: string, action: string, cssClass: string, duration: number = 5000) {
     this.snackBar.open(message, action, {
       duration: duration,
       panelClass: ['custom-alert', cssClass], 

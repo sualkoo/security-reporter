@@ -1,4 +1,4 @@
-<h5>Pentest duration:</h5>
+<h6>Pentest duration:</h6>
 <mat-radio-group
   aria-label="Select an option"
   class="alignment"
@@ -22,7 +22,7 @@
               max="10"
               [(ngModel)]="inputValue"
               [ngClass]="{'invalid-input': weeksInput.invalid && weeksInput.dirty}" />
-      <p>weeks</p>
+      <p class="text">weeks</p>
     </div>
 
     <mat-error *ngIf="weeksInput.invalid && weeksInput.dirty" class="invalid-message">
