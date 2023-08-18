@@ -2,7 +2,7 @@ describe('template spec', () => {
     //Should add tests for navbar
 
     beforeEach(() => {
-        cy.visit('http://localhost:4200/project-search');
+        cy.visit('https://sda-playground.azurewebsites.net/project-search');
     })
 
     it('Should correctly load component', () => {
@@ -66,7 +66,7 @@ describe('template spec', () => {
 describe('Project search page components tests - smaller viewport', () => {
     beforeEach(() => {
         cy.viewport(400, 800);
-        cy.visit('http://localhost:4200/project-search');
+        cy.visit('https://sda-playground.azurewebsites.net/project-search');
     })
 
     it('Should correctly load component', () => {

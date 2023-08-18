@@ -1,6 +1,6 @@
 describe('Testing bigger LandingPageComponent', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:4200/');
+        cy.visit('https://sda-playground.azurewebsites.net/');
     })
 
     it('Should mount component correctly', () => {
@@ -14,7 +14,7 @@ describe('Testing bigger LandingPageComponent', () => {
 describe('Testing smaller LandingPageComponent', () => {
     beforeEach(() => {
         cy.viewport(600, 800);
-        cy.visit('http://localhost:4200/');
+        cy.visit('https://sda-playground.azurewebsites.net/');
     })
 
     it('Should mount component correctly', () => {
