@@ -97,7 +97,7 @@ public class DashboardServiceTests
         mockCosmosService.Setup(cosmos => cosmos.GetCWEData()).ReturnsAsync(data);
 
         // Act
-        var result = await dashboardService.GetCWEData();
+        var result = await dashboardService.GetCweData();
 
         // Assert
         Assert.IsNotNull(result);
@@ -116,7 +116,7 @@ public class DashboardServiceTests
 
 
         // Assert
-        Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCWEData());
+        Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCweData());
     }
 
     [Test]
@@ -129,7 +129,7 @@ public class DashboardServiceTests
         mockCosmosService.Setup(cosmos => cosmos.GetCVSSData()).ReturnsAsync(data);
 
         // Act
-        var result = await dashboardService.GetCVSSData();
+        var result = await dashboardService.GetCvssData();
 
         // Assert
         Assert.IsNotNull(result);
@@ -148,6 +148,6 @@ public class DashboardServiceTests
 
 
         // Assert
-        Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCVSSData());
+        Assert.ThrowsAsync<CosmosException>(async () => await dashboardService.GetCvssData());
     }
 }

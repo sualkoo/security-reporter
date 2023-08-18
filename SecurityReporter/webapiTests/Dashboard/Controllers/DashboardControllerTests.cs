@@ -38,7 +38,7 @@ public class DashboardControllerTests
         mockDashboardService.Setup(service => service.GetCriticalityData()).ReturnsAsync(data);
 
         // Act
-        var result = dashboardController.getCriticalityData().Result;
+        var result = dashboardController.GetCriticalityData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -56,7 +56,7 @@ public class DashboardControllerTests
         mockDashboardService.Setup(service => service.GetCriticalityData()).ThrowsAsync(expectedException);
 
         // Act
-        var result = dashboardController.getCriticalityData().Result;
+        var result = dashboardController.GetCriticalityData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -72,7 +72,7 @@ public class DashboardControllerTests
         mockDashboardService.Setup(service => service.GetVulnerabilityData()).ReturnsAsync(data);
 
         // Act
-        var result = dashboardController.getVulnerabilityData().Result;
+        var result = dashboardController.GetVulnerabilityData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -90,7 +90,7 @@ public class DashboardControllerTests
         mockDashboardService.Setup(service => service.GetVulnerabilityData()).ThrowsAsync(expectedException);
 
         // Act
-        var result = dashboardController.getVulnerabilityData().Result;
+        var result = dashboardController.GetVulnerabilityData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -104,10 +104,10 @@ public class DashboardControllerTests
     {
         // Arange
         var data = new List<Tuple<int, int>>();
-        mockDashboardService.Setup(service => service.GetCWEData()).ReturnsAsync(data);
+        mockDashboardService.Setup(service => service.GetCweData()).ReturnsAsync(data);
 
         // Act
-        var result = dashboardController.getCWEData().Result;
+        var result = dashboardController.GetCweData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -122,10 +122,10 @@ public class DashboardControllerTests
         // Arange
         var expectedException = new CustomException(StatusCodes.Status500InternalServerError,
             "Unexpected error while searching for data");
-        mockDashboardService.Setup(service => service.GetCWEData()).ThrowsAsync(expectedException);
+        mockDashboardService.Setup(service => service.GetCweData()).ThrowsAsync(expectedException);
 
         // Act
-        var result = dashboardController.getCWEData().Result;
+        var result = dashboardController.GetCweData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -138,10 +138,10 @@ public class DashboardControllerTests
     {
         // Arange
         var data = new List<Tuple<float, string, string>>();
-        mockDashboardService.Setup(service => service.GetCVSSData()).ReturnsAsync(data);
+        mockDashboardService.Setup(service => service.GetCvssData()).ReturnsAsync(data);
 
         // Act
-        var result = dashboardController.getCVSSData().Result;
+        var result = dashboardController.GetCvssData().Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -156,10 +156,10 @@ public class DashboardControllerTests
         // Arange
         var expectedException = new CustomException(StatusCodes.Status500InternalServerError,
             "Unexpected error while searching for data");
-        mockDashboardService.Setup(service => service.GetCVSSData()).ThrowsAsync(expectedException);
+        mockDashboardService.Setup(service => service.GetCvssData()).ThrowsAsync(expectedException);
 
         // Act
-        var result = dashboardController.getCVSSData().Result;
+        var result = dashboardController.GetCvssData().Result;
 
         // Assert
         Assert.IsNotNull(result);

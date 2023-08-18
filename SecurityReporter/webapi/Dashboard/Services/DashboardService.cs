@@ -1,46 +1,46 @@
 ﻿using webapi.ProjectSearch.Services;
 using webapi.Service;
 
-namespace webapi.Dashboard.Services
+namespace webapi.Dashboard.Services;
+
+public class DashboardService : IDashboardService
 {
-    public class DashboardService : IDashboardService
+    private readonly ILogger logger;
+
+    public DashboardService(ICosmosService cosmosService)
     {
-        public ICosmosService CosmosService { get; set; }
-        private readonly ILogger Logger;
+        CosmosService = cosmosService;
+        var loggerFactory = LoggerProvider.GetLoggerFactory();
+        logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+    }
 
-        public DashboardService(ICosmosService cosmosService)
-        {
-            CosmosService = cosmosService;
-            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
-            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-        }
+    private ICosmosService CosmosService { get; set; }
 
-        public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
-        {
-            Logger.LogInformation($"Fetching Criticality data");
+    public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
+    {
+        logger.LogInformation("Fetching Criticality data");
 
-            return await CosmosService.GetCriticalityData();
-        }
+        return await CosmosService.GetCriticalityData();
+    }
 
-        public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
-        {
-            Logger.LogInformation($"Fetching Vulnerability data");
+    public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
+    {
+        logger.LogInformation("Fetching Vulnerability data");
 
-            return await CosmosService.GetVulnerabilityData();
-        }
+        return await CosmosService.GetVulnerabilityData();
+    }
 
-        public async Task<List<Tuple<int, int>>> GetCWEData()
-        {
-            Logger.LogInformation($"Fetching CWE data");
+    public async Task<List<Tuple<int, int>>> GetCweData()
+    {
+        logger.LogInformation("Fetching CWE data");
 
-            return await CosmosService.GetCWEData();
-        }
-        public async Task<List<Tuple<float, string, string>>> GetCVSSData()
-        {
-            Logger.LogInformation($"Fetching CVSS data");
+        return await CosmosService.GetCWEData();
+    }
 
-            return await CosmosService.GetCVSSData();
-        }
+    public async Task<List<Tuple<float, string, string>>> GetCvssData()
+    {
+        logger.LogInformation("Fetching CVSS data");
 
+        return await CosmosService.GetCVSSData();
     }
 }
