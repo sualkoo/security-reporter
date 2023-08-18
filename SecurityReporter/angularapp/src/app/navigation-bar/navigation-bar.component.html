@@ -26,7 +26,8 @@
       <li class="nav-item row align-items-center">
         <div class="col-2">
           <div class="user-circle" style="background-color: slategray">
-            <div class="initials">
+            <img *ngIf="!showInitials" [src]="photo" class="user-circle"/>
+            <div *ngIf="showInitials" class="initials">
               {{ initials }}
             </div>
           </div>

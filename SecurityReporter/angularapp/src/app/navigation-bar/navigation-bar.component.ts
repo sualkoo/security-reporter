@@ -11,8 +11,9 @@ export class NavigationBarComponent {
   }
 
   @Input() public mail: string = "admin@admin.sk";
+  @Input() public photo: string = "../../assets/undraw_Drink_coffee_v3au.png";
 
-  public showInitials = true;
+  public showInitials = false;
   public initials: string = "";
   public role: string = "admin";
   public isLoggedIn: boolean = false;
@@ -23,8 +24,11 @@ export class NavigationBarComponent {
   }
 
   ngOnInit() {
-    this.createInitials();
     this.setNavbar();
+    if (!this.photo) {
+      this.showInitials = true;
+      this.createInitials();
+    }
   }
     setNavbar() {
       if (!this.isLoggedIn) {
