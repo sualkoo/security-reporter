@@ -19,7 +19,7 @@ public class DbTestingMethodologyExtractorTests
         t.ToolName = "adb";
         t.Version = "1.0.41";
         t.TestType = "Android debugging";
-        t.WorkType = "Bridge to Andorid device";
+        t.WorkType = "Bridge to Android device";
 
         var t1 = new Tool();
         t1.ToolName = "Android Studio";
@@ -45,14 +45,14 @@ public class DbTestingMethodologyExtractorTests
             "testing error handling."
         };
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        var expectedStr = @"%----------------------------------------------------------------------------------------
 %	TOOLS USED
 %----------------------------------------------------------------------------------------
 % Not needed for Scope document
 % Required for Report document
 \newcommand{\ToolsUsed}{
 	\hline 
-	adb & 1.0.41 & Android debugging & Bridge to Andorid device \\
+	adb & 1.0.41 & Android debugging & Bridge to Android device \\
 	\hline
 	Android Studio & 2022.2.1 & Android Development, Emulator & Official integrated development environment for Google's Android operating system, with emulator capabilities. \\
 	\hline

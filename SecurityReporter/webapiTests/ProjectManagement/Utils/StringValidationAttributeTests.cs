@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using webapi.Utils;
 
+namespace webapiTests.ProjectManagement.Utils;
+
 [TestFixture]
 public class StringValidationAttributeTests
 {
@@ -22,7 +24,7 @@ public class StringValidationAttributeTests
     public void IsValid_ValidValueIsNonEmptyString_ShouldPassValidation()
     {
         // Arrange
-        string value = "Test";
+        const string value = "Test";
         var attribute = new StringValidationAttribute();
 
         // Act
@@ -36,7 +38,7 @@ public class StringValidationAttributeTests
     public void IsValid_InvalidValueIsEmptyString_ShouldFailValidation()
     {
         // Arrange
-        string value = "";
+        const string value = "";
         var attribute = new StringValidationAttribute();
 
         // Act
@@ -50,7 +52,7 @@ public class StringValidationAttributeTests
     public void IsValid_InvalidValueIsWhitespaceString_ShouldFailValidation()
     {
         // Arrange
-        string value = "   ";
+        const string value = "   ";
         var attribute = new StringValidationAttribute();
 
         // Act
@@ -78,7 +80,7 @@ public class StringValidationAttributeTests
     public void IsValid_ValidValueIsValidString_ShouldPassValidation()
     {
         // Arrange
-        string value = "Name of this project";
+        const string value = "Name of this project";
         var attribute = new StringValidationAttribute();
 
         // Act

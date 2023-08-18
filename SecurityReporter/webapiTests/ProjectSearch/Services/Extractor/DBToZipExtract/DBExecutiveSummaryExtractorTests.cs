@@ -12,9 +12,9 @@ public class DbExecutiveSummaryExtractorTests
     public void ExtractExecutiveSummaryTest()
     {
         // Arrange
-        var inputStr = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.";
+        const string inputStr = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium.";
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        const string expectedStr = @"%----------------------------------------------------------------------------------------
 %	EXECUTIVE SUMMARY
 %----------------------------------------------------------------------------------------
 %-<ExecSum>->
@@ -24,7 +24,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra 
 %-<ExecSum>
 \pagebreak
 \section*{Overall Exposure}";
-        
+
         // Act
         var result = DbExecutiveSummaryExtractor.ExtractExecutiveSummary(inputStr);
         var resultDecoded = Encoding.UTF8.GetString(result);

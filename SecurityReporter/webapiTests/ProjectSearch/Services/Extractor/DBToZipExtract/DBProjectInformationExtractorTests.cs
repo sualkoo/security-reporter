@@ -108,7 +108,7 @@ public class DbProjectInformationExtractorTests
         projectInformation.FindingsCountTotal = 7;
 
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        var expectedStr = @"%----------------------------------------------------------------------------------------
 %	PROJECT INFORMATION
 %----------------------------------------------------------------------------------------
 \newcommand{\ApplicationManager}{Anakin Skywalker}
@@ -191,7 +191,7 @@ public class DbProjectInformationExtractorTests
 \newcommand{\FindingsCountLow}{2}
 \newcommand{\FindingsCountInfo}{2}
 \newcommand{\FindingsCountTotal}{7}";
-        
+
         // Act
         var result = DbProjectInformationExtractor.ExtractProjectInformation(projectInformation);
         var resultDecoded = Encoding.UTF8.GetString(result);

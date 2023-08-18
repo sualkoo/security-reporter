@@ -1,88 +1,106 @@
-﻿using System.IO.Compression;
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
 using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
-namespace webapiTests.ProjectSearch.Services
+namespace webapiTests.ProjectSearch.Services;
+
+[TestFixture]
+public class ScopeAndProceduresExtractorTests
 {
-    [TestFixture()]
-    public class ScopeAndProceduresExtractorTests
+    [SetUp]
+    public void SetUp()
     {
-        ZipArchive zipArchive;
-        [SetUp()]
-        public void SetUp()
+        zipArchive = ZipFile.OpenRead("../../../ProjectSearch/ParserTestResources/parserUnitTestsZip.zip");
+        Assert.IsNotNull(zipArchive);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        zipArchive.Dispose();
+    }
+
+    private ZipArchive zipArchive;
+
+    [Test]
+    public void Empty()
+    {
+        var entry = zipArchive.GetEntry("ScopeAndProcedures/Empty/Scope_And_Procedures.tex");
+        var sape = new ScopeAndProceduresExtractor(entry);
+        Assert.IsNotNull(sape);
+    }
+
+    [Test]
+    public void FullInformation()
+    {
+        var entry = zipArchive.GetEntry("ScopeAndProcedures/FullInformation/Scope_And_Procedures.tex");
+        var sape = new ScopeAndProceduresExtractor(entry);
+        Assert.IsNotNull(sape);
+        var parsedScope = sape.ExtractScopeAndProcedures();
+        var testScope = new ScopeAndProcedures
         {
-            zipArchive = ZipFile.OpenRead("../../../ProjectSearch/ParserTestResources/parserUnitTestsZip.zip");
-            Assert.IsNotNull(zipArchive);
-        }
-
-        [TearDown()]
-        public void TearDown() {
-            zipArchive.Dispose();
-        }
-
-        [Test()]
-        public void Empty()
+	        InScope = new List<ScopeProcedure>()
+        };
+        var inScope1 = new ScopeProcedure
         {
-            ZipArchiveEntry entry = zipArchive.GetEntry("ScopeAndProcedures/Empty/Scope_And_Procedures.tex");
-            ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(entry);
-            Assert.IsNotNull(sape);
-        }
-
-        [Test()]
-        public void FullInformation()
+	        Component = "APK file",
+	        Detail = "Android application"
+        };
+        var inScope2 = new ScopeProcedure
         {
-            ZipArchiveEntry entry = zipArchive.GetEntry("ScopeAndProcedures/FullInformation/Scope_And_Procedures.tex");
-            ScopeAndProceduresExtractor sape = new ScopeAndProceduresExtractor(entry);
-            Assert.IsNotNull(sape);
-            ScopeAndProcedures parsedScope = sape.ExtractScopeAndProcedures();
-            ScopeAndProcedures testScope = new ScopeAndProcedures();
-            testScope.InScope = new List<ScopeProcedure>();
-            ScopeProcedure inScope1 = new ScopeProcedure();
-            inScope1.Component = "APK file";
-            inScope1.Detail = "Android application";
-            ScopeProcedure inScope2 = new ScopeProcedure();
-            inScope2.Component = "IPA file";
-            inScope2.Detail = "iOS application";
-            ScopeProcedure inScope3 = new ScopeProcedure();
-            inScope3.Component = "Source code";
-            inScope3.Detail = "Static analysis";
-            testScope.InScope.Add(inScope1);
-            testScope.InScope.Add(inScope2);
-            testScope.InScope.Add(inScope3);
+	        Component = "IPA file",
+	        Detail = "iOS application"
+        };
+        var inScope3 = new ScopeProcedure
+        {
+	        Component = "Source code",
+	        Detail = "Static analysis"
+        };
+        testScope.InScope.Add(inScope1);
+        testScope.InScope.Add(inScope2);
+        testScope.InScope.Add(inScope3);
 
-            testScope.OutOfScope = new List<ScopeProcedure>();
-            ScopeProcedure outOfScope1 = new ScopeProcedure();
-            outOfScope1.Component = "3rd party plugins";
-            outOfScope1.Detail = "Plugins not developed by Siemens";
-            ScopeProcedure outOfScope2 = new ScopeProcedure();
-            outOfScope2.Component = "Underlying operating systems";
-            outOfScope2.Detail = "Android and iOS";
-            ScopeProcedure outOfScope3 = new ScopeProcedure();
-            outOfScope3.Component = "REST APIs";
-            outOfScope3.Detail = "Was already tested";
-            testScope.OutOfScope.Add(outOfScope1);
-            testScope.OutOfScope.Add(outOfScope2);
-            testScope.OutOfScope.Add(outOfScope3);
+        testScope.OutOfScope = new List<ScopeProcedure>();
+        var outOfScope1 = new ScopeProcedure
+        {
+	        Component = "3rd party plugins",
+	        Detail = "Plugins not developed by Siemens"
+        };
+        var outOfScope2 = new ScopeProcedure
+        {
+	        Component = "Underlying operating systems",
+	        Detail = "Android and iOS"
+        };
+        var outOfScope3 = new ScopeProcedure
+        {
+	        Component = "REST APIs",
+	        Detail = "Was already tested"
+        };
+        testScope.OutOfScope.Add(outOfScope1);
+        testScope.OutOfScope.Add(outOfScope2);
+        testScope.OutOfScope.Add(outOfScope3);
 
-            testScope.WorstCaseScenarios = new List<string>
-            {
-                "Information leakage of personal /patient data/customer data",
-                "Modification or corruption of data",
-                "Unauthorized read/write access to application/database",
-                "Asset becomes partly or completely unavailable"
-            };
+        testScope.WorstCaseScenarios = new List<string>
+        {
+            "Information leakage of personal /patient data/customer data",
+            "Modification or corruption of data",
+            "Unauthorized read/write access to application/database",
+            "Asset becomes partly or completely unavailable"
+        };
 
-            testScope.Environment = new List<string>
-            {
-                "Android APK file",
-                "iOS IPA file",
-                "application source code",
-                "test user credentials."
-            };
+        testScope.Environment = new List<string>
+        {
+            "Android APK file",
+            "iOS IPA file",
+            "application source code",
+            "test user credentials."
+        };
 
-            testScope.WorstCaseScenariosReport = @"\newcommand{\WorstCaseScenariosReport}{
+        testScope.WorstCaseScenariosReport = @"\newcommand{\WorstCaseScenariosReport}{
 
 \begin{xltabular}{\textwidth}{|l|X|c|c|c|c|c|c|c|}
 	\hline 
@@ -111,14 +129,17 @@ namespace webapiTests.ProjectSearch.Services
 }
 ";
 
-            parsedScope.Should().BeEquivalentTo(testScope, options =>
+        parsedScope.Should().BeEquivalentTo(testScope, options =>
             options
                 .Excluding(str => str.Name == "WorstCaseScenariosReport")
-            );
+        );
 
-            string normalizedExpected = String.Join("", parsedScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)).ToLowerInvariant();
-            string normalizedActual = String.Join("", testScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries)).ToLowerInvariant();
-            normalizedActual.Should().Be(normalizedExpected);
-        }
+        var normalizedExpected = string.Join("",
+                parsedScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+        var normalizedActual = string.Join("",
+                testScope.WorstCaseScenariosReport.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+        normalizedActual.Should().Be(normalizedExpected);
     }
 }

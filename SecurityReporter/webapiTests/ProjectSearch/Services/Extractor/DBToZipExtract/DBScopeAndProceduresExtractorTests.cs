@@ -16,12 +16,16 @@ public class DbScopeAndProceduresExtractorTests
         var scopeAndProcedures = new ScopeAndProcedures();
 
         // Scope Procedures - InScope
-        var sp = new ScopeProcedure();
-        sp.Component = "APK file";
-        sp.Detail = "Android application";
-        var sp1 = new ScopeProcedure();
-        sp1.Component = "IPA file";
-        sp1.Detail = "iOS application";
+        var sp = new ScopeProcedure
+        {
+	        Component = "APK file",
+	        Detail = "Android application"
+        };
+        var sp1 = new ScopeProcedure
+        {
+	        Component = "IPA file",
+	        Detail = "iOS application"
+        };
 
         scopeAndProcedures.InScope = new List<ScopeProcedure>
         {
@@ -90,7 +94,7 @@ public class DbScopeAndProceduresExtractorTests
             "test user credentials."
         };
 
-        string expectedStr = @"%----------------------------------------------------------------------------------------
+        const string expectedStr = @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\InScope}{
@@ -180,7 +184,7 @@ public class DbScopeAndProceduresExtractorTests
         // Act
         var result = DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(scopeAndProcedures);
         var resultDecoded = Encoding.UTF8.GetString(result);
-        
+
         // Assert
         Assert.IsNotNull(result);
         StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
