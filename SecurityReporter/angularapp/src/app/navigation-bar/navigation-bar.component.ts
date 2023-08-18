@@ -17,8 +17,8 @@ export class NavigationBarComponent {
   public role: string = "admin";
   public isLoggedIn: boolean = false;
   public actualNavItem: string = "/project-search";
-  public circleColor: string = "slate-grey";
-
+  public circleColor: string = '#000000';
+  
   setNavItem(name: string): void {
     this.actualNavItem = name;
   }

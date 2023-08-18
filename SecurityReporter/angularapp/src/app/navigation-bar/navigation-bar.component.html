@@ -22,31 +22,35 @@
         </button>
       </li>
     </ul>
-    <ul *ngIf="isLoggedIn" class="nav navbar-nav ms-auto">
-      <div class="row col-12 align-items-center">
-        <div class="col-3">
-          <div class="circle" [ngStyle]="{'background-color': circleColor}">
-            <div *ngIf="showInitials" class="initials">
+    <ul *ngIf="isLoggedIn" class="navigation-list navbar-nav ms-auto">
+      <li class="nav-item row align-items-center">
+        <div class="col-2">
+          <div class="user-circle" style="background-color: green">
+            <div class="initials">
               {{ initials }}
             </div>
           </div>
         </div>
-        <div class="col-8 offset-1">
-          <div class="row align-items-start" style="color: slategray; font-weight: bold">
+        <div class="col-4 col-md-3 me-lg-5 offset-1">
+          <div class="user-details row align-items-start" style="color: slategray; font-weight: bold">
             {{ mail }}
           </div>
-          <div class="row mt-0" style="color: slategray">
-            {{ role }}
+          <div class="row">
+            <div class="col-6 col-md-8" style="color: slategray">
+              {{ role }}
+            </div>
+            <div class="col-6 col-md-4" style="text-decoration: underline">
+              <ul *ngIf="isLoggedIn" class="nav-item ml-auto">
+                <li>
+                  <button class="btn btn-link d-flex align-items-center login" (click)="logout()">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    LogOut
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </ul>
-    <ul *ngIf="isLoggedIn" class="navbar-nav ms-auto">
-      <li class="nav-item">
-        <button class="btn btn-link d-flex align-items-center login" (click)="logout()">
-          <i class="bi bi-box-arrow-in-right me-2"></i>
-          Logout
-        </button>
       </li>
     </ul>
   </div>
