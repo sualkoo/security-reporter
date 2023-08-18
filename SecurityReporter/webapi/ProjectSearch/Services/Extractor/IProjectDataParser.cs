@@ -1,9 +1,8 @@
 ﻿using webapi.ProjectSearch.Models;
 
-namespace webapi.ProjectSearch.Services.Extractor
+namespace webapi.ProjectSearch.Services.Extractor;
+
+public interface IProjectDataParser
 {
-    public interface IProjectDataParser
-    {
-        public ProjectReportData Extract(Stream fileStream);
-    }
+    public ProjectReportData Extract(Stream fileStream);
 }

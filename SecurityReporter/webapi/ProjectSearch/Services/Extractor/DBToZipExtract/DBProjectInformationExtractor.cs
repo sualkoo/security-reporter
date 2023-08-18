@@ -1,46 +1,50 @@
 ﻿using System.Text;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public class DbProjectInformationExtractor
 {
-    public class DbProjectInformationExtractor
+    public static byte[] ExtractProjectInformation(ProjectInformation projectInformation)
     {
-        public static byte[] ExtractProjectInformation(ProjectInformation projectInformation)
-        {
-			var technicalContactsParsed = new List<string>();
-			if (projectInformation.TechnicalContacts != null) {
-				foreach (ProjectInformationParticipant tc in projectInformation.TechnicalContacts)
-				{
-					string tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
-					technicalContactsParsed.Add(tcString);
-				}
-			}
-
-            var pentestTeamParsed = new List<string>();
-            if (projectInformation.PentestTeam != null)
+        var technicalContactsParsed = new List<string>();
+        if (projectInformation.TechnicalContacts != null)
+            foreach (var tc in projectInformation.TechnicalContacts)
             {
-                foreach (ProjectInformationParticipant tc in projectInformation.PentestTeam)
-                {
-                    string tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" + tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
-                    pentestTeamParsed.Add(tcString);
-                }
+                var tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" +
+                               tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+                technicalContactsParsed.Add(tcString);
             }
 
-            string content =				
-@"%----------------------------------------------------------------------------------------
+        var pentestTeamParsed = new List<string>();
+        if (projectInformation.PentestTeam != null)
+            foreach (var tc in projectInformation.PentestTeam)
+            {
+                var tcString = "\t" + tc.Name + " & " + tc.Department!.Replace("&", "\\&") + " & \\href{mailto://" +
+                               tc.Contact + "}{" + tc.Contact!.Split("@")[0] + "\\footnotemark[1]} \\\\";
+                pentestTeamParsed.Add(tcString);
+            }
+
+        var content =
+            @"%----------------------------------------------------------------------------------------
 %	PROJECT INFORMATION
 %----------------------------------------------------------------------------------------
 \newcommand{\ApplicationManager}{" + projectInformation.ApplicationManager!.Name + @"}
-\newcommand{\ApplicationManagerDepartment}{" + projectInformation.ApplicationManager.Department!.Replace("&", "\\&") + @"}
-\newcommand{\ApplicationManagerContact}{\href{mailto://" + projectInformation.ApplicationManager.Contact + @"}{" + projectInformation.ApplicationManager.Contact!.Split("@")[0] + @"\footnotemark[1]}}
+\newcommand{\ApplicationManagerDepartment}{" + projectInformation.ApplicationManager.Department!.Replace("&", "\\&") +
+            @"}
+\newcommand{\ApplicationManagerContact}{\href{mailto://" + projectInformation.ApplicationManager.Contact + @"}{" +
+            projectInformation.ApplicationManager.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\BusinessOwnerName}{" + projectInformation.BusinessOwner!.Name + @"}
 \newcommand{\BusinessOwnerDepartment}{" + projectInformation.BusinessOwner!.Department!.Replace("&", "\\&") + @"}
-\newcommand{\BusinessOwnerContact}{\href{mailto://" + projectInformation.BusinessOwner!.Contact + @"}{" + projectInformation.BusinessOwner.Contact!.Split("@")[0] + @"\footnotemark[1]}}
+\newcommand{\BusinessOwnerContact}{\href{mailto://" + projectInformation.BusinessOwner!.Contact + @"}{" +
+            projectInformation.BusinessOwner.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\BusinessRepresentativeName}{" + projectInformation.BusinessRepresentative!.Name + @"}
-\newcommand{\BusinessRepresentativeDepartment}{" + projectInformation.BusinessRepresentative!.Department!.Replace("&", "\\&") + @"}
-\newcommand{\BusinessRepresentativeContact}{\href{mailto://" + projectInformation.BusinessRepresentative!.Contact + @"}{" + projectInformation.BusinessRepresentative.Contact!.Split("@")[0] + @"\footnotemark[1]}}
+\newcommand{\BusinessRepresentativeDepartment}{" +
+            projectInformation.BusinessRepresentative!.Department!.Replace("&", "\\&") + @"}
+\newcommand{\BusinessRepresentativeContact}{\href{mailto://" + projectInformation.BusinessRepresentative!.Contact +
+            @"}{" + projectInformation.BusinessRepresentative.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\TechnicalContactsNumber}{" + technicalContactsParsed.Count() + @"}
 \newcommand{\TechnicalContacts}{
@@ -51,15 +55,19 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 % Required for Report document
 \newcommand{\PentestLeadName}{" + projectInformation.PentestLead!.Name + @"}
 \newcommand{\PentestLeadDepartment}{" + projectInformation.PentestLead!.Department!.Replace("&", "\\&") + @"}
-\newcommand{\PentestLeadContact}{\href{mailto://" + projectInformation.PentestLead!.Contact + @"}{" + projectInformation.PentestLead!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
+\newcommand{\PentestLeadContact}{\href{mailto://" + projectInformation.PentestLead!.Contact + @"}{" +
+            projectInformation.PentestLead!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 \newcommand{\PentestCoordinatorName}{" + projectInformation.PentestCoordinator!.Name + @"}
-\newcommand{\PentestCoordinatorDepartment}{" + projectInformation.PentestCoordinator!.Department!.Replace("&", "\\&") + @"}
-\newcommand{\PentestCoordinatorContact}{\href{mailto://" + projectInformation.PentestCoordinator!.Contact + @"}{" + projectInformation.PentestCoordinator!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
+\newcommand{\PentestCoordinatorDepartment}{" + projectInformation.PentestCoordinator!.Department!.Replace("&", "\\&") +
+            @"}
+\newcommand{\PentestCoordinatorContact}{\href{mailto://" + projectInformation.PentestCoordinator!.Contact + @"}{" +
+            projectInformation.PentestCoordinator!.Contact!.Split("@")[0] + @"\footnotemark[1]}}
 
 
 
-\newcommand{\PentestParticipantsNumber}{" + pentestTeamParsed.Count() + @"} % Number of participants in ""Penetration Testing Team""
+\newcommand{\PentestParticipantsNumber}{" + pentestTeamParsed.Count() +
+            @"} % Number of participants in ""Penetration Testing Team""
 \newcommand{\PentestTeamMember}{
 " + string.Join("\u0020&\n", pentestTeamParsed) + @"
 }
@@ -71,8 +79,10 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 \newcommand{\TargetInfoVersion}{" + projectInformation.TargetInfoVersion + @"} %% Asset Version 	
 \newcommand{\TargetInfoType}{\AssetType} %% Asset Type
 \newcommand{\TargetInfoEnvironment}{" + projectInformation.TargetInfoEnvironment + @"}
-\newcommand{\TargetInfoInternetFacing}{" + (projectInformation.TargetInfoInternetFacing ? "Yes" : "No") + @"} %% Asset Internet Facing
-\newcommand{\TargetInfoSNXConnectivity}{" + (projectInformation.TargetInfoSNXConnectivity ? "Yes" : "No") + @"} %% SNX Connectivity
+\newcommand{\TargetInfoInternetFacing}{" + (projectInformation.TargetInfoInternetFacing ? "Yes" : "No") +
+            @"} %% Asset Internet Facing
+\newcommand{\TargetInfoSNXConnectivity}{" + (projectInformation.TargetInfoSNXConnectivity ? "Yes" : "No") +
+            @"} %% SNX Connectivity
 \newcommand{\TargetInfoHostingLocation}{" + projectInformation.TargetInfoHostingLocation + @"} %% Hosting Location
 \newcommand{\TargetInfoHostingProvider}{" + projectInformation.TargetInfoHostingProvider + @"} %% Hosting Provider
 \newcommand{\TargetInfoLifecyclePhase}{" + projectInformation.TargetInfoLifeCyclePhase + @"}
@@ -84,11 +94,11 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %----------------------------------------------------------------------------------------
 %	AGREED TIMEFRAME
 %----------------------------------------------------------------------------------------
-\newcommand{\TimeframeTotal}{" + projectInformation.TimeFrameTotal +  @" working days} 
-\newcommand{\TimeframeStart}{" + projectInformation.TimeFrameStart.ToString("yyyy-MM-dd") +  @"} 
-\newcommand{\TimeframeEnd}{" + projectInformation.TimeFrameEnd.ToString("yyyy-MM-dd") +  @"} 
-\newcommand{\TimeframeReportDue}{" + projectInformation.TimeFrameReportDue.ToString("yyyy-MM-dd") +  @"} 
-\newcommand{\TimeframeComment}{" + projectInformation.TimeFrameComment +  @"}
+\newcommand{\TimeframeTotal}{" + projectInformation.TimeFrameTotal + @" working days} 
+\newcommand{\TimeframeStart}{" + projectInformation.TimeFrameStart.ToString("yyyy-MM-dd") + @"} 
+\newcommand{\TimeframeEnd}{" + projectInformation.TimeFrameEnd.ToString("yyyy-MM-dd") + @"} 
+\newcommand{\TimeframeReportDue}{" + projectInformation.TimeFrameReportDue.ToString("yyyy-MM-dd") + @"} 
+\newcommand{\TimeframeComment}{" + projectInformation.TimeFrameComment + @"}
 
 %----------------------------------------------------------------------------------------
 %	FINDINGS COUNT AND OVERALL THREAT EXPOSURE
@@ -108,8 +118,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 \newcommand{\FindingsCountLow}{" + projectInformation.FindingsCountLow + @"}
 \newcommand{\FindingsCountInfo}{" + projectInformation.FindingsCountInfo + @"}
 \newcommand{\FindingsCountTotal}{" + projectInformation.FindingsCountTotal + @"}";
-			Console.Write(content);
-            return Encoding.UTF8.GetBytes(content);
-        }
+        Console.Write(content);
+        return Encoding.UTF8.GetBytes(content);
     }
 }

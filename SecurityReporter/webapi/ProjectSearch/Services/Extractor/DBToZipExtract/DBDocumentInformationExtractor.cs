@@ -1,47 +1,37 @@
 ﻿using System.Globalization;
 using System.Text;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public static class DbDocumentInformationExtractor
 {
-    public class DbDocumentInformationExtractor
+    public static byte[] ExtractDocumentInformation(DocumentInformation documentInformation)
     {
-        public static byte[] ExtractDocumentInformation(DocumentInformation documentInformation)
+        // Initialize lists if null
+        if (documentInformation.Authors == null) documentInformation.Authors = new List<string>();
+
+        if (documentInformation.Reviewiers == null) documentInformation.Reviewiers = new List<string>();
+
+        if (documentInformation.Approvers == null) documentInformation.Approvers = new List<string>();
+
+
+        if (documentInformation.ReportDocumentHistory == null)
+            documentInformation.ReportDocumentHistory =
+                new List<ReportVersionEntry>(); // Initialize to an empty list if null
+
+        // Rest of the null checks can be added for other properties as needed...
+
+        var reportVersionEntries = new List<string>();
+        foreach (var rve in documentInformation.ReportDocumentHistory)
         {
-            // Initialize lists if null
-            if (documentInformation.Authors == null)
-            {
-                documentInformation.Authors = new List<string>();
-            }
+            var entryString = "\t\\ReportVersionEntry{" + rve.VersionDate.ToString("yyyy-MM-dd") + "}{" + rve.Version +
+                              "}{" + rve.WholeName + "}{" + rve.ReportStatus + "}";
+            reportVersionEntries.Add(entryString);
+        }
 
-            if (documentInformation.Reviewiers == null)
-            {
-                documentInformation.Reviewiers = new List<string>();
-            }
-
-            if (documentInformation.Approvers == null)
-            {
-                documentInformation.Approvers = new List<string>();
-            }
-
-
-
-            if (documentInformation.ReportDocumentHistory == null)
-            {
-                documentInformation.ReportDocumentHistory = new List<ReportVersionEntry>(); // Initialize to an empty list if null
-            }
-
-            // Rest of the null checks can be added for other properties as needed...
-
-            List<string> reportVersionEntries = new List<string>();
-            foreach (ReportVersionEntry rve in documentInformation.ReportDocumentHistory)
-            {
-                string entryString = "\t\\ReportVersionEntry{" + rve.VersionDate.ToString("yyyy-MM-dd") + "}{" + rve.Version + "}{" + rve.WholeName + "}{" + rve.ReportStatus + "}";
-                reportVersionEntries.Add(entryString);
-            }
-
-            string documentInfoContent = 
-@"%----------------------------------------------------------------------------------------
+        var documentInfoContent =
+            @"%----------------------------------------------------------------------------------------
 %	DOCUMENT TYPE
 %----------------------------------------------------------------------------------------
 
@@ -83,13 +73,13 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %----------------------------------------------------------------------------------------
 \newcommand{\FiscalYear}{FY23}
 \newcommand{\ReportVersion}{Default}
-\newcommand{\ReportDate}{" + documentInformation.ReportDate.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US")) + @"}
+\newcommand{\ReportDate}{" +
+            documentInformation.ReportDate.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US")) + @"}
 \newcommand{\ReportDocumentClassification}{CONFIDENTIAL}
 
 % \newcommand{\ReportStatus}{RELEASE} 
 \newcommand{\ReportStatus}{DRAFT}";
-            Console.WriteLine(documentInfoContent);
-            return Encoding.UTF8.GetBytes(documentInfoContent);
-        }
+        Console.WriteLine(documentInfoContent);
+        return Encoding.UTF8.GetBytes(documentInfoContent);
     }
 }

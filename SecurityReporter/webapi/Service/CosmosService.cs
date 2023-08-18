@@ -3,6 +3,7 @@ using System.Net;
 using webapi.Enums;
 using webapi.Login.Services;
 using webapi.Models;
+using webapi.ProjectSearch.Enums;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -347,7 +348,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
+        public async Task<PagedDbResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
         {
             int limit = 24;
             bool firstFilter = false;
@@ -472,7 +473,7 @@ namespace webapi.Service
 
             //Filling PagedDBResult Response
 
-            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(data, page);
+            PagedDbResults<List<FindingResponse>> results = new PagedDbResults<List<FindingResponse>>(data, page);
             results.TotalRecords = totalResults;
             results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
             if (results.TotalPages > page)

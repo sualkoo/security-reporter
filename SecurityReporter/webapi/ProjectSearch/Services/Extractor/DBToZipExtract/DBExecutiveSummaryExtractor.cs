@@ -1,14 +1,13 @@
 ﻿using System.Text;
-using webapi.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public static class DbExecutiveSummaryExtractor
 {
-    public class DbExecutiveSummaryExtractor
+    public static byte[] ExtractExecutiveSummary(string executiveSummary)
     {
-        public static byte[] ExtractExecutiveSummary(string executiveSummary)
-        {
-            string executiveSummaryContent =
-@"%----------------------------------------------------------------------------------------
+        var executiveSummaryContent =
+            @"%----------------------------------------------------------------------------------------
 %	EXECUTIVE SUMMARY
 %----------------------------------------------------------------------------------------
 %-<ExecSum>->
@@ -18,8 +17,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %-<ExecSum>
 \pagebreak
 \section*{Overall Exposure}";
-            Console.WriteLine(executiveSummaryContent);
-            return Encoding.UTF8.GetBytes(executiveSummaryContent);
-        }
+        Console.WriteLine(executiveSummaryContent);
+        return Encoding.UTF8.GetBytes(executiveSummaryContent);
     }
 }

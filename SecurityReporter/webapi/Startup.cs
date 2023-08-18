@@ -30,7 +30,7 @@ namespace webapi
             
             services.AddSingleton<IProjectDataValidator, ProjectDataValidator>();
             services.AddSingleton<IProjectDataParser, ProjectDataParser>();
-            services.AddSingleton<IDBProjectDataParser, DbProjectDataParser>();
+            services.AddSingleton<IDbProjectDataParser, DbProjectDataParser>();
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<IPdfBuilder, PdfBuilder>();
             services.AddSingleton<IDashboardService, DashboardService>();

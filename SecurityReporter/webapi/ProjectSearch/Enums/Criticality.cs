@@ -1,12 +1,11 @@
-﻿namespace webapi.Enums
+﻿namespace webapi.ProjectSearch.Enums;
+
+public enum Criticality
 {
-    public enum Criticality
-    {
-        Undefined,
-        High,
-        Medium,
-        Low,
-        Info,
-        TBR,
-    }
+    Undefined,
+    High,
+    Medium,
+    Low,
+    Info,
+    TBR
 }

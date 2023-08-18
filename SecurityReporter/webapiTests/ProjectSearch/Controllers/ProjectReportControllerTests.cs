@@ -155,7 +155,7 @@ public class ProjectReportControllerTests
             expectedFinding
         };
 
-        var expectedResponse = new PagedDBResults<List<FindingResponse>>(expectedData, 1);
+        var expectedResponse = new PagedDbResults<List<FindingResponse>>(expectedData, 1);
 
         mockProjectReportService.Setup(service => service.GetReportFindingsAsync(searchedValue, searchedValue,
             searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);

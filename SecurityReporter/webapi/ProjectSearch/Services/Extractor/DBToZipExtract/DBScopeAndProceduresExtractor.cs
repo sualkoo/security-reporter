@@ -1,54 +1,40 @@
 ﻿using System.Text;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
+namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
+
+public static class DbScopeAndProceduresExtractor
 {
-    public class DbScopeAndProceduresExtractor
+    public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
     {
-        public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
-        {
-			var inScope = new List<string>();
-			if (scopeAndProcedures.InScope != null)
-			{
-				foreach(ScopeProcedure sp  in scopeAndProcedures.InScope)
-				{
-					inScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
-                }
-			}
+        var inScope = new List<string>();
+        if (scopeAndProcedures.InScope != null)
+            foreach (var sp in scopeAndProcedures.InScope)
+                inScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
 
-            // Todo
-            //var worstCaseScenariosReportItems = new List<string>();
+        // Todo
+        //var worstCaseScenariosReportItems = new List<string>();
 
-            var worstCaseScenariosScope = new List<string>();
-			if (scopeAndProcedures.WorstCaseScenarios != null)
-			{
-                for (int i = 0; i < scopeAndProcedures.WorstCaseScenarios.Count; i++)
-                {
-                    string wcss = scopeAndProcedures.WorstCaseScenarios[i];
-                    worstCaseScenariosScope.Add("\tWS" + (i + 1) + "\t&\t" + wcss + "\t\\\\");
-                }
-            }
-
-            var outOfScope = new List<string>();
-            if (scopeAndProcedures.OutOfScope != null)
+        var worstCaseScenariosScope = new List<string>();
+        if (scopeAndProcedures.WorstCaseScenarios != null)
+            for (var i = 0; i < scopeAndProcedures.WorstCaseScenarios.Count; i++)
             {
-                foreach (ScopeProcedure sp in scopeAndProcedures.OutOfScope)
-                {
-                    outOfScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
-                }
+                var wcss = scopeAndProcedures.WorstCaseScenarios[i];
+                worstCaseScenariosScope.Add("\tWS" + (i + 1) + "\t&\t" + wcss + "\t\\\\");
             }
 
-            var environment = new List<string>();
-            if (scopeAndProcedures.Environment != null)
-            {
-                foreach (string env in scopeAndProcedures.Environment)
-                {
-                    environment.Add("\t\t\\item " + env);
-                }
-            }
-            
-            string scopeAndProceduresContent =
-@"%----------------------------------------------------------------------------------------
+        var outOfScope = new List<string>();
+        if (scopeAndProcedures.OutOfScope != null)
+            foreach (var sp in scopeAndProcedures.OutOfScope)
+                outOfScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
+
+        var environment = new List<string>();
+        if (scopeAndProcedures.Environment != null)
+            foreach (var env in scopeAndProcedures.Environment)
+                environment.Add("\t\t\\item " + env);
+
+        var scopeAndProceduresContent =
+            @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\InScope}{
@@ -101,8 +87,7 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract
 %----------------------------------------------------------------------------------------
 \newcommand{\TargetTestProtocol}{https://TODOTODO}
 ";
-			Console.WriteLine(scopeAndProceduresContent);
-            return Encoding.UTF8.GetBytes(scopeAndProceduresContent);
-        }
+        Console.WriteLine(scopeAndProceduresContent);
+        return Encoding.UTF8.GetBytes(scopeAndProceduresContent);
     }
 }

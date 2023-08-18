@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Moq;
 using NUnit.Framework;
-using webapi.Models.ProjectReport;
 using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
 using webapi.Service;
@@ -27,7 +27,7 @@ public class ProjectReportServiceTests
         // Initialize mocks and service
         mockCosmosService = new Mock<ICosmosService>();
         mockParser = new Mock<IProjectDataParser>();
-        mockDBParser = new Mock<IDBProjectDataParser>();
+        mockDBParser = new Mock<IDbProjectDataParser>();
         mockValidator = new Mock<IProjectDataValidator>();
         mockPdfBuilder = new Mock<IPdfBuilder>();
         mockAzureBlobService = new Mock<IAzureBlobService>();
@@ -37,7 +37,7 @@ public class ProjectReportServiceTests
 
     private Mock<ICosmosService> mockCosmosService;
     private Mock<IProjectDataParser> mockParser;
-    private Mock<IDBProjectDataParser> mockDBParser;
+    private Mock<IDbProjectDataParser> mockDBParser;
     private Mock<IPdfBuilder> mockPdfBuilder;
     private Mock<IProjectDataValidator> mockValidator;
     private Mock<IAzureBlobService> mockAzureBlobService;
@@ -97,7 +97,7 @@ public class ProjectReportServiceTests
             expectedFinding
         };
 
-        var expectedResponse = new PagedDBResults<List<FindingResponse>>(expectedData, 1);
+        var expectedResponse = new PagedDbResults<List<FindingResponse>>(expectedData, 1);
 
 
         // Searching by Project Report Name

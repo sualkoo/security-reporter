@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
-using webapi.Enums;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Enums;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapiTests.ProjectSearch.Services;
@@ -33,7 +33,7 @@ public class FindingsExtractorTests
         var entry = zipArchive.GetEntry("Findings/FullInformation/Finding.tex");
         var fe = new FindingsExtractor();
         Assert.IsNotNull(fe);
-        var parsedFinding = fe.extractFinding(entry);
+        var parsedFinding = fe.ExtractFinding(entry);
         var testFinding = new Finding
         {
             FindingAuthor = "Lukas Nad",
@@ -82,7 +82,7 @@ This finding references the following information sources:
         var entry = zipArchive.GetEntry("Findings/Empty/Finding.tex");
         var fe = new FindingsExtractor();
         Assert.IsNotNull(fe);
-        var parsedFinding = fe.extractFinding(entry);
+        var parsedFinding = fe.ExtractFinding(entry);
         var testFinding = new Finding();
 
 
@@ -95,7 +95,7 @@ This finding references the following information sources:
         var entry = zipArchive.GetEntry("Findings/CommandsEmpty/Missing_renewcommand.tex");
         var fe = new FindingsExtractor();
         Assert.IsNotNull(fe);
-        var parsedFinding = fe.extractFinding(entry);
+        var parsedFinding = fe.ExtractFinding(entry);
         var testFinding = new Finding();
 
         testFinding.SubsectionDetails = "The \\texttt{dummyapplication.apk} is signed with a debug certificate.";
@@ -121,7 +121,7 @@ This finding references the following information sources:
         entry = zipArchive.GetEntry("Findings/CommandsEmpty/FA_Lo_CWE_Cri_Cat_Det_Counter_Ref.tex");
         fe = new FindingsExtractor();
         Assert.IsNotNull(fe);
-        parsedFinding = fe.extractFinding(entry);
+        parsedFinding = fe.ExtractFinding(entry);
         testFinding = new Finding();
         testFinding.FindingName = "DummyApplication Signed with a Debug Certificate";
         testFinding.Component = "META-INF/CERT.RSA";
@@ -153,12 +153,12 @@ This finding references the following information sources:
         var entry = zipArchive.GetEntry("Findings/CommandsMissing/All_Commands_Missing.tex");
         var fe = new FindingsExtractor();
         Assert.IsNotNull(fe);
-        var parsedFinding = fe.extractFinding(entry);
+        var parsedFinding = fe.ExtractFinding(entry);
         var testFinding = new Finding();
         parsedFinding.Should().BeEquivalentTo(testFinding);
 
         entry = zipArchive.GetEntry("Findings/CommandsMissing/FA_L_CWE_Ex_De_Rep_Ref.tex");
-        parsedFinding = fe.extractFinding(entry);
+        parsedFinding = fe.ExtractFinding(entry);
         testFinding = new Finding();
         testFinding.FindingName = "DummyApplication Signed with a Debug Certificate";
         testFinding.Component = "META-INF/CERT.RSA";
@@ -245,7 +245,7 @@ This finding references the following information sources:
         testCountermeasures.Should().Be(parsedCountermeasures);
 
         entry = zipArchive.GetEntry("Findings/CommandsMissing/Only_Subsections_Left.tex");
-        parsedFinding = fe.extractFinding(entry);
+        parsedFinding = fe.ExtractFinding(entry);
         testFinding = new Finding();
         testFinding.SubsectionDetails = @"
 The \texttt{dummyapplication.apk} is signed with a debug certificate.

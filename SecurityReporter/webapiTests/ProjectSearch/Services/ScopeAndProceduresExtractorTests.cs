@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapiTests.ProjectSearch.Services;

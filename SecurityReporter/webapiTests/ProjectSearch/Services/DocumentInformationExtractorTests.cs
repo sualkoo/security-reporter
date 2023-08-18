@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
 namespace webapiTests.ProjectSearch.Services;
@@ -87,7 +87,7 @@ public class DocumentInformationExtractorTests
     }
 
     [Test]
-    public void MutlipleAttributesMissing()
+    public void MultipleAttributesMissing()
     {
         var entry = zipArchive.GetEntry(
             "DocumentInformation/MultipleAttributesMissing/RPN_RDA_RDMA_RDH_RV_RD_RDC/Document_Information.tex");
