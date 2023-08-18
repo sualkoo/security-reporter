@@ -49,6 +49,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
+import { BacklogComponentComponent } from './my-profile/components/backlog-component/backlog-component.component';
+import { CalendarComponentComponent } from './my-profile/components/calendar-component/calendar-component.component';
 
 
 @NgModule({
@@ -63,6 +65,8 @@ import { MyProfileComponent } from './my-profile/component-pages/my-profile-page
     HighlighterPipe,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
+    BacklogComponentComponent,
+    CalendarComponentComponent,
  
   ],
   imports: [
