@@ -18,24 +18,24 @@ public class MyProfileController : ControllerBase
 
 
 
-    [HttpGet("profile")]
-    public async Task<IActionResult> GetByEmail([FromQuery] string email)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("GET");
-        Console.ResetColor();
-        Console.WriteLine("\t /Project/profile");
+    //[HttpGet("profile")]
+    //public async Task<IActionResult> GetByEmail([FromQuery] string email)
+    //{
+    //    Console.ForegroundColor = ConsoleColor.Green;
+    //    Console.Write("GET");
+    //    Console.ResetColor();
+    //    Console.WriteLine("\t /Project/profile");
 
-        var result = await CosmosService.ProfileItems(email);
+    //    var result = await CosmosService.ProfileItems(email);
 
-        if (result.Projects.Count() == 0)
-        {
-            Console.WriteLine("No items found for given name.");
-            return StatusCode(404, "Error: No items found for given name.");
-        }
+    //    if (result.Projects.Count() == 0)
+    //    {
+    //        Console.WriteLine("No items found for given name.");
+    //        return StatusCode(404, "Error: No items found for given name.");
+    //    }
 
-        Console.WriteLine("Request executed without any errors.");
-        return StatusCode(201, result);
-    }
+    //    Console.WriteLine("Request executed without any errors.");
+    //    return StatusCode(201, result);
+    //}
 
 }
