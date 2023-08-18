@@ -12,10 +12,6 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
         public string ExtractExecutiveSummary()
         {
-            string line;
-            bool readingExecSum = false;
-            string resultString = "";
-
             if (execSumEntry == null)
             {
                 throw new ArgumentNullException();
@@ -23,30 +19,8 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 
             using (StreamReader reader = new StreamReader(execSumEntry.Open()))
             {
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        if (line == "%-<ExecSum>")
-                        {
-                            readingExecSum = false;
-                        }
-
-                        if (readingExecSum)
-                        {
-                            resultString += line;
-                        }
-
-                        if (line == "%-<ExecSum>->")
-                        {
-                            readingExecSum = true;
-                        }
-
-                    }
-
-                }
+                return reader.ReadToEnd();
             }
-            return resultString;
         }
     }
 }
