@@ -11,6 +11,8 @@ public class ProjectList
     [StringValidation(ErrorMessage = "The Project Name field must not be empty or contain only whitespace.")]
     public string ProjectName { get; set; }
 
+    public string? ProjectNameLower { get; set; }
+
     [Range(1, 6, ErrorMessage = "Value for attribute {0} must be between {1} and {2}.")]
     public ProjectStatus? ProjectStatus { get; set; }
 
@@ -31,4 +33,7 @@ public class ProjectList
     public DateOnly? IKO { get; set; }
     public DateOnly? TKO { get; set; }
     public List<Comment>? Comments { get; set; }
+
+    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
+    public DateOnly? ReportDueDate { get; set; }
 }
