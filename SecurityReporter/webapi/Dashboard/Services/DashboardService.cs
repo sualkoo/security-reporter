@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using webapi.ProjectSearch.Models;
-using webapi.ProjectSearch.Services;
+﻿using webapi.ProjectSearch.Services;
 using webapi.Service;
 
 namespace webapi.Dashboard.Services
