@@ -4,7 +4,6 @@ using System.Net;
 using webapi.Login.Models;
 using webapi.Login.Services;
 using webapi.Models;
-using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -150,7 +149,7 @@ namespace webapi.Service
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client")
+                if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
                 {
                     client = true;
                 }
@@ -159,7 +158,7 @@ namespace webapi.Service
             var queryString = "SELECT VALUE COUNT(1) FROM c";
             if (client)
             {
-                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
                 queryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
             }
 
@@ -186,7 +185,7 @@ namespace webapi.Service
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client")
+                if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
                 {
                     client = true;
                 }
@@ -195,7 +194,7 @@ namespace webapi.Service
             var queryString = "SELECT * FROM c";
             if (client)
             {
-                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
+                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
                 queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
             }
 
@@ -678,42 +677,42 @@ namespace webapi.Service
             }
         }
 
-        public async Task<Profile> ProfileItems(string email)
-        {
-            var queryText = $"SELECT VALUE p FROM p JOIN e IN p.WorkingTeam WHERE e = '{email}'"; // Customize your query
+        //public async Task<Profile> ProfileItems(string email)
+        //{
+        //    var queryText = $"SELECT VALUE p FROM p JOIN e IN p.WorkingTeam WHERE e = '{email}'"; // Customize your query
 
-            var queryDefinition = new QueryDefinition(queryText);
+        //    var queryDefinition = new QueryDefinition(queryText);
 
-            try
-            {
-                var queryResultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
+        //    try
+        //    {
+        //        var queryResultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
 
-                var myProfile = new Profile();
+        //        var myProfile = new Profile();
 
-                var results = new List<ProjectData>();
+        //        var results = new List<ProjectData>();
 
-                while (queryResultSetIterator.HasMoreResults)
-                {
-                    var response = await queryResultSetIterator.ReadNextAsync();
-                    results.AddRange(response);
-                    Console.WriteLine(response);
-                }
-                Console.WriteLine("Item found successfully.");
+        //        while (queryResultSetIterator.HasMoreResults)
+        //        {
+        //            var response = await queryResultSetIterator.ReadNextAsync();
+        //            results.AddRange(response);
+        //            Console.WriteLine(response);
+        //        }
+        //        Console.WriteLine("Item found successfully.");
 
-                myProfile.Projects = results;
+        //        myProfile.Projects = results;
 
-                UserRole userRole = await RolesContainer.ReadItemAsync<UserRole>(email, new PartitionKey(email));
+        //        UserRole userRole = await GetUserRole(email);
 
-                myProfile.Role = userRole.Role;
+        //        myProfile.Role = userRole.Role;
 
-                return myProfile;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error occurred: " + ex);
-                return new Profile();
-            }
-        }
+        //        return myProfile;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Error occurred: " + ex);
+        //        return new Profile();
+        //    }
+        //}
 
         public async Task<bool> CreateUser(UserRole user)
         {
@@ -730,6 +729,23 @@ namespace webapi.Service
                 return false;
             }
         }
+
+        public async Task<UserRole> GetUserRole(string email)
+        {
+
+            try
+            {
+                UserRole userRole = await RolesContainer.ReadItemAsync<UserRole>(email, new PartitionKey(email));
+                Console.WriteLine(userRole.id, userRole.Role);
+
+                return userRole;
+            }
+            catch (Exception ex)
+            {
+                return new UserRole();
+            }
+        }
+
         public async Task<List<UserRole>> GetAllUserRoles()
         {
             var queryText = $"SELECT * FROM p"; // Customize your query

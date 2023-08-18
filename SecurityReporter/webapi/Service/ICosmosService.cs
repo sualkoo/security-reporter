@@ -1,4 +1,5 @@
-﻿using webapi.Models;
+﻿using webapi.Login.Models;
+using webapi.Models;
 using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 
@@ -21,5 +22,6 @@ namespace webapi.Service
         Task<Profile> ProfileItems(string email);
 
         Task DeleteUsers();
+        Task<UserRole> GetUserRole(string email);
     }
 }

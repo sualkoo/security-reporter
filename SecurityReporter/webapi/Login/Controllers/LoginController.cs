@@ -1,44 +1,45 @@
 ﻿using IdentityServer4;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using webapi.Login.Services;
+using webapi.Login.Models;
+using webapi.Service;
 
 namespace webapi.Login.Controllers
 {
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly RoleService roleService;
-        private readonly Users users;
+        public ICosmosService CosmosService { get; }
 
-        public LoginController(RoleService roleService, Users users)
+        public LoginController(ICosmosService cosmosService)
         {
-            this.roleService = roleService;
-            this.users = users;
+            CosmosService = cosmosService;
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(string name, string password)
         {
+            if (name == "Username")
+            {
+                return BadRequest("Invalid credentials");
+
+            }
+
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return Conflict("Already signed in!");
             }
 
-            users.AssignRoles(roleService);
-            var testUsers = users.Data;
+            var user = await CosmosService.GetUserRole(name);
 
-            var user = testUsers.SingleOrDefault(u => u.Username == name);
 
-            if (user == null || user.Password != password)
+            if (user.id == name && user.id == password)
             {
-                return BadRequest("Invalid credentials");
+                var token = new IdentityServerUser(user.id);
+                await HttpContext.SignInAsync(token);
+
+                return Ok("Signed in!");
             }
-
-            var token = new IdentityServerUser(user.SubjectId);
-            await HttpContext.SignInAsync(token);
-
-            return Ok("Signed in!");
+            return BadRequest("Invalid credentials");
 
         }
 
@@ -59,7 +60,8 @@ namespace webapi.Login.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return Ok(await roleService.GetUserRoleBySubjectId(HttpContext.User?.FindFirst("sub")?.Value));
+                UserRole result = await CosmosService.GetUserRole(HttpContext.User?.FindFirst("sub")?.Value);
+                return Ok(result.Role);
             }
 
             return Ok("Not signed in!");
