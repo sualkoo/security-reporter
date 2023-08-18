@@ -59,15 +59,14 @@ import { CalendarComponentComponent } from './my-profile/components/calendar-com
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     LandingPageComponent,   
-    HighlighterPipe, LoginPageComponent,
+    HighlighterPipe,
+    LoginPageComponent,
     LandingPageComponent,    
     LandingPageComponent,
     HighlighterPipe,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
-    BacklogComponentComponent,
-    CalendarComponentComponent,
- 
+    
   ],
   imports: [
     MatSnackBarModule,
@@ -102,10 +101,19 @@ import { CalendarComponentComponent } from './my-profile/components/calendar-com
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-MyProfileComponent,
-    MatSnackBarModule, 
+    MatDialogModule,
+    FiltersComponent,
+    FiltersDatepickerComponent,
+    SliderComponent,
+    ExpansionPanelComponent,
+    InputComponent,
+    RouterModule,
+    MatSnackBarModule,
+    BacklogComponentComponent,
+    MyProfileComponent,
+    
   ],
+
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
 })
