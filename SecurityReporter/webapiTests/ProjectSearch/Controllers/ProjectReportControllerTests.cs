@@ -158,11 +158,11 @@ public class ProjectReportControllerTests
         var expectedResponse = new PagedDbResults<List<FindingResponse>>(expectedData, 1);
 
         mockProjectReportService.Setup(service => service.GetReportFindingsAsync(searchedValue, searchedValue,
-            searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);
+            searchedValue, searchedValue, searchedValue, searchedValue, searchedValue, page)).ReturnsAsync(expectedResponse);
 
         // Act
         var result = projectReportController.GetProjectReportFindings(searchedValue, searchedValue, searchedValue,
-            searchedValue, searchedValue, searchedValue, page).Result;
+            searchedValue, searchedValue, searchedValue, searchedValue, page).Result;
 
         // Assert
         Assert.IsNotNull(result);
@@ -181,11 +181,11 @@ public class ProjectReportControllerTests
             new CustomException(StatusCodes.Status400BadRequest, "At list one filter has to be selected");
 
         mockProjectReportService
-            .Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, page))
+            .Setup(service => service.GetReportFindingsAsync(null, null, null, null, null, null, null, page))
             .ThrowsAsync(expectedException);
 
         // Act
-        var result = projectReportController.GetProjectReportFindings(null, null, null, null, null, null, page).Result;
+        var result = projectReportController.GetProjectReportFindings(null, null, null, null, null, null, null, page).Result;
 
         // Assert
         Assert.IsNotNull(result);
