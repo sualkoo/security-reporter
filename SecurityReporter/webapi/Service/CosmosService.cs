@@ -607,6 +607,32 @@ namespace webapi.Service
             }
         }
 
+        public async Task<bool> GetUploadStatus(string id)
+        {
+            try
+            {
+                var project = await GetProjectById(id); // You should implement GetProjectById in your service
+
+                if (project != null)
+                {
+                    bool isScopeFileUploaded = project.IsScopeFileUploaded;
+                    bool isQuestionnaireFileUploaded = project.IsQuestionnaireFileUploaded;
+                    bool isReportFileUploaded = project.IsReportFileUploaded;
+
+                    return isScopeFileUploaded && isQuestionnaireFileUploaded && isReportFileUploaded;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred: " + ex);
+                return false;
+            }
+        }
+
         public async Task<bool> UpdateProject(ProjectData data)
         {
             if (data.Comments != null)
@@ -632,5 +658,7 @@ namespace webapi.Service
                 return false;
             }
         }
+
+      
     }
 }

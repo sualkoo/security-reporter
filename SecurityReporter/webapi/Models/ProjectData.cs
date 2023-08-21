@@ -6,6 +6,11 @@ namespace webapi.Models;
 
 public class ProjectData : ProjectList
 {
+
+    public bool IsScopeFileUploaded { get; set; }
+    public bool IsQuestionnaireFileUploaded { get; set; }
+    public bool IsReportFileUploaded { get; set; }
+
     [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
     public DateOnly? ReportDueDate { get; set; }
     public DateTime? RequestCreated { get; set; }

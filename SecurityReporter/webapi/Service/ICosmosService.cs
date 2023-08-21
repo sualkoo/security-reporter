@@ -8,6 +8,7 @@ namespace webapi.Service
 {
     public interface ICosmosService
     {
+        Task<bool> GetUploadStatus(string id);
         Task<bool> AddProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
