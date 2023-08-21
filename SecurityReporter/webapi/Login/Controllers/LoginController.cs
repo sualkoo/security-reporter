@@ -62,7 +62,7 @@ namespace webapi.Login.Controllers
                 return Ok(await roleService.GetUserRoleBySubjectId(HttpContext.User?.FindFirst("sub")?.Value));
             }
 
-            return Ok("Not signed in!");
+            return StatusCode(401, "Not signed in!");
 
         }
     }
