@@ -9,10 +9,11 @@ public class ProjectReportService : IProjectReportService
 {
     private readonly ILogger Logger;
     private IProjectReportService projectReportServiceImplementation;
-
+    private bool generatePdfs;
+    
     public ProjectReportService(IProjectDataParser parser, IDbProjectDataParser dbParser,
         IProjectDataValidator validator, ICosmosService cosmosService, IPdfBuilder pdfBuilder,
-        IAzureBlobService azureBlobService)
+        IAzureBlobService azureBlobService, IConfiguration configuration)
     {
         Validator = validator;
         Parser = parser;
@@ -22,6 +23,13 @@ public class ProjectReportService : IProjectReportService
         AzureBlobService = azureBlobService;
         var loggerFactory = LoggerProvider.GetLoggerFactory();
         Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+        
+        generatePdfs = false;
+        var pdfGenerationAllowed = configuration["GeneratePdfsFromReports"];
+        if (bool.TryParse(pdfGenerationAllowed, out bool generatePdfsValue))
+        {
+            generatePdfs = generatePdfsValue;
+        }
     }
 
     private IProjectDataValidator Validator { get; }
@@ -31,13 +39,13 @@ public class ProjectReportService : IProjectReportService
     private IAzureBlobService AzureBlobService { get; }
     private IPdfBuilder PdfBuilder { get; }
 
-    async Task<ProjectReportData> IProjectReportService.GetReportByIdAsync(Guid id)
+    public async Task<ProjectReportData> GetReportByIdAsync(Guid id)
     {
         Logger.LogInformation("Fetching project report by ID");
         return await CosmosService.GetProjectReport(id.ToString());
     }
 
-    async Task<ProjectReportData> IProjectReportService.SaveReportFromZipAsync(IFormFile file)
+    public async Task<ProjectReportData> SaveReportFromZipAsync(IFormFile file)
     {
         Logger.LogInformation("Saving new project report");
         ProjectReportData newReportData;
@@ -59,9 +67,12 @@ public class ProjectReportService : IProjectReportService
 
         try
         {
-            var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-            await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
-                newReportData.DocumentInfo!.ProjectReportName!);
+            if (generatePdfs)
+            {
+                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
+                    newReportData.DocumentInfo!.ProjectReportName!);
+            }
             await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
         }
         catch (Exception)
@@ -74,7 +85,7 @@ public class ProjectReportService : IProjectReportService
         return newReportData;
     }
 
-    async Task<PagedDbResults<List<FindingResponse>>> IProjectReportService.GetReportFindingsAsync(
+    public async Task<PagedDbResults<List<FindingResponse>>> GetReportFindingsAsync(
         string? projectName, string? details, string? impact, string? repeatability, string? references,
         string? cWE, int page)
     {
@@ -89,7 +100,7 @@ public class ProjectReportService : IProjectReportService
             references, cWE, page);
     }
 
-    async Task<bool> IProjectReportService.DeleteReportAsync(List<string> ids)
+    public async Task<bool> DeleteReportAsync(List<string> ids)
     {
         Logger.LogInformation("Deleting items from database");
 
@@ -99,7 +110,7 @@ public class ProjectReportService : IProjectReportService
         return true;
     }
 
-    async Task<bool> IProjectReportService.DeleteReportAllAsync()
+    public async Task<bool> DeleteReportAllAsync()
     {
         Logger.LogInformation("Deleting all items from database");
         var deletedProjects = await CosmosService.DeleteAllReportsAsync();
