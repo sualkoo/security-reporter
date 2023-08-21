@@ -55,19 +55,6 @@ public class ProjectController : ControllerBase
     }
 
 
-    //[HttpGet("count")]
-    //// [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    //public async Task<IActionResult> GetNumberOfProjects()
-    //{
-    //    int count = await CosmosService.GetNumberOfProjects();
-
-    //    if (count < 0)
-    //    {
-    //        return StatusCode(400, count);
-    //    }
-
-    //    return StatusCode(200, count);
-    //}
 
     [HttpGet("retrieve")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]

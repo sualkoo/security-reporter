@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net;
 using webapi.Login.Models;
 using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
@@ -379,6 +380,96 @@ namespace webapi.Service
                 queryDefinition.WithParameter(param.Key, param.Value);
             }
             var resultSetIterator = Container.GetItemQueryIterator<ProjectList>(queryDefinition);
+            try
+            {
+                while (resultSetIterator.HasMoreResults)
+                {
+                    var response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
+            result.Count = count;
+            result.Projects = items;
+
+            return result;
+
+        }
+
+        public async Task<Profile> GetBacklog(int pageSize, int pageNumber)
+        {
+            var result = new Profile();
+            int skipCount = pageSize * (pageNumber - 1);
+            int itemCount = pageSize;
+
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
+                {
+                    client = true;
+                }
+            }
+            else
+            {
+                result.Count = -1;
+                result.Projects = new List<ProfileBackLog>();
+                return result;
+            }
+
+            var queryString = "SELECT * FROM c";
+
+            var countqueryString = "SELECT VALUE COUNT(1) FROM c";
+            if (client)
+            {
+                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
+                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+
+                countqueryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+            }
+
+            var queryParameters = new Dictionary<string, object>();
+
+            var count = 0;
+            var countQueryDefinition = new QueryDefinition(countqueryString);
+            foreach (var param in queryParameters)
+            {
+                countQueryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var countResultSetIterator = Container.GetItemQueryIterator<int>(countQueryDefinition);
+            try
+            {
+                while (countResultSetIterator.HasMoreResults)
+                {
+                    var response = await countResultSetIterator.ReadNextAsync();
+                    count = response.Resource.FirstOrDefault();
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
+
+            queryString += " OFFSET @skipCount LIMIT @itemCount";
+            queryParameters["@skipCount"] = skipCount;
+            queryParameters["@itemCount"] = itemCount;
+
+            var items = new List<ProfileBackLog>();
+            var queryDefinition = new QueryDefinition(queryString);
+            foreach (var param in queryParameters)
+            {
+                queryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var resultSetIterator = Container.GetItemQueryIterator<ProfileBackLog>(queryDefinition);
             try
             {
                 while (resultSetIterator.HasMoreResults)

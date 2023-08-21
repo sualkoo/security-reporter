@@ -1,5 +1,6 @@
 ﻿using webapi.Login.Models;
 using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -11,6 +12,7 @@ namespace webapi.Service
         Task<List<string>> DeleteProjects(List<string> projectIds);
         Task<CountProjects> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
         //Task<int> GetNumberOfProjects();
+        Task<Profile> GetBacklog(int pageSize, int pageNumber);
 
         Task<bool> AddProjectReport(ProjectReportData data);
         Task<ProjectReportData> GetProjectReport(string projectId);
