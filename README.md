@@ -53,7 +53,7 @@ If you want to learn more about creating good readme files then refer the follow
 
 6. Enable secret storage and set a secret
 
-   - The Secret Manager tool includes an init command. To use user secrets, run the following command in the project directory:
+   - The Secret Manager tool includes an init command. To use user secrets, run the following command in the project directory (use cd SecurityReporter/webapi command in terminal):
    - You can find your PrimaryKey in Quickstart tab in Emulator.
 
    ```
