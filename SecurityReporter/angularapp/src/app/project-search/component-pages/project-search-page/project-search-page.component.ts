@@ -69,6 +69,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatabilityTest = this.repeatability;
     this.referencesTest = this.references;
     this.cweTest = this.cwe;
+    this.findingNameTest = this.findingName;
   }
 
   injectionOfSendingVariables() {
@@ -78,6 +79,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatabilitySending = this.repeatability;
     this.referencesSending = this.references;
     this.cweSending = this.cwe;
+    this.findingNameSending = this.findingName;
   }
 
   groupFindings() {
@@ -118,7 +120,8 @@ export class ProjectSearchPageComponent implements OnInit {
       this.impact,
       this.repeatability,
       this.references,
-      this.cwe
+      this.cwe,
+      this.findingName
     ).subscribe(
       (response) => {
         this.injectionOfSendingVariables();
@@ -151,7 +154,8 @@ export class ProjectSearchPageComponent implements OnInit {
       this.impactSending,
       this.repeatabilitySending,
       this.referencesSending,
-      this.cweSending
+      this.cweSending,
+      this.findingNameSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
       this.nextPage = res.nextPage;
@@ -174,7 +178,8 @@ export class ProjectSearchPageComponent implements OnInit {
     { id: 'case3', value: 'SubsectionImpact', label: 'Impact', checked: false},
     { id: 'case4', value: 'SubsectionRepeatability', label: 'Repeatability', checked: false},
     { id: 'case5', value: 'SubsectionReferences', label: 'References', checked: false},
-    { id: 'case6', value: 'CWE', label: 'CWE', checked: false }
+    { id: 'case6', value: 'CWE', label: 'CWE', checked: false },
+    { id: 'case7', value: 'FindingName', label: 'Finding Name', checked: false},
   ];
 
 
@@ -184,6 +189,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatability?: string;
   references?: string;
   cwe?: string;
+  findingName?: string;
 
   projectNameTest?: string;
   detailsTest?: string;
@@ -191,6 +197,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatabilityTest?: string;
   referencesTest?: string;
   cweTest?: string;
+  findingNameTest?: string;
 
   projectNameSending?: string;
   detailsSending?: string;
@@ -198,6 +205,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatabilitySending?: string;
   referencesSending?: string;
   cweSending?: string;
+  findingNameSending?: string;
 
   clearReportVariables() {
     this.projectName = '';
@@ -206,6 +214,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatability = '';
     this.references = '';
     this.cwe = '';
+    this.findingName = '';
   }
 
 
@@ -250,6 +259,9 @@ export class ProjectSearchPageComponent implements OnInit {
       }
       else if(value == 'SubsectionReferences') {
         this.references = this.value;
+      }
+      else if(value == 'FindingName') {
+        this.findingName = this.value;
       }
       else if(value == 'CWE') {
         this.cwe = this.value;

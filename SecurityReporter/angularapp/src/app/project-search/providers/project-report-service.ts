@@ -25,7 +25,7 @@ export class ProjectReportService {
     return this.http.get(`${this.apiUri}/${id}`);
   }
 
-  public getProjectReportFindings(page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
+  public getProjectReportFindings(page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string, findingName?: string) {
     let params = new HttpParams();
 
     params = params.set('page', page);
@@ -54,6 +54,10 @@ export class ProjectReportService {
 
     if (cwe !== undefined) {
       params = params.set('cwe', cwe);
+    }
+
+    if (findingName !== undefined) {
+      params = params.set('findingName', findingName);
     }
 
     return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUri}/findings`, { params: params });
