@@ -74,10 +74,9 @@
 
                     <div class="card-title">
 
-                      <h5 *ngIf="!projectNameTest">Finding: {{finding.findingName}}</h5>
-
-                      <h5 *ngIf="projectNameTest">
-                        <span>Finding: {{finding.findingName}}</span>
+                      <h5 *ngIf="!findingNameTest">Finding: {{finding.findingName}}</h5>
+                      <h5 *ngIf="findingNameTest">
+                        Finding: <span [innerHtml]="finding.findingName | highlighter:highlightValue:'partial'"></span>
                       </h5>
                     </div>
 

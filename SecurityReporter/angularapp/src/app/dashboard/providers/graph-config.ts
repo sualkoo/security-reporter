@@ -23,7 +23,7 @@ export const CriticalityConfig = {
         }
       },
       legend: {
-        display: true, // Hide the default legend,
+        display: true,
         align: 'center',
         position: 'right'as 'right',
 
@@ -72,7 +72,7 @@ export const VulnerabilityConfig = {
         }
       },
       legend: {
-        display: true, // Hide the default legend,
+        display: true,
         align: 'center',
         position: 'right',
 
@@ -122,7 +122,7 @@ export const CWEConfig = {
         }
       },
       legend: {
-        display: false, // Hide the default legend,
+        display: false,
 
       },
     },
@@ -177,7 +177,7 @@ export const CVSSConfig = {
         }
       },
       legend: {
-        display: false, // Hide the default legend,
+        display: false,
 
       },
     },

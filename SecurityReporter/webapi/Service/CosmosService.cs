@@ -348,7 +348,7 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDbResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, int page)
+        public async Task<PagedDbResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string? findingName, int page)
         {
             int limit = 24;
             bool firstFilter = false;
@@ -410,6 +410,11 @@ namespace webapi.Service
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
             }
+            if (!string.IsNullOrEmpty(findingName))
+            {
+                querypath.Add(" LOWER(f.FindingName) LIKE LOWER(@findingName) ");
+                queryPage += "&" + nameof(findingName) + "=" + Uri.EscapeDataString(findingName);
+            }
             if (querypath.Count() > 0)
             {
                 foreach (var path in querypath)
@@ -448,6 +453,7 @@ namespace webapi.Service
                                                                         .WithParameter("@repeatability", $"%{repeatability}%")
                                                                         .WithParameter("@references", $"%{references}%")
                                                                         .WithParameter("@valueInt", valueInt)
+                                                                        .WithParameter("@findingName", $"%{findingName}%")
                                                                         .WithParameter("@offset", offset)
                                                                         .WithParameter("@limit", limit);
 
@@ -465,7 +471,8 @@ namespace webapi.Service
                                                                                   .WithParameter("@impact", $"%{impact}%")
                                                                                   .WithParameter("@repeatability", $"%{repeatability}%")
                                                                                   .WithParameter("@references", $"%{references}%")
-                                                                                  .WithParameter("@valueInt", valueInt);
+                                                                                  .WithParameter("@valueInt", valueInt)
+                                                                                  .WithParameter("@findingName", $"%{findingName}%");
 
             FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
             FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
@@ -661,6 +668,14 @@ namespace webapi.Service
                 (float)f.CVSSAVG, (string)f.UploadMonth, (string)f.UploadYear)));
             }
             Logger.LogInformation("Returning found reports");
+
+            data = data.OrderByDescending(item => item.Item3)
+            .ThenByDescending(item => item.Item2)
+            .Take(8)
+            .OrderBy(item => item.Item3)
+            .ThenBy(item => item.Item2)
+            .ToList();
+
             return data;
         }
     }
