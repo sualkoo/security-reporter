@@ -11,17 +11,16 @@ public class ExecutiveSummaryExtractor
         this.execSumEntry = execSumEntry;
     }
 
-        public string ExtractExecutiveSummary()
+    public string ExtractExecutiveSummary()
+    {
+        if (execSumEntry == null)
         {
-            if (execSumEntry == null)
-            {
-                throw new ArgumentNullException();
-            }
+            throw new ArgumentNullException();
+        }
 
-            using (StreamReader reader = new StreamReader(execSumEntry.Open()))
-            {
-                return reader.ReadToEnd();
-            }
+        using (StreamReader reader = new StreamReader(execSumEntry.Open()))
+        {
+            return reader.ReadToEnd();
         }
     }
 }

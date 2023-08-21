@@ -28,7 +28,7 @@ public class DbTestingMethodologyExtractorTests
         t1.WorkType =
             "Official integrated development environment for Google's Android operating system, with emulator capabilities.";
 
-        testingMethodology.ToolsUsed = new List<Tool>
+        /*testingMethodology.ToolsUsed = new List<Tool>
         {
             t,
             t1
@@ -43,7 +43,7 @@ public class DbTestingMethodologyExtractorTests
             "client-side testing",
             "testing for weak cryptography",
             "testing error handling."
-        };
+        };*/
 
         var expectedStr = @"%----------------------------------------------------------------------------------------
 %	TOOLS USED

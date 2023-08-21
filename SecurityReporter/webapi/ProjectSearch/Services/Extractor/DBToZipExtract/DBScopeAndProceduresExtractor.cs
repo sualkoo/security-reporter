@@ -5,49 +5,47 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
 public static class DbScopeAndProceduresExtractor
 {
-    public class DbScopeAndProceduresExtractor
+    /*
+    public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
     {
-        /*
-        public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
+
+        var inScope = new List<string>();
+        if (scopeAndProcedures.InScope != null)
         {
-
-			var inScope = new List<string>();
-			if (scopeAndProcedures.InScope != null)
-			{
-				foreach(ScopeProcedure sp  in scopeAndProcedures.InScope)
-				{
-					inScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
-                }
-			}
-
-        // Todo
-        //var worstCaseScenariosReportItems = new List<string>();
-
-        var worstCaseScenariosScope = new List<string>();
-        if (scopeAndProcedures.WorstCaseScenarios != null)
-            for (var i = 0; i < scopeAndProcedures.WorstCaseScenarios.Count; i++)
+            foreach(ScopeProcedure sp  in scopeAndProcedures.InScope)
             {
-                var wcss = scopeAndProcedures.WorstCaseScenarios[i];
-                worstCaseScenariosScope.Add("\tWS" + (i + 1) + "\t&\t" + wcss + "\t\\\\");
+                inScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
             }
+        }
 
-        var outOfScope = new List<string>();
-        if (scopeAndProcedures.OutOfScope != null)
-            foreach (var sp in scopeAndProcedures.OutOfScope)
-                outOfScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
+    // Todo
+    //var worstCaseScenariosReportItems = new List<string>();
 
-        var environment = new List<string>();
-        if (scopeAndProcedures.Environment != null)
-            foreach (var env in scopeAndProcedures.Environment)
-                environment.Add("\t\t\\item " + env);
+    var worstCaseScenariosScope = new List<string>();
+    if (scopeAndProcedures.WorstCaseScenarios != null)
+        for (var i = 0; i < scopeAndProcedures.WorstCaseScenarios.Count; i++)
+        {
+            var wcss = scopeAndProcedures.WorstCaseScenarios[i];
+            worstCaseScenariosScope.Add("\tWS" + (i + 1) + "\t&\t" + wcss + "\t\\\\");
+        }
 
-        var scopeAndProceduresContent =
-            @"%----------------------------------------------------------------------------------------
+    var outOfScope = new List<string>();
+    if (scopeAndProcedures.OutOfScope != null)
+        foreach (var sp in scopeAndProcedures.OutOfScope)
+            outOfScope.Add("\t" + sp.Component + " & " + sp.Detail + "\u0020\\\\");
+
+    var environment = new List<string>();
+    if (scopeAndProcedures.Environment != null)
+        foreach (var env in scopeAndProcedures.Environment)
+            environment.Add("\t\t\\item " + env);
+
+    var scopeAndProceduresContent =
+        @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\InScope}{
 
-	\hline
+\hline
 " + string.Join("\n", inScope) + @"						
 }
 
@@ -65,7 +63,7 @@ public static class DbScopeAndProceduresExtractor
 
 % Required for Scope & Report.
 \newcommand{\WorstCaseScenariosScope}{
-	\hline
+\hline
 " + string.Join("\n", worstCaseScenariosScope) + @"
 }
 
@@ -75,7 +73,7 @@ public static class DbScopeAndProceduresExtractor
 %	OUT OF SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\OutOfScope}{
-    \hline
+\hline
 " + string.Join("\n", outOfScope) + @"
 }
 
@@ -83,8 +81,8 @@ public static class DbScopeAndProceduresExtractor
 %	ENVIRONMENT
 %----------------------------------------------------------------------------------------
 \newcommand{\Environment}{
-    
-    \ReportAssessmentTeamLong TODOTODO.
+
+\ReportAssessmentTeamLong TODOTODO.
 " + (environment.Count >= 1 ? "\t\\begin{itemize}" : null) + @"
 " + string.Join(",\n", environment) + @"
 " + (environment.Count >= 1 ? "\t\\end{itemize}" : null) + @"
@@ -95,9 +93,8 @@ public static class DbScopeAndProceduresExtractor
 %----------------------------------------------------------------------------------------
 \newcommand{\TargetTestProtocol}{https://TODOTODO}
 ";
-			Console.WriteLine(scopeAndProceduresContent);
-            return Encoding.UTF8.GetBytes(scopeAndProceduresContent);
-        }
-        */
+        Console.WriteLine(scopeAndProceduresContent);
+        return Encoding.UTF8.GetBytes(scopeAndProceduresContent);
     }
+    */
 }

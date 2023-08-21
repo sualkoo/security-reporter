@@ -5,27 +5,25 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
 public static class DbTestingMethodologyExtractor
 {
-    public class DbTestingMethodologyExtractor
+    public static byte[] ExtractTestingMethodology(TestingMethodology testingMethodology)
     {
-        public static byte[] ExtractTestingMethodology(TestingMethodology testingMethodology)
-        {
 
-            var toolsUsed = new List<string>();
-            /*(if (testingMethodology.ToolsUsed != null) {
-                foreach(Tool tool in testingMethodology.ToolsUsed)
-                {
-                    toolsUsed.Add("\t" + tool.ToolName + " & " + tool.Version + " & " + tool.TestType + " & " + tool.WorkType + " \\\\\n\t\\hline");
-                }
-            }
-
-            var attackVectors = new List<string>();
-            if (testingMethodology.AttackVectors != null)
+        var toolsUsed = new List<string>();
+        /*(if (testingMethodology.ToolsUsed != null) {
+            foreach(Tool tool in testingMethodology.ToolsUsed)
             {
-                foreach(string attackVector in testingMethodology.AttackVectors)
-                {
-                    attackVectors.Add("\t\t\\item " + attackVector);
-                }
-            }*/
+                toolsUsed.Add("\t" + tool.ToolName + " & " + tool.Version + " & " + tool.TestType + " & " + tool.WorkType + " \\\\\n\t\\hline");
+            }
+        }
+
+        var attackVectors = new List<string>();
+        if (testingMethodology.AttackVectors != null)
+        {
+            foreach(string attackVector in testingMethodology.AttackVectors)
+            {
+                attackVectors.Add("\t\t\\item " + attackVector);
+            }
+        }*/
 
         var testingMethodologyContent =
             @"%----------------------------------------------------------------------------------------

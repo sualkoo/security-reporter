@@ -65,7 +65,7 @@ public class ProjectDataParser : IProjectDataParser
         return newProjectReportData;
     }
 
-    private List<Finding> ExtractFindings(ZipArchive archive)
+    public List<Finding> ExtractFindings(ZipArchive archive)
     {
         var fe = new FindingsExtractor();
         var findingDictionary = new Dictionary<string, List<ZipArchiveEntry>>();

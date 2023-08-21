@@ -1,7 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
-using webapi.Models;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
@@ -10,9 +9,8 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
         string newCommandRegexPattern = @"\\(?:renew|new)command{\\([^}]+)}{([^}]+)}";
         string subsectionRegex = @"\\subsection\*{([^}]+)}([\s\S]*?)(?=\\subsection\*{[^}]+}|\\subsection\*|$)";
 
-        List<Finding> findingsList = new List<Finding>();
-        ZipArchiveEntry findingsDirectory;
-        public Finding extractFinding(ZipArchiveEntry currentEntry)
+
+        public Finding ExtractFinding(ZipArchiveEntry currentEntry)
         {
             Finding newFinding = new Finding();
             string line;
@@ -22,11 +20,11 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                 string fileContent = reader.ReadToEnd();
                 MatchCollection newCommandMatches = Regex.Matches(fileContent, newCommandRegexPattern);
                 MatchCollection subsectionMatches = Regex.Matches(fileContent, subsectionRegex);
-                foreach(Match match in newCommandMatches)
+                foreach (Match match in newCommandMatches)
                 {
                     assignNewData(match.Groups[1].ToString(), match.Groups[2].ToString(), newFinding);
                 }
-                foreach(Match match in subsectionMatches)
+                foreach (Match match in subsectionMatches)
                 {
                     assignNewData(match.Groups[1].ToString(), match.Groups[2].ToString(), newFinding);
                 }
@@ -49,9 +47,9 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     }
                 }*/
 
-            return newFinding;
+                return newFinding;
+            }
         }
-    }
 
         private void assignNewData(string command, string data, Finding newFinding)
         {
@@ -176,13 +174,13 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }
 
-    private static List<string> extractLocation(string data)
-    {
-        var result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-        for (var i = 0; i < result.Count; i++) result[i] = result[i].Trim();
+        private static List<string> extractLocation(string data)
+        {
+            var result = data.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+            for (var i = 0; i < result.Count; i++) result[i] = result[i].Trim();
 
-        return result;
-    }
+            return result;
+        }
 
         /*private void extractSubsection(string command, StreamReader reader, Finding newFinding)
         {
@@ -222,45 +220,47 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             }
         }*/
 
-    /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
-    {
-        string line;
-        string resultList = "";
-        string currentItem = "";
-        bool firstItem = true;
-
-        while ((line = reader.ReadLine()) != null)
+        /*private List<string> extractReferences(string data, StreamReader reader, Finding newFinding)
         {
-            string trimmedLine = line.Trim();
-            if (trimmedLine.Length >= 13)
+            string line;
+            string resultList = "";
+            string currentItem = "";
+            bool firstItem = true;
+
+            while ((line = reader.ReadLine()) != null)
             {
-                if (trimmedLine.Substring(0, 13) == "\\end{itemize}")
+                string trimmedLine = line.Trim();
+                if (trimmedLine.Length >= 13)
                 {
-                    if (currentItem != "")
+                    if (trimmedLine.Substring(0, 13) == "\\end{itemize}")
+                    {
+                        if (currentItem != "")
+                        {
+                            resultList = resultList + currentItem.Trim();
+                        }
+                        return resultList;
+                    }
+                }
+
+                if (trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
+                {
+                    if (!firstItem)
                     {
                         resultList = resultList + currentItem.Trim();
+                        currentItem = "";
                     }
-                    return resultList;
-                }
-            }
 
-            if (trimmedLine.Length >= 5 && trimmedLine.Substring(0, 5) == "\\item")
-            {
-                if (!firstItem)
+                    currentItem += trimmedLine.Substring(5);
+                    firstItem = false;
+                }
+                else if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem)
                 {
-                    resultList = resultList + currentItem.Trim();
-                    currentItem = "";
+                    currentItem += trimmedLine;
                 }
-
-                currentItem += trimmedLine.Substring(5);
-                firstItem = false;
             }
-            else if (!string.IsNullOrEmpty(trimmedLine) && trimmedLine.Length > 0 && !firstItem)
-            {
-                currentItem += trimmedLine;
-            }
-        }
 
-        return resultList;
-    }*/
+            return resultList;
+        }*/
+    }
+
 }

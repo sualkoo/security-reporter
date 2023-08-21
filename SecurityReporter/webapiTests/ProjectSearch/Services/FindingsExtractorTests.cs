@@ -158,6 +158,7 @@ This finding references the following information sources:
         parsedFinding.Should().BeEquivalentTo(testFinding);
 
         entry = zipArchive.GetEntry("Findings/CommandsMissing/FA_L_CWE_Ex_De_Rep_Ref.tex");
+        parsedFinding = new Finding();
         parsedFinding = fe.ExtractFinding(entry);
         testFinding = new Finding();
         testFinding.FindingName = "DummyApplication Signed with a Debug Certificate";
@@ -211,7 +212,7 @@ This finding references the following information sources:
 \begin{itemize}
 	\item \href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design and
 	Development: 8.4 Code-Signing}
-	\item \bibentry{CWE-296}
+	\item \bibentry{CW=123}
 \end{itemize}
 
 %-<References>

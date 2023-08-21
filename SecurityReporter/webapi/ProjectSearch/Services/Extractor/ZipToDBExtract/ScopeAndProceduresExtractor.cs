@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Text.RegularExpressions;
-using webapi.Models.ProjectReport;
+using webapi.ProjectSearch.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
