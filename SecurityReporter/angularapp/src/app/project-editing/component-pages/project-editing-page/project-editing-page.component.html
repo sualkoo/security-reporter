@@ -7,10 +7,13 @@
       </h4>
     </div>
     <div style="margin-bottom: 20px" class="projectname-input">
-      <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PN')"
-                           [title]="'Project name'"
-                           [inputValue]="this.projectClass.ProjectName"
-                           class="project-name-input">
+      <app-input-component
+        style="width: 500px"
+        (valueChanged)="onChildInputValueChanged($event, 'PN')"
+        [title]="'Project name'"
+        [inputValue]="this.projectClass.ProjectName"
+        class="project-name-input"
+      >
       </app-input-component>
     </div>
 
@@ -19,181 +22,349 @@
         <div class="left-column">
           <div class="two-in-row">
             <div class="date-container">
-              <datepicker-component #startDate
-                                    [maxDate]="isEndDateSet() ? correctDate(projectClass.EndDate) : defaultMaxDate"
-                                    [title]="'Start Date'"
-                                    [inputValue]="editedStartDate"
-                                    (valueChanged)="onChildDateValueChanged($event, 'STR')">
+              <datepicker-component
+                #startDate
+                [maxDate]="
+                  isEndDateSet()
+                    ? correctDate(projectClass.EndDate)
+                    : defaultMaxDate
+                "
+                [title]="'Start Date'"
+                [inputValue]="editedStartDate"
+                (valueChanged)="onChildDateValueChanged($event, 'STR')"
+              >
               </datepicker-component>
-              <mat-error *ngIf="isInvalidStartDate" class="error-message">Invalid start date</mat-error>
+              <mat-error *ngIf="isInvalidStartDate" class="error-message"
+                >Invalid start date</mat-error
+              >
             </div>
 
             <div class="date-container">
-              <datepicker-component #endDate
-                                    [minDate]="correctDate(this.projectClass.StartDate)"
-                                    [maxDate]="isRepDateSet() ? correctDate(projectClass.ReportDueDate) : defaultMaxDate"
-                                    [title]="'End Date'"
-                                    [inputValue]="editedEndDate"
-                                    (valueChanged)="onChildDateValueChanged($event, 'END')">
+              <datepicker-component
+                #endDate
+                [minDate]="correctDate(this.projectClass.StartDate)"
+                [maxDate]="
+                  isRepDateSet()
+                    ? correctDate(projectClass.ReportDueDate)
+                    : defaultMaxDate
+                "
+                [title]="'End Date'"
+                [inputValue]="editedEndDate"
+                (valueChanged)="onChildDateValueChanged($event, 'END')"
+              >
               </datepicker-component>
-              <mat-error *ngIf="isInvalidEndDate" class="error-message">Invalid end date</mat-error>
+              <mat-error *ngIf="isInvalidEndDate" class="error-message"
+                >Invalid end date</mat-error
+              >
             </div>
           </div>
 
-          <app-select-component (valueChanged)="onChildInputValueChanged($event, 'PST')"
-                                [option]="ProjectStatus"
-                                [title]="'Project status'"
-                                [inputValue]="this.projectClass.ProjectStatus ? getStatusString(this.projectClass.ProjectStatus) : 'None'">
+          <app-select-component
+            (valueChanged)="onChildInputValueChanged($event, 'PST')"
+            [option]="ProjectStatus"
+            [title]="'Project status'"
+            [inputValue]="
+              this.projectClass.ProjectStatus
+                ? getStatusString(this.projectClass.ProjectStatus)
+                : 'None'
+            "
+          >
           </app-select-component>
 
-          <app-select-component (valueChanged)="onChildInputValueChanged($event, 'PSC')"
-                                [option]="ProjectScope"
-                                [title]="'Project scope'"
-                                [inputValue]="this.projectClass.ProjectScope ? getScopeString(this.projectClass.ProjectScope) : 'None'">
+          <app-select-component
+            (valueChanged)="onChildInputValueChanged($event, 'PSC')"
+            [option]="ProjectScope"
+            [title]="'Project scope'"
+            [inputValue]="
+              this.projectClass.ProjectScope
+                ? getScopeString(this.projectClass.ProjectScope)
+                : 'None'
+            "
+          >
           </app-select-component>
 
-          <app-select-component (valueChanged)="onChildInputValueChanged($event, 'QUE')"
-                                [option]="Questionare"
-                                [title]="'Questionare'"
-                                [inputValue]="this.projectClass.ProjectQuestionare ? getQuestionareString(this.projectClass.ProjectQuestionare) : 'None'">
+          <app-select-component
+            (valueChanged)="onChildInputValueChanged($event, 'QUE')"
+            [option]="Questionare"
+            [title]="'Questionare'"
+            [inputValue]="
+              this.projectClass.ProjectQuestionare
+                ? getQuestionareString(this.projectClass.ProjectQuestionare)
+                : 'None'
+            "
+          >
           </app-select-component>
+
+          <div class="two-in-row">
+            <div class="date-container">
+              <datepicker-component
+                [minDate]="correctDate(this.projectClass.StartDate)"
+                [maxDate]="
+                  isEndDateSet()
+                    ? correctDate(projectClass.EndDate)
+                    : this.isRepDateSet()
+                    ? correctDate(this.projectClass.ReportDueDate)
+                    : this.defaultMaxDate
+                "
+                [title]="'IKO'"
+                [inputValue]="editedIKO"
+                (valueChanged)="onChildDateValueChanged($event, 'IKO')"
+              >
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidIKO" class="error-message"
+                >Invalid IKO</mat-error
+              >
+            </div>
+
+            <div class="date-container">
+              <datepicker-component
+                [minDate]="correctDate(this.projectClass.StartDate)"
+                [maxDate]="
+                  isEndDateSet()
+                    ? correctDate(projectClass.EndDate)
+                    : this.isRepDateSet()
+                    ? correctDate(this.projectClass.ReportDueDate)
+                    : this.defaultMaxDate
+                "
+                [title]="'TKO'"
+                [inputValue]="editedTKO"
+                (valueChanged)="onChildDateValueChanged($event, 'TKO')"
+              >
+              </datepicker-component>
+              <mat-error *ngIf="isInvalidTKO" class="error-message"
+                >Invalid TKO</mat-error
+              >
+            </div>
+          </div>
 
           <div class="input-container-pentest">
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PA')"
-                                 [title]="'Pentest aspect'"
-                                 [inputValue]="this.projectClass.PentestAspects">></app-input-component>
-            <mat-error *ngIf="isPentestAspectWhitespace" class="error-message">Pentest aspect cannot contain only whitespace</mat-error>
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'PA')"
+              [title]="'Pentest aspect'"
+              [inputValue]="this.projectClass.PentestAspects"
+              >></app-input-component
+            >
+            <mat-error *ngIf="isPentestAspectWhitespace" class="error-message"
+              >Pentest aspect cannot contain only whitespace</mat-error
+            >
           </div>
 
           <div>
-            <app-radio-button-component (valueChanged)="onChildRadioValueChanged($event)" [project]="this.projectClass"></app-radio-button-component>
+            <app-radio-button-component
+              (valueChanged)="onChildRadioValueChanged($event)"
+              [project]="this.projectClass"
+            ></app-radio-button-component>
           </div>
-          <div class="two-in-row">
-            <div class="date-container">
-              <datepicker-component [minDate]="correctDate(this.projectClass.StartDate)"
-                                    [maxDate]="isEndDateSet() ? correctDate(projectClass.EndDate) : (this.isRepDateSet() ? correctDate(this.projectClass.ReportDueDate) : this.defaultMaxDate)"
-                                    [title]="'IKO'"
-                                    [inputValue]="editedIKO"
-                                    (valueChanged)="onChildDateValueChanged($event, 'IKO')">
-              </datepicker-component>
-              <mat-error *ngIf="isInvalidIKO" class="error-message">Invalid IKO</mat-error>
-            </div>
 
-            <div class="date-container">
-              <datepicker-component [minDate]="correctDate(this.projectClass.StartDate)"
-                                    [maxDate]="isEndDateSet() ? correctDate(projectClass.EndDate) : (this.isRepDateSet() ? correctDate(this.projectClass.ReportDueDate) : this.defaultMaxDate)"
-                                    [title]="'TKO'"
-                                    [inputValue]="editedTKO"
-                                    (valueChanged)="onChildDateValueChanged($event, 'TKO')">
-              </datepicker-component>
-              <mat-error *ngIf="isInvalidTKO" class="error-message">Invalid TKO</mat-error>
-            </div>
-          </div>
+          <mat-accordion>
+            <mat-expansion-panel hideToggle style="color: white">
+              <mat-expansion-panel-header>
+                <mat-panel-title style="color: white">
+                  Pentests files upload
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div style="align-items: center">
+                <mat-divider></mat-divider>
+                <app-file-drag-drop
+                  [pentestTitle]="'Questionare'"
+                ></app-file-drag-drop>
+                <app-file-drag-drop
+                  [pentestTitle]="'Project scope'"
+                ></app-file-drag-drop>
+                <app-file-drag-drop
+                  [pentestTitle]="'Project report'"
+                ></app-file-drag-drop>
+              </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel hideToggle style="color: white">
+              <mat-expansion-panel-header>
+                <mat-panel-title style="color: white">
+                  Uploaded files
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="pentest-download">
+                <div>
+                  <p>Questionare</p>
+                  <mat-icon>download</mat-icon>
+                </div>
+                <div>
+                  <p>Project scope</p>
+                  <mat-icon>download</mat-icon>
+                </div>
+                <div>
+                  <p>Project report</p>
+                  <mat-icon>download</mat-icon>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
         </div>
 
         <div class="left-column">
           <div class="two-in-row">
             <div class="date-container">
-              <datepicker-component #reportDueDate
-                                    [minDate]="isEndDateSet() ? correctDate(projectClass.EndDate) : correctDate(projectClass.StartDate)"
-                                    [title]="'Report Due Date'"
-                                    [inputValue]="editedReportDueDate"
-                                    (valueChanged)="onChildDateValueChanged($event, 'REP')">
+              <datepicker-component
+                #reportDueDate
+                [minDate]="
+                  isEndDateSet()
+                    ? correctDate(projectClass.EndDate)
+                    : correctDate(projectClass.StartDate)
+                "
+                [title]="'Report Due Date'"
+                [inputValue]="editedReportDueDate"
+                (valueChanged)="onChildDateValueChanged($event, 'REP')"
+              >
               </datepicker-component>
-              <mat-error *ngIf="isInvalidReportDueDate" class="invalid-date-message">Invalid Report Due Date</mat-error>
+              <mat-error
+                *ngIf="isInvalidReportDueDate"
+                class="invalid-date-message"
+                >Invalid Report Due Date</mat-error
+              >
             </div>
 
             <div class="input-container">
-              <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CN')"
-                                   [title]="'Cats number'"
-                                   [inputValue]="projectClass.CatsNumber"></app-input-component>
-              <mat-error *ngIf="isCatsNumberWhitespace" class="invalid-input-message">Invalid Cats number</mat-error>
+              <app-input-component
+                (valueChanged)="onChildInputValueChanged($event, 'CN')"
+                [title]="'Cats number'"
+                [inputValue]="projectClass.CatsNumber"
+              ></app-input-component>
+              <mat-error
+                *ngIf="isCatsNumberWhitespace"
+                class="invalid-input-message"
+                >Invalid Cats number</mat-error
+              >
             </div>
-
           </div>
 
           <div class="input-container">
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'PL')"
-                                 [title]="'Project lead'"
-                                 class="project-lead-input"
-                                 [inputValue]="projectClass.ProjectLead"></app-input-component>
-            <mat-error *ngIf="isProjectLeadWhitespace" class="invalid-input-message">Project lead cannot contain only whitespace</mat-error>
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'PL')"
+              [title]="'Project lead'"
+              class="project-lead-input"
+              [inputValue]="projectClass.ProjectLead"
+            ></app-input-component>
+            <mat-error
+              *ngIf="isProjectLeadWhitespace"
+              class="invalid-input-message"
+              >Project lead cannot contain only whitespace</mat-error
+            >
           </div>
 
           <div class="input-container">
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'WT')"
-                                 [title]="'Working team'"
-                                 [inputValue]="wtField"></app-input-component>
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'WT')"
+              [title]="'Working team'"
+              [inputValue]="wtField"
+            ></app-input-component>
 
-            <mat-error *ngIf="isWorkingTeamWhitespace" class="invalid-input-message">Working team cannot contain only whitespace</mat-error>
+            <mat-error
+              *ngIf="isWorkingTeamWhitespace"
+              class="invalid-input-message"
+              >Working team cannot contain only whitespace</mat-error
+            >
           </div>
-          <button mat-flat-button
-                  color="warn"
-                  style="--mdc-filled-button-container-color: #009999"
-                  [disabled]="isWorkingTeamWhitespace"
-                  (click)="onChildButtonValueChanged('WT')">
+          <button
+            mat-flat-button
+            color="warn"
+            style="--mdc-filled-button-container-color: #009999"
+            [disabled]="isWorkingTeamWhitespace"
+            (click)="onChildButtonValueChanged('WT')"
+          >
             Add
           </button>
           <mat-list role="list">
             <mat-list-item *ngFor="let item of projectClass.WorkingTeam">
               {{ item }}
-              <button mat-icon-button
-                      (click)="deleteItem(item, 'WT')"
-                      matListItemMeta>
+              <button
+                mat-icon-button
+                (click)="deleteItem(item, 'WT')"
+                matListItemMeta
+              >
                 <mat-icon>remove</mat-icon>
               </button>
             </mat-list-item>
           </mat-list>
           <div class="input-container">
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'RS')"
-                                 [title]="'Report status'"
-                                 [inputValue]="projectClass.ReportStatus"></app-input-component>
-            <mat-error *ngIf="isReportStatusWhitespace" class="invalid-input-message">Report status cannot contain only whitespace</mat-error>
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'RS')"
+              [title]="'Report status'"
+              [inputValue]="projectClass.ReportStatus"
+            ></app-input-component>
+            <mat-error
+              *ngIf="isReportStatusWhitespace"
+              class="invalid-input-message"
+              >Report status cannot contain only whitespace</mat-error
+            >
           </div>
 
-          <app-select-component (valueChanged)="onChildInputValueChanged($event, 'OS')"
-                                [option]="OfferStatus"
-                                [title]="'Offer Status'"
-                                [inputValue]="this.projectClass.ProjectOfferStatus ? getOfferStatusString(this.projectClass.ProjectOfferStatus) : 'None'"></app-select-component>
+          <app-select-component
+            (valueChanged)="onChildInputValueChanged($event, 'OS')"
+            [option]="OfferStatus"
+            [title]="'Offer Status'"
+            [inputValue]="
+              this.projectClass.ProjectOfferStatus
+                ? getOfferStatusString(this.projectClass.ProjectOfferStatus)
+                : 'None'
+            "
+          ></app-select-component>
 
           <div class="input-container">
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'CFC')"
-                                 [title]="'Contact for client'"
-                                 [inputValue]="cfcField"></app-input-component>
-            <mat-error *ngIf="isCFCWhitespace" class="invalid-input-message">Contact for client cannot contain only whitespace</mat-error>
-            <mat-error *ngIf="isCFCInvalidEmail && !isCFCWhitespace" class="invalid-input-message">Invalid email format</mat-error>
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'CFC')"
+              [title]="'Contact for client'"
+              [inputValue]="cfcField"
+            ></app-input-component>
+            <mat-error *ngIf="isCFCWhitespace" class="invalid-input-message"
+              >Contact for client cannot contain only whitespace</mat-error
+            >
+            <mat-error
+              *ngIf="isCFCInvalidEmail && !isCFCWhitespace"
+              class="invalid-input-message"
+              >Invalid email format</mat-error
+            >
           </div>
-          <button mat-flat-button
-                  color="warn"
-                  style="--mdc-filled-button-container-color: #009999"
-                  [disabled]="isCFCInvalidEmail"
-                  (click)="onChildButtonValueChanged('CFC')">
+          <button
+            mat-flat-button
+            color="warn"
+            style="--mdc-filled-button-container-color: #009999"
+            [disabled]="isCFCInvalidEmail"
+            (click)="onChildButtonValueChanged('CFC')"
+          >
             Add
           </button>
           <mat-list role="list">
             <mat-list-item *ngFor="let item of projectClass.ContactForClients">
               {{ item }}
-              <button mat-icon-button
-                      (click)="deleteItem(item, 'CFC')"
-                      matListItemMeta>
+              <button
+                mat-icon-button
+                (click)="deleteItem(item, 'CFC')"
+                matListItemMeta
+              >
                 <mat-icon>remove</mat-icon>
               </button>
             </mat-list-item>
           </mat-list>
           <div>
-            <app-input-component (valueChanged)="onChildInputValueChanged($event, 'COM')"
-                                 [title]="'Comments'"
-                                 #commentInput
-                                 [inputValue]="comField"
-                                 >
+            <app-input-component
+              (valueChanged)="onChildInputValueChanged($event, 'COM')"
+              [title]="'Comments'"
+              #commentInput
+              [inputValue]="comField"
+            >
             </app-input-component>
-            <mat-error *ngIf="isCommentWhitespace" class="invalid-comment-message">Comment cannot contain only whitespace</mat-error>
+            <mat-error
+              *ngIf="isCommentWhitespace"
+              class="invalid-comment-message"
+              >Comment cannot contain only whitespace</mat-error
+            >
           </div>
-          <button mat-flat-button
-                  color="warn"
-                  style="--mdc-filled-button-container-color: #009999"
-                  (click)="onChildButtonValueChanged('COM')"
-                  [disabled]="isCommentWhitespace">
+          <button
+            mat-flat-button
+            color="warn"
+            style="--mdc-filled-button-container-color: #009999"
+            (click)="onChildButtonValueChanged('COM')"
+            [disabled]="isCommentWhitespace"
+          >
             Add
           </button>
 
@@ -201,9 +372,11 @@
             <mat-list role="list">
               <mat-list-item *ngFor="let item of projectClass.Comments">
                 <div [matTooltip]="item.text">{{ item.text }}</div>
-                <button mat-icon-button
-                        (click)="deleteItem(item.text, 'COM')"
-                        matListItemMeta>
+                <button
+                  mat-icon-button
+                  (click)="deleteItem(item.text, 'COM')"
+                  matListItemMeta
+                >
                   <mat-icon>remove</mat-icon>
                 </button>
               </mat-list-item>
@@ -212,13 +385,30 @@
         </div>
       </div>
 
-      <button mat-flat-button
-              color="warn"
-              class="create-button"
-              [disabled]="isProjectNameInvalidLength || isProjectNameWhitespace || isProjectNameEmpty || isInvalidStartDate || isInvalidEndDate || isPentestAspectWhitespace ||
-              isPentestValueInvalid || isInvalidIKO || isInvalidTKO || isInvalidReportDueDate ||
-              isCatsNumberWhitespace || isProjectLeadWhitespace || isWorkingTeamWhitespace || isReportStatusWhitespace || isCFCInvalidEmail || isCommentWhitespace"
-              (click)="validationFunction()">
+      <button
+        mat-flat-button
+        color="warn"
+        class="create-button"
+        [disabled]="
+          isProjectNameInvalidLength ||
+          isProjectNameWhitespace ||
+          isProjectNameEmpty ||
+          isInvalidStartDate ||
+          isInvalidEndDate ||
+          isPentestAspectWhitespace ||
+          isPentestValueInvalid ||
+          isInvalidIKO ||
+          isInvalidTKO ||
+          isInvalidReportDueDate ||
+          isCatsNumberWhitespace ||
+          isProjectLeadWhitespace ||
+          isWorkingTeamWhitespace ||
+          isReportStatusWhitespace ||
+          isCFCInvalidEmail ||
+          isCommentWhitespace
+        "
+        (click)="validationFunction()"
+      >
         Save
       </button>
     </div>

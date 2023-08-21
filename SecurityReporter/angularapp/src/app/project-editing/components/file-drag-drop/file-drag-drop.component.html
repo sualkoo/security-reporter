@@ -1,0 +1,24 @@
+<p>{{ pentestTitle }}</p>
+<div
+  class="file-upload-container"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+>
+  <p>Drag and drop or click to select file</p>
+  <input
+    type="file"
+    (change)="onFileSelected($event)"
+    style="display: none"
+    #fileInput
+    id="fileInput"
+  />
+  <label
+    for="fileInput"
+    class="file-input-label"
+    style="background-color: #ec6602"
+    >Select files</label
+  >
+</div>
+<ul>
+  <li *ngFor="let file of uploadedFiles">{{ file.name }}</li>
+</ul>

@@ -24,15 +24,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
 import { LogoutService } from '../../../services/logout.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 import { AutoLogoutService } from '../../../services/auto-logout.service';
+import { FileDragDropComponent } from '../../components/file-drag-drop/file-drag-drop.component';
 
 @Component({
   selector: 'app-project-editing-page',
   templateUrl: './project-editing-page.component.html',
-  styleUrls: ['../../../project-management/component-pages/add-project-page/add-project.component.css', './project-editing-page.component.css'],
+  styleUrls: [
+    '../../../project-management/component-pages/add-project-page/add-project.component.css',
+    './project-editing-page.component.css',
+  ],
   standalone: true,
   imports: [
     CommonModule,
+    FileDragDropComponent,
+    MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
     DatepickerComponent,
@@ -47,55 +55,77 @@ import { AutoLogoutService } from '../../../services/auto-logout.service';
     NgIf,
     MatListModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
+  panelOpenState = false;
 
-  constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
-    router: Router, alertService: AlertService,
+  pentestDummyList = [
+    { name: 'Pentest1', fileName: 'file1.pdf' },
+    // { name: 'Pentest2', fileName: 'file2.pdf' },
+    // { name: 'Pentest3', fileName: 'file3.pdf' },
+    // { name: 'Pentest4', fileName: 'file4.pdf' },
+    // { name: 'Pentest5', fileName: 'file5.pdf' },
+    // { name: 'Pentest6', fileName: 'file6.pdf' },
+    // { name: 'Pentest7', fileName: 'file7.pdf' },
+    // { name: 'Pentest8', fileName: 'file8.pdf' },
+    // { name: 'Pentest9', fileName: 'file9.pdf' },
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    addProjectService: AddProjectService,
+    router: Router,
+    alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
     private formBuilder: FormBuilder,
-    autoLogoutService: AutoLogoutService) {
-
+    autoLogoutService: AutoLogoutService
+  ) {
     super(addProjectService, router, alertService, autoLogoutService);
   }
 
   ngOnInit() {
     this.autoLogoutService.startTimer();
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
     });
   }
 
   mapJsonToProjectInterface(jsonData: any): ProjectInterface {
-  return {
-    id: jsonData.id,
-    ProjectName: jsonData.projectName,
-    StartDate: jsonData.startDate ? jsonData.startDate : new Date('0001-01-01'),
-    EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
-    ProjectStatus: jsonData.projectStatus,
-    ProjectScope: jsonData.projectScope,
-    ProjectQuestionare: jsonData.projectQuestionare,
-    PentestAspects: jsonData.pentestAspects,
-    PentestDuration: jsonData.pentestDuration,
-    ReportDueDate: jsonData.reportDueDate ? jsonData.reportDueDate : new Date('0001-01-01'),
-    IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
-    TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
-    RequestCreated: jsonData.requestCreated,
-    Comments: jsonData.comments ? jsonData.comments : [],
-    CatsNumber: jsonData.castNumber,
-    ProjectOfferStatus: jsonData.projectOfferStatus,
-    WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
-    ProjectLead: jsonData.projectLead,
-    ReportStatus: jsonData.reportStatus,
-    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : [],
-  };
-}
+    return {
+      id: jsonData.id,
+      ProjectName: jsonData.projectName,
+      StartDate: jsonData.startDate
+        ? jsonData.startDate
+        : new Date('0001-01-01'),
+      EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
+      ProjectStatus: jsonData.projectStatus,
+      ProjectScope: jsonData.projectScope,
+      ProjectQuestionare: jsonData.projectQuestionare,
+      PentestAspects: jsonData.pentestAspects,
+      PentestDuration: jsonData.pentestDuration,
+      ReportDueDate: jsonData.reportDueDate
+        ? jsonData.reportDueDate
+        : new Date('0001-01-01'),
+      IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
+      TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
+      RequestCreated: jsonData.requestCreated,
+      Comments: jsonData.comments ? jsonData.comments : [],
+      CatsNumber: jsonData.castNumber,
+      ProjectOfferStatus: jsonData.projectOfferStatus,
+      WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
+      ProjectLead: jsonData.projectLead,
+      ReportStatus: jsonData.reportStatus,
+      ContactForClients: jsonData.contactForClients
+        ? jsonData.contactForClients
+        : [],
+    };
+  }
 
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
@@ -187,14 +217,22 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     this.updateProjectService.updateProject(this.projectClass).subscribe(
       (response) => {
         console.log('Success:', response);
-        this.alertService.showSnackbar('Item saved successfully.', 'Close', 'green-alert');
+        this.alertService.showSnackbar(
+          'Item saved successfully.',
+          'Close',
+          'green-alert'
+        );
       },
       (error) => {
         console.log('Error:', error);
 
         const { title, status, errors } = error;
 
-        this.alertService.showSnackbar('Error occured during saving an item.', 'Close', 'red-alert');
+        this.alertService.showSnackbar(
+          'Error occured during saving an item.',
+          'Close',
+          'red-alert'
+        );
 
         console.log('Title:', title);
         console.log('Status Code:', status);
@@ -202,5 +240,4 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       }
     );
   }
-
 }

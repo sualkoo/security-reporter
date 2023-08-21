@@ -1,4 +1,18 @@
 .comment-container {
-  max-height: 200px; 
+  max-height: 200px;
   overflow-y: auto;
+}
+
+mat-expansion-panel {
+  width: 500px;
+  background-color: #009999;
+}
+
+mat-divider {
+  margin: 00px 0px 10px 0px;
+}
+
+.pentest-download div {
+  display: flex;
+  justify-content: space-between;
 }
