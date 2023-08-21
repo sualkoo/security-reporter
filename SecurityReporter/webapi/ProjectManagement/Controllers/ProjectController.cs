@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace webapi.ProjectManagement.Controllers;
 
@@ -167,6 +169,53 @@ public class ProjectController : ControllerBase
             Console.ResetColor();
 
             return StatusCode(400, $"Error retrieving project data: {ex.Message}");
+        }
+    }
+
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadFile(IFormFile file, string destination)
+    {
+        try
+        {
+            if (file == null || file.Length == 0)
+            {
+                return StatusCode(400, "Error: No file uploaded.");
+            }
+
+            if (string.IsNullOrEmpty(destination))
+            {
+                return StatusCode(400, "Error: Destination parameter is required.");
+            }
+
+            if (destination != "scope" && destination != "questionnaire" && destination != "report")
+            {
+                return StatusCode(400, "Error: Invalid destination parameter.");
+            }
+
+            if (Path.GetExtension(file.FileName).ToLower() != ".pdf")
+            {
+                return StatusCode(400, "Error: Uploaded file must be a PDF.");
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                byte[] fileBytes = memoryStream.ToArray();
+
+                //add the base
+
+                Console.WriteLine($"File uploaded successfully to {destination}");
+
+                return StatusCode(201, "File uploaded successfully.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.ResetColor();
+
+            return StatusCode(500, $"Error uploading file: {ex.Message}");
         }
     }
 }
