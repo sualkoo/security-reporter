@@ -11,7 +11,7 @@ export class UpdateProjectService {
   private updateEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.updateEndPointURL = 'https://localhost:7075/Project/update';
+    this.updateEndPointURL = '/Project/update';
   }
 
   public updateProject(data: ProjectInterface): Observable<any> {
