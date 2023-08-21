@@ -146,7 +146,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(15, 1, '');
+      const response = await this.getProjectsService.getProjects(15, 1, '', 0, true);
 
       if (response === "No data available.") {
         this.databaseError = false;
@@ -172,7 +172,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '');
+      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '', 0, true);
 
       if (response === "No data available.") {
         this.databaseError = false;
