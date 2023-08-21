@@ -3,7 +3,6 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { GetProjectsCountService } from '../../services/get-projects-count.service';
 import { GetProjectsServiceService } from '../../services/get-projects-service.service';
 import { ProjectInterface } from '../../../project-management/interfaces/project-interface';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -19,14 +18,25 @@ import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.comp
 import { GetRoleService } from '../../../shared/services/get-role.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { SortData } from '../../interfaces/sort-data';
- 
+
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
   styleUrls: ['./data-grid-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
-    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent, MatSortModule],
+  imports: [
+    MatTableModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    FiltersComponent,
+    ExpansionPanelComponent,
+    MatSortModule,
+  ],
 })
 export class DataGridComponentComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
@@ -39,7 +49,6 @@ export class DataGridComponentComponent implements AfterViewInit {
   selectedItems: any[] = [];
   noItemsFound = false;
   sortingDirections: boolean = false;
-
 
   displayedColumns: string[] = [
     'select',
@@ -59,24 +68,27 @@ export class DataGridComponentComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
-
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   filters: string = '';
-  length: number | undefined;
+  count: number | undefined;
   sortData: SortData = {
-      columnNumber: 0,
-      sortingDescDirection: false
+    columnNumber: 0,
+    sortingDescDirection: false,
   };
 
-  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private getRoleService: GetRoleService) { }
+  constructor(
+    private getProjectsService: GetProjectsServiceService,
+    private router: Router,
+    private dialog: MatDialog,
+    private getRoleService: GetRoleService
+  ) {}
 
   userRole: string = 'admin';
 
-  ngOnInit(): void {
-    this.getRole();
-    this.getInitItems();
-    this.getLength();
+  async ngOnInit() {
+    await this.getRole();
+    await this.getInitItems();
   }
 
   async getRole() {
@@ -87,10 +99,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     }
   }
 
-  async getLength() {
-    this.length = await this.projectsCountService.getNumberOfProjects();
-  }
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -99,7 +107,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
-
   }
 
   toggleAllRows() {
@@ -114,7 +121,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   handleRowClick(row: ProjectInterface) {
-    this.selection.toggle(row)
+    this.selection.toggle(row);
     this.handleSelectedList(row);
   }
 
@@ -123,14 +130,16 @@ export class DataGridComponentComponent implements AfterViewInit {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
 
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.projects.indexOf(row) + 2}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      this.projects.indexOf(row) + 2
+    }`;
   }
 
   handleSelectedList(row: ProjectInterface) {
     if (this.selection.isSelected(row)) {
       this.selectedItems.push(row);
     } else {
-      const index = this.selectedItems.findIndex(item => item.id === row.id);
+      const index = this.selectedItems.findIndex((item) => item.id === row.id);
       if (index !== -1) {
         this.selectedItems.splice(index, 1);
       }
@@ -195,7 +204,6 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.sort.sortChange.emit;
     this.getInitItems();
     window.location.reload(); //Reload Page
-    
   }
 
   async getInitItems() {
@@ -204,12 +212,19 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(15, 1, '', 0, false);
+      const response = await this.getProjectsService.getProjects(
+        15,
+        1,
+        this.filters,
+        0,
+        false
+      );
 
-      if (response === "No data available.") {
+      if (response === 'No data available.') {
         this.databaseError = false;
       } else {
-        this.projects = response;
+        this.projects = response.projects;
+        this.count = response.count;
         this.dataSource.data = this.projects;
       }
     } catch (error) {
@@ -218,7 +233,6 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
-
 
   getSelectedItems(): void {
     for (const item of this.selection.selected) {
@@ -231,13 +245,22 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '', this.sortData.columnNumber, this.sortData.sortingDescDirection);
+      const response = await this.getProjectsService.getProjects(
+        this.paginator.pageSize,
+        this.paginator.pageIndex + 1,
+        this.filters,
+        this.sortData.columnNumber,
+        this.sortData.sortingDescDirection
+      );
 
-      if (response === "No data available.") {
+      if (response === 'No data available.') {
         this.databaseError = false;
       } else {
-        this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+        this.projects = response.projects;
+        this.count = response.count;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(
+          this.projects
+        );
       }
     } catch (error) {
       this.databaseError = true;
@@ -247,7 +270,7 @@ export class DataGridComponentComponent implements AfterViewInit {
 
     this.selection.clear();
     for (const item of this.selectedItems) {
-      const foundItem = this.projects.find(project => project.id === item.id);
+      const foundItem = this.projects.find((project) => project.id === item.id);
       if (foundItem) {
         this.selection.select(foundItem);
       }
@@ -255,19 +278,29 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async filtersChangedHandler(filters: string) {
+    console.log(filters);
     this.filters = filters;
     this.isLoading = true;
 
     try {
-      const response = await this.getProjectsService.getProjects(15, 1, filters, 0, true);
+      const response = await this.getProjectsService.getProjects(
+        15,
+        1,
+        filters,
+        0,
+        true
+      );
 
-      if (response === "No data available.") {
+      if (response === 'No data available.') {
         this.filterError = true;
         this.filterMessageFlag = true;
         this.dataSource.data = [];
       } else {
-        this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+        this.projects = response.projects;
+        this.count = response.count;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(
+          this.projects
+        );
       }
     } catch (error) {
       this.filterError = true;
@@ -277,7 +310,6 @@ export class DataGridComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
-
 
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
@@ -311,7 +343,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   navigateToPage(): void {
-    this.router.navigate(['/project-management'])
+    this.router.navigate(['/project-management']);
   }
 
   navigateToThePage(projectId: number) {
@@ -325,52 +357,51 @@ export class DataGridComponentComponent implements AfterViewInit {
       data: this.selectedItems,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   areNoBoxesChecked(): boolean {
-
     return this.selectedItems.length === 0;
   }
-
 
   updateSelectedColumn(columnNumber: number) {
     this.sortData.columnNumber = columnNumber;
     switch (this.sortData.columnNumber) {
       case 1:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 2:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 3:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 4:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 5:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 6:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
       case 7:
-        this.sortData.sortingDescDirection = !this.sortData.sortingDescDirection;
-        this.handlePageChange()
+        this.sortData.sortingDescDirection =
+          !this.sortData.sortingDescDirection;
+        this.handlePageChange();
         break;
-
-
     }
-
-    
   }
-
 }
