@@ -668,6 +668,14 @@ namespace webapi.Service
                 (float)f.CVSSAVG, (string)f.UploadMonth, (string)f.UploadYear)));
             }
             Logger.LogInformation("Returning found reports");
+
+            data = data.OrderByDescending(item => item.Item3)
+            .ThenByDescending(item => item.Item2)
+            .Take(8)
+            .OrderBy(item => item.Item3)
+            .ThenBy(item => item.Item2)
+            .ToList();
+
             return data;
         }
     }

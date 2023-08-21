@@ -155,7 +155,6 @@ export class DashboardComponent implements OnInit {
     }
   }
   updateCVSSChart(): void {
-    this.cvss.sort((a, b) => a.item2 - b.item2);
 
     let labels = this.cvss.map((item) => item.item2);
     const data = this.cvss.map((item) => item.item1);
