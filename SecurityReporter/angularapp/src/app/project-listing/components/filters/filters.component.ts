@@ -1,31 +1,54 @@
-import { Component, EventEmitter, Output, ViewChild , Injectable, Inject} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  Injectable,
+  Inject,
+} from '@angular/core';
 import { SelectComponentComponent } from '../../../project-management/components/select-component/select-component.component';
 import { FiltersDatepickerComponent } from '../datepicker/datepicker.component';
 import { SliderComponent } from '../slider/slider.component';
 import { SelectInterface } from '../../../project-management/interfaces/select-interface';
-import { IKOIndex, ProjectData, QuestionareIndex, projectScopeIndex, projectStatusIndex } from '../../interfaces/project-data';
+import {
+  IKOIndex,
+  ProjectData,
+  QuestionareIndex,
+  projectScopeIndex,
+  projectStatusIndex,
+} from '../../interfaces/project-data';
 import { InputComponent } from '../input/input.component';
 import { FormControl, FormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   standalone: true,
-  imports: [SelectComponentComponent, FiltersDatepickerComponent, SliderComponent, FormsModule, InputComponent, MatButtonModule, MatFormFieldModule]
+  imports: [
+    SelectComponentComponent,
+    FiltersDatepickerComponent,
+    SliderComponent,
+    FormsModule,
+    InputComponent,
+    MatButtonModule,
+    MatFormFieldModule,
+  ],
 })
-
 export class FiltersComponent {
   constructor() {
-    this.projectNameControl.valueChanges.pipe(debounceTime(500)).subscribe((inputValue) => {
-      this.filteredClass.ProjectName = inputValue;
-      this.filtersChanged();
-    });
+    this.projectNameControl.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((inputValue) => {
+        this.filteredClass.ProjectName = inputValue;
+        this.filtersChanged();
+      });
   }
+
+  @Output() filtersChangedEvent = new EventEmitter<string>();
 
   projectNameControl = new FormControl();
 
@@ -96,31 +119,33 @@ export class FiltersComponent {
   onChildDateValueChanged(value: Date, id: string) {
     if (id == 'STR') {
       this.filteredClass.StartDate = value;
-    } else if (id == 'END'){
+    } else if (id == 'END') {
       this.filteredClass.EndDate = value;
     }
-    console.log(this.filteredClass)
+    console.log(this.filteredClass);
     this.filtersChanged();
   }
 
-  onChildSliderValueChanged(event: { start: number, end: number }) {    
+  onChildSliderValueChanged(event: { start: number; end: number }) {
     this.filteredClass.PentestStart = event.start;
     this.filteredClass.PentestEnd = event.end;
     this.filtersChanged();
   }
 
-  @Output() filtersChangedEvent = new EventEmitter<string>();
-
   filtersChanged() {
-    this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
+    this.url =
+      this.convertProjectDataToQueryString(this.filteredClass) +
+      '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
-    console.log(this.url)
+    console.log(this.url);
   }
 
   convertProjectDataToQueryString(data: ProjectData): string {
-  const queryStringParams: string[] = [];
+    const queryStringParams: string[] = [];
 
-    const encodeQueryParamValue = (value: string | number | boolean | Date): string => {
+    const encodeQueryParamValue = (
+      value: string | number | boolean | Date
+    ): string => {
       if (value instanceof Date) {
         return encodeURIComponent(value.toISOString());
       }
@@ -128,16 +153,24 @@ export class FiltersComponent {
     };
 
     if (data.ProjectStatus) {
-      queryStringParams.push(`&FilteredProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`);
+      queryStringParams.push(
+        `&FilteredProjectStatus=${encodeQueryParamValue(data.ProjectStatus)}`
+      );
     }
     if (data.Questionare) {
-      queryStringParams.push(`&FilteredProjectQuestionare=${encodeQueryParamValue(data.Questionare)}`);
+      queryStringParams.push(
+        `&FilteredProjectQuestionare=${encodeQueryParamValue(data.Questionare)}`
+      );
     }
     if (data.ProjectScope) {
-      queryStringParams.push(`&FilteredProjectScope=${encodeQueryParamValue(data.ProjectScope)}`);
+      queryStringParams.push(
+        `&FilteredProjectScope=${encodeQueryParamValue(data.ProjectScope)}`
+      );
     }
     if (data.ProjectName) {
-      queryStringParams.push(`&FilteredProjectName=${encodeQueryParamValue(data.ProjectName)}`);
+      queryStringParams.push(
+        `&FilteredProjectName=${encodeQueryParamValue(data.ProjectName)}`
+      );
     }
     if (data.IKO) {
       queryStringParams.push(`&FilteredIKO=${encodeQueryParamValue(data.IKO)}`);
@@ -154,14 +187,18 @@ export class FiltersComponent {
       queryStringParams.push(`&FilteredEndDate=${formattedDate}`);
     }
     if (data.PentestStart !== undefined && data.PentestEnd !== undefined) {
-      queryStringParams.push(`&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`);
+      queryStringParams.push(
+        `&FilteredPentestStart=${data.PentestStart}&FilteredPentestEnd=${data.PentestEnd}`
+      );
     }
     return queryStringParams.join('');
   }
 
   resetFilters() {
     this.filteredClass = {};
-    this.url = this.convertProjectDataToQueryString(this.filteredClass) + '&year=0&month=0&day=0&dayOfWeek=0';
+    this.url =
+      this.convertProjectDataToQueryString(this.filteredClass) +
+      '&year=0&month=0&day=0&dayOfWeek=0';
     this.filtersChangedEvent.emit(this.url);
   }
 }

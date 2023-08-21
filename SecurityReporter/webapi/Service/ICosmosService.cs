@@ -10,8 +10,9 @@ namespace webapi.Service
         Task<bool> AddProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
-        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
-        Task<int> GetNumberOfProjects();
+        Task<CountProjects> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
+        //Task<int> GetNumberOfProjects();
+        Task<Profile> GetBacklog(int pageSize, int pageNumber);
 
         Task<bool> AddProjectReport(ProjectReportData data);
         Task<ProjectReportData> GetProjectReport(string projectId);
@@ -19,7 +20,7 @@ namespace webapi.Service
 
         Task<ProjectData> GetProjectById(string id);
         Task<bool> UpdateProject(ProjectData data);
-        Task<Profile> ProfileItems(string email);
+        //Task<Profile> ProfileItems(string email);
 
         Task DeleteUsers();
         Task<UserRole> GetUserRole(string email);

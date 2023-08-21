@@ -1,10 +1,8 @@
-﻿using webapi.Models;
-
-namespace webapi.MyProfile.Models
+﻿namespace webapi.MyProfile.Models
 {
     public class Profile
     {
-        public string Role { get; set; }
-        public List<ProjectData> Projects { get; set; }
+        public int Count { get; set; }
+        public List<ProfileBackLog> Projects { get; set; }
     }
 }

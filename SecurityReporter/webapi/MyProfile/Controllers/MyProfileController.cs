@@ -19,14 +19,14 @@ public class MyProfileController : ControllerBase
 
 
     [HttpGet("profile")]
-    public async Task<IActionResult> GetByEmail([FromQuery] string email)
+    public async Task<IActionResult> GetByEmail([FromQuery] int pageSize, [FromQuery] int pageNumber)
     {
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("GET");
         Console.ResetColor();
-        Console.WriteLine("\t /Project/profile");
+        Console.WriteLine("\t /profile");
 
-        var result = await CosmosService.ProfileItems(email);
+        var result = await CosmosService.GetBacklog(pageSize, pageNumber);
 
         if (result.Projects.Count() == 0)
         {
