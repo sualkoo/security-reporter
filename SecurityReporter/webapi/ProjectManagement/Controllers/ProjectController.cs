@@ -56,6 +56,29 @@ public class ProjectController : ControllerBase
     }
 
 
+    [HttpGet("uploadStatus/{id}")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
+    public async Task<IActionResult> GetUploadStatus(string id)
+    {
+        try
+        {
+            bool uploadStatus = await CosmosService.GetUploadStatus(id);
+
+            if (uploadStatus)
+            {
+                return StatusCode(200, new { IsUploaded = true });
+            }
+            else
+            {
+                return StatusCode(404, new { IsUploaded = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(400, new { Error = $"Error retrieving upload status: {ex.Message}" });
+        }
+    }
+
     [HttpGet("count")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetNumberOfProjects()
