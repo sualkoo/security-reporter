@@ -7,7 +7,7 @@
 .filter-item {
   display: flex;
   align-items: center;
-  padding: 5px 20px; /* Add padding around each filter item */
+  padding: 0px; /* Add padding around each filter item */
   border-radius: 5px; /* Add rounded corners for a more pleasant look */
 }
 
@@ -99,6 +99,7 @@
 }
 
 
+
 @media screen and (max-width: 1090px) {
   .filters-container {
     grid-template-columns: 1fr; /* 1 column */
@@ -130,6 +131,14 @@
 
   }
 }
+
+@media(min-width: 1550px) {
+  .filter-item{
+    padding: 0px 20px;
+  }
+}
+
+
 ::ng-deep .highlighted-text{
   background-color: yellow;
 }

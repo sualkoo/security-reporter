@@ -5,10 +5,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  isUserLoggedIn: boolean = true;
-  setUserLoggedIn(isLoggedIn: boolean): void {
-    this.isUserLoggedIn = isLoggedIn;
-  }
 }
 
 
