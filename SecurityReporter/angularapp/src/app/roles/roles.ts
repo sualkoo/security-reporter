@@ -24,6 +24,10 @@ export class Roles implements CanActivate {
 
     console.log(userRole);
 
-    return true;
-  }
+    if (allowedRoles.includes(userRole)) {
+      return true;
+    } else {
+      this.router.navigate(['after-login']);
+      return false;
+    }  }
 }
