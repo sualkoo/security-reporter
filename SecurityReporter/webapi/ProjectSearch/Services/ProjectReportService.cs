@@ -87,17 +87,18 @@ public class ProjectReportService : IProjectReportService
 
     public async Task<PagedDbResults<List<FindingResponse>>> GetReportFindingsAsync(
         string? projectName, string? details, string? impact, string? repeatability, string? references,
-        string? cWE, int page)
+        string? cWE, string? findingName, int page)
     {
         Logger.LogInformation("Fetching project reports by keywords");
         if (!string.IsNullOrEmpty(projectName) && !string.IsNullOrEmpty(details) &&
             !string.IsNullOrEmpty(impact) && !string.IsNullOrEmpty(repeatability) &&
             !string.IsNullOrEmpty(references) &&
-            !string.IsNullOrEmpty(cWE))
+            !string.IsNullOrEmpty(cWE) &&
+            !string.IsNullOrEmpty(findingName))
             throw new CustomException(StatusCodes.Status400BadRequest, "Missing parameters.");
 
         return await CosmosService.GetPagedProjectReportFindings(projectName, details, impact, repeatability,
-            references, cWE, page);
+            references, cWE, findingName, page);
     }
 
     public async Task<bool> DeleteReportAsync(List<string> ids)

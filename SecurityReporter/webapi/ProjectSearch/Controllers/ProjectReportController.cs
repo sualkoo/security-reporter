@@ -46,15 +46,15 @@ public class ProjectReportController : ExceptionHandlingControllerBase
 
     [HttpGet("findings")]
     public async Task<IActionResult> GetProjectReportFindings(string? ProjectName, string? Details, string? Impact,
-        string? Repeatability, string? References, string? CWE, int page)
+        string? Repeatability, string? References, string? CWE, string? FindingName, int page)
     {
         Logger.LogInformation(
             $"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
-            $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}))");
+            $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, FindingName={FindingName}))");
         return await HandleExceptionAsync(async () =>
         {
             var fetchedReports = await ProjectReportService.GetReportFindingsAsync(ProjectName, Details, Impact,
-                Repeatability, References, CWE, page);
+                Repeatability, References, CWE, FindingName, page);
             return Ok(fetchedReports);
         });
     }

@@ -8,7 +8,7 @@ public interface IProjectReportService
     public Task<ProjectReportData> GetReportByIdAsync(Guid id);
 
     public Task<PagedDbResults<List<FindingResponse>>> GetReportFindingsAsync(string? projectName, string? details,
-        string? impact, string? repeatability, string? references, string? cWE, int page);
+        string? impact, string? repeatability, string? references, string? cWE, string? findingName, int page);
 
     public Task<ProjectReportData> SaveReportFromZipAsync(IFormFile file);
     public Task<bool> DeleteReportAsync(List<string> ids);
