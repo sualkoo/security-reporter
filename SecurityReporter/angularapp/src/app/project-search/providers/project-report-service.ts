@@ -1,35 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as JSZip from 'jszip';
-import { NotificationService } from './notification.service';
 import { ProjectReport } from '../interfaces/project-report.model';
 import { PagedResponse } from '../interfaces/paged-response.model';
 import { FindingResponse } from '../interfaces/finding-response.model';
+import {ApiPaths} from "../../api-paths.enum";
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectReportService {
-  private apiUrl: string;
+
+  public readonly apiUri: string;
 
   constructor(private http: HttpClient) {
-    this.apiUrl = '/project-reports';
+    this.apiUri = ApiPaths.ProjectReports;
   }
 
   public postZipFile(file: any) {
-    return this.http.post<ProjectReport>(this.apiUrl, file)
+    return this.http.post<ProjectReport>(this.apiUri, file)
   }
 
   public getProjectReport(id: string) {
-    console.log("Fetching project report, id=" + id);
-    // Todo: Add type to get request
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get(`${this.apiUri}/${id}`);
   }
 
-  public getProjectReportFindings(value: string, page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string) {
+  public getProjectReportFindings(page: number, projectName?: string, details?: string, impact?: string, repeatability?: string, references?: string, cwe?: string, findingName?: string) {
     let params = new HttpParams();
 
-    params = params.set('value', value);
     params = params.set('page', page);
 
     console.log("Project name: " + projectName);
@@ -58,15 +56,16 @@ export class ProjectReportService {
       params = params.set('cwe', cwe);
     }
 
-    console.log(params);
-    return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUrl}/findings`, { params: params });
+    if (findingName !== undefined) {
+      params = params.set('findingName', findingName);
+    }
+
+    return this.http.get<PagedResponse<FindingResponse>>(`${this.apiUri}/findings`, { params: params });
   }
 
-  /*public getProjectReports(subcategory: string, keyword: string, value: string, page: number) {
-
-    return this.http.get<PagedResponse>(this.apiUrl, { params: { subcategory: subcategory, keyword: keyword, value: value, page: page } });
-  }*/
-
+  public deleteProjectReport(ids: string[]) {
+    return this.http.delete<string[]>(this.apiUri,  { body: ids });
+  }
 
   async validateZipFile(file: File): Promise<boolean> {
     const zip = new JSZip();
@@ -92,9 +91,6 @@ export class ProjectReportService {
       ),
       configScopeAndProcedures: zipData.file('Config/Scope_and_Procedures.tex'),
       configTestingMethodology: zipData.file('Config/Testing_Methodology.tex'),
-      configFindingsDatabaseDRTemplate: zipData.file(
-        'Config/Findings_Database/DR_Template/main.tex'
-      ),
       staticPentestTeam: zipData.file('Static/PentestTeam.tex')
     };
 

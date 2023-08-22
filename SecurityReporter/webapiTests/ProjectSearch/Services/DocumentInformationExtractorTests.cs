@@ -1,166 +1,195 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
 using System.IO.Compression;
-using webapi.Models.ProjectReport;
+using FluentAssertions;
+using NUnit.Framework;
+using webapi.ProjectSearch.Models.ProjectReport;
+using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
-namespace webapi.ProjectSearch.Services.Tests
+namespace webapiTests.ProjectSearch.Services;
+
+[TestFixture]
+public class DocumentInformationExtractorTests
 {
-    [TestFixture()]
-    public class DocumentInformationExtractorTests
+    [SetUp]
+    public void SetUp()
     {
-        private ZipArchive zipArchive;
+        zipArchive = ZipFile.OpenRead("../../../ProjectSearch/ParserTestResources/parserUnitTestsZip.zip");
+        Assert.IsNotNull(zipArchive);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        zipArchive.Dispose();
+    }
+
+    private ZipArchive zipArchive;
 
 
-        [SetUp]
-        public void SetUp()
+    [Test]
+    public void MultipleAttributesEmpty()
+    {
+        var entry = zipArchive.GetEntry(
+            "DocumentInformation/MultipleAttributesEmpty/RPN_AT_RDA_RDH{Dt_F_VND_V}_RD/Document_Information.tex");
+
+        var die = new DocumentInformationExtractor(entry);
+
+        var testObject = new DocumentInformation
         {
-            zipArchive = ZipFile.OpenRead("../../../ProjectSearch/ParserTestResources/parserUnitTestsZip.zip");
-            Assert.IsNotNull(zipArchive);
-        }
-
-        [TearDown]
-        public void TearDown()
+            ProjectReportName = null,
+            AssetType = null,
+            MainAuthor = "Lukas Nad",
+            Authors = null,
+            Reviewiers = new List<string> { "Katarina Amrichova" },
+            Approvers = new List<string> { "Filip Mrocek" },
+            ReportDocumentHistory = new List<ReportVersionEntry>()
+        };
+        var report1 = new ReportVersionEntry
         {
-            zipArchive.Dispose();
-        }
-
-        
-        [Test()]
-        public void MultipleAttributesEmpty()
+            VersionDate = new DateTime(2023, 6, 7),
+            Version = "0.2",
+            WholeName = "Michal Olencin",
+            ReportStatus = "Added Findings"
+        };
+        testObject.ReportDocumentHistory.Add(report1);
+        var report2 = new ReportVersionEntry
         {
-            ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/MultipleAttributesEmpty/RPN_AT_RDA_RDH{Dt_F_VND_V}_RD/Document_Information.tex");
-
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-
-            DocumentInformation testObject = new DocumentInformation();
-            testObject.ProjectReportName = null;
-            testObject.AssetType = null;
-            testObject.MainAuthor = "Lukas Nad";
-            testObject.Authors = null;
-            testObject.Reviewiers = new List<string> {"Katarina Amrichova"};
-            testObject.Approvers = new List<string> { "Filip Mrocek" };
-            testObject.ReportDocumentHistory = new List<ReportVersionEntry>();
-            ReportVersionEntry report1 = new ReportVersionEntry();
-            report1.VersionDate = new DateTime(2023, 6, 7);
-            report1.Version = "0.2";
-            report1.WholeName = "Michal Olencin";
-            report1.ReportStatus = "Added Findings";
-            testObject.ReportDocumentHistory.Add(report1);
-            ReportVersionEntry report2 = new ReportVersionEntry();
-            report2.VersionDate = new DateTime(2023, 6, 8);
-            report2.Version = "0.4";
-            report2.WholeName = "Katarina Amrichova";
-            report2.ReportStatus = "Review";
-            testObject.ReportDocumentHistory.Add(report2);
+            VersionDate = new DateTime(2023, 6, 8),
+            Version = "0.4",
+            WholeName = "Katarina Amrichova",
+            ReportStatus = "Review"
+        };
+        testObject.ReportDocumentHistory.Add(report2);
+        var report3 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 8),
+            Version = "",
+            WholeName = "",
+            ReportStatus = ""
+        };
+        testObject.ReportDocumentHistory.Add(report3);
+        var report4 = new ReportVersionEntry
+        {
+            ReportStatus = "Release",
+            VersionDate = new DateTime(2023, 6, 9),
+            WholeName = "Lukas Nad",
+            Version = ""
+        };
+        testObject.ReportDocumentHistory.Add(report4);
 
 
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
+        var parsedObject = new DocumentInformation();
+        parsedObject = die.ExtractDocumentInformation();
 
-            Assert.IsNotNull(parsedObject);
-            parsedObject.Should().BeEquivalentTo(testObject); 
-            
-            /*try
+        Assert.IsNotNull(parsedObject);
+        parsedObject.Should().BeEquivalentTo(testObject);
+    }
+
+    [Test]
+    public void MultipleAttributesMissing()
+    {
+        var entry = zipArchive.GetEntry(
+            "DocumentInformation/MultipleAttributesMissing/RPN_RDA_RDMA_RDH_RV_RD_RDC/Document_Information.tex");
+
+        var die = new DocumentInformationExtractor(entry);
+        var parsedObject = die.ExtractDocumentInformation();
+
+        var testObject = new DocumentInformation
+        {
+            AssetType = "Mobile Application",
+            Approvers = new List<string> { "Filip Mrocek" },
+            Reviewiers = new List<string> { "Katarina Amrichova" },
+            ReportDocumentHistory = new List<ReportVersionEntry>()
+        };
+
+        Assert.IsNotNull(parsedObject);
+        parsedObject.Should().BeEquivalentTo(testObject);
+    }
+
+    [Test]
+    public void FileEmpty()
+    {
+        var entry = zipArchive.GetEntry("DocumentInformation/Empty/Document_Information.tex");
+
+        var die = new DocumentInformationExtractor(entry);
+        var parsedObject = die.ExtractDocumentInformation();
+
+        var testObject = new DocumentInformation
+        {
+            ReportDocumentHistory = new List<ReportVersionEntry>()
+        };
+
+        parsedObject.Should().BeEquivalentTo(testObject);
+    }
+
+    [Test]
+    public void FullInformation()
+    {
+        var entry = zipArchive.GetEntry("DocumentInformation/FullInformation/Document_Information.tex");
+
+        var die = new DocumentInformationExtractor(entry);
+        var parsedObject = die.ExtractDocumentInformation();
+
+        var testObject = new DocumentInformation
+        {
+            ProjectReportName = "Dummy Project 1",
+            AssetType = "Mobile Application",
+            MainAuthor = "Lukas Nad",
+            Authors = new List<string>
             {
-             
-            } catch(Exception ex)
-            {
-                Assert.Fail();
-            }*/
-        }
-
-        [Test()]
-        public void MutlipleAttributesMissing()
-        {
-            ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/MultipleAttributesMissing/RPN_RDA_RDMA_RDH_RV_RD_RDC/Document_Information.tex");
-
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
-
-            DocumentInformation testObject = new DocumentInformation();
-            testObject.AssetType = "Mobile Application";
-            testObject.Approvers = new List<string> { "Filip Mrocek" };
-            testObject.Reviewiers = new List<string> { "Katarina Amrichova" };
-            testObject.ReportDocumentHistory = new List<ReportVersionEntry>();
-
-            Assert.IsNotNull(parsedObject);
-            parsedObject.Should().BeEquivalentTo(testObject);
-
-        }
-        [Test()]
-        public void fileEmpty()
-        {
-            ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/Empty/Document_Information.tex");
-
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
-
-            DocumentInformation testObject = new DocumentInformation();
-            testObject.ReportDocumentHistory = new List<ReportVersionEntry>();
-
-            parsedObject.Should().BeEquivalentTo(testObject);
-        }
-
-        [Test()]
-        public void fullInformation()
-        {
-            ZipArchiveEntry entry = zipArchive.GetEntry("DocumentInformation/FullInformation/Document_Information.tex");
-
-            DocumentInformationExtractor die = new DocumentInformationExtractor(entry);
-            DocumentInformation parsedObject = new DocumentInformation();
-            parsedObject = die.ExtractDocumentInformation();
-
-            DocumentInformation testObject = new DocumentInformation();
-            testObject.ProjectReportName = "Dummy Project 1";
-            testObject.AssetType = "Mobile Application";
-            testObject.MainAuthor = "Lukas Nad";
-            testObject.Authors = new List<string> { 
                 "Lukas Nad",
                 "Taksh Medhavi",
                 "Michal Olencin"
-            };
-            testObject.Reviewiers = new List<string> { "Katarina Amrichova" };
-            testObject.Approvers = new List<string> { "Filip Mrocek" };
-            testObject.ReportDocumentHistory = new List<ReportVersionEntry>();
-            ReportVersionEntry report1 = new ReportVersionEntry();
-            report1.VersionDate = new DateTime(2023, 6, 6);
-            report1.Version = "0.1";
-            report1.WholeName = "Lukas Nad";
-            report1.ReportStatus = "Initial Draft";
-            testObject.ReportDocumentHistory.Add(report1);
-            ReportVersionEntry report2 = new ReportVersionEntry();
-            report2.VersionDate = new DateTime(2023, 6, 7);
-            report2.Version = "0.2";
-            report2.WholeName = "Michal Olencin";
-            report2.ReportStatus = "Added Findings";
-            testObject.ReportDocumentHistory.Add(report2);
-            ReportVersionEntry report3 = new ReportVersionEntry();
-            report3.VersionDate = new DateTime(2023, 6, 8);
-            report3.Version = "0.3";
-            report3.WholeName = "Taksh Medhavi";
-            report3.ReportStatus = "Added Findings";
-            testObject.ReportDocumentHistory.Add(report3);
-            ReportVersionEntry report4 = new ReportVersionEntry();
-            report4.VersionDate = new DateTime(2023, 6, 8);
-            report4.Version = "0.4";
-            report4.WholeName = "Katarina Amrichova";
-            report4.ReportStatus = "Review";
-            testObject.ReportDocumentHistory.Add(report4);
-            ReportVersionEntry report5 = new ReportVersionEntry();
-            report5.VersionDate = new DateTime(2023, 6, 9);
-            report5.Version = "0.5";
-            report5.WholeName = "Lukas Nad";
-            report5.ReportStatus = "Release";
-            testObject.ReportDocumentHistory.Add(report5);
+            },
+            Reviewiers = new List<string> { "Katarina Amrichova" },
+            Approvers = new List<string> { "Filip Mrocek" },
+            ReportDocumentHistory = new List<ReportVersionEntry>()
+        };
+        var report1 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 6),
+            Version = "0.1",
+            WholeName = "Lukas Nad",
+            ReportStatus = "Initial Draft"
+        };
+        testObject.ReportDocumentHistory.Add(report1);
+        var report2 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 7),
+            Version = "0.2",
+            WholeName = "Michal Olencin",
+            ReportStatus = "Added Findings"
+        };
+        testObject.ReportDocumentHistory.Add(report2);
+        var report3 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 8),
+            Version = "0.3",
+            WholeName = "Taksh Medhavi",
+            ReportStatus = "Added Findings"
+        };
+        testObject.ReportDocumentHistory.Add(report3);
+        var report4 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 8),
+            Version = "0.4",
+            WholeName = "Katarina Amrichova",
+            ReportStatus = "Review"
+        };
+        testObject.ReportDocumentHistory.Add(report4);
+        var report5 = new ReportVersionEntry
+        {
+            VersionDate = new DateTime(2023, 6, 9),
+            Version = "0.5",
+            WholeName = "Lukas Nad",
+            ReportStatus = "Release"
+        };
+        testObject.ReportDocumentHistory.Add(report5);
 
-            testObject.ReportDate = new DateTime(2023, 6, 12);
+        testObject.ReportDate = new DateTime(2023, 6, 12);
 
-            Assert.IsNotNull(parsedObject);
-            parsedObject.Should().BeEquivalentTo(testObject);
-        }
+        Assert.IsNotNull(parsedObject);
+        parsedObject.Should().BeEquivalentTo(testObject);
     }
-
-
 }

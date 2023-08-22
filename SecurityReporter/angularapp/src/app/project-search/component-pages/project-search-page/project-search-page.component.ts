@@ -1,16 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ProjectReportService } from '../../providers/project-report-service';
-import { ProjectReport } from '../../interfaces/project-report.model';
 import { NotificationService } from '../../providers/notification.service';
 import { fromEvent } from 'rxjs';
 import { FindingResponse } from '../../interfaces/finding-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Finding } from '../../interfaces/ProjectReport/finding';
+import { GroupedFinding } from '../../interfaces/grouped-findings.model';
 
 @Component({
   selector: 'app-project-search',
   templateUrl: './project-search-page.component.html',
-  styleUrls: ['./project-search-page.component.css', '../../project-search.css'],
+  styleUrls: ['./project-search-page.component.css', '../../../project-search.css'],
 })
 export class ProjectSearchPageComponent implements OnInit {
   constructor(private projectReportService: ProjectReportService, private notificationService: NotificationService) { }
@@ -29,13 +28,12 @@ export class ProjectSearchPageComponent implements OnInit {
 
   isScrolledToBottom(): boolean {
     const container = this.reportsScrollableBox.nativeElement;
-    const atBottom = container.scrollTop + container.clientHeight + 350 >= container.scrollHeight;
+    const atBottom = container.scrollTop + container.clientHeight + 50 >= container.scrollHeight;
     return atBottom;
   }
 
   loadedFindings: FindingResponse[] = []
-  groupedFindings: { [key: string]: Finding[] } = {};
-  groupedFindingsEntries: Array<[string, Finding[]]> = [];
+  groupedFindings: GroupedFinding[] = [];
 
   totalRecords?: number;
   nextPage: string | undefined | null;
@@ -58,8 +56,7 @@ export class ProjectSearchPageComponent implements OnInit {
 
   resetSearch() {
     this.loadedFindings = [];
-    this.groupedFindings = {};
-    this.groupedFindingsEntries = [];
+    this.groupedFindings = [];
     this.totalRecords = 0;
     this.nextPage = null;
     this.lastLoadedPage = 1;
@@ -72,6 +69,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatabilityTest = this.repeatability;
     this.referencesTest = this.references;
     this.cweTest = this.cwe;
+    this.findingNameTest = this.findingName;
   }
 
   injectionOfSendingVariables() {
@@ -81,51 +79,51 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatabilitySending = this.repeatability;
     this.referencesSending = this.references;
     this.cweSending = this.cwe;
+    this.findingNameSending = this.findingName;
   }
-
-  //groupFindings() {
-  //  this.loadedFindings.forEach((findingRes: FindingResponse) => {
-  //    if (!this.groupedFindings[findingRes.projectReportName]) {
-  //      this.groupedFindings[findingRes.projectReportName] = [];
-  //    }
-  //    this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
-  //  });
-  //  this.groupedFindingsEntries = Object.entries(this.groupedFindings);
-  //}
 
   groupFindings() {
-    // Get the index from which to start grouping the new findings
-    const startIndex = (this.lastLoadedPage - 1) * 6;
+    const groupedFindingsMap = new Map<string, GroupedFinding>();
 
-    for (let i = startIndex; i < this.loadedFindings.length; i++) {
-      const findingRes: FindingResponse = this.loadedFindings[i];
-      if (!this.groupedFindings[findingRes.projectReportName]) {
-        this.groupedFindings[findingRes.projectReportName] = [];
+    for (const findingRes of this.loadedFindings) {
+      const { projectReportId, projectReportName, finding } = findingRes;
+
+      if (groupedFindingsMap.has(projectReportId)) {
+        // Add the finding to an existing group
+        const existingGroup = groupedFindingsMap.get(projectReportId);
+        existingGroup?.findings.push(finding);
+      } else {
+        // Create a new group
+        const isProjectSelected = this.groupedFindings.some(gf => gf.projectId === projectReportId && gf.checked === true);
+        const newGroup: GroupedFinding = {
+          projectId: projectReportId,
+          projectName: projectReportName,
+          findings: [finding],
+          checked: isProjectSelected
+        };
+        groupedFindingsMap.set(projectReportId, newGroup);
       }
-      this.groupedFindings[findingRes.projectReportName].push(findingRes.finding);
     }
 
-    // Update the groupedFindingsEntries with the newly added findings
-    this.groupedFindingsEntries = Object.entries(this.groupedFindings);
+    // Convert the map to an array of GroupedFinding objects
+    this.groupedFindings = Array.from(groupedFindingsMap.values());
   }
-
 
   loadFindings() {
     this.highlightValue = this.value;
     this.injectionOfTestVariables();
     this.isLoading = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       1,
       this.projectName,
       this.details,
       this.impact,
       this.repeatability,
       this.references,
-      this.cwe
+      this.cwe,
+      this.findingName
     ).subscribe(
       (response) => {
-        console.log(response)
         this.injectionOfSendingVariables();
         if (response.data.length == 0) {
           this.notificationService.displayMessage("No findings found.", "info");
@@ -135,7 +133,6 @@ export class ProjectSearchPageComponent implements OnInit {
           this.totalRecords = response.totalRecords;
           this.nextPage = response.nextPage;
           this.lastLoadedPage = response.pageNumber;
-          console.log(this.groupedFindingsEntries);
         }
         this.isLoading = false;
       }, (HttpErrorResponse) => {
@@ -149,18 +146,16 @@ export class ProjectSearchPageComponent implements OnInit {
   @ViewChild('reportsScrollableBox', { static: true }) reportsScrollableBox!: ElementRef;
 
   loadNextPage() {
-    console.log("Loading next page")
-    console.log(this.nextPage);
     this.isLoadingNextPage = true;
     this.projectReportService.getProjectReportFindings(
-      this.value,
       (this.lastLoadedPage + 1),
       this.projectNameSending,
       this.detailsSending,
       this.impactSending,
       this.repeatabilitySending,
       this.referencesSending,
-      this.cweSending
+      this.cweSending,
+      this.findingNameSending
     ).subscribe(res => {
       this.lastLoadedPage = res.pageNumber;
       this.nextPage = res.nextPage;
@@ -168,7 +163,6 @@ export class ProjectSearchPageComponent implements OnInit {
         this.loadedFindings.push(report);
       }
       this.groupFindings();
-      console.log(res);
       this.isLoadingNextPage = false;
     })
   }
@@ -184,7 +178,8 @@ export class ProjectSearchPageComponent implements OnInit {
     { id: 'case3', value: 'SubsectionImpact', label: 'Impact', checked: false},
     { id: 'case4', value: 'SubsectionRepeatability', label: 'Repeatability', checked: false},
     { id: 'case5', value: 'SubsectionReferences', label: 'References', checked: false},
-    { id: 'case6', value: 'CWE', label: 'CWE', checked: false }
+    { id: 'case6', value: 'CWE', label: 'CWE', checked: false },
+    { id: 'case7', value: 'FindingName', label: 'Finding Name', checked: false},
   ];
 
 
@@ -194,6 +189,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatability?: string;
   references?: string;
   cwe?: string;
+  findingName?: string;
 
   projectNameTest?: string;
   detailsTest?: string;
@@ -201,6 +197,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatabilityTest?: string;
   referencesTest?: string;
   cweTest?: string;
+  findingNameTest?: string;
 
   projectNameSending?: string;
   detailsSending?: string;
@@ -208,6 +205,7 @@ export class ProjectSearchPageComponent implements OnInit {
   repeatabilitySending?: string;
   referencesSending?: string;
   cweSending?: string;
+  findingNameSending?: string;
 
   clearReportVariables() {
     this.projectName = '';
@@ -216,6 +214,7 @@ export class ProjectSearchPageComponent implements OnInit {
     this.repeatability = '';
     this.references = '';
     this.cwe = '';
+    this.findingName = '';
   }
 
 
@@ -243,29 +242,29 @@ export class ProjectSearchPageComponent implements OnInit {
   isFormValid: boolean = false;
 
   checkFormValidity(): void {
-
     this.isFormValid = this.value.trim() !== '' && this.keywordsValues.length > 0;
 
-
-    console.log(this.keywordsValues);
     for(let value of this.keywordsValues) {
-      if(value == 'ProjectReportName') {
-       this.projectName = value;
+      if (value == 'ProjectReportName') {
+        this.projectName = this.value;
      }
       else if(value == 'SubsectionDetails') {
-        this.details = value;
+        this.details = this.value;
       }
       else if(value == 'SubsectionImpact') {
-        this.impact = value;
+        this.impact = this.value;
       }
       else if(value == 'SubsectionRepeatability') {
-        this.repeatability = value;
+        this.repeatability = this.value;
       }
       else if(value == 'SubsectionReferences') {
-        this.references = value;
+        this.references = this.value;
+      }
+      else if(value == 'FindingName') {
+        this.findingName = this.value;
       }
       else if(value == 'CWE') {
-        this.cwe = value;
+        this.cwe = this.value;
         if(this.value.length > 0)
         this.onlyNumbers(this.value);
       }
@@ -285,10 +284,10 @@ export class ProjectSearchPageComponent implements OnInit {
     this.clearReportVariables();
   }
 
+  checkCheckbox: number = 0;
 
   onlyNumbers(event: string, ): void {
     const numberRegex = /^[0-9]+$/;
-    console.log(numberRegex.test(event));
 
     if (!numberRegex.test(event)) {
       this.cwe = '';
@@ -302,7 +301,19 @@ export class ProjectSearchPageComponent implements OnInit {
          //delay 200ms
           setTimeout(() => {
           caseItem.checked = false;
+          this.checkFormValidity();
+
+          for(let value of this.keywords) {
+            if (value.checked) {
+              this.checkCheckbox++;
+            }
+          }
+          console.log(this.checkCheckbox);
+          if (this.checkCheckbox == 0) {
+            this.isCheckboxChecked = false;
+          }
         }, 100);
+          this.checkCheckbox = 0;
         }
       });
 
@@ -310,5 +321,110 @@ export class ProjectSearchPageComponent implements OnInit {
     }
   }
 
+  onGetSource(projectId: string, projectName: string): void {
+    this.notificationService.displayMessage("Downloading source...", "info");
+    const url = `${this.projectReportService.apiUri}/${projectId}/download`;
 
+    fetch(url)
+      .then(response => {
+        // Clone the response before consuming it as a blob
+        return response.blob().then(blob => {
+          // Now you can safely read the text from the cloned response
+            const sanitizedProjectName = projectName.replace(/\s/g, "_");
+            const fullFilename = `Report-${sanitizedProjectName}.zip`;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = fullFilename;
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href); // Clean up the object URL
+        });
+      })
+      .catch(error => {
+        console.error('Error downloading the file:', error);
+      });
+  }
+
+  onGetPdf  (projectId: string, projectName: string): void {
+    this.notificationService.displayMessage("Downloading source...", "info");
+    const url = `${this.projectReportService.apiUri}/${projectId}/download/pdf`;
+
+    fetch(url)
+        .then(response => {
+          // Clone the response before consuming it as a blob
+          return response.blob().then(blob => {
+            // Now you can safely read the text from the cloned response
+            const sanitizedProjectName = projectName.replace(/\s/g, "_");
+            const fullFilename = `Report-${sanitizedProjectName}.pdf`;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = fullFilename;
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href); // Clean up the object URL
+          });
+        })
+        .catch(error => {
+          console.error('Error downloading the file:', error);
+        });
+  }
+
+  onSelectionCheckboxChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    if (target.checked) {
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = true;
+    } else {
+      this.groupedFindings.find(p => p.projectId == target.value)!.checked = false;
+    }
+
+    this.selectedProjects = [];
+    this.groupedFindings.forEach(gf => {
+      if (gf.checked) {
+        this.selectedProjects.push(gf );
+      }
+    })
+  }
+
+  selectedProjects: GroupedFinding[] = [];
+
+  onDeleteSelectedProjects() {
+    const projectIds: string[] = this.selectedProjects.map(p => p.projectId);
+    // BE request
+    this.projectReportService.deleteProjectReport(projectIds).subscribe((res) => {
+      // Success
+      for (let selectedGf of this.selectedProjects) {
+        this.loadedFindings = this.loadedFindings.filter(lf => lf.projectReportId !== selectedGf.projectId);
+        this.groupedFindings = this.groupedFindings.filter(gf => gf.projectId !== selectedGf.projectId);
+        this.totalRecords = this.loadedFindings.length;
+      }
+      this.groupFindings();
+      this.selectedProjects = [];
+      this.notificationService.displayMessage("Successfully removed from db!", "info");
+    }, (e: HttpErrorResponse) => {
+      // Error
+      console.error(e);
+      this.selectedProjects = [];
+    })
+
+
+  }
+
+  showPopup: boolean = false;
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
+
+  showSidebar: boolean = true;
+
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
+  }
+
+  showCSAPopup: boolean = false;
 }

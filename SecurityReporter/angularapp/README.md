@@ -1,27 +1,63 @@
-# Angularapp
+# Project setup
+1. Clone repository
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.0.
+2. Download and install Cosmos DB Emulator:
+   - https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
 
-## Development server
+3. Download and install nodeJS: 
+   - https://nodejs.org/en/download/current
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+3. Open Cosmos DB Emulator (emulator should show up in browser)
 
-## Code scaffolding
+4. Create comsos DB Emulator Container and Database in explorer tab (menu) with name ProjectDatabase and ProjectContainer. Paste following items.
+   - In Database id: ProjectDatabase
+   - In Container id: ProjectContainer
+   - In Partition Key: id
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+5. Add to cosmos DB Emulator ProjectDatabase new container:
+   - In Container id: ProjectRolesContainer
+   - In Partition Key: id
 
-## Build
+   - For now you need to add users with roles manually in this format:
+      - Example: 
+      - {
+            "id": "client@client.sk",
+            "Role": "client"
+         }
+      - Attribute Role can be admin/client/coordinator/pentester/default.
+      - You can add new item by clicking on ProjectRolesDatabase -> ProjectRolesContainer -> Items, then click on New item and then click save.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+6. Enable secret storage and set a secret
 
-## Running unit tests
+   - The Secret Manager tool includes an init command. To use user secrets, run the following command in the project directory:
+   - You can find your PrimaryKey in Quickstart tab in Emulator.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```
+   dotnet user-secrets init
+   ```
 
-## Running end-to-end tests
+   ```
+   dotnet user-secrets set "DB:PrimaryKey" "your cosmos db primary key from cosmosDB data explorer"
+   ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+7. Open repository folder in terminal and type:
+   ```
+   npm install
+   ```
 
-## Further help
+8. Open project solution in Visual Studio
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+9. 
+   - In View tab click on Solution explorer.
+   - In Solution explorer right click on Solution and choose Properties
+   - In menu select Common Properties -> Startup Project
+   - Click on Multiple startup project radio button
+   - In table set webapi Project will be on top (select it and move it with arrows on right) and select Start Action in right column
+   - In table set angularapp Project to second position and select Start Action in right column
+   - Click Apply and OK
+
+10. Start project (F5)
+
+11. Swagger and angular page should be visible in browser.
+
+- [ASP.NET Safe storage](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows)

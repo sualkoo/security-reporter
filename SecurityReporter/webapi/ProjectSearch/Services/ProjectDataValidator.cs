@@ -1,69 +1,62 @@
-﻿using System.ComponentModel.DataAnnotations;
-using webapi.Models.ProjectReport;
-using webapi.ProjectSearch.Models;
+﻿using webapi.ProjectSearch.Models;
+using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services
+namespace webapi.ProjectSearch.Services;
+
+public class ProjectDataValidator : IProjectDataValidator
 {
-    public class ProjectDataValidator : IProjectDataValidator
+    private readonly ILogger logger;
+
+    public ProjectDataValidator()
     {
-        private readonly ILogger Logger;
+        var loggerFactory = LoggerProvider.GetLoggerFactory();
+        logger = loggerFactory.CreateLogger<ProjectDataValidator>();
+    }
 
-        public ProjectDataValidator()
+    public bool Validate(ProjectReportData projectReport)
+    {
+        var result = true;
+
+        var validationResults = new[]
         {
-            ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
-            Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-        }
+            DataAnnotation.ValidateEntity(projectReport),
+            DataAnnotation.ValidateEntity<DocumentInformation>(projectReport.DocumentInfo),
+            DataAnnotation.ValidateList(projectReport.DocumentInfo.ReportDocumentHistory),
+            DataAnnotation.ValidateEntity<ProjectInformation>(projectReport.ProjectInfo),
+            DataAnnotation.ValidateTimeFrames(projectReport.ProjectInfo),
+            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.ApplicationManager),
+            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessOwner),
+            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessRepresentative),
+            DataAnnotation.ValidateList(projectReport.ProjectInfo.TechnicalContacts),
+            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestLead),
+            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestCoordinator),
+            DataAnnotation.ValidateList(projectReport.ProjectInfo.PentestTeam),
+            DataAnnotation.ValidateList(projectReport.Findings),
+            DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
+            DataAnnotation.ValidateList(projectReport.ScopeAndProcedures.InScope),
+            DataAnnotation.ValidateList(projectReport.ScopeAndProcedures.OutOfScope),
+            DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
+            DataAnnotation.ValidateList(projectReport.TestingMethodology.ToolsUsed)
+        };
 
-        public bool Validate(ProjectReportData projectReport)
-        {
-            bool result = true;
+        var errors = new List<string>();
 
-            var validationResults = new EntityValidationResult[]
+        foreach (var validationResult in validationResults)
+            if (validationResult.HasError)
             {
-                DataAnnotation.ValidateEntity<ProjectReportData>(projectReport),
-                DataAnnotation.ValidateEntity<DocumentInformation>(projectReport.DocumentInfo),
-                DataAnnotation.ValidateList<ReportVersionEntry>(projectReport.DocumentInfo.ReportDocumentHistory),
-                DataAnnotation.ValidateEntity<ProjectInformation>(projectReport.ProjectInfo),
-                DataAnnotation.ValidateTimeFrames(projectReport.ProjectInfo),
-                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.ApplicationManager),
-                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessOwner),
-                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessRepresentative),
-                DataAnnotation.ValidateList<ProjectInformationParticipant>(projectReport.ProjectInfo.TechnicalContacts),
-                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestLead),
-                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestCoordinator),
-                DataAnnotation.ValidateList<ProjectInformationParticipant>(projectReport.ProjectInfo.PentestTeam),
-                DataAnnotation.ValidateList<Finding>(projectReport.Findings),
-                DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
-                DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.InScope),
-                DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.OutOfScope),
-                DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
-                DataAnnotation.ValidateList<Tool>(projectReport.TestingMethodology.ToolsUsed),
-            };
-
-            var errors = new List<string>();
-
-            foreach ( var validationResult in validationResults )
-            {
-                if (validationResult.HasError)
+                result = false;
+                foreach (var error in validationResult.ValidationErrors)
                 {
-                    result = false;
-                    foreach (var error in validationResult.ValidationErrors)
-                    {
-                        Logger.LogError(error.ErrorMessage);
-                        errors.Add(error.ErrorMessage);
-                    }
+                    logger.LogError(error.ErrorMessage);
+                    errors.Add(error.ErrorMessage);
                 }
             }
 
-            if (result)
-            {
-                Logger.LogInformation("Validation of Project Report successed!");
-            } else
-            {
-                throw new CustomException(StatusCodes.Status400BadRequest, "Validation fail", errors);
-            }
+        if (result)
+            logger.LogInformation("Validation of Project Report successed!");
+        else
+            throw new CustomException(StatusCodes.Status400BadRequest, "Validation fail", errors);
 
-            return result;
-        }
+        return result;
     }
 }
