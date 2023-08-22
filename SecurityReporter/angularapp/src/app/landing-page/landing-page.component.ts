@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutoLogoutService } from '../services/auto-logout.service';
 import { AlertService } from '../project-management/services/alert.service';
-import { LogoutService } from '../services/logout.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -10,7 +10,7 @@ import { LogoutService } from '../services/logout.service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent {
-  constructor(private router: Router, private alertService: AlertService, private logOut: LogoutService) { }
+  constructor(private router: Router, private alertService: AlertService, private logOut: AuthService) { }
 
 
   navigateToPage(page: string): void {

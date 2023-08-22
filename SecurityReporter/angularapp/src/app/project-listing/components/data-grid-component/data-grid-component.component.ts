@@ -16,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { GetRoleService } from '../../../shared/services/get-role.service';
+import { AuthService } from '../../../services/auth.service';
  
 @Component({
   selector: 'app-data-grid-component',
@@ -60,7 +60,7 @@ export class DataGridComponentComponent implements AfterViewInit {
 
   length: number | undefined;
 
-  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private getRoleService: GetRoleService) { }
+  constructor(private projectsCountService: GetProjectsCountService, private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private getRoleService: AuthService) { }
 
   userRole: string = 'admin';
 

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoginService } from './services/login.service';
+import { AuthService } from '../services/auth.service';
 import { error } from 'cypress/types/jquery';
-import { GetRoleService } from '../shared/services/get-role.service';
-
-
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +12,7 @@ import { GetRoleService } from '../shared/services/get-role.service';
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private loginService: LoginService, private roleService: GetRoleService) { }
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private loginService: AuthService) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -34,7 +31,7 @@ export class LoginPageComponent implements OnInit {
         if ( data.status == 200) {
           console.log("Login successful")
 
-          this.roleService.getRole().then(role => {
+          this.loginService.getRole().then(role => {
             if (role === 'default') {
               window.location.href = 'default-page';
             } else {
