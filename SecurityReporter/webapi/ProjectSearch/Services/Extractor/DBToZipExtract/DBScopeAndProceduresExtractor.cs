@@ -5,6 +5,61 @@ namespace webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
 
 public static class DbScopeAndProceduresExtractor
 {
+    public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
+    {
+        string result = @"%----------------------------------------------------------------------------------------
+%	IN SCOPE
+%----------------------------------------------------------------------------------------
+\newcommand{\InScope}{
+
+	" + scopeAndProcedures.InScope + @"					
+}
+
+
+%----------------------------------------------------------------------------------------
+%	WORST CASE SCENARIOS
+%----------------------------------------------------------------------------------------
+
+% Not needed for Scope Document
+% Required for Report
+
+
+\newcommand{\WorstCaseScenariosReport}{
+
+    " + scopeAndProcedures.WorstCaseScenariosReport + @"
+
+}
+
+
+% Required for Scope & Report.
+\newcommand{\WorstCaseScenariosScope}{
+	" + scopeAndProcedures.WorstCaseScenarios + @"
+}
+
+
+
+%----------------------------------------------------------------------------------------
+%	OUT OF SCOPE
+%----------------------------------------------------------------------------------------
+\newcommand{\OutOfScope}{
+    " + scopeAndProcedures.OutOfScope + @"
+}
+
+%----------------------------------------------------------------------------------------
+%	ENVIRONMENT
+%----------------------------------------------------------------------------------------
+\newcommand{\Environment}{
+    " + scopeAndProcedures.Environment + @"
+}
+
+%----------------------------------------------------------------------------------------
+%	TEST PROTOCOL: TARGET
+%----------------------------------------------------------------------------------------
+\newcommand{\TargetTestProtocol}{https://TODOTODO}
+";
+    
+    return Encoding.UTF8.GetBytes(result);
+    }
     /*
     public static byte[] ExtractScopeAndProcedures(ScopeAndProcedures scopeAndProcedures)
     {
