@@ -10,6 +10,8 @@ namespace webapi.Service;
 public class AzureBlobService : IAzureBlobService
 {
     private readonly BlobServiceClient _blobServiceClient;
+    private readonly BlobServiceClient blobProjectServiceClient;
+    private readonly BlobContainerClient projectContainerClient;
     private readonly BlobContainerClient projectReportContainerClient;
     private readonly ILogger _logger;
 
@@ -33,6 +35,13 @@ public class AzureBlobService : IAzureBlobService
         if (!projectReportContainerClient.Exists())
         {
             projectReportContainerClient = _blobServiceClient.CreateBlobContainer("reports");
+        }
+
+        blobProjectServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
+        projectContainerClient = blobProjectServiceClient.GetBlobContainerClient("projects");
+        if (!projectContainerClient.Exists())
+        {
+            projectContainerClient = blobProjectServiceClient.CreateBlobContainer("projects");
         }
     }
 
