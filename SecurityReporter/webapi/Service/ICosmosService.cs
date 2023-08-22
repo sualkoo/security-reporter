@@ -20,6 +20,5 @@ namespace webapi.Service
 
         Task<ProjectData> GetProjectById(string id);
         Task<bool> UpdateProject(ProjectData data);
-        Task<bool> Download(string path);
     }
 }

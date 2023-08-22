@@ -132,11 +132,11 @@ public class ProjectController : ControllerBase
 
     [HttpGet("download")]
     // [Authorize(Policy = "AdminCoordinatorPolicy")]
-    public async Task<IActionResult> Download(string path)
+    public async Task<IActionResult> Download(string name)
     {
         Console.WriteLine("Downloading file..");
 
-        bool result = await CosmosService.Download(path);
+        bool result = true; // change me to service call
 
         if (!result)
         {

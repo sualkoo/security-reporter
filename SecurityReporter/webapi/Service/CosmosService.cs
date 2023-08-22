@@ -632,10 +632,5 @@ namespace webapi.Service
                 return false;
             }
         }
-
-        public async Task<bool> Download(string path)
-        {
-            return true;
-        }
     }
 }
