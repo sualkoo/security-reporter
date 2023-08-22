@@ -6,8 +6,6 @@ namespace webapi.Models;
 
 public class ProjectData : ProjectList
 {
-    [DateRangeValidation("EndDate", ErrorMessage = "End date must be less than or equal to report due date.")]
-    public DateOnly? ReportDueDate { get; set; }
     public DateTime? RequestCreated { get; set; }
 
     [StringValidation(ErrorMessage = "The Cats Number field must not be empty or contain only whitespace.")]

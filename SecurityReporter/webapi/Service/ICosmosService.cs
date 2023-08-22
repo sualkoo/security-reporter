@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using webapi.Login.Models;
 using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -11,8 +10,9 @@ namespace webapi.Service
         Task<bool> AddProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
-        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter);
-        Task<int> GetNumberOfProjects();
+        Task<CountProjects> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
+        //Task<int> GetNumberOfProjects();
+        Task<Profile> GetBacklog(int pageSize, int pageNumber);
 
         Task<bool> AddProjectReport(ProjectReportData data);
         Task<ProjectReportData> GetProjectReport(string projectId);
@@ -20,5 +20,9 @@ namespace webapi.Service
 
         Task<ProjectData> GetProjectById(string id);
         Task<bool> UpdateProject(ProjectData data);
+        //Task<Profile> ProfileItems(string email);
+
+        Task DeleteUsers();
+        Task<UserRole> GetUserRole(string email);
     }
 }

@@ -1,0 +1,53 @@
+img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #ec6602;
+}
+
+.profile {
+    margin-top: 50px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+.profile-photo {
+    margin-top : 50px;
+    margin-left: 50px;
+}
+
+.profile-info {
+    display: flex;
+    margin-top: 100px;
+    margin-left: 50px;
+}
+
+.profile-name {
+    margin-left : 150px;
+    display:flex;
+    flex-direction:column;
+    justify-content:end;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tabs {
+  margin-top: 50px;
+  display:flow;
+  justify-content: center;
+}
+
+h4 {
+    font-weight: 400;
+}
+
+.delete-button {
+  width: 150px;
+  height: 50px;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-right: 20px;
+}

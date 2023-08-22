@@ -46,6 +46,9 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { AutoLogoutService } from './services/auto-logout.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 import { FileDragDropComponent } from './project-editing/components/file-drag-drop/file-drag-drop.component';
 
 @NgModule({
@@ -61,6 +64,7 @@ import { FileDragDropComponent } from './project-editing/components/file-drag-dr
     HighlighterPipe,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
+ 
   ],
   imports: [
     MatSnackBarModule,
@@ -96,14 +100,9 @@ import { FileDragDropComponent } from './project-editing/components/file-drag-dr
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule,
-    FiltersComponent,
-    FiltersDatepickerComponent,
-    SliderComponent,
-    ExpansionPanelComponent,
-    InputComponent,
-    RouterModule,
-    MatSnackBarModule,
+    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
+MyProfileComponent,
+    MatSnackBarModule, 
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],

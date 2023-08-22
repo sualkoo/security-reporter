@@ -362,3 +362,10 @@ MigrationBackup/
 FodyWeavers.xsd
 /SecurityReporter/angularapp/.angular/
 */.vscode
+*.mp4
+*.avi
+*.mov
+
+.vs/
+/SecurityReporter/angularapp_uiTests/cypress/screenshots/addIncorrectProject.cy.js
+/SecurityReporter/package-lock.json
