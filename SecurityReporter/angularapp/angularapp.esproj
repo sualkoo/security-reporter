@@ -12,7 +12,7 @@
     <UserSecretsId>b748f895-ac0a-4af8-ad6e-779195da7718</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\my-profile\components\" />
+    <Folder Include="src\app\my-profile\components\backlog-component\Services\" />
     <Folder Include="src\app\services\" />
     <Folder Include="src\app\roles\" />
     <Folder Include="src\app\project-editing\component-pages\" />
