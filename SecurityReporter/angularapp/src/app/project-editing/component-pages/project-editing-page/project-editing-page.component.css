@@ -5,11 +5,11 @@
 
 mat-expansion-panel {
   width: 500px;
-  background-color: #009999;
+  background-color: #f2f2f2;
 }
 
 mat-divider {
-  margin: 00px 0px 10px 0px;
+  margin: 00px 0px 15px 0px;
 }
 
 .pentest-download div {

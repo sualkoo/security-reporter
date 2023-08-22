@@ -156,48 +156,44 @@
             ></app-radio-button-component>
           </div>
 
-          <mat-accordion>
-            <mat-expansion-panel hideToggle style="color: white">
-              <mat-expansion-panel-header>
-                <mat-panel-title style="color: white">
-                  Pentests files upload
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div style="align-items: center">
-                <mat-divider></mat-divider>
-                <app-file-drag-drop
-                  [pentestTitle]="'Questionare'"
-                ></app-file-drag-drop>
-                <app-file-drag-drop
-                  [pentestTitle]="'Project scope'"
-                ></app-file-drag-drop>
-                <app-file-drag-drop
-                  [pentestTitle]="'Project report'"
-                ></app-file-drag-drop>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Pentests files upload </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="align-items: center">
+              <mat-divider></mat-divider>
+              <app-file-drag-drop
+                [pentestTitle]="'Questionare'"
+              ></app-file-drag-drop>
+              <app-file-drag-drop
+                [pentestTitle]="'Project scope'"
+              ></app-file-drag-drop>
+              <app-file-drag-drop
+                [pentestTitle]="'Project report'"
+              ></app-file-drag-drop>
+            </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Uploaded files </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+
+            <div class="pentest-download">
+              <div>
+                <p>Questionare</p>
+                <mat-icon style="color: #ec6602">download</mat-icon>
               </div>
-            </mat-expansion-panel>
-            <mat-expansion-panel hideToggle style="color: white">
-              <mat-expansion-panel-header>
-                <mat-panel-title style="color: white">
-                  Uploaded files
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div class="pentest-download">
-                <div>
-                  <p>Questionare</p>
-                  <mat-icon>download</mat-icon>
-                </div>
-                <div>
-                  <p>Project scope</p>
-                  <mat-icon>download</mat-icon>
-                </div>
-                <div>
-                  <p>Project report</p>
-                  <mat-icon>download</mat-icon>
-                </div>
+              <div>
+                <p>Project scope</p>
+                <mat-icon style="color: #ec6602">download</mat-icon>
               </div>
-            </mat-expansion-panel>
-          </mat-accordion>
+              <div>
+                <p>Project report</p>
+                <mat-icon style="color: #ec6602">download</mat-icon>
+              </div>
+            </div>
+          </mat-expansion-panel>
         </div>
 
         <div class="left-column">
