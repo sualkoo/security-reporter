@@ -173,7 +173,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(IFormFile file, string destination)
+    public async Task<IActionResult> UploadFile(IFormFile file, string destination, string id)
     {
         try
         {
@@ -187,7 +187,7 @@ public class ProjectController : ControllerBase
                 return StatusCode(400, "Error: Destination parameter is required.");
             }
 
-            if (destination != "scope" && destination != "questionnaire" && destination != "report")
+            if (destination != "scope" && destination != "questionaire" && destination != "report")
             {
                 return StatusCode(400, "Error: Invalid destination parameter.");
             }
