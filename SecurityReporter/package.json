@@ -10,6 +10,6 @@
     "@angular-devkit/build-angular": "^16.1.7",
     "@angular/cli": "^16.1.7",
     "@angular/platform-browser-dynamic": "^16.1.8",
-    "cypress": "^12.17.3"
+    "cypress": "^12.17.4"
   }
 }

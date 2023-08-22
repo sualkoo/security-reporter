@@ -1,0 +1,473 @@
+{
+  "id": "2fe4585d-3873-4560-826f-2cd82abcf61e",
+  "documentInfo": {
+    "projectReportName": "Dummy Project 1",
+    "assetType": "Mobile Application",
+    "mainAuthor": "Lukas Nad",
+    "authors": [
+      "Lukas Nad",
+      "Taksh Medhavi",
+      "Michal Olencin"
+    ],
+    "reviewiers": [
+      "Katarina Amrichova"
+    ],
+    "approvers": [
+      "Filip Mrocek"
+    ],
+    "reportDocumentHistory": [
+      {
+        "versionDate": "2023-06-06T00:00:00",
+        "version": "0.1",
+        "wholeName": "Lukas Nad",
+        "reportStatus": "Initial Draft"
+      },
+      {
+        "versionDate": "2023-06-07T00:00:00",
+        "version": "0.2",
+        "wholeName": "Michal Olencin",
+        "reportStatus": "Added Findings"
+      },
+      {
+        "versionDate": "2023-06-08T00:00:00",
+        "version": "0.3",
+        "wholeName": "Taksh Medhavi",
+        "reportStatus": "Added Findings"
+      },
+      {
+        "versionDate": "2023-06-08T00:00:00",
+        "version": "0.4",
+        "wholeName": "Katarina Amrichova",
+        "reportStatus": "Review"
+      },
+      {
+        "versionDate": "2023-06-09T00:00:00",
+        "version": "0.5",
+        "wholeName": "Lukas Nad",
+        "reportStatus": "Release"
+      }
+    ],
+    "reportDate": "2023-06-12T00:00:00"
+  },
+  "executiveSummary": "The Penetration Testing team at SHS TE DC CYS CSA in Slovakia conducted a penetration test of \\textbf{\\textsc{\\ReportProjectName}} system in order to assess its overall security posture. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium. Cras varius purus eu cursus vehicula. Sed in molestie arcu, id placerat velit. Praesent sagittis purus in neque convallis, a faucibus odio egestas. Nam ultrices, metus et mattis facilisis, felis lectus tempor velit, a interdum nisl libero nec dui. Mauris interdum scelerisque semper. Cras mattis id lacus a ullamcorper. Curabitur fermentum vehicula leo, vel convallis turpis luctus nec. In mollis vitae diam in ornare. Donec molestie augue nisl, malesuada maximus urna gravida quis. Curabitur ac ante turpis. Nulla facilisi. Aenean eleifend ipsum at velit lobortis, in hendrerit arcu dapibus. Proin ut lacus sed tellus maximus euismod. Suspendisse elementum mauris tellus, eget imperdiet leo dictum nec. Fusce tortor mauris, iaculis non tristique ut, condimentum a odio.Maecenas tincidunt sollicitudin metus id eleifend. Cras justo urna, tempus et mi vestibulum, iaculis pellentesque nunc. Etiam nisi nibh, bibendum sed augue in, molestie lacinia turpis. Ut bibendum pretium mi vel volutpat. Praesent mattis scelerisque neque a vehicula. Cras nec iaculis mi, in rutrum ligula. Suspendisse potenti.Fusce mollis, erat eget tempus ornare, erat nisl mattis dolor, sed porta mauris quam eget tortor. Etiam bibendum sodales lorem ut fringilla. Phasellus in urna ex. In venenatis turpis a augue egestas efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras laoreet odio eu auctor molestie. In congue malesuada sollicitudin.Integer egestas mollis ex quis semper. Nam vitae diam aliquet, elementum leo molestie, suscipit mauris. Suspendisse ex magna, fermentum eu sem non, convallis faucibus nisl. In id dignissim orci, non sodales ante. Nulla bibendum sem nec turpis porta pulvinar. Curabitur fringilla libero ut ex faucibus, non ultrices nisl volutpat. Quisque imperdiet condimentum diam eu scelerisque. Integer ullamcorper euismod accumsan. Curabitur efficitur, neque non blandit tempus, quam erat viverra risus, eu placerat risus elit eu neque. ",
+  "projectInfo": {
+    "applicationManager": {
+      "name": "Anakin Skywalker",
+      "department": "SHS DI DA CEC ITH EH-PLM",
+      "contact": "anakin.skywalker@siemens-healthineers.com"
+    },
+    "businessOwner": {
+      "name": "Padme Amidala",
+      "department": "SHS DI DA CEC EPE",
+      "contact": "padme.amidala@siemens-healthineers.com"
+    },
+    "businessRepresentative": {
+      "name": "Luke Skywalker",
+      "department": "SHS DI DA CEC ITH EH-PLM",
+      "contact": "luke.skywalker@siemens-healthineers.com"
+    },
+    "technicalContacts": [
+      {
+        "name": "Obi Wan Kenobi",
+        "department": "SHS TE DC SVK D&A DIG PTM",
+        "contact": "obi-wan.kenobi@siemens-healthineers.com"
+      },
+      {
+        "name": "Baby Yoda",
+        "department": "SHS DI D&A CEC ITH EH-R&D",
+        "contact": "baby.yoda@siemens-healthineers.com"
+      }
+    ],
+    "pentestLead": {
+      "name": "Lukas Nad",
+      "department": "SHS TE DC CYS CSA PPA",
+      "contact": "lukas.nad@siemens-healthineers.com"
+    },
+    "pentestCoordinator": {
+      "name": "Alzbeta Vojtusova",
+      "department": "SHS TE DC CYS CSA PPA",
+      "contact": "alzbeta.vojtusova@siemens-healthineers.com"
+    },
+    "pentestTeam": [
+      {
+        "name": "Lukas Nad",
+        "department": "SHS TE DC CYS CSA P&PA",
+        "contact": "lukas.nad@siemens-healthineers.com"
+      },
+      {
+        "name": "Michal Olencin",
+        "department": "SHS TE DC CYS CSA P&PA",
+        "contact": "michal.olencin@siemens-healthineers.com"
+      },
+      {
+        "name": "Medhavi Taksh",
+        "department": "SHS TE DC CYS LAB",
+        "contact": "taksh.bhatt@siemens-healthineers.com"
+      }
+    ],
+    "targetInfoVersion": "12.1.1.2",
+    "targetInfoEnvironment": "Testing Environment",
+    "targetInfoInternetFacing": true,
+    "targetInfoSNXConnectivity": false,
+    "targetInfoHostingConnection": "Special Network",
+    "targetInfoHostingProvider": "N/A",
+    "targetInfoLifeCyclePhase": "Pre-Production",
+    "targetInfoCriticality": "N/A",
+    "targetInfoAssetID": "N/A",
+    "targetInfoSHARPUUID": "N/A",
+    "targetInfoDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies pharetra pretium. Cras varius purus eu cursus vehicula. Sed in molestie arcu, id placerat velit. Praesent sagittis purus in neque convallis, a faucibus odio egestas. Nam ultrices, metus et mattis facilisis, felis lectus tempor velit, a interdum nisl libero nec dui. Mauris interdum scelerisque semper. Cras mattis id lacus a ullamcorper. Curabitur fermentum vehicula leo, vel convallis turpis luctus nec. In mollis vitae diam in ornare. Donec molestie augue nisl, malesuada maximus urna gravida quis. Curabitur ac ante turpis. Nulla facilisi. Aenean eleifend ipsum at velit lobortis, in hendrerit arcu dapibus. Proin ut lacus sed tellus maximus euismod. Suspendisse elementum mauris tellus, eget imperdiet leo dictum nec. Fusce tortor mauris, iaculis non tristique ut, condimentum a odio.",
+    "timeFrameTotal": 10,
+    "timeFrameStart": "2023-05-29T00:00:00",
+    "timeFrameEnd": "2023-06-09T00:00:00",
+    "timeFrameReportDue": "2023-06-12T00:00:00",
+    "timeFrameComment": "-",
+    "findingsCountCriticalTBD": 0,
+    "findingsCountCritical": 0,
+    "findingsCountHigh": 1,
+    "findingsCountMedium": 2,
+    "findingsCountLow": 2,
+    "findingsCountInfo": 2,
+    "findingsCountTotal": 7
+  },
+  "findings": [
+    {
+      "findingAuthor": "Lukas Nad",
+      "findingName": "DummyApplication Signed with a Debug Certificate",
+      "location": [
+        "dummyapplication.apk"
+      ],
+      "component": "META-INF/CERT.RSA",
+      "foundWith": "KeyStore Explorer",
+      "testMethod": "Manual Analysis",
+      "cvss": "N/A",
+      "cvssVector": "N/A",
+      "cwe": 296,
+      "criticality": 4,
+      "exploitability": 1,
+      "category": 5,
+      "detectability": 1,
+      "subsectionDetails": "The \\texttt{dummyapplication.apk} is signed with a debug certificate.",
+      "subsectionImpact": "Debug certificates do not meet security standards of the release certificates.",
+      "subsectionRepeatability": "The \\texttt{dummyapplication.apk} is signed with a debug certificate (\\texttt{CERT.RSA}), which can be found in the \\texttt{META-INF} folder.The certificate properties are shown in \\cref{figure:DebugCert}.",
+      "subsectionCountermeasures": "Make sure that release version of the application is signed with the organization certificate of appropriate RSA (2048-bit)and SHA-2 keysizes.",
+      "subsectionReferences": [
+        "\\href{https://doku-center.med.siemens.de/regelwerke/L4U-Intranet/GD/GD-41/GD-41-03-E.pdf}{Siemens Healthineers Guidance for Secure Software Architecture, Design andDevelopment: 8.4 Code-Signing}",
+        "\\bibentry{CWE-296}"
+      ]
+    },
+    {
+      "findingAuthor": "Michal Olencin",
+      "findingName": "Sensitive Information Disclosure via Logging",
+      "location": [
+        "dummyapplication.apk",
+        "dummyapplication.ipa"
+      ],
+      "component": "Logcat",
+      "foundWith": "Manual testing",
+      "testMethod": "Manual",
+      "cvss": "4.0",
+      "cvssVector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+      "cwe": 532,
+      "criticality": 2,
+      "exploitability": 3,
+      "category": 3,
+      "detectability": 3,
+      "subsectionDetails": "Sensitive information like JWT and exception stacktrace is being written to the logs, making it accessible to unauthorized parties.",
+      "subsectionImpact": "The presence of sensitive information in the console creates a security risk as attackers could potentially access and misuse the information, leading to data breaches and other negative consequences.",
+      "subsectionRepeatability": "During the static analysis it was observed, that the value of the cache (including JWT) is logged at level \\texttt{info} in the method \\texttt{saveString} (see \\cref{figure:code_jwt}).Additionally, observe that the exception stack trace is logged at level \\texttt{error} in the method \\texttt{saveString} (see \\cref{figure:code_exception}).In \\cref{figure:code_enabled} is snippet that sets the log level.Since the level is set to \\texttt{info}, both JWT  and exception stacktrace are logged.The aforementioned code snippets can be observed during runtime using the Logcat tool.The following screenshot (\\cref{figure:logcat}) shows Logcat output during the authentication.",
+      "subsectionCountermeasures": "It is recommended not to enable logging in the production build or to remove sensitive information from logging, such as JWT and exception stack trace.",
+      "subsectionReferences": [
+        "\\href{https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N}{CVSS 4.0}",
+        "\\bibentry{CWE-532}"
+      ]
+    },
+    {
+      "findingAuthor": "Michal Olencin",
+      "findingName": "Missing Enforced Updating",
+      "location": [
+        "dummyapplication.apk",
+        "dummyapplication.ipa"
+      ],
+      "component": "Multiple",
+      "foundWith": "Manual Testing",
+      "testMethod": "Manual",
+      "cvss": "N/A",
+      "cvssVector": "N/A",
+      "cwe": 691,
+      "criticality": 4,
+      "exploitability": 1,
+      "category": 4,
+      "detectability": 3,
+      "subsectionDetails": "The both applications, Android ans iOS, are missing enforced updating, which assures running updated and fully patched application.",
+      "subsectionImpact": "The missing enforced updating poses the risk of exploitation of known vulnerabilities, increases the attack surface of outdated app, and may result in compliance violations.",
+      "subsectionRepeatability": "Try to change version of the application to an older version.Rebuild the application and run it.User is able to interact with the older version of the application.",
+      "subsectionCountermeasures": "When the app is opened, check whether any new updates have been released for the application.If the app is outdated, do not allow the user to interact with the application until it is updated.To check for new updates, the \\texttt{\\href{https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateManager}{AppUpdateManager}} for Android applications can be used.For iOS applications, the \\texttt{http://itunes.apple.com/lookup?id=<BundleId>} API call can be used.",
+      "subsectionReferences": [
+        "\\href{https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateManager}{AppUpdateManager Documentation}",
+        "\\href{https://performance-partners.apple.com/search-api}{iTunes Search API}",
+        "\\bibentry{CWE-691}"
+      ]
+    },
+    {
+      "findingAuthor": "Michal Olencin",
+      "findingName": "Heap Inspection of Sensitive Memory",
+      "location": [
+        "dummyapplication.apk",
+        "dummyapplication.ipa"
+      ],
+      "component": "AppCacheTemplate",
+      "foundWith": "Manual testing",
+      "testMethod": "Manual",
+      "cvss": "3.3",
+      "cvssVector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+      "cwe": 244,
+      "criticality": 3,
+      "exploitability": 2,
+      "category": 2,
+      "detectability": 3,
+      "subsectionDetails": "The unprotected in-memory storage of plaintext sensitive data exposes its contents to potential disclosure.An absence of secure deletion mechanisms further extend the attack surface past the necessary longevity of the contents.",
+      "subsectionImpact": "Sensitive data residing in memory could be exposed to an attacker during a \"heap inspection\" attack.For instance, plaintext account credentials could be exposed during the exploitation of a memory disclosure vulnerability or the execution of a memory dump.",
+      "subsectionRepeatability": "By using static analysis, one can observe the variable \\texttt{pJwt} is stored as \\texttt{string} type in the \\texttt{AppCacheTemplate} (see \\cref{figure:code}).By following the following steps, contents of the \\texttt{pJwt} variable can be read from memory:",
+      "subsectionCountermeasures": "As countermeasure, don't save JWT to variable in the \\texttt{AppCacheTemplate} class.Instead, directly access JWT value form \\texttt{FlutterSecureStorage} instance.Review source code for storing sensitive data in memory.Substitute ordinary \\texttt{String} objects with \\texttt{byte[]}, which can be cleared from memory when no longer needed.However, it is important to ensure that the \\texttt{byte[]} is securely encrypted and cleared from memory when no longer needed to prevent sensitive information from being disclosed.",
+      "subsectionReferences": [
+        "\\href{https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N}{CVSS 3.3}",
+        "\\href{https://developer.android.com/studio/profile/memory-profiler}{Memory Profiler}",
+        "\\bibentry{CWE-244}"
+      ]
+    },
+    {
+      "findingAuthor": "Michal Olencin",
+      "findingName": "Outdated Components",
+      "location": [
+        "dummyapplication.apk",
+        "dummyapplication.ipa"
+      ],
+      "component": "Multiple",
+      "foundWith": "Manual testing",
+      "testMethod": "Manual",
+      "cvss": "2.5",
+      "cvssVector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N",
+      "cwe": 1104,
+      "criticality": 3,
+      "exploitability": 1,
+      "category": 4,
+      "detectability": 3,
+      "subsectionDetails": "The application uses outdated third party components.Also the application uses API level 21 (Android 5.0) as minimum API level required for the application to run.",
+      "subsectionImpact": "Outdated third party components can compromise the security of an application, leading to data theft, business disruption, legal issues, and harm to reputation.Upgrading these packages and monitoring the system's security is necessary to avoid these consequences.The best practice is to use the latest versions of components.By setting the minimum API level to 21, the application can be installed on an older version of Android that has multiple unfixed vulnerabilities.This increases the risk of known vulnerabilities in older Android versions being exploited by attackers, potentially compromising the security of the application and user data.",
+      "subsectionRepeatability": "Observe the set value \\texttt{minSdkVersion} in the file \\texttt{build.gradle} to check Android minimum API level (see \\cref{figure:gradle}).Observe the output of the command \\texttt{flutter pub outdated} to check outdated third party components (see \\cref{figure:flutter}).",
+      "subsectionCountermeasures": "The following countermeasures are recommended:",
+      "subsectionReferences": [
+        "\\href{https://svm.cert.siemens.com/portal/}{Security Vulnerability Monitoring}",
+        "\\href{https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N}{CVSS 2.5}",
+        "\\bibentry{CWE-1104}"
+      ]
+    },
+    {
+      "findingAuthor": "Taksh Medhavi",
+      "findingName": "ePHI is stored on device without encryption",
+      "location": [
+        "dummyapplication.apk"
+      ],
+      "component": "Android local storage",
+      "foundWith": "TODOTODO",
+      "testMethod": "TODOTODO",
+      "cvss": "8.0",
+      "cvssVector": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+      "cwe": 359,
+      "criticality": 1,
+      "exploitability": 3,
+      "category": 2,
+      "detectability": 3,
+      "subsectionDetails": "Application allows user to save ePHI (Electronic Protected Health Information) on device and patient information is stored in plain text in HTML file format. Application stores HTML file in \\texttt{android > data > com.siemenshealthineers.dummyapplicationapp > files} directory. The file contains sensitive information such as patient vitals, allergies, diagnostic results and medication in it.",
+      "subsectionImpact": "Third party application installed in mobile devices can access ePHI stored in application data directory and since data at rest is stored without encryption, attacker can read contents of file which can lead to loss of confidentiality and violation of healthcare compliance. Application with external storage read/write permission can affect file integrity, as well as, application availability. In another scenario, attacker with local access of device can use file manager to access patient data.",
+      "subsectionRepeatability": "User can download patient summary details in device in plaintext HTML file as shown in \\cref{figure:003.ephi_2.jpg}. \\cref{figure:005.ephi_in_html_file} shows that HTML file contains ePHI such as patient vitals, allergies, diagnostic results and medication in it.User can also open patient summary HTML file using file manager and access ePHI as shown in \\cref{figure:006.patient_data_file_location}.",
+      "subsectionCountermeasures": "Application allows ePHI to be downloaded in plain HTML without encryption at rest. Application should handle patient data as per healthcare compliances applicable and should provide PDF report with password.",
+      "subsectionReferences": [
+        "\\href{https://www.first.org/cvss/calculator/3.0#CVSS:3.0/AV:A/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H}{CVSS 8.0}% \\item \\href{https://cwe.mitre.org/data/definitions/359.html}% {CWE-359}",
+        "\\bibentry{CWE-359}"
+      ]
+    },
+    {
+      "findingAuthor": "Taksh Medhavi",
+      "findingName": "Weak Application Signature",
+      "location": [
+        "dummyapplication.apk"
+      ],
+      "component": "META-INF/CERT.SF",
+      "foundWith": "TODOTODO",
+      "testMethod": "TODOTODO",
+      "cvss": "4.7",
+      "cvssVector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:N",
+      "cwe": 328,
+      "criticality": 2,
+      "exploitability": 1,
+      "category": 2,
+      "detectability": 3,
+      "subsectionDetails": "Application uses SHA1 for application signing. Also, application supports Android v1 signing. For Android 5.0 to 8.1, it can lead to Janus vulnerability. Currently application is supporting Android 5.0 and higher versions.",
+      "subsectionImpact": "SHA1 has flaws with regards to collisions and it is considered weak hashing algorithm. In Janus vulnerability scenario, the attacker can modify the code in applications without affecting their signatures.",
+      "subsectionRepeatability": "Application is using deprecated SHA1 algorithm and supports v1 also as shown in \\cref{figure:APK_sign}.Application also supports Android minimum SDK version 21 which allows application to be installed on devices with Android 5.0 and higher.",
+      "subsectionCountermeasures": "Sign the application with v2 signature with SHA256 hash. For Android device below version 8.0, Janus vulnerability is applicable for all versions of signature, so application should support Android device above 8.0 to avoid it. It can be achieved by changing default configuration value of \"minSdkVersion\" parameter in build.gradle file.",
+      "subsectionReferences": [
+        "\\href{https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:N}{CVSS 4.7}",
+        "\\href{https://nvd.nist.gov/vuln/detail/CVE-2017-13156}{Janus Vulnerability: CVE-2017-13156}",
+        "\\bibentry{CWE-328}"
+      ]
+    }
+  ],
+  "scopeAndProcedures": {
+    "inScope": [
+      {
+        "component": "APK file",
+        "detail": "Android application"
+      },
+      {
+        "component": "IPA file",
+        "detail": "iOS application"
+      },
+      {
+        "component": "Source code",
+        "detail": "Static analysis"
+      }
+    ],
+    "outOfScope": [
+      {
+        "component": "3rd party plugins",
+        "detail": "Plugins not developed by Siemens"
+      },
+      {
+        "component": "Underlying operating systems",
+        "detail": "Android and iOS"
+      },
+      {
+        "component": "REST APIs",
+        "detail": "Was already tested"
+      }
+    ],
+    "worstCaseScenarios": [
+      "Information leakage of personal /patient data/customer data",
+      "Modification or corruption of data",
+      "Unauthorized read/write access to application/database",
+      "Asset becomes partly or completely unavailable"
+    ],
+    "environment": [
+      "Android APK file",
+      "iOS IPA file",
+      "application source code",
+      "test user credentials."
+    ],
+    "worstCaseScenariosReport": {
+      "findingDescription": "Missing Enforced Updating",
+      "worstCaseReport": [
+        [
+          true,
+          true,
+          false,
+          false
+        ],
+        [
+          true,
+          true,
+          true,
+          false
+        ],
+        [
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          false
+        ],
+        [
+          false,
+          false,
+          false,
+          false
+        ],
+        [
+          false,
+          false,
+          false,
+          false
+        ],
+        [
+          false,
+          false,
+          false,
+          false
+        ]
+      ]
+    }
+  },
+  "testingMethodology": {
+    "toolsUsed": [
+      {
+        "toolName": "adb",
+        "version": "1.0.41",
+        "testType": "Android debugging",
+        "workType": "Bridge to Andorid device"
+      },
+      {
+        "toolName": "Android Studio",
+        "version": "2022.2.1",
+        "testType": "Android Development, Emulator",
+        "workType": "Official integrated development environment for Google's Android operating system, with emulator capabilities."
+      },
+      {
+        "toolName": "apktool",
+        "version": "v2.7.0-dirty",
+        "testType": "Reverse Engineering",
+        "workType": "APK decompiler"
+      },
+      {
+        "toolName": "Burp Suite Professional",
+        "version": "2023.4.5",
+        "testType": "Automatic scan, Manual verification",
+        "workType": "Intercepting web traffic, request modification, etc."
+      },
+      {
+        "toolName": "Checkmarx",
+        "version": "9.5.4.1000",
+        "testType": "Automated static analysis",
+        "workType": "Source code verification"
+      },
+      {
+        "toolName": "Genymotion",
+        "version": "3.4.0",
+        "testType": "Virtualization",
+        "workType": "Android emulator."
+      },
+      {
+        "toolName": "Jadx",
+        "version": "1.4.7",
+        "testType": "Reverse Engineering",
+        "workType": "APK decompiler"
+      },
+      {
+        "toolName": "MobSF",
+        "version": "3.6.0",
+        "testType": "Static and Dynamic Analysis",
+        "workType": "Automated, all-in-one mobile application pen-testing,"
+      },
+      {
+        "toolName": "strings",
+        "version": "2.40",
+        "testType": "Reverse Engineering",
+        "workType": "String finder in binary files"
+      }
+    ],
+    "attackVectors": [
+      "static analysis",
+      "file system analysis",
+      "debugging",
+      "workflow analysis",
+      "client-side testing",
+      "testing for weak cryptography",
+      "testing error handling."
+    ]
+  }
+}
