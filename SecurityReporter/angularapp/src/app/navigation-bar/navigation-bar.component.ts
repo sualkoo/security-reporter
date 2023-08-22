@@ -1,13 +1,13 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.css']
 })
-export class NavigationBarComponent {
+export class NavigationBarComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {
   }
 
@@ -19,22 +19,23 @@ export class NavigationBarComponent {
   @Input() public mail: string = "admin@admin.sk";
   @Input() public photo: string = "../../assets/undraw_Drink_coffee_v3au.png";
 
-  public showInitials = false;
-  public initials: string = "";
-  public role: string = "admin";
-  public isLoggedIn: Observable<boolean> = this.authService.getIsLoggedIn();
-  public actualNavItem: string = "/project-search";
+  showInitials = false;
+  initials: string = "";
+  role = "";
+  roleSub?: Subscription;
+  isLoggedIn: Observable<boolean> = this.authService.getIsLoggedIn();
+  actualNavItem: string = "/project-search";
 
   setNavItem(name: string): void {
     this.actualNavItem = name;
   }
 
   ngOnInit() {
-    this.setNavbar();
-    if (!this.photo) {
-      this.showInitials = true;
-      this.createInitials();
-    }
+
+    this.roleSub = this.authService.getCurrentUserRole().subscribe(res => {
+      this.role = res;
+      this.setNavbar();
+    })
   }
     setNavbar() {
       if (!this.isLoggedIn) {

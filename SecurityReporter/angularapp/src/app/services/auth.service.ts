@@ -10,12 +10,17 @@ export class AuthService {
   private loginUrl = "/login";
   private getRoleEndpointURL = '/role';
   private isLoggedIn = new BehaviorSubject<boolean>(false);
+  private currentRole = new BehaviorSubject<string>("admin");
   status_code = 0;
 
   constructor(private http: HttpClient) { }
 
   getIsLoggedIn() {
     return this.isLoggedIn.asObservable();
+  }
+
+  getCurrentUserRole() {
+    return this.currentRole.asObservable();
   }
 
   public logout(): boolean {
@@ -71,6 +76,7 @@ export class AuthService {
       this.http.get(this.getRoleEndpointURL, { responseType: 'text' as 'json' }).subscribe(
         (response) => {
           this.isLoggedIn.next(true);
+          this.currentRole.next(response.toString())
           resolve(response);
         },
         (error) => {
