@@ -217,7 +217,7 @@ public class ProjectController : ControllerBase
                 return StatusCode(400, "Error: Uploaded file must be a PDF.");
             }
 
-            await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id);
+            await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id + ".pdf");
 
             Console.WriteLine($"File uploaded successfully");
 
