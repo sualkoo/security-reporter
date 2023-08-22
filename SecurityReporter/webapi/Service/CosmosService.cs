@@ -30,6 +30,12 @@ namespace webapi.Service
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
             EndpointUri = configuration["DB:EndpointUri"];
+
+            if (string.IsNullOrEmpty(EndpointUri))
+            {
+               EndpointUri = "https://localhost:8081";
+            }
+
             if (string.IsNullOrEmpty(PrimaryKey))
             {
                 EndpointUri = "https://security-reporter.documents.azure.com:443";

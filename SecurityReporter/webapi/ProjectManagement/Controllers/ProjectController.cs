@@ -10,10 +10,12 @@ namespace webapi.ProjectManagement.Controllers;
 public class ProjectController : ControllerBase
 {
     public ICosmosService CosmosService { get; }
+    public IAzureBlobService AzureBlobService { get; }
 
-    public ProjectController(ICosmosService cosmosService)
+    public ProjectController(ICosmosService cosmosService, IAzureBlobService azureBlobService)
     {
         CosmosService = cosmosService;
+        AzureBlobService = azureBlobService;
     }
 
     [HttpPost("add")]
@@ -155,11 +157,11 @@ public class ProjectController : ControllerBase
 
     [HttpGet("download")]
     // [Authorize(Policy = "AdminCoordinatorPolicy")]
-    public async Task<IActionResult> Download(string name)
+    public async Task<IActionResult> Download(string name, string path)
     {
         Console.WriteLine("Downloading file..");
 
-        bool result = true; // change me to service call
+        bool result = await AzureBlobService.DownloadProject(name, path);
 
         if (!result)
         {

@@ -155,4 +155,28 @@ public class AzureBlobService : IAzureBlobService
             finding.ClearImageList();
         }
     }
+
+    public async Task<bool> DownloadProject(string fileName, string path)
+    {
+
+        BlobClient blobClient = projectContainerClient.GetBlobClient(fileName);
+
+        if (await blobClient.ExistsAsync())
+        {
+            string filePath = Path.Combine(path, fileName);
+
+            BlobDownloadInfo blobDownloadInfo = await blobClient.DownloadAsync();
+            using (FileStream fs = File.OpenWrite(filePath))
+            {
+                await blobDownloadInfo.Content.CopyToAsync(fs);
+                fs.Close();
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
