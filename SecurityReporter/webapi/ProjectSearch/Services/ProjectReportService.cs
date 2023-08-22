@@ -9,7 +9,7 @@ public class ProjectReportService : IProjectReportService
 {
     private readonly ILogger Logger;
     private IProjectReportService projectReportServiceImplementation;
-    private bool generatePdfs;
+    private bool generatePdfs { get; }
     
     public ProjectReportService(IProjectDataParser parser, IDbProjectDataParser dbParser,
         IProjectDataValidator validator, ICosmosService cosmosService, IPdfBuilder pdfBuilder,
