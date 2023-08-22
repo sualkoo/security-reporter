@@ -155,4 +155,14 @@ public class AzureBlobService : IAzureBlobService
             finding.ClearImageList();
         }
     }
+
+    public async Task UploadProjectFile(string filePath, string blobName)
+    {
+        BlobClient blobClient = projectContainerClient.GetBlobClient(blobName);
+
+        using (FileStream fs = File.OpenRead(filePath))
+        {
+            await blobClient.UploadAsync(fs, true);
+        }
+    }
 }

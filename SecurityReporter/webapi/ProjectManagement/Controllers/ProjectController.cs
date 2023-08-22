@@ -191,11 +191,11 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(IFormFile file, string destination, string id)
+    public async Task<IActionResult> UploadFile(string filePath, string destination, string id)
     {
         try
         {
-            if (file == null || file.Length == 0)
+            if (filePath == null || filePath.Length == 0)
             {
                 return StatusCode(400, "Error: No file uploaded.");
             }
@@ -210,22 +210,16 @@ public class ProjectController : ControllerBase
                 return StatusCode(400, "Error: Invalid destination parameter.");
             }
 
-            if (Path.GetExtension(file.FileName).ToLower() != ".pdf")
+            if (Path.GetExtension(filePath).ToLower() != ".pdf")
             {
                 return StatusCode(400, "Error: Uploaded file must be a PDF.");
             }
 
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                byte[] fileBytes = memoryStream.ToArray();
+            await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id);
 
-                //add the base
+            Console.WriteLine($"File uploaded successfully");
 
-                Console.WriteLine($"File uploaded successfully to {destination}");
-
-                return StatusCode(201, "File uploaded successfully.");
-            }
+            return StatusCode(201, "File uploaded successfully.");
         }
         catch (Exception ex)
         {
