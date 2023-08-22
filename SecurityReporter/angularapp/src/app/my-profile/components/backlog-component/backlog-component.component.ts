@@ -156,9 +156,9 @@ export class BacklogComponentComponent implements AfterViewInit {
 
       const response = await this.getBacklogService.getBacklogData(pageSize, pageNumber).toPromise();
 
-      if (response.length === 0) {
+      if (response && response.length === 0) {
         this.databaseError = false;
-      } else {
+      } else if (response) {
         this.projects = response;
         this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
       }

@@ -49,6 +49,7 @@ import { AutoLogoutService } from './services/auto-logout.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
+import { BacklogComponentComponent } from './my-profile/components/backlog-component/backlog-component.component';
 
 
 @NgModule({
@@ -100,8 +101,10 @@ import { MyProfileComponent } from './my-profile/component-pages/my-profile-page
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-MyProfileComponent,
-    MatSnackBarModule, 
+    MyProfileComponent,
+    MatSnackBarModule,
+    BacklogComponentComponent
+
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],

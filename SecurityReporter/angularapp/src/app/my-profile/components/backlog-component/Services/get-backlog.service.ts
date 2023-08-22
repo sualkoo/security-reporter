@@ -8,7 +8,7 @@ import { ProjectInterface } from '../../../../project-management/interfaces/proj
 })
 export class GetBacklogService {
 
-  private endPointUrl = '/profile';
+  private endPointUrl = '/profile/';
 
   constructor(private http: HttpClient) { }
 
