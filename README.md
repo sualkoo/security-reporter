@@ -69,6 +69,10 @@ If you want to learn more about creating good readme files then refer the follow
    npm install
    ```
 
+   ```
+   npm i bootstrap-icons --save
+   ```
+
 8. Open project solution in Visual Studio
 
 9. 
