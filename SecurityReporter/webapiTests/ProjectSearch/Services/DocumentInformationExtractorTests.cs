@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
 using webapi.ProjectSearch.Models.ProjectReport;

@@ -223,9 +223,5 @@ public class DbScopeAndProceduresExtractorTests
             .ToLowerInvariant();
 
         resultDecodedFormatted.Should().Be(testFormatted);
-        // Assert
-        //Assert.IsNotNull(result);
-
-        //StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
     }
 }

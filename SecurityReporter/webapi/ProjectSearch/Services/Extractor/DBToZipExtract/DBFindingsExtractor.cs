@@ -23,7 +23,7 @@ public static class DbFindingsExtractor
 \renewcommand{\TestMethod}{" + finding.TestMethod + @"}
 \renewcommand{\CVSS}{" + finding.CVSS + @"}
 \renewcommand{\CVSSvector}{" + finding.CVSSVector + @"}
-\renewcommand{\CWE}{" + finding.CWE + @"}
+\renewcommand{\CWE}{" + ((finding.CWE != null) ? finding.CWE : "") + @"}
 % Poor-man's combo boxes:
 % High, Medium, Low, Info, TBR (To Be Rated)
 \renewcommand{\Criticality}{" + finding.Criticality + @"}
