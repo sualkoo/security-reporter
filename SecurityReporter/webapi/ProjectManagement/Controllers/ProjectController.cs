@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace webapi.ProjectManagement.Controllers;
 
@@ -210,6 +212,47 @@ public class ProjectController : ControllerBase
             Console.ResetColor();
 
             return StatusCode(400, $"Error retrieving project data: {ex.Message}");
+        }
+    }
+
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadFile(string filePath, string destination, string id)
+    {
+        try
+        {
+            if (filePath == null || filePath.Length == 0)
+            {
+                return StatusCode(400, "Error: No file uploaded.");
+            }
+
+            if (string.IsNullOrEmpty(destination))
+            {
+                return StatusCode(400, "Error: Destination parameter is required.");
+            }
+
+            if (destination != "scope" && destination != "questionaire" && destination != "report")
+            {
+                return StatusCode(400, "Error: Invalid destination parameter.");
+            }
+
+            if (Path.GetExtension(filePath).ToLower() != ".pdf")
+            {
+                return StatusCode(400, "Error: Uploaded file must be a PDF.");
+            }
+
+            await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id + ".pdf");
+
+            Console.WriteLine($"File uploaded successfully");
+
+            return StatusCode(201, "File uploaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.ResetColor();
+
+            return StatusCode(500, $"Error uploading file: {ex.Message}");
         }
     }
 }
