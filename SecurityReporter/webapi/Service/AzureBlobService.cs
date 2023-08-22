@@ -156,6 +156,30 @@ public class AzureBlobService : IAzureBlobService
         }
     }
 
+    public async Task<bool> DownloadProject(string fileName, string path)
+    {
+
+        BlobClient blobClient = projectContainerClient.GetBlobClient(fileName);
+
+        if (await blobClient.ExistsAsync())
+        {
+            string filePath = Path.Combine(path, fileName);
+
+            BlobDownloadInfo blobDownloadInfo = await blobClient.DownloadAsync();
+            using (FileStream fs = File.OpenWrite(filePath))
+            {
+                await blobDownloadInfo.Content.CopyToAsync(fs);
+                fs.Close();
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public async Task UploadProjectFile(string filePath, string blobName)
     {
         BlobClient blobClient = projectContainerClient.GetBlobClient(blobName);
