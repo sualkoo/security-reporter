@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AlertService } from '../project-management/services/alert.service';
-import { LogoutService } from './logout.service';
+import { AuthService } from '../services/auth.service';
 import { LandingPageComponent } from '../landing-page/landing-page.component';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class AutoLogoutService {
   private timer: any;
   private isLoggingOut: boolean = false; 
 
-  constructor(private snackBar: MatSnackBar, private router: Router, private alertService: AlertService, private logOut: LogoutService) {
+  constructor(private snackBar: MatSnackBar, private router: Router, private alertService: AlertService, private logOut: AuthService) {
     this.initInteractionsListener();
   }
 

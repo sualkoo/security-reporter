@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LogoutService } from '../services/logout.service';
+import { AuthService } from '../services/auth.service';
 import { AlertService } from '../project-management/services/alert.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { AlertService } from '../project-management/services/alert.service';
   styleUrls: ['./after-login-page.component.css']
 })
 export class AfterLoginPageComponent {
-  constructor(private router: Router, private snackBar: MatSnackBar, private logOut: LogoutService, private alertService: AlertService) { }
+  constructor(private router: Router, private snackBar: MatSnackBar, private logOut: AuthService, private alertService: AlertService) { }
 
 
   navigateToPage(page: string): void {
