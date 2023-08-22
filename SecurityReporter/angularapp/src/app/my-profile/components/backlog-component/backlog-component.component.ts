@@ -17,7 +17,7 @@ import { GetBacklogService } from './Services/get-backlog.service';
 @Component({
   selector: 'app-backlog-component',
   templateUrl: './backlog-component.component.html',
-  styleUrls: ['./backlog-component.component.css'],
+  //styleUrls: ['./backlog-component.component.css'],
   standalone: true,
   imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
     CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
