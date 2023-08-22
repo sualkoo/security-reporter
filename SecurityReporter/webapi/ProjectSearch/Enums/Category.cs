@@ -1,12 +1,11 @@
-﻿namespace webapi.Enums
+﻿namespace webapi.ProjectSearch.Enums;
+
+public enum Category
 {
-    public enum Category
-    {
-        Undefined,
-        AccessControl,
-        ApplicationDesign,
-        InformationDisclosure,
-        OutdatedSoftware,
-        SecurityConfiguration,
-    }
+    Undefined,
+    AccessControl,
+    ApplicationDesign,
+    InformationDisclosure,
+    OutdatedSoftware,
+    SecurityConfiguration
 }

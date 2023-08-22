@@ -1,11 +1,10 @@
-﻿namespace webapi.Enums
+﻿namespace webapi.ProjectSearch.Enums;
+
+public enum Detectability
 {
-    public enum Detectability
-    {
-        Undefined,
-        Difficult,
-        Average,
-        Easy,
-        TBR,
-    }
+    Undefined,
+    Difficult,
+    Average,
+    Easy,
+    TBR
 }

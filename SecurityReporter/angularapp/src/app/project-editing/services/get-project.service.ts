@@ -10,7 +10,7 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class GetProjectService {
-  private getEndPointURL = 'https://localhost:7075/Project/getProject';
+  private getEndPointURL = '/Project/getProject';
 
   constructor(private http: HttpClient) { }
 

@@ -1,7 +1,7 @@
 describe('Landing page to listing projects page', () => {
     beforeEach(() => {
         cy.viewport(1280, 720);
-        cy.visit('https://sda-playground.azurewebsites.net/');
+        cy.visit('https://sda-projectmanagement.azurewebsites.net/');
     });
 
     it.skip('should navigate to ', () => {
@@ -17,5 +17,4 @@ describe('Landing page to listing projects page', () => {
         cy.get('.mat-mdc-simple-snack-bar > .mat-mdc-snack-bar-label').should('be.visible')
         cy.url().should('include', '/welcome')
     }
-        
 });

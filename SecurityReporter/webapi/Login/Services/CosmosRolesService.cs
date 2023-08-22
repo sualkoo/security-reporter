@@ -21,15 +21,14 @@ namespace webapi.Service
 {
     public class CosmosRolesService
     {
-        private string PrimaryKey { get; set; }
-        private string EndpointUri { get; } = "https://localhost:8081";
+        private string PrimaryKey { get; set; } = "6sDm3pLgxLV7WnQqYkYPBmoyapf91CHvD1OpTJVBxNvYh6wRgmTEqJBy7kAR11MiTEEne6QV5G9dACDbdbjQSg==";
+        private string EndpointUri { get; } = "https://security-reporter.documents.azure.com:443";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectRolesContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
 
         public CosmosRolesService(IConfiguration configuration)
         {
-            PrimaryKey = configuration["DB:PrimaryKey"];
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
         }

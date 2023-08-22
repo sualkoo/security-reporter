@@ -132,6 +132,24 @@ public class ProjectController : ControllerBase
         return StatusCode(202, project);
     }
 
+    [HttpGet("download")]
+    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    public async Task<IActionResult> Download(string name)
+    {
+        Console.WriteLine("Downloading file..");
+
+        bool result = true; // change me to service call
+
+        if (!result)
+        {
+            Console.WriteLine("Error occured in Project/download get request.");
+            return StatusCode(400, "Error: Unable to download file.");
+        }
+
+        Console.WriteLine("Request executed without any errors.");
+        return Ok();
+    }
+
     [HttpGet("getProject")]
     // [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> GetProjectById(string id)
