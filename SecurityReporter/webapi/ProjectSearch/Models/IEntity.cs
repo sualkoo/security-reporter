@@ -1,6 +1,5 @@
-﻿namespace webapi.ProjectSearch.Models
+﻿namespace webapi.ProjectSearch.Models;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-    }
 }
