@@ -35,10 +35,10 @@ export class LoginPageComponent implements OnInit {
             if (role === 'default') {
               window.location.href = 'default-page';
             } else {
-              window.location.href = 'after-login';
+              window.location.href = 'welcome';
             }
           });
-        } 
+        }
 
         else if(data.status == 400){
           this.snackBar.open('Bad credentials.', 'Close', {

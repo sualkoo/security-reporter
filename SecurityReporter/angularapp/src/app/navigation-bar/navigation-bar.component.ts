@@ -1,10 +1,16 @@
 import {Component, Input} from '@angular/core';
+import {AuthService} from "../services/auth.service";
+import {Router} from "@angular/router";
+import {Observable} from "rxjs";
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.css']
 })
 export class NavigationBarComponent {
+  constructor(private authService: AuthService, private router: Router) {
+  }
+
   showNavigation: boolean = false;
   toggleNavigation() {
     this.showNavigation = !this.showNavigation;
@@ -16,9 +22,9 @@ export class NavigationBarComponent {
   public showInitials = false;
   public initials: string = "";
   public role: string = "admin";
-  public isLoggedIn: boolean = false;
+  public isLoggedIn: Observable<boolean> = this.authService.getIsLoggedIn();
   public actualNavItem: string = "/project-search";
-  
+
   setNavItem(name: string): void {
     this.actualNavItem = name;
   }
@@ -57,14 +63,12 @@ export class NavigationBarComponent {
     this.initials = this.mail.charAt(0).toUpperCase();
   }
 
-  login() {
-    this.isLoggedIn = true;
-    this.setNavbar();
+  onLogin() {
+    this.router.navigate(["log-in"])
   }
 
-  logout() {
-    this.isLoggedIn = false;
-    this.setNavbar();
+  onLogout() {
+    this.authService.logoutAsync().then();
   }
 
   menuItems: { text: string, link: string, disabled?: boolean }[] = [];

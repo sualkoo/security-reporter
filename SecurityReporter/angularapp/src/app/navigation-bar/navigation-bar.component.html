@@ -14,15 +14,15 @@
         </a>
       </li>
     </ul>
-    <ul *ngIf="!isLoggedIn" class="navbar-nav ms-auto">
+    <ul *ngIf="!(isLoggedIn | async)" class="navbar-nav ms-auto">
       <li class="nav-item">
-        <button class="btn btn-link d-flex align-items-center login" (click)="login()">
+        <button class="btn btn-link d-flex align-items-center login" (click)="onLogin()">
           <i class="bi bi-box-arrow-in-right me-2"></i>
           Login
         </button>
       </li>
     </ul>
-    <ul *ngIf="isLoggedIn" class="navigation-list navbar-nav ms-auto" style="list-style-type: none">
+    <ul *ngIf="isLoggedIn | async" class="navigation-list navbar-nav ms-auto" style="list-style-type: none">
       <li class="nav-item row align-items-center">
         <div class="col-2">
           <div class="user-circle" style="background-color: slategray">
@@ -41,9 +41,9 @@
               {{ role }}
             </div>
             <div class="col-6 col-md-4" style="text-decoration: underline">
-              <ul *ngIf="isLoggedIn" class="nav-item ml-auto" style="list-style-type: none">
+              <ul *ngIf="isLoggedIn | async" class="nav-item ml-auto" style="list-style-type: none">
                 <li>
-                  <button class="btn btn-link d-flex align-items-center login" (click)="logout()">
+                  <button class="btn btn-link d-flex align-items-center login" (click)="onLogout()">
                     <i class="bi bi-box-arrow-in-right me-2"></i>
                     Logout
                   </button>
