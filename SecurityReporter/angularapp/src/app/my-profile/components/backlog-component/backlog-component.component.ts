@@ -14,9 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { GetRoleService } from '../../../shared/services/get-role.service';
 import { FiltersComponent } from '../../../project-listing/components/filters/filters.component';
 import { ExpansionPanelComponent } from '../../../project-listing/components/expansion-panel/expansion-panel.component';
-import { DeletePopupComponentComponent } from '../../../project-listing/components/delete-popup-component/delete-popup-component.component';
-import { GetProjectsCountService } from '../../../project-listing/services/get-projects-count.service';
-import { GetProjectsServiceService } from '../../../project-listing/services/get-projects-service.service';
+import { GetBacklogService } from './Services/get-backlog.service';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -25,7 +24,8 @@ import { GetProjectsServiceService } from '../../../project-listing/services/get
   styleUrls: ['./backlog-component.component.css'],
   standalone: true,
   imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
-    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent, 
+],
 })
 export class BacklogComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -48,6 +48,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     'pentestDuration',
     'iko',
     'tko',
+  ];
 
   ];
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
@@ -58,11 +59,10 @@ export class BacklogComponentComponent implements AfterViewInit {
   filters: string = '';
 
   length: number | undefined;
+    count: any;
 
   constructor(
-    private projectsCountService: GetProjectsCountService,
-    private getProjectsService: GetProjectsServiceService,
-    private router: Router,
+    private getBacklogService: GetBacklogService,
     private dialog: MatDialog,
     private getRoleService: GetRoleService) { }
 
@@ -208,15 +208,29 @@ export class BacklogComponentComponent implements AfterViewInit {
     }
   }
 
-  isChecked(row: any): boolean {
-    return this.selection.isSelected(row);
-  }
+  async getInitItems() {
+    this.isLoading = true;
+    this.databaseError = false;
+    this.filterError = false;
 
-  truncateComment(comment: string, maxLength: number): string {
-    if (comment.length <= maxLength) {
-      return comment;
-    } else {
-      return comment.substr(0, maxLength) + '...';
+    try {
+      const response = await this.getBacklogService.getBacklogData(
+        15,
+        1,
+        0
+      );
+
+      if (response === 'No data available.') {
+        this.databaseError = false;
+      } else {
+        this.projects = response.projects;
+        this.count = response.count;
+        this.dataSource.data = this.projects;
+      }
+    } catch (error) {
+      this.databaseError = true;
+    } finally {
+      this.isLoading = false;
     }
   }
 

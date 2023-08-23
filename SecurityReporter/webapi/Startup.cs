@@ -1,13 +1,7 @@
-﻿
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using webapi.Login;
-using webapi.Login.Services;
-using webapi.Login.Utils.Authorization;
 using webapi.ProjectSearch.Services;
 using webapi.Service;
 
@@ -27,10 +21,7 @@ namespace webapi
             services.AddSingleton<IProjectDataValidator, ProjectDataValidator>();
             services.AddSingleton<IProjectDataParser, ProjectDataParser>();
             services.AddSingleton<IProjectReportService, ProjectReportService>();
-            services.AddSingleton<RoleService>();
-            services.AddSingleton<ClientMailService>();
-            services.AddSingleton<Users>();
-            services.AddSingleton<CosmosRolesService>();
+
 
             services.AddSwaggerGen(c =>
             {
@@ -43,26 +34,7 @@ namespace webapi
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryApiScopes(Config.GetApiScopes);
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminCoordinatorPolicy", policy =>
-                {
-                    policy.Requirements.Add(new RoleRequirement("admin", "coordinator"));
-                });
-                options.AddPolicy("AdminPentesterPolicy", policy =>
-                {
-                    policy.Requirements.Add(new RoleRequirement("admin", "pentester"));
-                });
-                options.AddPolicy("AdminCoordinatorClientPolicy", policy =>
-                {
-                    policy.Requirements.Add(new RoleRequirement("admin", "coordinator", "client"));
-                });
-                options.AddPolicy("DefaultPolicy", policy =>
-                {
-                    policy.Requirements.Add(new RoleRequirement("default"));
-                });
-            });
-            services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+
         }
         public void Configure(IApplicationBuilder app)
         {
