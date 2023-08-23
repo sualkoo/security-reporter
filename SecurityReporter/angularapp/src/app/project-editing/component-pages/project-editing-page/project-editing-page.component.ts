@@ -25,9 +25,9 @@ import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
 import { LogoutService } from '../../../services/logout.service';
 import { MatExpansionModule } from '@angular/material/expansion';
-
 import { AutoLogoutService } from '../../../services/auto-logout.service';
 import { FileDragDropComponent } from '../../components/file-drag-drop/file-drag-drop.component';
+import { FileDownloadService } from '../../services/file-download.service';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -79,6 +79,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     private route: ActivatedRoute,
     addProjectService: AddProjectService,
     router: Router,
+    private fileDownloadService : FileDownloadService,
     alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
@@ -239,5 +240,22 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
         console.log('Errors:', errors);
       }
     );
+  }
+
+  downloadFile(fileName: string) {
+    
+    this.fileDownloadService.getDownloadFile(fileName)
+      .then((response: Blob) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

@@ -180,18 +180,18 @@
             <mat-divider></mat-divider>
 
             <div class="pentest-download">
-              <div>
-                <p>Questionare</p>
-                <mat-icon style="color: #ec6602">download</mat-icon>
-              </div>
-              <div>
-                <p>Project scope</p>
-                <mat-icon style="color: #ec6602">download</mat-icon>
-              </div>
-              <div>
-                <p>Project report</p>
-                <mat-icon style="color: #ec6602">download</mat-icon>
-              </div>
+                <div (click)="downloadFile('questionnaire')">
+                    <p>Questionnaire</p>
+                    <mat-icon style="color: #ec6602">download</mat-icon>
+                </div>
+                <div (click)="downloadFile('scope')">
+                    <p>Project Scope</p>
+                    <mat-icon style="color: #ec6602">download</mat-icon>
+                </div>
+                <div (click)="downloadFile('report')">
+                    <p>Project Report</p>
+                    <mat-icon style="color: #ec6602">download</mat-icon>
+                </div>
             </div>
           </mat-expansion-panel>
         </div>
