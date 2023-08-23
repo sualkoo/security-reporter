@@ -15,7 +15,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     this.showNavigation = !this.showNavigation;
   }
 
-  public photo: string = '../../assets/undraw_Drink_coffee_v3au.png';
+  public photo: string = '';
 
   showInitials = false;
   initials: string = '';
