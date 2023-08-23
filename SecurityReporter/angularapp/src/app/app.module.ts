@@ -40,26 +40,36 @@ import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FooterComponent } from './footer/footer.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DefaultPageComponentComponent } from './default-page/component-pages/default-page-component.component';
 import { AfterLoginPageComponent } from './after-login-page/after-login-page.component';
 import { AutoLogoutService } from './services/auto-logout.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
+import { AboutPentestsComponent } from './about-pentests/about-pentests.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectSearchPageComponent,
     AddProjectReportComponent,
-    LandingPageComponent,   
-    HighlighterPipe, LoginPageComponent,
-    LandingPageComponent,    
     LandingPageComponent,
     HighlighterPipe,
+    LoginPageComponent,
+    FooterComponent,
+    DashboardComponent,
+    AboutPentestsComponent,
+    NavigationBarComponent,
     DefaultPageComponentComponent,
-    AfterLoginPageComponent
+    AfterLoginPageComponent,
+ 
   ],
   imports: [
     MatSnackBarModule,
@@ -95,7 +105,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
     MatButtonModule,
     DeletePopupComponentComponent,
     MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-    MatSnackBarModule
+MyProfileComponent,
+    MatSnackBarModule, 
   ],
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],

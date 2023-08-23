@@ -1,14 +1,13 @@
-﻿namespace webapi.ProjectSearch.Models
-{
-    public class ErrorResponse
-    {
-        public string Message { get; }
-        public List<string> details { get; }
+﻿namespace webapi.ProjectSearch.Models;
 
-        public ErrorResponse(string message, List<string>? details)
-        {
-            this.Message = message;
-            this.details = details;
-        }
+public class ErrorResponse
+{
+    public ErrorResponse(string message, List<string>? details)
+    {
+        Message = message;
+        Details = details;
     }
+
+    public string Message { get; }
+    public List<string>? Details { get; }
 }

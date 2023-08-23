@@ -1,12 +1,10 @@
-﻿using webapi.Models.ProjectReport;
+﻿using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Models
+namespace webapi.ProjectSearch.Models;
+
+public class FindingResponse
 {
-    public class FindingResponse
-    {
-        public Guid ProjectReportId { get; set; }
-        public string ProjectReportName { get; set; }
-        public Finding Finding { get; set; }
-
-    }
+    public Guid ProjectReportId { get; set; }
+    public string ProjectReportName { get; set; }
+    public Finding Finding { get; set; }
 }

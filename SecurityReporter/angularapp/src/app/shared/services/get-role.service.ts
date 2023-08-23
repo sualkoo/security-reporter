@@ -19,7 +19,7 @@ export class GetRoleService {
           resolve(response);
         },
         (error) => {
-          reject(error);
+          resolve(error.error);
         }
       );
     });
