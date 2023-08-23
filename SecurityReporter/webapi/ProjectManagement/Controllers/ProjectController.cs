@@ -136,11 +136,11 @@ public class ProjectController : ControllerBase
 
     [HttpGet("download")]
     // [Authorize(Policy = "AdminCoordinatorPolicy")]
-    public async Task<IActionResult> Download(string name, string path)
+    public async Task<IActionResult> Download(string name)
     {
         Console.WriteLine("Downloading file..");
 
-        bool result = await AzureBlobService.DownloadProject(name, path);
+        bool result = await AzureBlobService.DownloadProject(name);
 
         if (!result)
         {
