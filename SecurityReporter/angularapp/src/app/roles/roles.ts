@@ -32,10 +32,10 @@ export class Roles implements CanActivate {
     if (allowedRoles.includes(userRole)) {
       return true;
     } else {
-      this.router.navigate(['log-in']);
+      this.router.navigate(['welcome']);
       this.notificationService.displayMessage(
         "You're not allowed to access this page.",
-        'info'
+        'warning'
       );
       return false;
     }
