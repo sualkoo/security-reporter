@@ -8,17 +8,31 @@ import { ProjectInterface } from '../../../../project-management/interfaces/proj
 })
 export class GetBacklogService {
 
-  private endPointUrl = '/profile';
+  private getProjectEndPointURL: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.getProjectEndPointURL = "/profile"
+  }
 
-  getBacklogData(pageSize: number, pageNumber: number): Observable<ProjectInterface[]> {
-    const params = {
-      pageSize: pageSize.toString(),
-      pageNumber: pageNumber.toString()
-    };
+  getBacklogData(pageSize: number, pageNumber: number, columnNumber: number): Promise<any> {
+    this.getProjectEndPointURL = '/profile' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber;
 
 
-    return this.http.get<ProjectInterface[]>(this.endPointUrl, { params });
+    return new Promise((resolve, reject) => {
+      this.http.get(this.getProjectEndPointURL).subscribe(
+        (response) => {
+          if (response !== null && response !== undefined) {
+            resolve(response);
+          } else {
+            const noDataResponse = "No data available.";
+            resolve(noDataResponse);
+          }
+        },
+        (error) => {
+          console.error(error);
+          reject(error);
+        }
+      );
+    });
   }
 }

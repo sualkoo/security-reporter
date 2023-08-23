@@ -13,6 +13,7 @@ import { GetRoleService } from '../../../shared/services/get-role.service';
 import { FiltersComponent } from '../../../project-listing/components/filters/filters.component';
 import { ExpansionPanelComponent } from '../../../project-listing/components/expansion-panel/expansion-panel.component';
 import { GetBacklogService } from './Services/get-backlog.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-backlog-component',
@@ -20,7 +21,8 @@ import { GetBacklogService } from './Services/get-backlog.service';
   styleUrls: ['./backlog-component.component.css'],
   standalone: true,
   imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
-    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent],
+    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent, 
+],
 })
 export class BacklogComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -31,6 +33,7 @@ export class BacklogComponentComponent implements AfterViewInit {
   filterMessageFlag = false;
   selectedItems: any[] = [];
   noItemsFound = false;
+
   displayedColumns: string[] = [
     'projectName',
     'projectStatus',
@@ -52,9 +55,11 @@ export class BacklogComponentComponent implements AfterViewInit {
   filters: string = '';
 
   length: number | undefined;
+    count: any;
 
   constructor(
     private getBacklogService: GetBacklogService,
+    private dialog: MatDialog,
     private getRoleService: GetRoleService) { }
 
   userRole: string = 'admin';
@@ -151,16 +156,18 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      const pageSize = 15;
-      const pageNumber = 1;
+      const response = await this.getBacklogService.getBacklogData(
+        15,
+        1,
+        0
+      );
 
-      const response = await this.getBacklogService.getBacklogData(pageSize, pageNumber).toPromise();
-
-      if (response && response.length === 0) {
+      if (response === 'No data available.') {
         this.databaseError = false;
-      } else if (response) {
-        this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+      } else {
+        this.projects = response.projects;
+        this.count = response.count;
+        this.dataSource.data = this.projects;
       }
     } catch (error) {
       this.databaseError = true;
@@ -168,5 +175,6 @@ export class BacklogComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
+
 }
 
