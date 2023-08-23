@@ -243,7 +243,8 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
   }
 
   downloadFile(fileName: string) {
-    
+    fileName += `_${this.projectClass.id}.pdf`;
+
     this.fileDownloadService.getDownloadFile(fileName)
       .then((response: Blob) => {
         const blob = new Blob([response], { type: 'application/pdf' });
