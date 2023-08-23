@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using webapi.Login.Models;
 using webapi.Service;
 
 
@@ -36,6 +38,20 @@ public class MyProfileController : ControllerBase
 
         Console.WriteLine("Request executed without any errors.");
         return StatusCode(201, result);
+    }
+
+    [HttpGet("email")]
+    public async Task<IActionResult> GetUser()
+    {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+           
+            string result = (await CosmosService.GetUserRole(HttpContext.User?.FindFirst("sub")?.Value)).id;
+            return Ok(result);
+        }
+
+        return Ok("Not signed in!");
+
     }
 
 }

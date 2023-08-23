@@ -24,5 +24,7 @@ namespace webapi.Service
 
         Task DeleteUsers();
         Task<UserRole> GetUserRole(string email);
+
+        Task<User> GetUser(string email);
     }
 }

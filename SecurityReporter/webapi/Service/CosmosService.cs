@@ -6,6 +6,7 @@ using webapi.Models;
 using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
+using User = webapi.Login.Models.User;
 
 namespace webapi.Service
 {
@@ -933,5 +934,39 @@ namespace webapi.Service
             }
             Console.WriteLine("Finnishing of clearing user role DB");
         }
+
+        public async Task<User> GetEmailById(string id)
+        {
+            try
+            {
+                ItemResponse<User> response = await Container.ReadItemAsync<User>(id, new PartitionKey(id));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving project by ID: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<User> GetUser(string email)
+        {
+
+            try
+            {
+                User userRole = await RolesContainer.ReadItemAsync<User>(email, new PartitionKey(email));
+                Console.WriteLine(userRole.Username, userRole.Role);
+
+                return userRole;
+            }
+            catch (Exception ex)
+            {
+                return new User();
+            }
+        }
+
     }
 }
