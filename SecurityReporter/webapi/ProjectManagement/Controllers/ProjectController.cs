@@ -59,6 +59,28 @@ public class ProjectController : ControllerBase
         return StatusCode(200);
     }
 
+    [HttpGet("checkFileExists/{id}")]
+    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
+    public async Task<IActionResult> CheckFileExists(string id)
+    {
+        string scopeFileName = $"scope_{id}.pdf";
+        string questionnaireFileName = $"questionnaire_{id}.pdf";
+        string reportFileName = $"report_{id}.pdf";
+
+        bool scopeFileExists = await AzureBlobService.CheckFileExistsAsync(scopeFileName);
+        bool questionnaireFileExists = await AzureBlobService.CheckFileExistsAsync(questionnaireFileName);
+        bool reportFileExists = await AzureBlobService.CheckFileExistsAsync(reportFileName);
+
+        var fileExistenceData = new
+        {
+            ScopeFileExists = scopeFileExists,
+            QuestionnaireFileExists = questionnaireFileExists,
+            ReportFileExists = reportFileExists
+        };
+
+        return StatusCode(200, fileExistenceData);
+    }
+
 
     [HttpGet("uploadStatus/{id}")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
@@ -241,6 +263,9 @@ public class ProjectController : ControllerBase
             }
 
             await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id + ".pdf");
+
+
+            Console.WriteLine(filePath, destination + "_" + id + ".pdf");
 
             Console.WriteLine($"File uploaded successfully");
 

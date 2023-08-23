@@ -97,6 +97,22 @@ public class AzureBlobService : IAzureBlobService
         };
     }
 
+    public async Task<bool> CheckFileExistsAsync(string fileName)
+    {
+        try
+        {
+            BlobClient blobClient = projectContainerClient.GetBlobClient(fileName);
+            bool blobExists = await blobClient.ExistsAsync();
+
+            return blobExists;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+
     public async Task DeleteReportFolder(Guid projectReportId)
     {
         _logger.LogInformation("Deleting files for report " + projectReportId);
