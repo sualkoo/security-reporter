@@ -33,8 +33,7 @@ public class ProjectDataParser : IProjectDataParser
                 var ese = new ExecutiveSummaryExtractor(currentEntry);
                 newProjectReportData.ExecutiveSummary = ese.ExtractExecutiveSummary();
                 currentEntry = archive.GetEntry("Config/Project_Information.tex");
-                var pie = new ProjectInformationExtractor(currentEntry, pentestTeamDict);
-                newProjectReportData.ProjectInfo = pie.ExtractProjectInformation();
+                newProjectReportData.ProjectInfo = ProjectInformationExtractor.ExtractProjectInformation(currentEntry, pentestTeamDict);
                 currentEntry = archive.GetEntry("Config/Scope_and_Procedures.tex");
                 var sape = new ScopeAndProceduresExtractor(currentEntry);
                 newProjectReportData.ScopeAndProcedures = sape.ExtractScopeAndProcedures();

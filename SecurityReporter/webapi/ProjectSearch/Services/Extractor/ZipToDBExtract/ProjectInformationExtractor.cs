@@ -5,21 +5,12 @@ using webapi.ProjectSearch.Models.ProjectReport;
 
 namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
-    public class ProjectInformationExtractor
+    public static class ProjectInformationExtractor
     {
-        ZipArchiveEntry projectInfoEntry;
-        Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary;
-        ProjectInformation newProjectInfo = new ProjectInformation();
-
-        public ProjectInformationExtractor(ZipArchiveEntry projectInfoEntry,
+        public static ProjectInformation ExtractProjectInformation(ZipArchiveEntry projectInfoEntry,
             Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary)
         {
-            this.projectInfoEntry = projectInfoEntry;
-            this.pentestTeamDictionary = pentestTeamDictionary;
-        }
-
-        public ProjectInformation ExtractProjectInformation()
-        {
+            ProjectInformation newProjectInfo = new ProjectInformation();
             string line;
             newProjectInfo.PentestTeam = new List<ProjectInformationParticipant>();
             newProjectInfo.TechnicalContacts = new List<ProjectInformationParticipant>();
@@ -41,11 +32,11 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                         var memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
                         foreach (Match member in memberMatches)
                             if (!string.IsNullOrWhiteSpace(member.Value))
-                                AssignNewData(match.Groups[2].Value.Trim(), member.Value);
+                                AssignNewData(match.Groups[2].Value.Trim(), member.Value, newProjectInfo, pentestTeamDictionary);
                     }
                     else
                     {
-                        AssignNewData(match.Groups[2].Value, match.Groups[3].Value);
+                        AssignNewData(match.Groups[2].Value, match.Groups[3].Value, newProjectInfo, pentestTeamDictionary);
                     }
 
                 /*char[] delimiters = { '{', '}' };
@@ -93,7 +84,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return newProjectInfo;
         }
 
-        private string ExtractDepartment(string data)
+        private static string ExtractDepartment(string data)
         {
             if (data != null)
             {
@@ -108,7 +99,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return null;
         }
 
-        private string ExtractContact(string data)
+        private static string ExtractContact(string data)
         {
             string[] delimiters = { "//", "}" };
             if (data != null) return data.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -116,7 +107,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             return null;
         }
 
-        private void AssignNewData(string command, string data)
+        private static void AssignNewData(string command, string data, ProjectInformation newProjectInfo, Dictionary<string, ProjectInformationParticipant> pentestTeamDictionary)
         {
             if (data != null && command != null)
                 switch ("\\" + command)
