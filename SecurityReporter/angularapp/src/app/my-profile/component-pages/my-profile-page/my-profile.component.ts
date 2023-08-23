@@ -26,11 +26,9 @@ export class MyProfileComponent {
 
   async getRole() {
     this.role = await this.getRoleService.getRole();
-    console.log(this.role);
   }
 
   async getEmail() {
     this.email = await this.getEmailService.getEmail();
-    console.log(this.email);
   }
 }
