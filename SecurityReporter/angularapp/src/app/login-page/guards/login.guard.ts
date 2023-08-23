@@ -15,10 +15,10 @@ export class loginGuard implements CanActivate {
       var response = await this.loginService.sendLoginInfo("username", "password");
       if (response.status == 409) {
         console.log(response.status)
-        this.router.navigate(['/after-login'])
+        this.router.navigate(['/welcome'])
         return false
       }
-       
+
     return true
   }
 }
