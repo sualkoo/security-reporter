@@ -13,5 +13,5 @@ public interface IAzureBlobService
     Task SaveImagesFromZip(Guid projectReportId, List<Finding> findingsList);
     Task LoadImagesFromDb(Guid projectReportId, ProjectReportData projectReportData);
     Task UploadProjectFile(string filePath, string blobName);
-    Task<bool> DownloadProject(string fileName, string path);
+    Task<bool> DownloadProject(string fileName);
 }
