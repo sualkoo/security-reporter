@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
@@ -15,8 +15,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
     this.showNavigation = !this.showNavigation;
   }
 
-  @Input() public mail: string = 'admin@admin.sk';
-  @Input() public photo: string = '../../assets/undraw_Drink_coffee_v3au.png';
+  public photo: string = '../../assets/undraw_Drink_coffee_v3au.png';
 
   showInitials = false;
   initials: string = '';
@@ -49,6 +48,10 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   }
 
   setNavbar() {
+    if (!this.photo) {
+      this.showInitials = true;
+      this.createInitials();
+    }
     if (!this.isLoggedIn) {
       this.menuItems = this.defaultMenuItems;
     } else {
@@ -72,7 +75,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   }
 
   private createInitials(): void {
-    this.initials = this.mail.charAt(0).toUpperCase();
+    this.initials = this.role.charAt(0).toUpperCase();
   }
 
   onLogin() {
