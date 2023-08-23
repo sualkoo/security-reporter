@@ -15,7 +15,8 @@ import { GetRoleService } from '../../../shared/services/get-role.service';
 import { FiltersComponent } from '../../../project-listing/components/filters/filters.component';
 import { ExpansionPanelComponent } from '../../../project-listing/components/expansion-panel/expansion-panel.component';
 import { GetBacklogService } from './Services/get-backlog.service';
-import { MatDialog } from '@angular/material/dialog';
+import { GetProjectService } from '../../../project-editing/services/get-project.service';
+import { GetProjectsServiceService } from '../../../project-listing/services/get-projects-service.service';
 
 
 @Component({
@@ -50,7 +51,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     'tko',
   ];
 
-  ];
+
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
@@ -64,7 +65,7 @@ export class BacklogComponentComponent implements AfterViewInit {
   constructor(
     private getBacklogService: GetBacklogService,
     private dialog: MatDialog,
-    private getRoleService: GetRoleService) { }
+    private getRoleService: GetRoleService, private getProjectsService: GetProjectsServiceService) { }
 
   userRole: string = 'admin';
   userId: string = '';
@@ -73,7 +74,6 @@ export class BacklogComponentComponent implements AfterViewInit {
 
     this.getRole();
     this.getInitItems();
-    this.getLength();
   }
 
   async getRole() {
@@ -85,9 +85,6 @@ export class BacklogComponentComponent implements AfterViewInit {
     }
   }
 
-  async getLength() {
-    this.length = await this.projectsCountService.getNumberOfProjects();
-  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -140,26 +137,6 @@ export class BacklogComponentComponent implements AfterViewInit {
     }
   }
 
-  async getInitItems() {
-    this.isLoading = true;
-    this.databaseError = false;
-    this.filterError = false;
-
-    try {
-      const response = await this.getProjectsService.getProjects(15, 1, '', 0, true);
-
-      if (response === "No data available.") {
-        this.databaseError = false;
-      } else {
-        this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
-      }
-    } catch (error) {
-      this.databaseError = true;
-    } finally {
-      this.isLoading = false;
-    }
-  }
 
   getSelectedItems(): void {
     for (const item of this.selection.selected) {
@@ -234,8 +211,5 @@ export class BacklogComponentComponent implements AfterViewInit {
     }
   }
 
-  navigateToPage(): void {
-    this.router.navigate(['/project-management'])
-  }
 }
 
