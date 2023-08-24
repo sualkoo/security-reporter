@@ -18,20 +18,24 @@ export class UploadService {
       this.http.post(this.uploadURL + "?destination=" + destination + "&id=" + id, formData).subscribe(
         (response) => {
           resolve(response)
-          this.alertService.showSnackbar(
-            'File uploaded successfully.',
-            'Close',
-            'green-alert'
-          );
         },
         (error) => {
           console.error(error);
-          reject(error);
-          this.alertService.showSnackbar(
-            'Error occured during uploading the file.',
-            'Close',
-            'red-alert'
-          );
+          resolve(error);
+
+          if (error.status == 201) {
+            this.alertService.showSnackbar(
+              'File uploaded successfully.',
+              'Close',
+              'green-alert'
+            );
+          } else {
+            this.alertService.showSnackbar(
+              'Error occured during uploading the file.',
+              'Close',
+              'red-alert'
+            );
+          }
         }
       );
     });
