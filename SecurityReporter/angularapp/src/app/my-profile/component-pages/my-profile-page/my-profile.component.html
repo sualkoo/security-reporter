@@ -1,7 +1,14 @@
 <div class="profile">
   <div class="profile-header">
     <h1>My profile</h1>
-    <button mat-flat-button color="warn" class="delete-button">Sign out</button>
+    <button
+      mat-flat-button
+      color="warn"
+      class="delete-button"
+      (click)="logoutPage()"
+    >
+      Sign out
+    </button>
   </div>
 
   <div class="profile-info">
