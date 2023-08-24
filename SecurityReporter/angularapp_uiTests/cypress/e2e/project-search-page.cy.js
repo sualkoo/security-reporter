@@ -79,19 +79,19 @@ describe('template spec', () => {
         cy.get('div.card-body').should('exist').and('be.visible');
     })
 
-    it('Should correctly load navbar (TBR)', () => {
+    it('Should correctly load navbar', () => {
         CheckBigNavbar();
     })
 
-    it('Should redirect to landing page (TBR)', () => {
+    it('Should redirect to landing page', () => {
         Redirect('Home', 'welcome')
     })
 
-    it('Should redirect to project management (TBR)', () => {
-        Redirect('Project Management', 'project-management')
+    it('Should redirect to project listing', () => {
+        Redirect('Project Listing', 'list-projects')
     })
 
-    it('Should redirect to dashboard (TBR)', () => {
+    it('Should redirect to dashboard', () => {
         Redirect('Dashboard', 'dashboard')
     })
 })
@@ -167,19 +167,19 @@ describe('Project search page components tests - smaller viewport', () => {
         cy.get('div.card-body').should('exist').and('be.visible');
     })
 
-    it('Should correctly load navbar (TBR)', () => {
+    it('Should correctly load navbar', () => {
         CheckSmallNavbar();
     })
 
-    it('Should redirect to landing page (TBR)', () => {
+    it('Should redirect to landing page', () => {
         RedirectSmallComponent('Home', 'welcome')
     })
 
-    it('Should redirect to project management (TBR)', () => {
-        RedirectSmallComponent('Project Management', 'project-management')
+    it('Should redirect to project listing', () => {
+        RedirectSmallComponent('Project Listing', 'list-projects')
     })
 
-    it('Should redirect to dashboard (TBR)', () => {
+    it('Should redirect to dashboard', () => {
         RedirectSmallComponent('Dashboard', 'dashboard')
     })
 })
