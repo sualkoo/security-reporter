@@ -157,19 +157,32 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                     }
                     break;
                 case "Details":
-                    newFinding.SubsectionDetails = data;
+                    newFinding.UnformattedSubsectionDetails = data;
+                    newFinding.SubsectionDetails =  extractSubsection(data);
                     break;
                 case "Impact":
-                    newFinding.SubsectionImpact = data;
+                    newFinding.UnformattedSubsectionImpact = data;
+                    newFinding.SubsectionImpact = extractSubsection(data);
                     break;
                 case "Repeatability":
-                    newFinding.SubsectionRepeatability = data;
+                    newFinding.UnformattedSubsectionRepeatability = data;
+                    newFinding.SubsectionRepeatability = extractSubsection(data);
                     break;
                 case "Countermeasures":
-                    newFinding.SubsectionCountermeasures = data;
+                    newFinding.UnformattedSubsectionCountermeasures = data;
+                    newFinding.SubsectionCountermeasures = extractSubsection(data);
                     break;
                 case "References":
-                    newFinding.SubsectionReferences = data;
+                    newFinding.UnformattedSubsectionReferences = data;
+                    string referencesRegex = @"\\href{([^}]*)}";
+                    MatchCollection matches = Regex.Matches(data, referencesRegex, RegexOptions.Multiline);
+                    string result = "";
+                    foreach(Match match in matches)
+                    {
+                        result += (match.Groups[1].ToString() + "\n");
+                    }
+
+                    newFinding.SubsectionReferences = "This finding references the following information sources: \n" + result;
                     break;
             }
         }
@@ -180,6 +193,25 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             for (var i = 0; i < result.Count; i++) result[i] = result[i].Trim();
 
             return result;
+        }
+
+        private string extractSubsection(string data)
+        {
+            string result = data;
+            string regexCommandsBeggining = @"\\[\w]*{";
+            string regexComments = @"^(%\s*.*)";
+            string regexFigures = @"\\begin{figure}[\w\W]*?\\end{figure}";
+            
+            result = Regex.Replace(result, regexFigures, "", RegexOptions.Multiline);
+            result = Regex.Replace(result, regexCommandsBeggining, "", RegexOptions.Multiline);
+            result = Regex.Replace(result, regexComments, "", RegexOptions.Multiline);
+
+            result = result.Replace("}", "");
+            result = result.Replace("\n", " ");
+            result = result.Replace("\r", "");
+            result = result.Trim();
+            return result;
+            //result = result.Split("")
         }
 
         /*private void extractSubsection(string command, StreamReader reader, Finding newFinding)

@@ -43,15 +43,15 @@ public static class DbFindingsExtractor
 %-------------------------------------------
 
 \subsection*{Details}
-" + finding.SubsectionDetails + @"
+" + finding.UnformattedSubsectionDetails + @"
 \subsection*{Impact}
-" + finding.SubsectionImpact + @"
+" + finding.UnformattedSubsectionImpact + @"
 \subsection*{Repeatability}
-" + finding.SubsectionRepeatability + @"
+" + finding.UnformattedSubsectionRepeatability + @"
 \subsection*{Countermeasures}
-" + finding.SubsectionCountermeasures + @"
+" + finding.UnformattedSubsectionCountermeasures + @"
 \subsection*{References}
-" + finding.SubsectionReferences + @"
+" + finding.UnformattedSubsectionReferences + @"
 ";
         var memoryStream = new MemoryStream();
         var bytes = Encoding.UTF8.GetBytes(findingContent);

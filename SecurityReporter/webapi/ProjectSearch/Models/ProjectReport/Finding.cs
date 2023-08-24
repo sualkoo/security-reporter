@@ -39,10 +39,15 @@ public class Finding : IEntity
     public Detectability Detectability { get; set; }
 
     public string? SubsectionDetails { get; set; } = "";
+    public string? UnformattedSubsectionDetails { get; set; } = "";
     public string? SubsectionImpact { get; set; } = "";
+    public string? UnformattedSubsectionImpact { get; set; } = "";
     public string? SubsectionRepeatability { get; set; } = "";
+    public string? UnformattedSubsectionRepeatability { get; set; } = "";
     public string? SubsectionCountermeasures { get; set; } = "";
+    public string? UnformattedSubsectionCountermeasures { get; set; } = "";
     public string? SubsectionReferences { get; set; } = "";
+    public string? UnformattedSubsectionReferences { get; set; } = "";
     public string? FolderName { get; set; } = "";
 
     public List<FileData>? GetImages()
