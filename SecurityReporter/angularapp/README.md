@@ -39,6 +39,9 @@
    ```
    dotnet user-secrets set "DB:PrimaryKey" "your cosmos db primary key from cosmosDB data explorer"
    ```
+   ```
+   dotnet user-secrets set "DB:EndpointUri" "your cosmos db URI from cosmosDB data explorer"
+   ```
 
 7. Open repository folder in terminal and type:
    ```
