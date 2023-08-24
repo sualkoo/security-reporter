@@ -30,7 +30,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AlertService } from '../../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { max } from 'rxjs';
-import { LogoutService } from '../../../services/logout.service';
+import { AuthService } from '../../../services/auth.service';
 import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({

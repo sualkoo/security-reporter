@@ -15,10 +15,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
-import { GetRoleService } from '../../../shared/services/get-role.service';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { AuthService } from '../../../services/auth.service';
 import { SortData } from '../../interfaces/sort-data';
-
+import { MatSort, MatSortModule } from '@angular/material/sort';
+ 
 @Component({
   selector: 'app-data-grid-component',
   templateUrl: './data-grid-component.component.html',
@@ -81,7 +81,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     private getProjectsService: GetProjectsServiceService,
     private router: Router,
     private dialog: MatDialog,
-    private getRoleService: GetRoleService
+    private authService: AuthService
   ) {}
 
   userRole: string = 'admin';
@@ -92,7 +92,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   }
 
   async getRole() {
-    this.userRole = await this.getRoleService.getRole();
+    this.userRole = await this.authService.getRole();
 
     if (this.userRole == 'Not signed in!') {
       this.userRole = 'admin';

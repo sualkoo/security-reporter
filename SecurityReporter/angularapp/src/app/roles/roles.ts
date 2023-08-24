@@ -5,18 +5,23 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { GetRoleService } from '../shared/services/get-role.service';
+import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../project-search/providers/notification.service';
 
 @Injectable()
 export class Roles implements CanActivate {
-  constructor(private router: Router, private getRoleService: GetRoleService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) {}
 
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
     const allowedRoles: string[] = route.data.allowedRoles;
-    var userRole = await this.getRoleService.getRole();
+    var userRole = await this.authService.getRole();
 
     if (userRole == 'Not signed in!') {
       userRole = 'admin';
@@ -24,6 +29,15 @@ export class Roles implements CanActivate {
 
     console.log(userRole);
 
-    return true;
+    if (allowedRoles.includes(userRole)) {
+      return true;
+    } else {
+      this.router.navigate(['log-in']);
+      this.notificationService.displayMessage(
+        "You're not allowed to access this page.",
+        'info'
+      );
+      return false;
+    }
   }
 }

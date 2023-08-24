@@ -26,6 +26,5 @@
     <Folder Include="src\app\project-search\components\" />
     <Folder Include="src\app\project-search\interfaces\Enums\" />
     <Folder Include="src\app\project-search\interfaces\ProjectReport\" />
-    <Folder Include="src\app\shared\services\" />
   </ItemGroup>
 </Project>
