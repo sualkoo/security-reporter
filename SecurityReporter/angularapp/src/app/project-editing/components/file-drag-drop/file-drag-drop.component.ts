@@ -13,13 +13,12 @@ import { UploadService } from '../../services/upload.service';
 })
 export class FileDragDropComponent {
   uploadedFiles: File[] = [];
-  constructor(private fileDownloadService: FileDownloadService) { }
+  constructor(private fileDownloadService: FileDownloadService, private uploadService: UploadService) { }
 
   @Input() pentestTitle?: string;
   @Input() id: string = "";
   @Input() pentest: string = "";
 
-  constructor(private uploadService: UploadService) { }
 
   downloadFile(fileName: string) {
     this.fileDownloadService.getDownloadFile(fileName)
