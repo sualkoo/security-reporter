@@ -23,7 +23,7 @@ import { AlertService } from '../../../project-management/services/alert.service
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
-import { LogoutService } from '../../../services/logout.service';
+import { AuthService } from '../../../services/auth.service';
 import { AutoLogoutService } from '../../../services/auto-logout.service';
 
 @Component({
