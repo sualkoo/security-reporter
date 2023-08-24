@@ -39,6 +39,7 @@ export class FileDragDropComponent {
   }
 
   private processFiles(files: FileList) {
+    this.uploadedFiles = [];
     for (let i = 0; i < files.length; i++) {
       this.uploadedFiles.push(files[i]);
     }
