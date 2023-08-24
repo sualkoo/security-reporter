@@ -93,7 +93,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   adminMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'Project Search', link: '/project-search', disabled: false },
-    { text: 'Project Management', link: '/list-project', disabled: false },
+    { text: 'Project Management', link: '/list-projects', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
     { text: 'My Profile', link: '/my-profile', disabled: false}
   ];
