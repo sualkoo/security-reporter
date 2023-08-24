@@ -7,14 +7,14 @@
   <p>Drag and drop or click to select file</p>
   <input
     type="file"
-    (change)="onFileSelected($event)"
     style="display: none"
-    #fileInput
-    id="fileInput"
+    
+    id={{pentest}}
     accept="application/pdf"
+    (change)="onFileSelected($event)"
   />
   <label
-    for="fileInput"
+    for={{pentest}}
     class="file-input-label"
     style="background-color: #ec6602"
     >Select file</label
