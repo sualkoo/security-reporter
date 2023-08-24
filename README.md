@@ -26,30 +26,34 @@ If you want to learn more about creating good readme files then refer the follow
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
 
 # Project setup
+
 1. Clone repository
 
 2. Download and install Cosmos DB Emulator:
+
    - https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
 
 3. Open Cosmos DB Emulator (emulator should show up in browser)
 
 4. Create comsos DB Emulator Container and Database in explorer tab (menu) with name ProjectDatabase and ProjectContainer. Paste following items.
+
    - In Database id: ProjectDatabase
    - In Container id: ProjectContainer
    - In Partition Key: id
 
 5. Add to cosmos DB Emulator ProjectDatabase new container:
+
    - In Container id: ProjectRolesContainer
    - In Partition Key: id
 
    - For now you need to add users with roles manually in this format:
-      - Example: 
-      - {
-            "id": "client@client.sk",
-            "Role": "client"
-         }
-      - Attribute Role can be admin/client/coordinator/pentester/default.
-      - You can add new item by clicking on ProjectRolesDatabase -> ProjectRolesContainer -> Items, then click on New item and then click save.
+     - Example:
+     - {
+       "id": "client@client.sk",
+       "Role": "client"
+       }
+     - Attribute Role can be admin/client/coordinator/pentester/default.
+     - You can add new item by clicking on ProjectRolesDatabase -> ProjectRolesContainer -> Items, then click on New item and then click save.
 
 6. Enable secret storage and set a secret
 
@@ -65,6 +69,7 @@ If you want to learn more about creating good readme files then refer the follow
    ```
 
 7. Open repository folder in terminal and type:
+
    ```
    npm install
    ```
@@ -75,8 +80,7 @@ If you want to learn more about creating good readme files then refer the follow
 
 8. Open project solution in Visual Studio
 
-9. 
-   - In View tab click on Solution explorer.
+9. - In View tab click on Solution explorer.
    - In Solution explorer right click on Solution and choose Properties
    - In menu select Common Properties -> Startup Project
    - Click on Multiple startup project radio button
@@ -96,12 +100,11 @@ Welcome to the documentation for SecurityReporter, a C# and .NET-based applicati
 
 ## Prerequisites
 
-- **texlive-full**: The application depends on `texlive-full` for generating PDFs. If it's not already installed on your server. Generating of PDFs is disabled by default, you can enable it in configuration by adding
-  "GeneratePdfsFromReports" to true.
-- You can download and install it using the following command for debian linux:
+- **texlive-full**: The application depends on `texlive-full` for generating PDFs. If it's not already installed on your server.
+- You can download and install it using the following command for debian linux (windows is not supported yet.):
 
   ```bash
-  sudo apt-get install texlive-full
+  apt-get update -y && apt-get install texlive-full -y
   ```
 
 - **Azure Cosmos DB**: The application uses Cosmos DB to store its data. Create a database named `ProjectDatabase` and two containers: `ProjectContainer` and `ReportContainer` in your Cosmos DB account.
@@ -118,11 +121,9 @@ Configure the application by updating the `appsettings.json` file or user secret
     "EndpointUri": "your-cosmosdb-endpoint-uri",
     "PrimaryKey": "your-cosmosdb-primary-key"
   },
-  "AzureStorage" {
+  "AzureStorage": {
       "StorageAccount" : "your-azure-storage-account",
       "AccessKey": "your-azure-storage-access-key"
-
-  },
-  "GeneratePdfsFromReports" : false
+  }
 }
 ```
