@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using webapi.Login.Models;
+using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 
 namespace webapi.Service
@@ -12,8 +14,10 @@ namespace webapi.Service
         Task<bool> UpdateProject(ProjectData data);
         Task<bool> DeleteProject(string projectId);
         Task<List<string>> DeleteProjects(List<string> projectIds);
-        Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter);
-        Task<int> GetNumberOfProjects();
+        Task<CountProjects> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort);
+        //Task<int> GetNumberOfProjects();
+        Task<Profile> GetBacklog(int pageSize, int pageNumber);
+
         Task<bool> AddProjectReport(ProjectReportData data);
         Task<ProjectReportData> GetProjectReport(string projectId);
         Task<PagedDbResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string? findingName, int page);
@@ -24,6 +28,10 @@ namespace webapi.Service
         Task<List<Tuple<int, int>>> GetCWEData();
         Task<List<string>> DeleteAllReportsAsync();
 
+        //Task<Profile> ProfileItems(string email);
+
+        Task DeleteUsers();
+        Task<UserRole> GetUserRole(string email);
         Task<List<Tuple<float, string, string>>> GetCVSSData();
     }
 }

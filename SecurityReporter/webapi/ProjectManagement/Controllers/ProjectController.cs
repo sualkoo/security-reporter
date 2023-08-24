@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
@@ -105,25 +104,12 @@ public class ProjectController : ControllerBase
         }
     }
 
-    [HttpGet("count")]
-    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    public async Task<IActionResult> GetNumberOfProjects()
-    {
-        int count = await CosmosService.GetNumberOfProjects();
-
-        if (count < 0)
-        {
-            return StatusCode(400, count);
-        }
-
-        return StatusCode(200, count);
-    }
 
     [HttpGet("retrieve")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
+    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter, [FromQuery] SortData sort)
     {
-        var items = new List<ProjectList>();
+        var items = new CountProjects();
 
         try
         {
@@ -132,9 +118,9 @@ public class ProjectController : ControllerBase
             Console.ResetColor();
             Console.WriteLine("\t /Project/retrieve");
 
-            items = await CosmosService.GetItems(pageSize, pageNumber, filter);
+            items = await CosmosService.GetItems(pageSize, pageNumber, filter, sort);
 
-            if (items.Count > 0)
+            if (items.Projects.Count > 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Success: Data retrieved successfully.");
@@ -166,9 +152,9 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
-        
+
         bool result = await CosmosService.UpdateProject(project);
-        
+
         if (!result)
         {
             Console.WriteLine("Error occured in Project/update put request.");
@@ -181,11 +167,11 @@ public class ProjectController : ControllerBase
 
     [HttpGet("download")]
     // [Authorize(Policy = "AdminCoordinatorPolicy")]
-    public async Task<IActionResult> Download(string name, string path)
+    public async Task<IActionResult> Download(string name)
     {
         Console.WriteLine("Downloading file..");
 
-        bool result = await AzureBlobService.DownloadProject(name, path);
+        bool result = await AzureBlobService.DownloadProject(name);
 
         if (!result)
         {
@@ -238,34 +224,26 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(string filePath, string destination, string id)
+    public async Task<IActionResult> UploadFile(IFormFile file, string destination, string id)
     {
         try
         {
-            if (filePath == null || filePath.Length == 0)
-            {
-                return StatusCode(400, "Error: No file uploaded.");
-            }
-
             if (string.IsNullOrEmpty(destination))
             {
                 return StatusCode(400, "Error: Destination parameter is required.");
             }
 
-            if (destination != "scope" && destination != "questionaire" && destination != "report")
+            if (destination != "scope" || destination != "questionaire"|| destination != "report")
             {
                 return StatusCode(400, "Error: Invalid destination parameter.");
             }
 
-            if (Path.GetExtension(filePath).ToLower() != ".pdf")
+            if (Path.GetExtension(file.FileName).ToLower() != ".pdf")
             {
                 return StatusCode(400, "Error: Uploaded file must be a PDF.");
             }
 
-            await AzureBlobService.UploadProjectFile(filePath, destination + "_" + id + ".pdf");
-
-
-            Console.WriteLine(filePath, destination + "_" + id + ".pdf");
+            await AzureBlobService.UploadProjectFile(file, destination + "_" + id + ".pdf");
 
             Console.WriteLine($"File uploaded successfully");
 
@@ -281,4 +259,3 @@ public class ProjectController : ControllerBase
         }
     }
 }
-    

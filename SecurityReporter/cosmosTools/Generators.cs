@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
+using webapi.Login.Models;
 using webapi.Models;
 
 [assembly: InternalsVisibleTo("cosmosTools_uTest")]
@@ -11,10 +12,10 @@ namespace cosmosTools
         internal int MinRandomValue { get; } = 3;
         internal int MaxRandomValue { get; } = 8;
 
-        private List<string> workingTeam;
+        public List<string> workingTeam { get; }
 
         public Generators()
-        { 
+        {
             workingTeam = new List<string> { "John Smith", "Emma Johnson", "Michael Williams", "Emily Brown", "Daniel Jones", "Olivia Davis", "James Wilson",
                     "Ava Martinez", "William Taylor", "Sophia Anderson", "Alexander Thomas", "Mia Hernandez", "Benjamin White", "Charlotte Jackson", "Samuel Lee", "Harper Garcia",
                     "Joseph Martin", "Amelia Thompson", "David Perez", "Abigail Rodriguez", "Andrew Scott", "Grace Evans", "Christopher Turner", "Scarlett Murphy", "Matthew Adams",
@@ -27,7 +28,7 @@ namespace cosmosTools
         public string GenerateRandomEmail(string name)
         {
             var splitName = name.Split(' ');
-            return $"{splitName[0].ToLower()}{splitName[1]}{new Random().Next(10, 800)}@siemens-healthineers.com";
+            return $"{splitName[0].ToLower()}{splitName[1]}@siemens-healthineers.com";
         }
 
         public string GenerateRandomString(int length)
@@ -143,14 +144,19 @@ namespace cosmosTools
             return pentestAspects[new Random().Next(0, pentestAspects.Count())];
         }
 
-        public List<string> GenerateWorkingTeam()
+        public List<string> GenerateWorkingTeam(List<UserRole> userRoles)
         {
 
             var newTeam = new List<string>();
 
             for (int j = 0; j < new Random().Next(MinRandomValue, MaxRandomValue); j++)
             {
-                newTeam.Add(workingTeam[new Random().Next(0, workingTeam.Count())]);
+                var newUser = userRoles[new Random().Next(0, userRoles.Count())].id;
+                if (!newTeam.Contains(newUser))
+                {
+                    newTeam.Add(newUser);
+
+                }
             }
             return newTeam;
         }

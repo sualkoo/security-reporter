@@ -23,16 +23,26 @@ import { AlertService } from '../../../project-management/services/alert.service
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetProjectService } from '../../services/get-project.service';
 import { ActivatedRoute } from '@angular/router';
-import { LogoutService } from '../../../services/logout.service';
+import { AuthService } from '../../../services/auth.service';
 import { AutoLogoutService } from '../../../services/auto-logout.service';
+import { FileDragDropComponent } from '../../components/file-drag-drop/file-drag-drop.component';
+import { FileDownloadService } from '../../services/file-download.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { CheckFileExistsService } from '../../services/check-file-exists.service';
+import { FileExists } from '../../../project-management/interfaces/file-exists-interface';
 
 @Component({
   selector: 'app-project-editing-page',
   templateUrl: './project-editing-page.component.html',
-  styleUrls: ['../../../project-management/component-pages/add-project-page/add-project.component.css', './project-editing-page.component.css'],
+  styleUrls: [
+    '../../../project-management/component-pages/add-project-page/add-project.component.css',
+    './project-editing-page.component.css',
+  ],
   standalone: true,
   imports: [
     CommonModule,
+    FileDragDropComponent,
+    MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
     DatepickerComponent,
@@ -47,55 +57,100 @@ import { AutoLogoutService } from '../../../services/auto-logout.service';
     NgIf,
     MatListModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
 })
 export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
+  panelOpenState = false;
+  fileExists!: FileExists;
 
-  constructor(private route: ActivatedRoute, addProjectService: AddProjectService,
-    router: Router, alertService: AlertService,
+  pentestDummyList = [
+    { name: 'Pentest1', fileName: 'file1.pdf' },
+    // { name: 'Pentest2', fileName: 'file2.pdf' },
+    // { name: 'Pentest3', fileName: 'file3.pdf' },
+    // { name: 'Pentest4', fileName: 'file4.pdf' },
+    // { name: 'Pentest5', fileName: 'file5.pdf' },
+    // { name: 'Pentest6', fileName: 'file6.pdf' },
+    // { name: 'Pentest7', fileName: 'file7.pdf' },
+    // { name: 'Pentest8', fileName: 'file8.pdf' },
+    // { name: 'Pentest9', fileName: 'file9.pdf' },
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    addProjectService: AddProjectService,
+    router: Router,
+    private fileDownloadService : FileDownloadService,
+    alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
+    private checkFileExistsService: CheckFileExistsService,
     private formBuilder: FormBuilder,
-    autoLogoutService: AutoLogoutService) {
-
+    autoLogoutService: AutoLogoutService
+  ) {
     super(addProjectService, router, alertService, autoLogoutService);
   }
 
   ngOnInit() {
     this.autoLogoutService.startTimer();
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
+      this.checkFileExistsForProject(this.projectId);
     });
   }
 
+  checkFileExistsForProject(projectId: string): void {
+    this.checkFileExistsService.checkFileExists(projectId)
+      .then((response: any) => {
+        this.fileExists = this.mapFileExistsResponse(response); // Use the mapping method
+        console.log(this.fileExists);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  mapFileExistsResponse(jsonResponse: any): FileExists {
+    return {
+      scopeFileExists: jsonResponse.scopeFileExists,
+      questionnaireFileExists: jsonResponse.questionnaireFileExists,
+      reportFileExists: jsonResponse.reportFileExists
+    };
+  }
+
   mapJsonToProjectInterface(jsonData: any): ProjectInterface {
-  return {
-    id: jsonData.id,
-    ProjectName: jsonData.projectName,
-    StartDate: jsonData.startDate ? jsonData.startDate : new Date('0001-01-01'),
-    EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
-    ProjectStatus: jsonData.projectStatus,
-    ProjectScope: jsonData.projectScope,
-    ProjectQuestionare: jsonData.projectQuestionare,
-    PentestAspects: jsonData.pentestAspects,
-    PentestDuration: jsonData.pentestDuration,
-    ReportDueDate: jsonData.reportDueDate ? jsonData.reportDueDate : new Date('0001-01-01'),
-    IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
-    TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
-    RequestCreated: jsonData.requestCreated,
-    Comments: jsonData.comments ? jsonData.comments : [],
-    CatsNumber: jsonData.castNumber,
-    ProjectOfferStatus: jsonData.projectOfferStatus,
-    WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
-    ProjectLead: jsonData.projectLead,
-    ReportStatus: jsonData.reportStatus,
-    ContactForClients: jsonData.contactForClients ? jsonData.contactForClients : [],
-  };
-}
+    return {
+      id: jsonData.id,
+      ProjectName: jsonData.projectName,
+      StartDate: jsonData.startDate
+        ? jsonData.startDate
+        : new Date('0001-01-01'),
+      EndDate: jsonData.endDate ? jsonData.endDate : new Date('0001-01-01'),
+      ProjectStatus: jsonData.projectStatus,
+      ProjectScope: jsonData.projectScope,
+      ProjectQuestionare: jsonData.projectQuestionare,
+      PentestAspects: jsonData.pentestAspects,
+      PentestDuration: jsonData.pentestDuration,
+      ReportDueDate: jsonData.reportDueDate
+        ? jsonData.reportDueDate
+        : new Date('0001-01-01'),
+      IKO: jsonData.iko ? jsonData.iko : new Date('0001-01-01'),
+      TKO: jsonData.tko ? jsonData.tko : new Date('0001-01-01'),
+      RequestCreated: jsonData.requestCreated,
+      Comments: jsonData.comments ? jsonData.comments : [],
+      CatsNumber: jsonData.castNumber,
+      ProjectOfferStatus: jsonData.projectOfferStatus,
+      WorkingTeam: jsonData.workingTeam ? jsonData.workingTeam : [],
+      ProjectLead: jsonData.projectLead,
+      ReportStatus: jsonData.reportStatus,
+      ContactForClients: jsonData.contactForClients
+        ? jsonData.contactForClients
+        : [],
+    };
+  }
 
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
@@ -187,14 +242,22 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     this.updateProjectService.updateProject(this.projectClass).subscribe(
       (response) => {
         console.log('Success:', response);
-        this.alertService.showSnackbar('Item saved successfully.', 'Close', 'green-alert');
+        this.alertService.showSnackbar(
+          'Item saved successfully.',
+          'Close',
+          'green-alert'
+        );
       },
       (error) => {
         console.log('Error:', error);
 
         const { title, status, errors } = error;
 
-        this.alertService.showSnackbar('Error occured during saving an item.', 'Close', 'red-alert');
+        this.alertService.showSnackbar(
+          'Error occured during saving an item.',
+          'Close',
+          'red-alert'
+        );
 
         console.log('Title:', title);
         console.log('Status Code:', status);
@@ -203,4 +266,21 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     );
   }
 
+  downloadFile(fileName: string) {
+    fileName += `_${this.projectClass.id}.pdf`;
+
+    this.fileDownloadService.getDownloadFile(fileName)
+      .then((response: Blob) => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 }

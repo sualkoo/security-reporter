@@ -24,4 +24,8 @@
     <Folder Include="cypress\fixtures\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="cypress\videos\" />
+  </ItemGroup>
+
 </Project>

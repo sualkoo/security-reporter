@@ -50,6 +50,7 @@ import { AutoLogoutService } from './services/auto-logout.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
+import { FileDragDropComponent } from './project-editing/components/file-drag-drop/file-drag-drop.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
@@ -78,7 +79,8 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     HttpClientModule,
     MatSlideToggleModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,MatSnackBarModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -111,4 +113,4 @@ MyProfileComponent,
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
