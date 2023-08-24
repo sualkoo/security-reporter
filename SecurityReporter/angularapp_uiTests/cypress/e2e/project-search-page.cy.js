@@ -79,19 +79,19 @@ describe('template spec', () => {
         cy.get('div.card-body').should('exist').and('be.visible');
     })
 
-    it('Should correctly load navbar (TBR)', () => {
+    it('Should correctly load navbar', () => {
         CheckBigNavbar();
     })
 
-    it('Should redirect to landing page (TBR)', () => {
+    it('Should redirect to landing page', () => {
         Redirect('Home', 'welcome')
     })
 
-    it('Should redirect to project management (TBR)', () => {
-        Redirect('Project Management', 'project-management')
+    it('Should redirect to project listing', () => {
+        Redirect('Project Listing', 'list-projects')
     })
 
-    it('Should redirect to dashboard (TBR)', () => {
+    it('Should redirect to dashboard', () => {
         Redirect('Dashboard', 'dashboard')
     })
 })
@@ -167,19 +167,19 @@ describe('Project search page components tests - smaller viewport', () => {
         cy.get('div.card-body').should('exist').and('be.visible');
     })
 
-    it('Should correctly load navbar (TBR)', () => {
+    it('Should correctly load navbar', () => {
         CheckSmallNavbar();
     })
 
-    it('Should redirect to landing page (TBR)', () => {
+    it('Should redirect to landing page', () => {
         RedirectSmallComponent('Home', 'welcome')
     })
 
-    it('Should redirect to project management (TBR)', () => {
-        RedirectSmallComponent('Project Management', 'project-management')
+    it('Should redirect to project listing', () => {
+        RedirectSmallComponent('Project Listing', 'list-projects')
     })
 
-    it('Should redirect to dashboard (TBR)', () => {
+    it('Should redirect to dashboard', () => {
         RedirectSmallComponent('Dashboard', 'dashboard')
     })
 })
@@ -236,7 +236,7 @@ function CheckNavbarLinks() {
         and('not.have.class', 'active').and('not.be.disabled')
     cy.get('a.nav-link').contains('Project Search').should('be.visible').and('have.class', 'fw-bolder')
         .and('not.be.disabled').and('have.class', 'active');
-    cy.get('a.nav-link').contains('Project Management').should('be.visible').and('not.have.class', 'fw-bolder')
+    cy.get('a.nav-link').contains('Project Listing').should('be.visible').and('not.have.class', 'fw-bolder')
         .and('not.be.enabled').and('not.have.class', 'active');
     cy.get('a.nav-link').contains('Dashboard').should('be.visible').and('not.have.class', 'fw-bolder')
         .and('not.be.enabled').and('not.have.class', 'active');
@@ -245,7 +245,7 @@ function CheckNavbarLinks() {
 function NavbarLinksNotShown() {
     cy.get('a.nav-link').contains('Home').should('not.be.visible');
     cy.get('a.nav-link').contains('Project Search').should('not.be.visible')
-    cy.get('a.nav-link').contains('Project Management').should('not.be.visible');
+    cy.get('a.nav-link').contains('Project Listing').should('not.be.visible');
     cy.get('a.nav-link').contains('Dashboard').should('not.be.visible');
     cy.get('button').contains('Logout').should('not.be.visible');
 }

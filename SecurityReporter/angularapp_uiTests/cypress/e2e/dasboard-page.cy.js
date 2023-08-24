@@ -12,8 +12,8 @@ describe('Testing landing page - big viewport', () => {
         Redirect('Project Search', 'project-search');
     })
 
-    it('Redirect to Project Management page', () => {
-        Redirect('Project Management', 'project-management');
+    it('Redirect to Project Listing page', () => {
+        Redirect('Project Listing', 'list-projects');
     })
 })
 
@@ -32,8 +32,8 @@ describe('Testing landing page - small viewport', () => {
         RedirectSmallComponent('Project Search', 'project-search');
     })
 
-    it('Redirect to Project Management page', () => {
-        RedirectSmallComponent('Project Management', 'project-management');
+    it('Redirect to Project Listing page', () => {
+        RedirectSmallComponent('Project Listing', 'list-projects');
     })
 })
 
