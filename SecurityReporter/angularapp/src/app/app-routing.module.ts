@@ -21,6 +21,7 @@ const routes: Routes = [
   {
     path: 'welcome',
     component: LandingPageComponent,
+    title: 'Welcome - CSA',
     data: {
       allowedRoles: ['admin', 'pentester', 'coordinator', 'client', 'default'],
     },
@@ -29,11 +30,13 @@ const routes: Routes = [
     path: 'project-search',
     component: ProjectSearchPageComponent,
     canActivate: [Roles],
+    title: 'Project Search - CSA',
     data: { allowedRoles: ['admin', 'pentester'] },
   },
   {
     path: 'project-management',
     component: AddProjectComponent,
+    title: 'Project Management - CSA',
     canActivate: [Roles],
     data: { allowedRoles: ['admin', 'coordinator'] },
   },
@@ -41,34 +44,44 @@ const routes: Routes = [
     path: 'add-project',
     component: AddProjectComponent,
     canActivate: [Roles],
+    title: 'Add project - CSA',
     data: { allowedRoles: ['admin', 'coordinator'] },
   },
   {
     path: 'list-projects',
     component: ListProjectsPageComponent,
     canActivate: [Roles],
+    title: 'Project Listing - CSA',
     data: { allowedRoles: ['admin', 'coordinator', 'client'] },
   },
   {
     path: 'edit-project/:id',
     component: ProjectEditingPageComponent,
     canActivate: [Roles],
+    title: 'Edit Project - CSA',
     data: { allowedRoles: ['admin', 'coordinator'] },
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [Roles],
+    title: 'Dashboard - CSA',
     data: { allowedRoles: ['admin', 'coordinator'] },
   },
   {
     path: 'about-pentests',
     component: AboutPentestsComponent,
+    title: 'About Pentests - CSA',
     data: {
       allowedRoles: ['admin', 'pentester', 'coordinator', 'client', 'default'],
     },
   },
-  { path: 'log-in', component: LoginPageComponent, canActivate: [loginGuard] },
+  {
+    path: 'log-in',
+    component: LoginPageComponent,
+    title: 'Login - CSA',
+    canActivate: [loginGuard],
+  },
   {
     path: 'after-login',
     component: AfterLoginPageComponent,
@@ -87,6 +100,7 @@ const routes: Routes = [
     path: 'my-profile',
     component: MyProfileComponent,
     canActivate: [Roles],
+    title: 'My Profile - CSA',
     data: { allowedRoles: ['admin', 'pentester', 'coordinator', 'client'] },
   },
 ];

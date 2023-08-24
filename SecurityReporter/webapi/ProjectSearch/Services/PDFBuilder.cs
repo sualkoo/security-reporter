@@ -44,12 +44,12 @@ public class PdfBuilder : IPdfBuilder
             return await GeneratePdfUnix(zipFileStream, projectReportId);
         }
      
-        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system.");
+        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system on serverside.");
     }
 
     private async Task<FileContentResult> GeneratePdfWindows(Stream zipFileStream, Guid projectReportId)
     {
-        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system.");
+        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system on serverside (Windows is under development). ");
     }
     
     private async Task<FileContentResult> GeneratePdfUnix(Stream zipFileStream, Guid projectReportId)
@@ -73,8 +73,10 @@ public class PdfBuilder : IPdfBuilder
         var generatePdfProcess = Process.Start(generatePdfInfo);
         generatePdfProcess.WaitForExit();
         if (generatePdfProcess.ExitCode != 0)
+        {
             throw new CustomException(StatusCodes.Status500InternalServerError,
                 "Latex sources cannot be compiled to PDF due to errors in source code.");
+        }
 
         var pdfBytes = await File.ReadAllBytesAsync(Path.Combine(latexSourceDir, "Main.pdf"));
 
