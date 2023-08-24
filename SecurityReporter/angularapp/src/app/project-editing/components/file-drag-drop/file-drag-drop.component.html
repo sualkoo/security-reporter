@@ -15,6 +15,6 @@
 <ul>
   <li *ngFor="let file of uploadedFiles">
     {{ file.name }}
-    <mat-icon [style.color]="'#ec6602'" (click)="upload(file, pentest)" class="upload-icon" matTooltip="{{ 'Upload file' }}">cloud_upload</mat-icon>
+    <mat-icon [style.color]="'#ec6602'" (click)="upload(file, pentest)" class="upload-icon clickable-item" matTooltip="{{ 'Upload file' }}">cloud_upload</mat-icon>
   </li>
 </ul>

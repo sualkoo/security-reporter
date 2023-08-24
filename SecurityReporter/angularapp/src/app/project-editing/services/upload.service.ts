@@ -29,6 +29,8 @@ export class UploadService {
               'Close',
               'green-alert'
             );
+
+            window.location.reload();
           } else {
             this.alertService.showSnackbar(
               'Error occured during uploading the file.',

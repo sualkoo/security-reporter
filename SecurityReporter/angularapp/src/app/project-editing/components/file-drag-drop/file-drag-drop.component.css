@@ -28,3 +28,7 @@ ul {
   padding-top: 8px;
   margin-left: 8px;
 }
+
+.clickable-item {
+  cursor: pointer;
+}
