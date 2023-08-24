@@ -1,6 +1,6 @@
 describe('Testing landing page - big viewport', () => {
     beforeEach(() => {
-        cy.visit('localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
         Login();
     })
 
@@ -20,7 +20,7 @@ describe('Testing landing page - big viewport', () => {
 describe('Testing landing page - small viewport', () => {
     beforeEach(() => {
         cy.viewport(600, 800);
-        cy.visit('localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
         LoginSmallComponent();
     })
 

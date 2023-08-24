@@ -1,7 +1,7 @@
 describe('Testing bigger LandingPageComponent', () => {
     //CHECK FOOTER ELEMENTS STRASNE SPOMALUJE TESTY IDK PRECO
     beforeEach(() => {
-        cy.visit('http://localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
     })
 
     it('Should mount component correctly', () => {
@@ -24,7 +24,7 @@ describe('Testing bigger LandingPageComponent', () => {
 describe('Testing smaller LandingPageComponent', () => {
     beforeEach(() => {
         cy.viewport(600, 800);
-        cy.visit('http://localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
     })
 
     it('Should mount component correctly', () => {

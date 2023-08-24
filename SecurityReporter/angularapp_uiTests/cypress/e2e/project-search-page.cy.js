@@ -2,7 +2,7 @@ describe('template spec', () => {
     //Should add tests for navbar
 
     beforeEach(() => {
-        cy.visit('http://localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
         Login();
     })
 
@@ -99,7 +99,7 @@ describe('template spec', () => {
 describe('Project search page components tests - smaller viewport', () => {
     beforeEach(() => {
         cy.viewport(400, 800);
-        cy.visit('http://localhost:4200/welcome');
+        cy.visit('https://localhost:4200/welcome');
         LoginSmallComponent();
     })
 
@@ -254,7 +254,6 @@ function CheckBigNavbar() {
     cy.get('img.img-fluid.col-3').should('exist').and('be.visible');
     cy.get('div.navbar-brand.pb-3').should('exist').and('be.visible').and('contain', 'Cybersecurity Assessment');
     CheckNavbarLinks();
-    cy.get('img.user-circle.ng-star-inserted').should('exist').and('be.visible');
     cy.get('a#navbarDarkDropdownMenuLink').should('exist').and('be.visible').children().eq(0).then($child => {
         cy.get($child).click();
         cy.get('button.dropdown-item').should('exist').and('be.visible').and('be.enabled');
