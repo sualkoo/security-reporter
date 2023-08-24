@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FileDownloadService } from '../../services/file-download.service';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-file-drag-drop',
@@ -15,6 +16,10 @@ export class FileDragDropComponent {
   constructor(private fileDownloadService: FileDownloadService) { }
 
   @Input() pentestTitle?: string;
+  @Input() id: string = "";
+  @Input() pentest: string = "";
+
+  constructor(private uploadService: UploadService) { }
 
   downloadFile(fileName: string) {
     this.fileDownloadService.getDownloadFile(fileName)
@@ -48,7 +53,12 @@ export class FileDragDropComponent {
     event.preventDefault();
   }
 
+  upload(file: File, destination: string) {
+    this.uploadService.upload(file, destination, this.id);
+  }
+
   private processFiles(files: FileList) {
+    this.uploadedFiles = [];
     for (let i = 0; i < files.length; i++) {
       this.uploadedFiles.push(files[i]);
     }
