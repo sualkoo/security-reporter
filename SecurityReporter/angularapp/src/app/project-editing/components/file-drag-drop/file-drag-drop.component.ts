@@ -35,9 +35,7 @@ export class FileDragDropComponent {
   }
 
   upload(file: File, destination: string) {
-    var ret = this.uploadService.upload(file, destination, this.id);
-    // TODO handle return - alertservice + vypisat co vracia
-    // TODO css + aby iba jeden mohol byt + ostatne buttons
+    this.uploadService.upload(file, destination, this.id);
   }
 
   private processFiles(files: FileList) {
