@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
@@ -25,11 +25,7 @@
         <Folder Include="ProjectSearch\Enums\" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\angularapp\angularapp.esproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
-        <None Include="Properties\serviceDependencies.local.json.user" />
+    <ItemGroup>        <None Include="Properties\serviceDependencies.local.json.user" />
         <None Include="webapi.csproj" />
     </ItemGroup>
 

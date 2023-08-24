@@ -49,12 +49,12 @@ public class AzureBlobService : IAzureBlobService
     public async Task SaveReportPdf(byte[] pdfContent, Guid projectReportId, string projectReportName)
     {
         _logger.LogInformation("Saving generated PDF for report " + projectReportId);
-        
+
         string filePath = $"{projectReportId}/{projectReportName.Replace(" ", "_")}.pdf";
-        
-        
+
+
         var pdfBlob = projectReportContainerClient.GetBlobClient(filePath);
-        
+
         await pdfBlob.UploadAsync(new MemoryStream(pdfContent), true);
         _logger.LogInformation("Saved PDF blob to: " + pdfBlob.Uri);
     }
@@ -62,7 +62,7 @@ public class AzureBlobService : IAzureBlobService
     public async Task<FileContentResult> GetReportPdf(Guid projectReportId)
     {
         _logger.LogInformation("Fetching PDF for report " + projectReportId);
-    
+
         // List the blobs in the specified directory
         List<BlobItem> blobs = new List<BlobItem>();
         await foreach (BlobHierarchyItem blob in projectReportContainerClient.GetBlobsByHierarchyAsync(
@@ -74,10 +74,10 @@ public class AzureBlobService : IAzureBlobService
                 blobs.Add(blob.Blob);
             }
         }
-    
+
         // Find the first PDF blob in the list
         var pdfBlob = blobs.FirstOrDefault(blob => blob.Name.EndsWith(".pdf"));
-    
+
         if (pdfBlob == null)
         {
             throw new CustomException(StatusCodes.Status404NotFound, "PDF file not found.");
@@ -85,12 +85,12 @@ public class AzureBlobService : IAzureBlobService
 
         var pdfBlobClient = projectReportContainerClient.GetBlobClient(pdfBlob.Name);
         BlobDownloadInfo pdfDownloadInfo = await pdfBlobClient.DownloadAsync();
-    
+
         using var memoryStream = new MemoryStream();
         await pdfDownloadInfo.Content.CopyToAsync(memoryStream);
         memoryStream.Seek(0, SeekOrigin.Begin);
         var pdfBytes = memoryStream.ToArray();
-        
+
         return new FileContentResult(pdfBytes, "application/pdf")
         {
             FileDownloadName = pdfBlobClient.Name.Substring(37)
@@ -130,8 +130,8 @@ public class AzureBlobService : IAzureBlobService
     public async Task LoadImagesFromDb(Guid projectReportId, ProjectReportData projectReportData)
     {
         _logger.LogInformation("Creating images for the ZIP file " + projectReportId);
-        
-        foreach(Finding finding in projectReportData.Findings)
+
+        foreach (Finding finding in projectReportData.Findings)
         {
             await foreach (BlobHierarchyItem blob in projectReportContainerClient.GetBlobsByHierarchyAsync(
                                        delimiter: "/",
@@ -146,7 +146,7 @@ public class AzureBlobService : IAzureBlobService
                     await download.Content.CopyToAsync(memoryStream);
                     byte[] byteArray = memoryStream.ToArray();
 
-                    string blobName = blob.Blob.Name; 
+                    string blobName = blob.Blob.Name;
                     finding.AddImage(blobName.Substring(($"{projectReportId}/Findings/{finding.FolderName}/").Length), byteArray);
                 }
             }
@@ -156,13 +156,13 @@ public class AzureBlobService : IAzureBlobService
     public async Task SaveImagesFromZip(Guid projectReportId, List<Finding> findingsList)
     {
         _logger.LogInformation("Converting images into blobs " + projectReportId);
-        foreach(Finding finding in findingsList)
+        foreach (Finding finding in findingsList)
         {
-            foreach(FileData imageData in finding.GetImages())
+            foreach (FileData imageData in finding.GetImages())
             {
                 string blobPath = $"{projectReportId}/Findings/{finding.FolderName}/{imageData.FileName}";
                 BlobClient blobClient = projectReportContainerClient.GetBlobClient(blobPath);
-                using(MemoryStream stream = new MemoryStream(imageData.Content))
+                using (MemoryStream stream = new MemoryStream(imageData.Content))
                 {
                     await blobClient.UploadAsync(stream);
                     Console.WriteLine(blobClient.Uri);
@@ -172,14 +172,16 @@ public class AzureBlobService : IAzureBlobService
         }
     }
 
-    public async Task<bool> DownloadProject(string fileName, string path)
+    public async Task<bool> DownloadProject(string fileName)
     {
 
         BlobClient blobClient = projectContainerClient.GetBlobClient(fileName);
 
         if (await blobClient.ExistsAsync())
         {
-            string filePath = Path.Combine(path, fileName);
+            string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string downloadFolderPath = Path.Combine(downloadsPath, "Downloads");
+            string filePath = Path.Combine(downloadFolderPath, fileName);
 
             BlobDownloadInfo blobDownloadInfo = await blobClient.DownloadAsync();
             using (FileStream fs = File.OpenWrite(filePath))
@@ -195,14 +197,13 @@ public class AzureBlobService : IAzureBlobService
             return false;
         }
     }
-
-    public async Task UploadProjectFile(string filePath, string blobName)
+    public async Task UploadProjectFile(IFormFile file, string blobName)
     {
         BlobClient blobClient = projectContainerClient.GetBlobClient(blobName);
 
-        using (FileStream fs = File.OpenRead(filePath))
+        using (Stream stream = file.OpenReadStream())
         {
-            await blobClient.UploadAsync(fs, true);
+            await blobClient.UploadAsync(stream, true);
         }
     }
 }
