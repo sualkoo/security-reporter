@@ -9,7 +9,6 @@ public class ProjectReportService : IProjectReportService
 {
     private readonly ILogger Logger;
     private IProjectReportService projectReportServiceImplementation;
-    private bool generatePdfs { get; }
     
     public ProjectReportService(IProjectDataParser parser, IDbProjectDataParser dbParser,
         IProjectDataValidator validator, ICosmosService cosmosService, IPdfBuilder pdfBuilder,
@@ -23,13 +22,6 @@ public class ProjectReportService : IProjectReportService
         AzureBlobService = azureBlobService;
         var loggerFactory = LoggerProvider.GetLoggerFactory();
         Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-        
-        generatePdfs = false;
-        var pdfGenerationAllowed = configuration["GeneratePdfsFromReports"];
-        if (bool.TryParse(pdfGenerationAllowed, out bool generatePdfsValue))
-        {
-            generatePdfs = generatePdfsValue;
-        }
     }
 
     private IProjectDataValidator Validator { get; }
@@ -67,12 +59,9 @@ public class ProjectReportService : IProjectReportService
 
         try
         {
-            if (generatePdfs)
-            {
-                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
-                    newReportData.DocumentInfo!.ProjectReportName!);
-            }
+            var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+            await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
+                newReportData.DocumentInfo!.ProjectReportName!);
             await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
         }
         catch (Exception)

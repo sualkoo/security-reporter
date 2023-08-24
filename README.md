@@ -21,9 +21,11 @@ Welcome to the documentation for SecurityReporter, a C# and .NET-based applicati
 - **Azure Blob Service**: Configure the `appsettings.json` or user secrets for integration with Azure Blob Storage. Create a container named `reports` in your Azure Blob Storage account.
 
 # Project setup
+
 1. Clone repository
 
 2. Download and install Cosmos DB Emulator:
+
    - https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
 
 3. Open Cosmos DB Emulator (emulator should show up in browser) and create Database called ProjectDatabase with these Containers all with id as Partition key:
@@ -74,9 +76,9 @@ Welcome to the documentation for SecurityReporter, a C# and .NET-based applicati
    - In table set angularapp Project to second position and select Start Action in right column
    - Click Apply and OK
 
-11. Start project (F5)
+8. Start project (F5)
 
-12. Swagger and angular page should be visible in browser.
+9. Swagger and angular page should be visible in browser.
 
 # Contribute
 
