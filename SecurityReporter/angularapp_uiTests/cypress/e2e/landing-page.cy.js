@@ -1,12 +1,22 @@
 describe('Testing bigger LandingPageComponent', () => {
+    //CHECK FOOTER ELEMENTS STRASNE SPOMALUJE TESTY IDK PRECO
     beforeEach(() => {
-        cy.visit('https://sda-playground.azurewebsites.net/');
+        cy.visit('https://localhost:4200/welcome');
     })
 
     it('Should mount component correctly', () => {
+        CheckBigNavbar();
         CheckBanner();
         CheckContent();
         CheckFooterElements();
+    })
+
+    it('Redirect from landing to about pentest page works', () => {
+        AboutPentestRedirect();
+    })
+
+    it('Redirect from landing to "Order a pentest" doesnt work', () => {
+        cy.get('a.nav-link').contains('Order a pentest').should('not.be.enabled');
     })
 })
 
@@ -14,13 +24,27 @@ describe('Testing bigger LandingPageComponent', () => {
 describe('Testing smaller LandingPageComponent', () => {
     beforeEach(() => {
         cy.viewport(600, 800);
-        cy.visit('https://sda-playground.azurewebsites.net/');
+        cy.visit('https://localhost:4200/welcome');
     })
 
     it('Should mount component correctly', () => {
+        CheckSmallNavbar();
         CheckBanner();
         CheckContent();
         CheckFooterElements();
+    })
+
+    it('Redirect from landing to about pentest page works', () => {
+        cy.get('span.navbar-toggler-icon').click().then(() => {
+            AboutPentestRedirect();
+        })
+
+    })
+
+    it('Redirect from landing to "Order a pentest" doesnt work', () => {
+        cy.get('span.navbar-toggler-icon').click().then(() => {
+            cy.get('a.nav-link').contains('Order a pentest').should('not.be.enabled');
+        })
     })
 })
 
@@ -89,33 +113,37 @@ function CheckFooterElements() {
     cy.get('p#footer_more_info').should('exist').and('be.visible');
 }
 
+function CheckNavbarLinks() {
+    cy.get('a.nav-link').contains('Home').should('be.visible').and('have.class', 'fw-bolder').and('have.class', 'active').should('not.be.disabled');
+    cy.get('a.nav-link').contains('About pentest').should('be.visible').and('not.have.class', 'fw-bolder').should('not.be.disabled');
+    cy.get('a.nav-link').contains('Order a pentest').should('be.visible').and('not.have.class', 'fw-bolder').should('not.be.enabled');
+    cy.get('button').contains('Login').should('be.visible').and('not.be.disabled');
+}
+
+function NavbarLinksNotShown() {
+    cy.get('a.nav-link').contains('Home').should('not.be.visible');
+    cy.get('a.nav-link').contains('About pentest').should('not.be.visible');
+    cy.get('a.nav-link').contains('Order a pentest').should('not.be.visible');
+}
+
 function CheckBigNavbar() {
-    /*cy.get('img.img-fluid').should('exist').and('be.visible');
-    cy.get('button.btn.btn-link.d-flex.align-items-center.login').should('exist').and('be.enabled');
-    cy.get('i').should('exist').and('be.visible');
-  
-    //Navbar
-    cy.get('nav.navbar.navbar-expand-lg.navbar-dark.bg-dark').should('exist').and('be.visible');
-    cy.get('div#navbarNav.collapse.navbar-collapse').should('exist').and('be.visible');
-    cy.get('a.nav-link.link').contains('Home').should('exist').and('be.visible');
-    cy.get('a.nav-link.link').contains('About us').should('exist').and('be.visible');
-    cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');*/
+    cy.get('img.img-fluid.col-3').should('exist').and('be.visible');
+    cy.get('div.navbar-brand.pb-3').should('exist').and('be.visible').and('contain', 'Cybersecurity Assessment');
+    CheckNavbarLinks();
 }
 
 function CheckSmallNavbar() {
-    /*cy.get('nav.navbar.navbar-expand-lg.navbar-dark.bg-dark').should('exist').and('be.visible');
-    cy.get('button.navbar-toggler.offset-1').should('exist').and('be.visible').and('be.enabled');
-    cy.get('span.navbar-toggler-icon').should('exist').and('be.visible');
-  
-    cy.get('a.nav-link.link').contains('Home').should('not.be.visible');
-    cy.get('a.nav-link.link').contains('About us').should('not.be.visible');
-    cy.get('a.nav-link.link').contains('How to order a pentest').should('not.be.visible');
-  
-    cy.get('button.navbar-toggler.offset-1').click();
-  
-    cy.get('a.nav-link.link').contains('Home').should('exist').and('be.visible');
-    cy.get('a.nav-link.link').contains('About us').should('exist').and('be.visible');
-    cy.get('a.nav-link.link').contains('How to order a pentest').should('exist').and('be.visible');*/
+    cy.get('img.img-fluid.col-3').should('exist').and('be.visible');
+    cy.get('div.navbar-brand.pb-3').should('exist').and('be.visible').and('contain', 'Cybersecurity Assessment');
+    NavbarLinksNotShown();
+    cy.get('span.navbar-toggler-icon').should('exist').and('be.visible').and('not.be.disabled').click().then(() => {
+        CheckNavbarLinks();
+        cy.wait(300);
+        cy.get('span.navbar-toggler-icon').click().then(() => {
+            NavbarLinksNotShown();
+        });
+    })
+
 }
 
 function CheckContent() {
@@ -157,5 +185,13 @@ function CheckBanner() {
     cy.get('span.h5.hero-block__subtitle.display-block').contains('(1337 Pentesters)').should('exist').and('be.visible');
     cy.get('div.col-12.col-lg-6.order-lg-2').should('exist').and('be.visible');
     cy.get('img.img-fluid').should('exist').and('be.visible');
+}
+
+function AboutPentestRedirect() {
+    cy.get('a.nav-link').contains('About pentest').click().then(() => {
+        cy.url().should('include', 'about-pentest');
+        cy.get('a.nav-link').contains('About pentest').should('have.class', 'fw-bolder').and('have.class', 'active');
+        cy.get('a.nav-link').contains('Home').should('not.have.class', 'fw-bolder').and('not.have.class', 'active');
+    })
 }
 

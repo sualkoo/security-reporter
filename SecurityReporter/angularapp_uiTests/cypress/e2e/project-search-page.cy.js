@@ -2,7 +2,8 @@ describe('template spec', () => {
     //Should add tests for navbar
 
     beforeEach(() => {
-        cy.visit('https://sda-playground.azurewebsites.net/project-search');
+        cy.visit('https://localhost:4200/welcome');
+        Login();
     })
 
     it('Should correctly load component', () => {
@@ -26,15 +27,15 @@ describe('template spec', () => {
         SingleFilterClearButton();
     })
 
-    it('Should return search items', () => {
-        SearchRequest();
+    it('Should return search mock items', () => {
+        MockSearchRequest();
 
         //Check if elements after load exist
         CheckElementsAfterSearch();
     })
 
     it('Should hide sidebar', () => {
-        SearchRequest();
+        MockSearchRequest();
         cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
         CheckNoSidebarElements();
         cy.get('div.drop-zone.ng-star-inserted').should('not.be.visible');
@@ -45,28 +46,61 @@ describe('template spec', () => {
         CheckElementsAfterSearch();
     })
 
-    it('Shouldnt return search items', () => {
+    it('Shouldnt return mock search items', () => {
         NoSearchItems();
     })
 
-    it('Should "delete" item ', () => {
-        SearchRequest();
+    it('Should "delete" mock item ', () => {
+        MockSearchRequest();
         CheckDeleteElements();
         DeleteItems();
     })
 
-    it('Should "delete" item - no sidebar', () => {
-        SearchRequest();
+    it('Should "delete" mock item - no sidebar', () => {
+        MockSearchRequest();
         cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
         CheckDeleteElements();
         DeleteItems();
+    })
+
+    it('Should return search item (not mock)', () => {
+        SearchRequest('risk', 'input#case1.checkbox')
+        cy.get('div.card-body').should('exist').and('be.visible');
+    })
+
+    it('Shouldnt return search item (not mock)', () => {
+        SearchRequest('ergegegwergergeb01584rk', 'input#case1.checkbox')
+        cy.get('div.card-body').should('not.exist');
+        Popup('Attention', 'No findings found.', 'info');
+    })
+
+    it('Should return search item based on report name filter', () => {
+        SearchRequest('sql', 'input#case7.checkbox')
+        cy.get('div.card-body').should('exist').and('be.visible');
+    })
+
+    it('Should correctly load navbar (TBR)', () => {
+        CheckBigNavbar();
+    })
+
+    it('Should redirect to landing page (TBR)', () => {
+        Redirect('Home', 'welcome')
+    })
+
+    it('Should redirect to project management (TBR)', () => {
+        Redirect('Project Management', 'project-management')
+    })
+
+    it('Should redirect to dashboard (TBR)', () => {
+        Redirect('Dashboard', 'dashboard')
     })
 })
 
 describe('Project search page components tests - smaller viewport', () => {
     beforeEach(() => {
         cy.viewport(400, 800);
-        cy.visit('https://sda-playground.azurewebsites.net/project-search');
+        cy.visit('https://localhost:4200/welcome');
+        LoginSmallComponent();
     })
 
     it('Should correctly load component', () => {
@@ -90,12 +124,12 @@ describe('Project search page components tests - smaller viewport', () => {
         SingleFilterClearButton();
     })
 
-    it('Shouldnt return search items', () => {
+    it('Shouldnt return mock search items', () => {
         NoSearchItems();
     })
 
-    it('Should return search items', () => {
-        SearchRequest();
+    it('Should return mock search items', () => {
+        MockSearchRequest();
 
         cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
         CheckElementsAfterSearch();
@@ -107,11 +141,46 @@ describe('Project search page components tests - smaller viewport', () => {
         cy.get('h4').contains('or').should('not.exist');
     })
 
-    it('Should "delete" item', () => {
-        SearchRequest();
+    it('Should "delete" mock item', () => {
+        MockSearchRequest();
         cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
         CheckDeleteElements();
         DeleteItems();
+    })
+
+    it('Should return search item (not mock)', () => {
+        SearchRequest('risk', 'input#case1.checkbox')
+        cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
+        cy.get('div.card-body').should('exist').and('be.visible');
+    })
+
+    it('Shouldnt return search item (not mock)', () => {
+        SearchRequest('ergegegwergergeb01584rk', 'input#case1.checkbox')
+        cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('not.exist');
+        cy.get('div.card-body').should('not.exist');
+        Popup('Attention', 'No findings found.', 'info');
+    })
+
+    it('Should return search item based on report name filter', () => {
+        SearchRequest('sql', 'input#case7.checkbox')
+        cy.get('mat-icon.mat-icon.notranslate.icon.material-icons.mat-ligature-font.mat-icon-no-color.ng-star-inserted').should('contain', 'menu').and('exist').click();
+        cy.get('div.card-body').should('exist').and('be.visible');
+    })
+
+    it('Should correctly load navbar (TBR)', () => {
+        CheckSmallNavbar();
+    })
+
+    it('Should redirect to landing page (TBR)', () => {
+        RedirectSmallComponent('Home', 'welcome')
+    })
+
+    it('Should redirect to project management (TBR)', () => {
+        RedirectSmallComponent('Project Management', 'project-management')
+    })
+
+    it('Should redirect to dashboard (TBR)', () => {
+        RedirectSmallComponent('Dashboard', 'dashboard')
     })
 })
 
@@ -142,9 +211,76 @@ function CheckExistenceOfFiltersElements() {
     cy.get('input.checkbox').eq(3).should('be.visible');
     cy.get('input.checkbox').eq(4).should('be.visible');
     cy.get('input.checkbox').eq(5).should('be.visible');
-    cy.get('div.center.submit-button.pt-4').should('be.visible');
+    cy.get('div.center.submit-button.pt-4');
     cy.get('button#search_button').should('contain', 'Search').and('be.disabled');
     cy.get('button#clear_button').should('contain', 'Clear').and('be.disabled');
+}
+
+function Login() {
+    cy.get('button').contains('Login').click();
+    cy.get('input#mat-input-0').type('admin@admin.sk')
+    cy.get('input#mat-input-1').type('admin');
+    cy.get('.login-form > :nth-child(3)').click()
+    cy.get('a.nav-link').contains('Project Search').click();
+}
+
+function LoginSmallComponent() {
+    cy.get('span.navbar-toggler-icon').click().then(() => {
+        Login();
+        cy.get('span.navbar-toggler-icon').click();
+    })
+}
+
+function CheckNavbarLinks() {
+    cy.get('a.nav-link').contains('Home').should('be.visible').and('not.have.class', 'fw-bolder').
+        and('not.have.class', 'active').and('not.be.disabled')
+    cy.get('a.nav-link').contains('Project Search').should('be.visible').and('have.class', 'fw-bolder')
+        .and('not.be.disabled').and('have.class', 'active');
+    cy.get('a.nav-link').contains('Project Management').should('be.visible').and('not.have.class', 'fw-bolder')
+        .and('not.be.enabled').and('not.have.class', 'active');
+    cy.get('a.nav-link').contains('Dashboard').should('be.visible').and('not.have.class', 'fw-bolder')
+        .and('not.be.enabled').and('not.have.class', 'active');
+}
+
+function NavbarLinksNotShown() {
+    cy.get('a.nav-link').contains('Home').should('not.be.visible');
+    cy.get('a.nav-link').contains('Project Search').should('not.be.visible')
+    cy.get('a.nav-link').contains('Project Management').should('not.be.visible');
+    cy.get('a.nav-link').contains('Dashboard').should('not.be.visible');
+    cy.get('button').contains('Logout').should('not.be.visible');
+}
+
+function CheckBigNavbar() {
+    cy.get('img.img-fluid.col-3').should('exist').and('be.visible');
+    cy.get('div.navbar-brand.pb-3').should('exist').and('be.visible').and('contain', 'Cybersecurity Assessment');
+    CheckNavbarLinks();
+    cy.get('a#navbarDarkDropdownMenuLink').should('exist').and('be.visible').children().eq(0).then($child => {
+        cy.get($child).click();
+        cy.get('button.dropdown-item').should('exist').and('be.visible').and('be.enabled');
+    })
+}
+
+function CheckSmallNavbar() {
+    cy.get('img.img-fluid.col-3').should('exist').and('be.visible');
+    cy.get('div.navbar-brand.pb-3').should('exist').and('be.visible').and('contain', 'Cybersecurity Assessment');
+    NavbarLinksNotShown();
+    cy.get('span.navbar-toggler-icon').should('exist').and('be.visible').and('not.be.disabled').click().then(() => {
+        CheckNavbarLinks();
+        cy.get('span.navbar-toggler-icon').click();
+    })
+}
+
+function RedirectSmallComponent(page, urlInclude) {
+    cy.get('span.navbar-toggler-icon');
+    Redirect(page, urlInclude);
+}
+
+function Redirect(page, urlInclude) {
+    cy.get('a.nav-link').contains(page).click().then(() => {
+        cy.url().should('include', urlInclude);
+        cy.get('a.nav-link').contains(page).should('have.class', 'active').and('have.class', 'fw-bolder');
+        cy.get('a.nav-link').contains('Project Search').should('not.have.class', 'active').and('not.have.class', 'fw-bolder');
+    })
 }
 
 function CheckUploadElementsBiggerViewport() {
@@ -162,14 +298,14 @@ function CheckUploadElementsBiggerViewport() {
 }
 
 function CheckUploadElementsSmallerViewport() {
-    cy.get('div.pl-2');
-    cy.get('h4.left.upload-items').and('be.visible');
-    cy.get('div.pb-2.pt-1');
-    cy.get('div.center');
-    cy.get('button.btn.btn-primary').should('contain', 'Browse for file').and('be.visible').and('be.enabled');
-    cy.get('p.file-type.pt-1').should('contain', 'Accepted file type: .zip');
-    cy.get('div.center.pt-4.pb-4');
-    cy.get('button.btn.btn-secondary').should('contain', 'Upload').and('be.disabled');
+    cy.get('div.pl-2').should('exist');
+    cy.get('h4.left.upload-items').should('exist');
+    cy.get('div.pb-2.pt-1').should('exist');
+    cy.get('div.center').should('exist');
+    cy.get('button.btn.btn-primary').should('exist').and('contain', 'Browse for file').and('be.enabled');
+    cy.get('p.file-type.pt-1').should('exist').and('contain', 'Accepted file type: .zip');
+    cy.get('div.center.pt-4.pb-4').should('exist').and('exist');
+    cy.get('button.btn.btn-secondary').should('exist').and('contain', 'Upload').and('be.disabled');
 }
 
 function CheckOneFilter(order) {
@@ -204,7 +340,7 @@ function CheckElementsAfterSearch() {
     })
 
     cy.get('mat-icon#up_button').should('contain', 'arrow_upward').click().then(() => {
-       cy.get('mat-icon#up_button').should('not.exist');
+        cy.get('mat-icon#up_button').should('not.exist');
     })
 
     cy.get('button.btn.btn-dark').should('contain', 'Get Source').and('exist').and('be.enabled');
@@ -252,12 +388,18 @@ function CheckNoSidebarElements() {
     cy.get('div.center').should('not.be.visible');
 }
 
-function SearchRequest() {
+function SearchRequest(searchString, checkbox) {
+    cy.get('input#mat-input-2').type(searchString);
+    cy.get(checkbox).check();
+    cy.get('button.btn.btn-primary.m-1').click();
+}
+
+function MockSearchRequest() {
     cy.get('input[placeholder = "Search..."]').type('dum');
     cy.get('input.checkbox').first().should('be.visible').check();
     cy.get('input.checkbox').should('be.checked');
 
-    cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dum&details=&impact=&repeatability=&references=&cwe=`, {
+    cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dum&details=&impact=&repeatability=&references=&cwe=&findingName=`, {
         statusCode: 200,
         fixture: 'search-response.json'
     }).as('response')
@@ -322,6 +464,9 @@ function SingleFilterClearButton() {
 
     //CWE
     CheckOneFilter(5);
+
+    //Finding Name
+    CheckOneFilter(6);
 }
 
 function NoSearchItems() {
@@ -329,7 +474,7 @@ function NoSearchItems() {
     cy.get('input.checkbox').first().should('be.visible').check();
     cy.get('input.checkbox').should('be.checked');
 
-    cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dgurug&details=&impact=&repeatability=&references=&cwe=`, {
+    cy.intercept('GET', `/api/project-reports/findings?page=1&projectName=dgurug&details=&impact=&repeatability=&references=&cwe=&findingName=`, {
         statusCode: 404,
         totalpost: 0
     }).as('errorResponse');
@@ -340,7 +485,7 @@ function NoSearchItems() {
 
     cy.on('window:console', (consoleMessage) => {
         expect(consoleMessage).to.have.property('type', 'error');
-        expect(consoleMessage).to.have.property('text', 'GET https://localhost:7075/project-reports/findings?page=1&projectName=${badProjectName}&details=&impact=&repeatability=&references=&cwe= 404 (Not Found)');
+        expect(consoleMessage).to.have.property('text', 'GET /api/project-reports/findings?page=1&projectName=dgurug&details=&impact=&repeatability=&references=&cwe=&findingName= 404 (Not Found)');
     });
 
     Popup('Attention', 'No findings found.', 'info');
