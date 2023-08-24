@@ -206,4 +206,10 @@ public class AzureBlobService : IAzureBlobService
             await blobClient.UploadAsync(stream, true);
         }
     }
+
+    public async Task DeleteProjectFile(string blobName)
+    {
+        BlobClient blobClient = projectContainerClient.GetBlobClient(blobName);
+        await blobClient.DeleteIfExistsAsync();
+    }
 }

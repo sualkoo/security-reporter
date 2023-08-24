@@ -63,7 +63,7 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> CheckFileExists(string id)
     {
         string scopeFileName = $"scope_{id}.pdf";
-        string questionnaireFileName = $"questionnaire_{id}.pdf";
+        string questionnaireFileName = $"questionare_{id}.pdf";
         string reportFileName = $"report_{id}.pdf";
 
         bool scopeFileExists = await AzureBlobService.CheckFileExistsAsync(scopeFileName);
@@ -257,5 +257,22 @@ public class ProjectController : ControllerBase
 
             return StatusCode(500, $"Error uploading file: {ex.Message}");
         }
+    }
+
+    [HttpDelete("deleteBlobFile")]
+    public async Task<IActionResult> DeleteBlobFile(string destination, string id)
+    {
+            if (string.IsNullOrEmpty(destination))
+            {
+                return StatusCode(400, "Error: Destination parameter is required.");
+            }
+
+            if (destination != "scope" && destination != "questionare" && destination != "report")
+            {
+                return StatusCode(400, "Error: Invalid destination parameter.");
+            }
+
+            await AzureBlobService.DeleteProjectFile(destination + "_" + id + ".pdf");
+            return StatusCode(204, "File deleted successfully.");
     }
 }

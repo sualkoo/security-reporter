@@ -3,13 +3,14 @@ import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FileDownloadService } from '../../services/file-download.service';
 import { UploadService } from '../../services/upload.service';
+import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-file-drag-drop',
   templateUrl: './file-drag-drop.component.html',
   styleUrls: ['./file-drag-drop.component.css'],
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatTooltipModule],
 })
 export class FileDragDropComponent {
   uploadedFiles: File[] = [];
@@ -61,9 +62,5 @@ export class FileDragDropComponent {
     for (let i = 0; i < files.length; i++) {
       this.uploadedFiles.push(files[i]);
     }
-
-
-
-
   }
 }

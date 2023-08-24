@@ -14,7 +14,6 @@ mat-divider {
 
 .pentest-download div {
   display: flex;
-  justify-content: space-between;
 }
 
 .clickable-item {
@@ -23,4 +22,11 @@ mat-divider {
 
 .not-clickable {
   cursor: not-allowed;
+}
+
+.icons-group {
+  padding-right: 20px;
+  position: absolute;
+  right: 0;
+  gap: 10px;
 }

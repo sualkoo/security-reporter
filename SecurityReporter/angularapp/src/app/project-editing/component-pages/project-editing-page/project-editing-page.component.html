@@ -186,28 +186,40 @@
               <mat-divider></mat-divider>
 
               <div class="pentest-download">
-                  <div (click)="fileExists.questionnaireFileExists ? downloadFile('questionnaire') : null"
-                       class="clickable-item"
-                       [ngClass]="{ 'not-clickable': !fileExists.questionnaireFileExists }">
-                      <p>Questionnaire</p>
-                      <mat-icon [style.color]="fileExists.questionnaireFileExists ? '#ec6602' : '#999'"
-                                matTooltip="{{ fileExists.questionnaireFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
+                <div>
+                  <p>Questionaire</p>
+
+                  <div class="icons-group">
+                    <mat-icon class="clickable-item"
+                              [ngClass]="{ 'not-clickable': !fileExists.questionnaireFileExists }" [style.color]="fileExists.questionnaireFileExists ? '#ec6602' : '#999'" matTooltip="{{ fileExists.questionnaireFileExists ? 'Delete file' : 'File not uploaded' }}" (click)="deleteFile('questionare')">delete</mat-icon>
+
+                    <mat-icon class="clickable-item"
+                              [ngClass]="{ 'not-clickable': !fileExists.questionnaireFileExists }" [style.color]="fileExists.questionnaireFileExists ? '#ec6602' : '#999'"
+                              matTooltip="{{ fileExists.questionnaireFileExists ? 'Download file' : 'File not uploaded' }}" (click)="fileExists.questionnaireFileExists ? downloadFile('questionare') : null">download</mat-icon>
                   </div>
-                  <div (click)="fileExists.scopeFileExists ? downloadFile('scope') : null"
-                       class="clickable-item"
-                       [ngClass]="{ 'not-clickable': !fileExists.scopeFileExists }">
-                      <p>Project Scope</p>
-                      <mat-icon [style.color]="fileExists.scopeFileExists ? '#ec6602' : '#999'"
-                                matTooltip="{{ fileExists.scopeFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
+                </div>
+                <div>
+                  <p>Project Scope</p>
+                  <div class="icons-group">
+                    <mat-icon class="clickable-item"
+                              [ngClass]="{ 'not-clickable': !fileExists.scopeFileExists }" [style.color]="fileExists.scopeFileExists ? '#ec6602' : '#999'" matTooltip="{{ fileExists.scopeFileExists ? 'Delete file' : 'File not uploaded' }}" (click)="deleteFile('scope')">delete</mat-icon>
+                    <mat-icon class="clickable-item"
+                              [ngClass]="{ 'not-clickable': !fileExists.scopeFileExists }" [style.color]="fileExists.scopeFileExists ? '#ec6602' : '#999'"
+                              matTooltip="{{ fileExists.scopeFileExists ? 'Download file' : 'File not uploaded' }}" (click)="fileExists.scopeFileExists ? downloadFile('scope') : null">download</mat-icon>
                   </div>
-                  <div (click)="fileExists.reportFileExists ? downloadFile('report') : null"
-                       class="clickable-item"
-                       [ngClass]="{ 'not-clickable': !fileExists.reportFileExists }">
-                      <p>Project Report</p>
-                      <mat-icon [style.color]="fileExists.reportFileExists ? '#ec6602' : '#999'"
-                                matTooltip="{{ fileExists.reportFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
                   </div>
-              </div>
+                  <div>
+                    <p>Project Report</p>
+                    <div class="icons-group">
+                      <mat-icon class="clickable-item"
+                                [ngClass]="{ 'not-clickable': !fileExists.reportFileExists }" [style.color]="fileExists.reportFileExists ? '#ec6602' : '#999'" matTooltip="{{ fileExists.reportFileExists ? 'Delete file' : 'File not uploaded' }}" (click)="deleteFile('report')">delete</mat-icon>
+
+                      <mat-icon class="clickable-item"
+                                [ngClass]="{ 'not-clickable': !fileExists.reportFileExists }" [style.color]="fileExists.reportFileExists ? '#ec6602' : '#999'"
+                                matTooltip="{{ fileExists.reportFileExists ? 'Download file' : 'File not uploaded' }}" (click)="fileExists.reportFileExists ? downloadFile('report') : null">download</mat-icon>
+                    </div>
+                    </div>
+                  </div>
 
           </mat-expansion-panel>
         </div>

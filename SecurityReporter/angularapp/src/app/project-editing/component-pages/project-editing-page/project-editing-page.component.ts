@@ -30,6 +30,7 @@ import { FileDownloadService } from '../../services/file-download.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CheckFileExistsService } from '../../services/check-file-exists.service';
 import { FileExists } from '../../../project-management/interfaces/file-exists-interface';
+import { DeleteService } from '../../services/delete.service';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -82,13 +83,14 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     private route: ActivatedRoute,
     addProjectService: AddProjectService,
     router: Router,
-    private fileDownloadService : FileDownloadService,
+    private fileDownloadService: FileDownloadService,
     alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
     private checkFileExistsService: CheckFileExistsService,
     private formBuilder: FormBuilder,
-    autoLogoutService: AutoLogoutService
+    autoLogoutService: AutoLogoutService,
+    private deleteService: DeleteService
   ) {
     super(addProjectService, router, alertService, autoLogoutService);
   }
@@ -282,5 +284,9 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  deleteFile(destination: string) {
+    this.deleteService.delete(destination, this.projectClass.id)
   }
 }

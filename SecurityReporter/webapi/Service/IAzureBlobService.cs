@@ -13,6 +13,7 @@ public interface IAzureBlobService
     Task SaveImagesFromZip(Guid projectReportId, List<Finding> findingsList);
     Task LoadImagesFromDb(Guid projectReportId, ProjectReportData projectReportData);
     Task UploadProjectFile(IFormFile file, string blobName);
+    Task DeleteProjectFile(string blobName);
     Task<bool> DownloadProject(string fileName);
     Task<bool> CheckFileExistsAsync(string fileName);
 }
