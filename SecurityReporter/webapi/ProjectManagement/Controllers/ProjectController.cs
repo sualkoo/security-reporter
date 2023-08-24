@@ -233,7 +233,7 @@ public class ProjectController : ControllerBase
                 return StatusCode(400, "Error: Destination parameter is required.");
             }
 
-            if (destination != "scope" || destination != "questionaire"|| destination != "report")
+            if (destination != "scope" && destination != "questionare" && destination != "report")
             {
                 return StatusCode(400, "Error: Invalid destination parameter.");
             }
