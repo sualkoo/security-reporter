@@ -1,58 +1,105 @@
-﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 
-namespace webapi.ProjectSearch.Controllers
+namespace webapi.ProjectSearch.Controllers;
+
+[ApiController]
+[Route("api/project-reports")]
+// [Authorize(Policy = "AdminPentesterPolicy")]
+public class ProjectReportController : ExceptionHandlingControllerBase
 {
-    [ApiController]
-    [Route("project-reports")]
-    // [Authorize(Policy = "AdminPentesterPolicy")]
-    public class ProjectReportController : ExceptionHandlingControllerBase
+    private new readonly ILogger Logger;
+
+    public ProjectReportController(ILogger<ProjectReportController> logger,
+        ILogger<ExceptionHandlingControllerBase> baseLogger, IProjectReportService projectReportService,
+        IPdfBuilder pdfBuilder) : base(baseLogger)
     {
-        private IProjectReportService ProjectReportService { get; }
-        private readonly ILogger Logger;
+        ProjectReportService = projectReportService;
+        PdfBuilder = pdfBuilder;
+        Logger = logger;
+    }
 
-        public ProjectReportController(ILogger<ProjectReportController> logger, IProjectReportService projectReportService)
+    private IProjectReportService ProjectReportService { get; }
+    private IPdfBuilder PdfBuilder { get; }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProjectReport(IFormFile file)
+    {
+        Logger.LogInformation("Received POST request for saving new report");
+        return await HandleExceptionAsync(async () =>
         {
-            ProjectReportService = projectReportService;
-            Logger = logger;
-        }
+            var savedReport = await ProjectReportService.SaveReportFromZipAsync(file);
+            return Ok(savedReport);
+        });
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> addProjectReport(IFormFile file)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProjectReportById(Guid id)
+    {
+        Logger.LogInformation("Received GET request for fetching report by ID");
+        return await HandleExceptionAsync(async () =>
         {
-            Logger.LogInformation("Received POST request for saving new report");
-            return await HandleExceptionAsync(async () =>
-            {
-                ProjectReportData savedReport = await ProjectReportService.SaveReportFromZip(file);
-                return Ok(savedReport);
-            });
+            var fetchedReport = await ProjectReportService.GetReportByIdAsync(id);
+            return Ok(fetchedReport);
+        });
+    }
 
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> getProjectReportById(Guid id)
+    [HttpGet("findings")]
+    public async Task<IActionResult> GetProjectReportFindings(string? ProjectName, string? Details, string? Impact,
+        string? Repeatability, string? References, string? CWE, string? FindingName, int page)
+    {
+        Logger.LogInformation(
+            $"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
+            $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, FindingName={FindingName}))");
+        return await HandleExceptionAsync(async () =>
         {
-            Logger.LogInformation("Received GET request for fetching report by ID");
-            return await HandleExceptionAsync(async () =>
-            {
-                ProjectReportData fetchedReport = await ProjectReportService.GetReportByIdAsync(id);
-                return Ok(fetchedReport);
-            });
-        }
+            var fetchedReports = await ProjectReportService.GetReportFindingsAsync(ProjectName, Details, Impact,
+                Repeatability, References, CWE, FindingName, page);
+            return Ok(fetchedReports);
+        });
+    }
 
-        [HttpGet("findings")]
-        public async Task<IActionResult> getProjectReportFindings(string? ProjectName, string? Details, string? Impact, string? Repeatability, string? References, string? CWE, string value, int page)
+    [HttpGet("{id}/download")]
+    public async Task<IActionResult> DownloadProjectZip(Guid id)
+    {
+        Logger.LogInformation("Received GET request for download report by ID");
+        return await HandleExceptionAsync(async () =>
         {
-            Logger.LogInformation($"Received GET request for fetching reports by keywords, params=(ProjectNameFilter={ProjectName}, DetailsFilter={Details}," +
-                $" ImpactFilter={Impact},RepeatibilityFilter={Repeatability}, ReferencesFilter={References}, CWEFiler={CWE}, value={value}))");
-            return await HandleExceptionAsync(async () =>
-            {
-                PagedDBResults<List<FindingResponse>> fetchedReports = await ProjectReportService.GetReportFindingsAsync(ProjectName, Details, Impact, Repeatability, References, CWE, value, page);
-                return Ok(fetchedReports);
-            });
+            return await ProjectReportService.GetReportSourceByIdAsync(id);
+        });
+    }
 
-        }
+    [HttpGet("{id}/download/pdf")]
+    public async Task<IActionResult> DownloadProjectPdf(Guid id)
+    {
+        Logger.LogInformation("Received GET request for downloading PDF of report by ID");
+        return await HandleExceptionAsync(async () =>
+        {
+            return await ProjectReportService.GetPdfByProjectIdAsync(id);
+        });
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProjectReports([FromBody] List<string> ids)
+    {
+        Logger.LogInformation("Recieved DELETE request for deleting reports by id.");
+
+        return await HandleExceptionAsync(async () =>
+        {
+            var test = await ProjectReportService.DeleteReportAsync(ids);
+            return Ok(test);
+        });
+    }
+
+    [HttpDelete("all")]
+    public async Task<IActionResult> DeleteProjectReportsAll()
+    {
+        Logger.LogInformation("Received DELETE request for deleting ALL reports.");
+
+        return await HandleExceptionAsync(async () =>
+        {
+            var result = await ProjectReportService.DeleteReportAllAsync();
+            return Ok(result);
+        });
     }
 }

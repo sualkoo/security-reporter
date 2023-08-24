@@ -40,6 +40,7 @@ import { MatCardModule } from '@angular/material/card';
 import { InputComponent } from './project-listing/components/input/input.component';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FooterComponent } from './footer/footer.component';
 import { ProjectEditingPageComponent } from './project-editing/component-pages/project-editing-page/project-editing-page.component';
 import { Roles } from './roles/roles';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -51,6 +52,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
 import { FileDragDropComponent } from './project-editing/components/file-drag-drop/file-drag-drop.component';
 
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
+import { AboutPentestsComponent } from './about-pentests/about-pentests.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,9 +64,10 @@ import { FileDragDropComponent } from './project-editing/components/file-drag-dr
     LandingPageComponent,
     HighlighterPipe,
     LoginPageComponent,
-    LandingPageComponent,
-    LandingPageComponent,
-    HighlighterPipe,
+    FooterComponent,
+    DashboardComponent,
+    AboutPentestsComponent,
+    NavigationBarComponent,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
  

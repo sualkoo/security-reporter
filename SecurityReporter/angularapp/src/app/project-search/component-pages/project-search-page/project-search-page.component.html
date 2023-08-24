@@ -1,11 +1,9 @@
 <div class="container-fluid bg-light">
   <div class="row">
-    <!-- Sidebar -->
-    <div class="col-2 col-sm-6 col-lg-4 col-xl-3 bg-white position-fixed" style="height: 100vh; overflow-y: auto">
+    <!--Sidebar-->
+    <div [ngClass]="{'col-12': showSidebar, 'd-none': !showSidebar, 'col-sm-5': showSidebar, 'col-lg-4': showSidebar, 'col-xl-3': showSidebar, 'position-fixed': showSidebar}" class="bg-white" style="height: 90%; overflow-y: auto; overflow-x: hidden;">
       <div class="mt-2 pt-2">
-
         <div class="search-container">
-          <h1 class="center pb-2 mt-3">Search items</h1>
           <mat-form-field class="search-field">
             <mat-icon matPrefix>search</mat-icon>
             <input matInput placeholder="Search..." [(ngModel)]="value" (ngModelChange)="checkFormValidity()" (keyup.enter)="isFormValid && !isLoading ? onSearch() : null">
@@ -31,20 +29,18 @@
               </div>
             </div>
           </div>
-
           <div class="center submit-button pt-4">
-            <button class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
+            <button id="search_button" class="btn btn-primary m-1" [disabled]="!isFormValid || isLoading" (click)="onSearch()">
               <span *ngIf="!isLoading">Search</span>
               <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
             </button>
-            <button class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
+            <button id="clear_button" class="btn btn-light m-1" [disabled]="!isCheckboxChecked" (click)="onFilterDelete()">
               Clear filters
             </button>
           </div>
         </div>
         <div class="container  mt-5 ml-1 col-12">
           <div>
-
             <!-- Upload -->
             <app-add-project-report></app-add-project-report>
           </div>
@@ -53,31 +49,34 @@
       </div>
     </div>
     <!-- Project Report Findings -->
-    <div class="col offset-sm-6 offset-lg-4 offset-xl-3">
-      <div style="overflow-y: scroll; height: 100vh;" #reportsScrollableBox>
+    <div [ngClass]="{'col': showSidebar, 'col-sm-7': showSidebar, 'col-lg-8': showSidebar, 'col-xl-9': showSidebar, 'd-none d-sm-block': showSidebar, 'offset-3': showSidebar, 'offset-sm-5': showSidebar, 'offset-lg-4': showSidebar, 'offset-xl-3': showSidebar}">
+      <div id ="scrollable_box" style="overflow-y: auto; height: 90vh;" #reportsScrollableBox>
         <div>
-          <div class="container-fluid mt-3">
-            <h4>Found findings: {{totalRecords}}</h4>
+          <div class="mt-3">
+            <h4 *ngIf="totalRecords">Found findings: {{totalRecords}}</h4>
           </div>
-          <div *ngFor="let findingsGroup of groupedFindingsEntries; let key = index">
-            <div class="card mt-3 mb-3">
+          <div *ngFor="let project of groupedFindings">
+            <div [class]="'card mt-3 mb-3 ' + (project.checked ? 'border-2 border-primary border-dark' : '' )">
               <div class="card-body">
                 <div class="card-title">
-                  <h3 *ngIf="!projectNameTest" class="mb-2">Project: {{findingsGroup[0]}}</h3>
-                  <h3 *ngIf="projectNameTest" class="mb-2"
-                      [innerHtml]="findingsGroup[0] | highlighter:highlightValue:'partial'">
-                  </h3>
+                  <input class="projectSelectionCheckbox form-check-input me-2 mt-2" style="border: 2px solid black; box-sizing: border-box;" [checked]="project.checked" (click)="onSelectionCheckboxChange($event)" type="checkbox" [value]="project.projectId">
+                  <label class="form-check-label">
+                    <h3 *ngIf="!projectNameTest" class="mb-2">Project: {{project.projectName}}</h3>
+                    <h3 *ngIf="projectNameTest" class="mb-2"
+                        [innerHtml]="project.projectName | highlighter:highlightValue:'partial'">
+                    </h3>
+                  </label>
+
                 </div>
-                <div class="card bg-light mt-2 mb-2" *ngFor="let finding of groupedFindingsEntries[key][1]">
+                <div class="card bg-light mt-2 mb-2" *ngFor="let finding of project.findings">
 
                   <div class="card-body">
 
                     <div class="card-title">
 
-                      <h5 *ngIf="!projectNameTest">Finding: {{finding.findingName}}</h5>
-
-                      <h5 *ngIf="projectNameTest">
-                        <span>Finding: {{finding.findingName}}</span>
+                      <h5 *ngIf="!findingNameTest">Finding: {{finding.findingName}}</h5>
+                      <h5 *ngIf="findingNameTest">
+                        Finding: <span [innerHtml]="finding.findingName | highlighter:highlightValue:'partial'"></span>
                       </h5>
                     </div>
 
@@ -120,19 +119,52 @@
                   </div>
                 </div>
                 <div class="mt-3">
-
-                  <button class="btn btn-dark">Get Source</button>
-                  <button class="btn btn-dark">Get PDF</button>
+                  <button class="btn btn-dark me-2" (click)="onGetSource(project.projectId, project.projectName)">Get Source</button>
+                  <button class="btn btn-light" (click)="onGetPdf(project.projectId, project.projectName)">Get PDF</button>
                 </div>
               </div>
             </div>
-
             <div class="text-center pagination-centered">
               <mat-spinner *ngIf="isLoadingNextPage" diameter="50"></mat-spinner>
             </div>
           </div>
         </div>
       </div>
+      <div class="popup-overlay" [style.display]="showPopup ? 'block' : 'none'">
+        <div class="popup">
+          <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-md-auto">
+            </div>
+            <div class="col col-lg-2">
+              <mat-icon class="close-icon close-popup-button" color="warn" (click)="closePopup()">close</mat-icon>
+            </div>
+            <div class="container-fluid bg-white border">
+              <h5><b style="color: #ec6602;">Selected projects to delete:</b> {{selectedProjects.length}}</h5>
+              <div *ngFor="let project of selectedProjects">
+                <p> <b>Project name:</b> {{project.projectName}}  <b>id:</b> {{project.projectId}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+
+              </div>
+              <div class="col-md-auto">
+
+              </div>
+              <div class="col col-lg-2">
+                <mat-icon id="confirm_delete_button" class="icon delete-selected-findings-button" (click)="onDeleteSelectedProjects(); closePopup()">delete_outline</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+<div class="group-icons">
+  <mat-icon class="icon" id="up_button" *ngIf="reportsScrollableBox.scrollTop !== 0" (click)="resetView()">arrow_upward</mat-icon>
+  <mat-icon class="icon" *ngIf="totalRecords" (click)="toggleSidebar()">menu</mat-icon>
+  <mat-icon class="icon" id="delete_button" *ngIf="selectedProjects.length >= 1" (click)="openPopup()">delete_outline</mat-icon>
+</div>
 </div>

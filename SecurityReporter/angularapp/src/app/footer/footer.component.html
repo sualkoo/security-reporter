@@ -1,0 +1,45 @@
+<footer class="bg-dark text-light py-4">
+    <div class="container pt-5">
+      <div class="row">
+        <div *ngFor="let section of footerSections" class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+          <h5 id="section_title">{{ section.title }}</h5>
+          <ul class="list-unstyled">
+            <li id="link_title" *ngFor="let link of section.links">
+                <a class="footer-link" [href]="link.url">{{ link.title }}</a>
+              </li>
+          </ul>
+        </div>
+        <div *ngFor="let section of connectSection" class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+            <h5 id="connect_section_title">{{ section.title }}</h5>
+            <ul class="list-unstyled horizontal-group-icon">
+              <li *ngFor="let link of section.links">
+                <a class="footer-link" [href]="link.url">
+                  <i class="footer-icon" *ngIf="link.icon" [class]="link.icon"></i>
+                </a>
+              </li>
+            </ul>
+        </div>
+        <div class="col col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+            <h5 id="newsletter_section_title">Newsletter</h5>
+              <ul class="list-unstyled">
+                  <li>
+                    <a href="https://www.siemens-healthineers.com/newsletter"><button class="btn btn-primary m-1">Subscribe</button></a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <p id="footer_more_info" style="color: #999;">Siemens Healthcare GmbH &copy; 2023 |
+            <a class="footer-link" href="https://www.siemens-healthineers.com/corporate-info">Corporate Information</a> |
+            <a class="footer-link" href="https://www.siemens-healthineers.com/siemens-website-privacy-policy">Website Privacy Policy</a> |
+            <a class="footer-link" href="https://www.siemens-healthineers.com/marketing-privacy-notice">Marketing Privacy Notice</a> |
+            <a class="footer-link" href="https://www.siemens-healthineers.com/cookie">Cookie Policy</a> |
+            <a class="footer-link" href="https://www.siemens-healthineers.com/terms-of-use">Terms of Use</a> |
+            <a class="footer-link" href="https://static.siemens-healthineers.com/cms/LicenseInfo.html">3rd Party Licenses</a>
+          </p>
+        </div>
+      </div>
+    </div>
+</footer>

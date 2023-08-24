@@ -64,7 +64,7 @@ namespace webapi.Login.Controllers
                 return Ok(result.Role);
             }
 
-            return Ok("Not signed in!");
+            return StatusCode(401, "Not signed in!");
 
         }
     }

@@ -1,8 +1,11 @@
 ﻿using Microsoft.Azure.Cosmos;
 using System.ComponentModel;
 using System.Net;
+using webapi.Enums;
+using webapi.Login.Services;
 using webapi.Login.Models;
 using webapi.Models;
+using webapi.ProjectSearch.Enums;
 using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -11,16 +14,15 @@ namespace webapi.Service
 {
     public class CosmosService : ICosmosService
     {
-        private string PrimaryKey { get; set; }
-        private string EndpointUri { get; } = "https://localhost:8081";
+        private string PrimaryKey { get; set; } = "";
+        private string EndpointUri { get; } = "";
         private string DatabaseName { get; } = "ProjectDatabase";
         private string ContainerName { get; } = "ProjectContainer";
+        private string ReportContainerName { get; } = "ReportContainer";
 
         private string RolesContainerName { get; } = "ProjectRolesContainer";
 
         private readonly IHttpContextAccessor httpContextAccessor;
-
-        private string ReportContainerName { get; } = "ProjectReportContainer";
         private Microsoft.Azure.Cosmos.Container Container { get; }
         private Microsoft.Azure.Cosmos.Container RolesContainer { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
@@ -29,6 +31,13 @@ namespace webapi.Service
         public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
+            EndpointUri = configuration["DB:EndpointUri"];
+
+            if (string.IsNullOrEmpty(EndpointUri))
+            {
+               EndpointUri = "https://localhost:8081";
+            }
+
             if (string.IsNullOrEmpty(PrimaryKey))
             {
                 EndpointUri = "https://security-reporter.documents.azure.com:443";
@@ -492,13 +501,12 @@ namespace webapi.Service
 
         }
 
-
         public async Task<bool> AddProjectReport(ProjectReportData data)
         {
             Logger.LogInformation("Adding project report to database.");
             try
             {
-                data.Id = Guid.NewGuid();
+                // data.Id = Guid.NewGuid();
                 await ReportContainer.CreateItemAsync<ProjectReportData>(data);
                 Logger.LogInformation("Project Report was successfuly saved to DB");
                 return true;
@@ -530,87 +538,9 @@ namespace webapi.Service
             }
         }
 
-        public async Task<PagedDBResults<List<ProjectReportData>>> GetPagedProjectReports(string? subcategory, string keyword, string value, int page)
+        public async Task<PagedDbResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string? findingName, int page)
         {
             int limit = 24;
-            if (page < 1)
-            {
-                page = 1;
-            }
-            int offset = limit * (page - 1);
-            int totalResults;
-            List<ProjectReportData> data = new List<ProjectReportData>();
-
-
-            string query = "SELECT * FROM c WHERE ";
-            string queryCount = "SELECT VALUE COUNT(1) FROM c WHERE";
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                query = $"{query} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-                queryCount = $"{queryCount} LOWER(c[@subcategory][@keyword]) LIKE LOWER(@value)";
-            }
-            else
-            {
-                query = $"{query} LOWER(c[@keyword]) LIKE LOWER(@value) OFFSET @offset LIMIT @limit";
-                queryCount = $"{queryCount} LOWER(c[@keyword]) LIKE LOWER(@value)";
-            }
-
-            try
-            {
-                Logger.LogInformation("Fetching reports from the database");
-                QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@subcategory", $"{subcategory}")
-                                                                            .WithParameter("@value", $"%{value}%")
-                                                                            .WithParameter("@keyword", $"{keyword}")
-                                                                            .WithParameter("@offset", offset)
-                                                                            .WithParameter("@limit", limit);
-                FeedIterator<ProjectReportData> queryResultSetIterator = ReportContainer.GetItemQueryIterator<ProjectReportData>(queryDefinition);
-                while (queryResultSetIterator.HasMoreResults)
-                {
-                    FeedResponse<ProjectReportData> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                    data.AddRange(currentResultSet.ToList());
-                }
-                Logger.LogInformation("Returning found reports");
-
-
-                QueryDefinition queryDefinitioCount = new QueryDefinition(queryCount).WithParameter("@subcategory", $"{subcategory}")
-                                                                                     .WithParameter("@value", $"%{value}%")
-                                                                                     .WithParameter("@keyword", $"{keyword}");
-
-                FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitioCount);
-                FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
-                totalResults = response.FirstOrDefault();
-
-                PagedDBResults<List<ProjectReportData>> results = new PagedDBResults<List<ProjectReportData>>(data, page);
-                results.TotalRecords = totalResults;
-                results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
-                UriBuilder uriBuilder = new UriBuilder("/project-reports");
-                string queryPage = uriBuilder.Query;
-                if (results.TotalPages > page)
-                {
-                    if (!string.IsNullOrEmpty(subcategory))
-                    {
-                        queryPage += "subcategory=" + Uri.EscapeDataString(subcategory);
-                    }
-                    queryPage += "&keyword=" + Uri.EscapeDataString(keyword) + "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
-
-                    uriBuilder.Query = queryPage.TrimStart('?');
-                    results.NextPage = uriBuilder.Uri;
-                }
-
-                return results;
-            }
-            catch (Exception exception)
-            {
-                Logger.LogError("Unexpected error occurred during report fetching by keywords: " + exception);
-                throw new CustomException(StatusCodes.Status500InternalServerError, "Unexpected error occurred");
-            }
-        }
-
-        public async Task<PagedDBResults<List<FindingResponse>>> GetPagedProjectReportFindings(string? projectName, string? details, string? impact, string? repeatability, string? references, string? cWE, string value, int page)
-        {
-            int limit = 6;
             bool firstFilter = false;
             if (page < 1)
             {
@@ -620,49 +550,60 @@ namespace webapi.Service
             int totalResults;
             int valueInt = 0;
             List<string> querypath = new List<string>();
-            List<FindingResponse> newData = new List<FindingResponse>();
+            List<FindingResponse> data = new List<FindingResponse>();
+            UriBuilder uriBuilder = new UriBuilder("https://localhost:7075/project-reports/findings");
+            string queryPage = uriBuilder.Query;
 
-            //Building Queries
+            //Building Queries and Next Page URL
 
             string query = "SELECT DISTINCT VALUE {'ProjectReportId': c.id, 'ProjectReportName': c.DocumentInfo.ProjectReportName, 'Finding': f } " +
                             "FROM c " +
                             "JOIN f IN c.Findings " +
-                            "JOIN r IN f.SubsectionReferences " +
                             "WHERE";
 
             string queryCount = "SELECT DISTINCT c.id, f.FindingName " +
                                 "FROM c " +
                                 "JOIN f IN c.Findings " +
-                                "JOIN r IN f.SubsectionReferences " +
                                 "WHERE";
 
             if (!string.IsNullOrEmpty(projectName))
             {
-                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(c.DocumentInfo.ProjectReportName) LIKE LOWER(@projectName) ");
+                queryPage += "&"+ nameof(projectName) + "=" + Uri.EscapeDataString(projectName);
             }
             if (!string.IsNullOrEmpty(details))
             {
-                querypath.Add(" LOWER(f[@details]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionDetails) LIKE LOWER(@details) ");
+                queryPage += "&" + nameof(details) + "=" + Uri.EscapeDataString(details);
             }
             if (!string.IsNullOrEmpty(impact))
             {
-                querypath.Add(" LOWER(f[@impact]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionImpact) LIKE LOWER(@impact) ");
+                queryPage += "&" + nameof(impact) + "=" + Uri.EscapeDataString(impact);
             }
             if (!string.IsNullOrEmpty(repeatability))
             {
-                querypath.Add(" LOWER(f[@repeatability]) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionRepeatability) LIKE LOWER(@repeatability) ");
+                queryPage += "&" + nameof(repeatability) + "=" + Uri.EscapeDataString(repeatability);
             }
             if (!string.IsNullOrEmpty(references))
             {
-                querypath.Add(" LOWER(r) LIKE LOWER(@value) ");
+                querypath.Add(" LOWER(f.SubsectionReferences) LIKE LOWER(@references) ");
+                queryPage += "&" + nameof(references) + "=" + Uri.EscapeDataString(references);
             }
-            if (!string.IsNullOrEmpty(cWE) && int.TryParse(value, out valueInt))
+            if (!string.IsNullOrEmpty(cWE) && int.TryParse(cWE, out valueInt))
             {
-                querypath.Add(" (f[@cwe]) = (@valueInt) ");
+                querypath.Add(" (f.CWE) = (@valueInt) ");
+                queryPage += "&" + nameof(cWE) + "=" + Uri.EscapeDataString(cWE);
             }
-            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(value, out valueInt))
+            else if (!string.IsNullOrEmpty(cWE) && !int.TryParse(cWE, out valueInt))
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "Unable to convert string to int for CWE value");
+            }
+            if (!string.IsNullOrEmpty(findingName))
+            {
+                querypath.Add(" LOWER(f.FindingName) LIKE LOWER(@findingName) ");
+                queryPage += "&" + nameof(findingName) + "=" + Uri.EscapeDataString(findingName);
             }
             if (querypath.Count() > 0)
             {
@@ -685,85 +626,79 @@ namespace webapi.Service
             {
                 throw new CustomException(StatusCodes.Status400BadRequest, "At least one filter has to be selected");
             }
+
+            queryPage += "&page=" + (page + 1);
+
+            uriBuilder.Query = queryPage.TrimStart('?');
+
             query = $"{query}  ORDER BY c.DocumentInfo.ProjectReportName OFFSET @offset LIMIT @limit";
             queryCount = $" SELECT VALUE COUNT(1) FROM ( {queryCount} )";
 
             //Executing Queries
             //Reports
             Logger.LogInformation("Fetching reports from the database");
-            QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@value", $"%{value}%")
-                                                                        .WithParameter("@offset", offset)
+            QueryDefinition queryDefinition = new QueryDefinition(query).WithParameter("@projectName", $"%{projectName}%")
+                                                                        .WithParameter("@details", $"%{details}%")
+                                                                        .WithParameter("@impact", $"%{impact}%")
+                                                                        .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                        .WithParameter("@references", $"%{references}%")
                                                                         .WithParameter("@valueInt", valueInt)
-                                                                        .WithParameter("@details", $"{details}")
-                                                                        .WithParameter("@impact", $"{impact}")
-                                                                        .WithParameter("@repeatability", $"{repeatability}")
-                                                                        .WithParameter("@cwe", $"{cWE}")
+                                                                        .WithParameter("@findingName", $"%{findingName}%")
+                                                                        .WithParameter("@offset", offset)
                                                                         .WithParameter("@limit", limit);
 
             FeedIterator<FindingResponse> queryResultSetIterator = ReportContainer.GetItemQueryIterator<FindingResponse>(queryDefinition);
             while (queryResultSetIterator.HasMoreResults)
             {
                 FeedResponse<FindingResponse> currentResultSet = await queryResultSetIterator.ReadNextAsync();
-                newData.AddRange(currentResultSet.ToList());
+                data.AddRange(currentResultSet.ToList());
             }
             Logger.LogInformation("Returning found reports");
 
             //Total Results
-            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@value", $"%{value}%")
-                                                                                  .WithParameter("@details", $"{details}")
-                                                                                  .WithParameter("@impact", $"{impact}")
-                                                                                  .WithParameter("@repeatability", $"{repeatability}")
-                                                                                  .WithParameter("@cwe", $"{cWE}")
-                                                                                  .WithParameter("@valueInt", valueInt);
+            QueryDefinition queryDefinitionCount = new QueryDefinition(queryCount).WithParameter("@projectName", $"%{projectName}%")
+                                                                                  .WithParameter("@details", $"%{details}%")
+                                                                                  .WithParameter("@impact", $"%{impact}%")
+                                                                                  .WithParameter("@repeatability", $"%{repeatability}%")
+                                                                                  .WithParameter("@references", $"%{references}%")
+                                                                                  .WithParameter("@valueInt", valueInt)
+                                                                                  .WithParameter("@findingName", $"%{findingName}%");
 
             FeedIterator<int> resultSetIterator = ReportContainer.GetItemQueryIterator<int>(queryDefinitionCount);
             FeedResponse<int> response = await resultSetIterator.ReadNextAsync();
             totalResults = response.FirstOrDefault();
 
-            //Filling PagedDBResult
+            //Filling PagedDBResult Response
 
-            PagedDBResults<List<FindingResponse>> results = new PagedDBResults<List<FindingResponse>>(newData, page);
+            PagedDbResults<List<FindingResponse>> results = new PagedDbResults<List<FindingResponse>>(data, page);
             results.TotalRecords = totalResults;
             results.TotalPages = (int)Math.Ceiling((double)totalResults / limit);
-
-            //Building URL for next page
-            UriBuilder uriBuilder = new UriBuilder("/project-reports/findings");
-            string queryPage = uriBuilder.Query;
             if (results.TotalPages > page)
             {
-                if (!string.IsNullOrEmpty(projectName))
-                {
-                    queryPage += "ProjectName=" + Uri.EscapeDataString(projectName);
-                }
-                if (!string.IsNullOrEmpty(details))
-                {
-                    queryPage += "&Details=" + Uri.EscapeDataString(details);
-                }
-                if (!string.IsNullOrEmpty(impact))
-                {
-                    queryPage += "&Impact=" + Uri.EscapeDataString(impact);
-                }
-                if (!string.IsNullOrEmpty(repeatability))
-                {
-                    queryPage += "&Repeatability=" + Uri.EscapeDataString(repeatability);
-                }
-                if (!string.IsNullOrEmpty(references))
-                {
-                    queryPage += "&References=" + Uri.EscapeDataString(references);
-                }
-                if (!string.IsNullOrEmpty(cWE))
-                {
-                    queryPage += "&CWE=" + Uri.EscapeDataString(cWE);
-                }
-                queryPage += "&value=" + Uri.EscapeDataString(value) + "&page=" + (page + 1);
-
-                uriBuilder.Query = queryPage.TrimStart('?');
                 results.NextPage = uriBuilder.Uri;
             }
-
             return results;
         }
 
+        public async Task<bool> DeleteProjectReports(List<string> projectReportIds)
+        {
+            Logger.LogInformation("Searching for selected Project Reports in database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await this.GetProjectReport(reportId);
+            }
+
+            Logger.LogInformation("Deleting selected Project Reports from database.");
+
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+
+            Logger.LogInformation("Successfully deleted Project Reports from database.");
+            return true;
+        }
         public async Task<ProjectData> GetProjectById(string id)
         {
             try
@@ -778,6 +713,32 @@ namespace webapi.Service
             catch (Exception ex)
             {
                 throw new Exception($"Error retrieving project by ID: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<bool> GetUploadStatus(string id)
+        {
+            try
+            {
+                var project = await GetProjectById(id); // You should implement GetProjectById in your service
+
+                if (project != null)
+                {
+                    bool isScopeFileUploaded = project.IsScopeFileUploaded;
+                    bool isQuestionnaireFileUploaded = project.IsQuestionnaireFileUploaded;
+                    bool isReportFileUploaded = project.IsReportFileUploaded;
+
+                    return isScopeFileUploaded && isQuestionnaireFileUploaded && isReportFileUploaded;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred: " + ex);
+                return false;
             }
         }
 
@@ -860,6 +821,133 @@ namespace webapi.Service
             }
         }
 
+        public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
+        {
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
+            string query = "SELECT f.Criticality, Count(1) AS Count " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "GROUP BY f.Criticality";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
+                ((Criticality)Enum.ToObject(typeof(Criticality), (int)f.Criticality)).ToString(),
+                (int)f.Count, (int)f.Criticality)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
+        }
+
+        public async Task<List<Tuple<string, int, int>>> GetVulnerabilityData()
+        {
+            List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
+            string query = "SELECT f.Exploitability, Count(1) AS Count " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "GROUP BY f.Exploitability";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                //data.AddRange(currentResultSet.Select(f => new Tuple<int, int>((int)f.Exploitability, (int)f.Count)));
+                data.AddRange(currentResultSet.Select(f => new Tuple<string, int, int>(
+                ((Exploitability)Enum.ToObject(typeof(Exploitability), (int)f.Exploitability)).ToString(),
+                (int)f.Count, (int)f.Exploitability)));
+            }
+            Logger.LogInformation("Returning found reports");
+            return data;
+        }
+
+        public async Task<List<Tuple< int, int>>> GetCWEData()
+        {
+            List<Tuple<int, int>> data = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> sendingData = new List<Tuple<int, int>>();
+            string query = "SELECT f.CWE, Count(1) AS Count " +
+                            "FROM c " +
+                            "JOIN f IN c.Findings " +
+                            "GROUP BY f.CWE";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<int, int>(
+                (int)f.Count, (int)f.CWE)));
+
+               
+            }
+            data.Sort();
+            data.Reverse();
+            int numberOfValues = 8;
+            if(numberOfValues > data.Count) {
+            numberOfValues = data.Count;
+            }
+
+            for (int i = 0; i < numberOfValues; i++)
+            {
+                sendingData.Add(data[i]);
+            }
+
+            Logger.LogInformation("Returning found reports");
+            return sendingData;
+        }
+
+        public async Task<List<string>> DeleteAllReportsAsync()
+        {
+            List<string> projectReportIds = new List<string>();
+            List<ProjectReportData> projectReports = new List<ProjectReportData>();
+            string query = "SELECT VALUE c.id " +
+                           "FROM c";
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<string> queryResultSetIterator = ReportContainer.GetItemQueryIterator<string>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<string> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                projectReportIds.AddRange(currentResultSet.ToList());
+            }
+            foreach (string reportId in projectReportIds)
+            {
+                await ReportContainer.DeleteItemAsync<ProjectReportData>(reportId, new PartitionKey(reportId));
+            }
+            Logger.LogInformation("Successfully deleted All Project Reports from database.");
+            return projectReportIds;
+        }
+
+        public async Task<List<Tuple<float, string, string>>> GetCVSSData()
+        {
+            List<Tuple<float, string, string>> data = new List<Tuple<float, string, string>>();
+            string query = "SELECT SUBSTRING(c.uploadDate, 0, 4) AS UploadYear, SUBSTRING(c.uploadDate, 5, 2) AS UploadMonth, AVG(StringToNumber(f.CVSS)) AS CVSSAVG FROM c JOIN f IN c.Findings WHERE f.CVSS <> 'N/A' GROUP BY SUBSTRING(c.uploadDate, 0, 4), SUBSTRING(c.uploadDate, 5, 2)";
+                           
+            QueryDefinition queryDefinition = new QueryDefinition(query);
+
+            FeedIterator<dynamic> queryResultSetIterator = ReportContainer.GetItemQueryIterator<dynamic>(queryDefinition);
+            while (queryResultSetIterator.HasMoreResults)
+            {
+                FeedResponse<dynamic> currentResultSet = await queryResultSetIterator.ReadNextAsync();
+                data.AddRange(currentResultSet.Select(f => new Tuple<float, string, string>(
+
+                (float)f.CVSSAVG, (string)f.UploadMonth, (string)f.UploadYear)));
+            }
+            Logger.LogInformation("Returning found reports");
+
+            data = data.OrderByDescending(item => item.Item3)
+            .ThenByDescending(item => item.Item2)
+            .Take(8)
+            .OrderBy(item => item.Item3)
+            .ThenBy(item => item.Item2)
+            .ToList();
+
+            return data;
+        }
+
         public async Task<UserRole> GetUserRole(string email)
         {
 
@@ -933,5 +1021,7 @@ namespace webapi.Service
             }
             Console.WriteLine("Finnishing of clearing user role DB");
         }
+
+      
     }
 }
