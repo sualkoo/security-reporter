@@ -22,7 +22,7 @@
 <ul>
   <li *ngFor="let file of uploadedFiles">
     {{ file.name }}
-    <mat-icon style="color: #23d100">check</mat-icon>
+    <mat-icon style="color: #23d100" (click)="upload(file, pentest)">check</mat-icon>
     <mat-icon style="color: #d10000">cancel</mat-icon>
     <mat-icon style="color: #c3d100">cached</mat-icon>
   </li>

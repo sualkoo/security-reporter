@@ -164,12 +164,18 @@
               <mat-divider></mat-divider>
               <app-file-drag-drop
                 [pentestTitle]="'Questionare'"
+                [id]="this.projectClass.id"
+                [pentest]="'questionare'"
               ></app-file-drag-drop>
               <app-file-drag-drop
                 [pentestTitle]="'Project scope'"
+                [id]="this.projectClass.id"
+                [pentest]="'scope'"
               ></app-file-drag-drop>
               <app-file-drag-drop
                 [pentestTitle]="'Project report'"
+                [id]="this.projectClass.id"
+                [pentest]="'report'"
               ></app-file-drag-drop>
             </div>
           </mat-expansion-panel>
