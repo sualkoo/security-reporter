@@ -20,3 +20,7 @@ mat-divider {
 .clickable-item {
   cursor: pointer;
 }
+
+.not-clickable {
+  cursor: not-allowed;
+}

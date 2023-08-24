@@ -28,6 +28,8 @@ import { AutoLogoutService } from '../../../services/auto-logout.service';
 import { FileDragDropComponent } from '../../components/file-drag-drop/file-drag-drop.component';
 import { FileDownloadService } from '../../services/file-download.service';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { CheckFileExistsService } from '../../services/check-file-exists.service';
+import { FileExists } from '../../../project-management/interfaces/file-exists-interface';
 
 @Component({
   selector: 'app-project-editing-page',
@@ -62,6 +64,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
   projectId!: string;
   projectForm!: FormGroup;
   panelOpenState = false;
+  fileExists!: FileExists;
 
   pentestDummyList = [
     { name: 'Pentest1', fileName: 'file1.pdf' },
@@ -83,6 +86,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     alertService: AlertService,
     private updateProjectService: UpdateProjectService,
     private getProjectService: GetProjectService,
+    private checkFileExistsService: CheckFileExistsService,
     private formBuilder: FormBuilder,
     autoLogoutService: AutoLogoutService
   ) {
@@ -94,7 +98,27 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     this.route.params.subscribe((params) => {
       this.projectId = params['id'];
       this.getProjectDetails(this.projectId);
+      this.checkFileExistsForProject(this.projectId);
     });
+  }
+
+  checkFileExistsForProject(projectId: string): void {
+    this.checkFileExistsService.checkFileExists(projectId)
+      .then((response: any) => {
+        this.fileExists = this.mapFileExistsResponse(response); // Use the mapping method
+        console.log(this.fileExists);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  mapFileExistsResponse(jsonResponse: any): FileExists {
+    return {
+      scopeFileExists: jsonResponse.scopeFileExists,
+      questionnaireFileExists: jsonResponse.questionnaireFileExists,
+      reportFileExists: jsonResponse.reportFileExists
+    };
   }
 
   mapJsonToProjectInterface(jsonData: any): ProjectInterface {
@@ -128,6 +152,7 @@ export class ProjectEditingPageComponent extends AddProjectComponent {
     };
   }
 
+  
   async getProjectDetails(projectId: string) {
     var projectData = await this.getProjectService.getProjectById(projectId);
     this.projectClass = this.mapJsonToProjectInterface(projectData);

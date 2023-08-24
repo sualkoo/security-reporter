@@ -180,17 +180,26 @@
               <mat-divider></mat-divider>
 
               <div class="pentest-download">
-                  <div (click)="downloadFile('questionnaire')" class="clickable-item">
+                  <div (click)="fileExists.questionnaireFileExists ? downloadFile('questionnaire') : null"
+                       class="clickable-item"
+                       [ngClass]="{ 'not-clickable': !fileExists.questionnaireFileExists }">
                       <p>Questionnaire</p>
-                      <mat-icon style="color: #ec6602">download</mat-icon>
+                      <mat-icon [style.color]="fileExists.questionnaireFileExists ? '#ec6602' : '#999'"
+                                matTooltip="{{ fileExists.questionnaireFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
                   </div>
-                  <div (click)="downloadFile('scope')" class="clickable-item">
+                  <div (click)="fileExists.scopeFileExists ? downloadFile('scope') : null"
+                       class="clickable-item"
+                       [ngClass]="{ 'not-clickable': !fileExists.scopeFileExists }">
                       <p>Project Scope</p>
-                      <mat-icon style="color: #ec6602">download</mat-icon>
+                      <mat-icon [style.color]="fileExists.scopeFileExists ? '#ec6602' : '#999'"
+                                matTooltip="{{ fileExists.scopeFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
                   </div>
-                  <div (click)="downloadFile('report')" class="clickable-item">
+                  <div (click)="fileExists.reportFileExists ? downloadFile('report') : null"
+                       class="clickable-item"
+                       [ngClass]="{ 'not-clickable': !fileExists.reportFileExists }">
                       <p>Project Report</p>
-                      <mat-icon style="color: #ec6602">download</mat-icon>
+                      <mat-icon [style.color]="fileExists.reportFileExists ? '#ec6602' : '#999'"
+                                matTooltip="{{ fileExists.reportFileExists ? '' : 'File not uploaded' }}">download</mat-icon>
                   </div>
               </div>
 
