@@ -28,8 +28,6 @@ namespace webapi.Service
         Task<List<Tuple<int, int>>> GetCWEData();
         Task<List<string>> DeleteAllReportsAsync();
 
-        Task<ProjectData> GetProjectById(string id);
-        Task<bool> UpdateProject(ProjectData data);
         //Task<Profile> ProfileItems(string email);
 
         Task DeleteUsers();

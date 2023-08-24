@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Net;
 using webapi.Enums;
-using webapi.Login.Services;
 using webapi.Login.Models;
 using webapi.Models;
 using webapi.ProjectSearch.Enums;
@@ -724,11 +723,8 @@ namespace webapi.Service
 
                 if (project != null)
                 {
-                    bool isScopeFileUploaded = project.IsScopeFileUploaded;
-                    bool isQuestionnaireFileUploaded = project.IsQuestionnaireFileUploaded;
-                    bool isReportFileUploaded = project.IsReportFileUploaded;
 
-                    return isScopeFileUploaded && isQuestionnaireFileUploaded && isReportFileUploaded;
+                    return true;
                 }
                 else
                 {

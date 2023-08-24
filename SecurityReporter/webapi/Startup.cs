@@ -4,8 +4,6 @@ using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using webapi.Dashboard.Services;
 using webapi.Login;
-using webapi.Login.Services;
-using webapi.Login.Utils.Authorization;
 using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
 using webapi.Service;
@@ -31,10 +29,7 @@ namespace webapi
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<IPdfBuilder, PdfBuilder>();
             services.AddSingleton<IDashboardService, DashboardService>();
-            services.AddSingleton<RoleService>();
-            services.AddSingleton<ClientMailService>();
-            services.AddSingleton<Users>();
-            services.AddSingleton<CosmosRolesService>();
+
             
 
             services.AddSwaggerGen(c =>
