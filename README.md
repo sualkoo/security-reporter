@@ -1,29 +1,24 @@
 # Introduction
 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.
+Welcome to the documentation for SecurityReporter, a C# and .NET-based application for managing cybersecurity assessment reports and projects. Follow the instructions below to properly set up and configure the application.
 
-# Getting Started
 
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
+## Prerequisites
 
-1. Installation process
-2. Software dependencies
-3. Latest releases
-4. API references
+- **texlive-full**: The application depends on `texlive-full` for generating PDFs. It needs to run on Linux, Windows is currently not supported. 
+- You can download and install it using the following command for debian linux:
 
-# Build and Test
+  ```bash
+  sudo apt-get install texlive-full
+  ```
 
-TODO: Describe and show how to build your code and run the tests.
+- **Node.js**: The application uses Node.js for server enviroment.
 
-# Contribute
+- **Visual Studio with ASP.NET and web development extension**: IDE and extension for developing project.
 
-TODO: Explain how other users and developers can contribute to make your code better.
+- **Azure Cosmos DB**: The application uses Cosmos DB to store its data. Create a database named `ProjectDatabase` and two containers: `ProjectContainer` and `ReportContainer` in your Cosmos DB account.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+- **Azure Blob Service**: Configure the `appsettings.json` or user secrets for integration with Azure Blob Storage. Create a container named `reports` in your Azure Blob Storage account.
 
 # Project setup
 1. Clone repository
@@ -31,40 +26,37 @@ If you want to learn more about creating good readme files then refer the follow
 2. Download and install Cosmos DB Emulator:
    - https://learn.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=ssl-netstd21
 
-3. Open Cosmos DB Emulator (emulator should show up in browser)
+3. Open Cosmos DB Emulator (emulator should show up in browser) and create Database called ProjectDatabase with these Containers all with id as Partition key:
+   - ProjectContainer
+   - ReportContainer
+   - ProjectRolesContainer
 
-4. Create comsos DB Emulator Container and Database in explorer tab (menu) with name ProjectDatabase and ProjectContainer. Paste following items.
-   - In Database id: ProjectDatabase
-   - In Container id: ProjectContainer
-   - In Partition Key: id
-
-5. Add to cosmos DB Emulator ProjectDatabase new container:
-   - In Container id: ProjectRolesContainer
-   - In Partition Key: id
-
-   - For now you need to add users with roles manually in this format:
-      - Example: 
+4. For now you need to add users with roles manually to the ProjectRolesContainer in this format:
+   - Example: 
       - {
-            "id": "client@client.sk",
-            "Role": "client"
+               "id": "client@client.sk",
+               "Role": "client"
          }
       - Attribute Role can be admin/client/coordinator/pentester/default.
       - You can add new item by clicking on ProjectRolesDatabase -> ProjectRolesContainer -> Items, then click on New item and then click save.
 
-6. Enable secret storage and set a secret
+5. Configure the application by updating the `appsettings.json` file or user secrets  with the appropriate values, if you don't specify configuration for CosmosDB or AzureStorage, the application will use production connection by default:
 
-   - The Secret Manager tool includes an init command. To use user secrets, run the following command in the project directory (use cd SecurityReporter/webapi command in terminal):
-   - You can find your PrimaryKey in Quickstart tab in Emulator.
+   ```json
+   {
+      "CosmosDB": {
+         "EndpointUri": "your-cosmosdb-endpoint-uri",
+         "PrimaryKey": "your-cosmosdb-primary-key"
+      },
+      "AzureStorage": {
+         "StorageAccount" : "your-azure-storage-account",
+         "AccessKey": "your-azure-storage-access-key"
+      }
+   }
+   ```
+   [ASP.NET Safe storage](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows)
 
-   ```
-   dotnet user-secrets init
-   ```
-
-   ```
-   dotnet user-secrets set "DB:PrimaryKey" "your cosmos db primary key from cosmosDB data explorer"
-   ```
-
-7. Open repository folder in terminal and type:
+6. Open repository folder in terminal and type:
    ```
    npm install
    ```
@@ -73,9 +65,7 @@ If you want to learn more about creating good readme files then refer the follow
    npm i bootstrap-icons --save
    ```
 
-8. Open project solution in Visual Studio
-
-9. 
+7. Open project solution in Visual Studio
    - In View tab click on Solution explorer.
    - In Solution explorer right click on Solution and choose Properties
    - In menu select Common Properties -> Startup Project
@@ -84,45 +74,16 @@ If you want to learn more about creating good readme files then refer the follow
    - In table set angularapp Project to second position and select Start Action in right column
    - Click Apply and OK
 
-10. Start project (F5)
+11. Start project (F5)
 
-11. Swagger and angular page should be visible in browser.
+12. Swagger and angular page should be visible in browser.
 
-- [ASP.NET Safe storage](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows)
+# Contribute
 
-# SecurityReporter readme
+You can contribute to SecurityReporter to help make it even better! Follow these guides to get started:
 
-Welcome to the documentation for SecurityReporter, a C# and .NET-based application for managing cybersecurity assessment reports and projects. Follow the instructions below to properly set up and configure the application.
+- [ASP.NET Core](https://github.com/aspnet/Home)
+- [Visual Studio Code](https://github.com/Microsoft/vscode)
+- [Chakra Core](https://github.com/Microsoft/ChakraCore)
 
-## Prerequisites
 
-- **texlive-full**: The application depends on `texlive-full` for generating PDFs. If it's not already installed on your server. Generating of PDFs is disabled by default, you can enable it in configuration by adding
-  "GeneratePdfsFromReports" to true.
-- You can download and install it using the following command for debian linux:
-
-  ```bash
-  sudo apt-get install texlive-full
-  ```
-
-- **Azure Cosmos DB**: The application uses Cosmos DB to store its data. Create a database named `ProjectDatabase` and two containers: `ProjectContainer` and `ReportContainer` in your Cosmos DB account.
-
-- **Azure Blob Service**: Configure the `appsettings.json` or user secrets for integration with Azure Blob Storage. Create a container named `reports` in your Azure Blob Storage account.
-
-## Configuration
-
-Configure the application by updating the `appsettings.json` file or user secrets with the appropriate values, if you don't specify configuration for CosmosDB or AzureStorage, the application will use production connection by default:
-
-```json
-{
-  "CosmosDB": {
-    "EndpointUri": "your-cosmosdb-endpoint-uri",
-    "PrimaryKey": "your-cosmosdb-primary-key"
-  },
-  "AzureStorage" {
-      "StorageAccount" : "your-azure-storage-account",
-      "AccessKey": "your-azure-storage-access-key"
-
-  },
-  "GeneratePdfsFromReports" : false
-}
-```
