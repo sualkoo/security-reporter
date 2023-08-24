@@ -16,3 +16,7 @@ mat-divider {
   display: flex;
   justify-content: space-between;
 }
+
+.clickable-item {
+  cursor: pointer;
+}

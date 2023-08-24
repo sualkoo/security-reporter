@@ -174,25 +174,26 @@
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
-              <mat-panel-title> Uploaded files </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-divider></mat-divider>
+              <mat-expansion-panel-header>
+                  <mat-panel-title> Uploaded files </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-divider></mat-divider>
 
-            <div class="pentest-download">
-                <div (click)="downloadFile('questionnaire')">
-                    <p>Questionnaire</p>
-                    <mat-icon style="color: #ec6602">download</mat-icon>
-                </div>
-                <div (click)="downloadFile('scope')">
-                    <p>Project Scope</p>
-                    <mat-icon style="color: #ec6602">download</mat-icon>
-                </div>
-                <div (click)="downloadFile('report')">
-                    <p>Project Report</p>
-                    <mat-icon style="color: #ec6602">download</mat-icon>
-                </div>
-            </div>
+              <div class="pentest-download">
+                  <div (click)="downloadFile('questionnaire')" class="clickable-item">
+                      <p>Questionnaire</p>
+                      <mat-icon style="color: #ec6602">download</mat-icon>
+                  </div>
+                  <div (click)="downloadFile('scope')" class="clickable-item">
+                      <p>Project Scope</p>
+                      <mat-icon style="color: #ec6602">download</mat-icon>
+                  </div>
+                  <div (click)="downloadFile('report')" class="clickable-item">
+                      <p>Project Report</p>
+                      <mat-icon style="color: #ec6602">download</mat-icon>
+                  </div>
+              </div>
+
           </mat-expansion-panel>
         </div>
 
