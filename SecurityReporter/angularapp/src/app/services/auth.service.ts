@@ -81,7 +81,7 @@ export class AuthService {
         .subscribe(
           (response) => {
             this.isLoggedIn.next(true);
-            console.log(response);
+            console.log("Current role: " + response);
             this.currentRole.next(response.toString());
             resolve(response);
           },
