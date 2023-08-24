@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Microsoft.Azure.Cosmos.Serialization.HybridRow;
+using System.Globalization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webapi.ProjectSearch.Models.ProjectReport;
@@ -21,18 +22,24 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 var fileContent = reader.ReadToEnd();
                 var regexPattern =
-                    @"\\(newcommand|renewcommand)\s*\{\\([a-zA-Z]*)\}\s*\{((?>[^{}]+|\{(?<DEPTH>)|\}(?<-DEPTH>))*(?(DEPTH)(?!)))\}";
+                    @"\\(newcommand|renewcommand)\s*{\\([a-zA-Z]*)}\s*{([\s\S]*?)}(?=\s*(?:%|$))";
 
-                var matches = Regex.Matches(fileContent, regexPattern);
+                var matches = Regex.Matches(fileContent, regexPattern, RegexOptions.Multiline);
                 foreach (Match match in matches)
                     if (match.Groups[2].Value == "PentestTeamMember" || match.Groups[2].Value == "TechnicalContacts")
                     {
-                        var memberPattern = @"\s*[\w\W]*?(?<=\s|[\\\s&])$";
 
-                        var memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
-                        foreach (Match member in memberMatches)
-                            if (!string.IsNullOrWhiteSpace(member.Value))
-                                AssignNewData(match.Groups[2].Value.Trim(), member.Value, newProjectInfo, pentestTeamDictionary);
+                        //var memberPattern = @"(?:\\[A-Za-z]+\s*(?:{[^}]*})?\s*\\|^[^\r\n]+&[^&]*&[^&]*&[^&]*\\\\\s*&\s*$)";
+
+                        //var memberMatches = Regex.Matches(match.Groups[3].Value, memberPattern, RegexOptions.Multiline);
+                       // foreach (Match member in memberMatches)
+                       // {
+                            if (!string.IsNullOrWhiteSpace(match.Groups[3].Value))
+                            {
+                                AssignNewData(match.Groups[2].Value.Trim(), match.Groups[3].Value.Trim(), newProjectInfo, pentestTeamDictionary);
+                            }
+                      //  }
+                            
                     }
                     else
                     {
@@ -90,9 +97,21 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             {
                 var result = "";
                 var delimiter = "\\&";
-                var editedString = data.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var str in editedString) result += str;
+                string[] editedString = data.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
 
+                foreach (var str in editedString) 
+                {
+                    if(str == editedString[editedString.Length - 1])
+                    {
+                        result += str;
+                    }
+                    else
+                    {
+                        result += (str + "&");
+                    }
+                }
+
+                result = result.Trim();
                 return result;
             }
 
@@ -112,6 +131,7 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
             if (data != null && command != null)
                 switch ("\\" + command)
                 {
+                    
                     case "\\ApplicationManager":
                         newProjectInfo.ApplicationManager = new ProjectInformationParticipant();
                         newProjectInfo.ApplicationManager.Name = data;
@@ -152,26 +172,37 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             newProjectInfo.BusinessRepresentative.Contact = ExtractContact(data);
                         break;
                     case "\\TechnicalContacts":
-                        if (data[0] == '\\')
+                        string[] technicalContactsDelimiters = { "\\\\&", "\\\\" };
+                        string formattedString = Regex.Replace(data, @"(\\\\\s*)&(\s*)", "\\\\&");
+                        string[] splitString = formattedString.Split(technicalContactsDelimiters, StringSplitOptions.RemoveEmptyEntries);
+                        foreach(string str in splitString)
                         {
-                            var regPattern = @"\\(?=\w)\\?\w+";
-                            var collection = Regex.Matches(data, regPattern);
-                            foreach (Match match in collection)
-                                newProjectInfo.PentestTeam.Add(pentestTeamDictionary[match.Value]);
+                            if (data[0] == '\\')
+                            {
+                                string result = str.Trim();
+                                //string result = Regex.Replace(str, @"\\(\s+)", "");
+                                //var regPattern = @"\\(?=\w)\\?\w+";
+                                //var collection = Regex.Matches(data, regPattern);
+                                //foreach (Match match in collection)
+                                ProjectInformationParticipant newParticipant = pentestTeamDictionary[result];
+                                newParticipant.Department = newParticipant.Department.Replace("\\&", "&");
+                                newProjectInfo.TechnicalContacts.Add(newParticipant);
+                            }
+                            else
+                            {
+                                char[] delimiters = { '{', '}' };
+                                var splitByAmpersand = Regex.Split(str, @"(?<!\\)&")
+                                    .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                                var newPerson = new ProjectInformationParticipant();
+                                newPerson.Name = splitByAmpersand[0].Trim();
+                                newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
+                                newPerson.Contact = ExtractContact(
+                                    splitByAmpersand[2].Trim()
+                                        .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                                newProjectInfo.TechnicalContacts.Add(newPerson);
+                            }
                         }
-                        else
-                        {
-                            char[] delimiters = { '{', '}' };
-                            var splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
-                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                            var newPerson = new ProjectInformationParticipant();
-                            newPerson.Name = splitByAmpersand[0].Trim();
-                            newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
-                            newPerson.Contact = ExtractContact(
-                                splitByAmpersand[2].Trim()
-                                    .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
-                            newProjectInfo.TechnicalContacts.Add(newPerson);
-                        }
+                        
 
                         break;
                     case "\\PentestLeadName":
@@ -200,25 +231,35 @@ namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
                             newProjectInfo.PentestCoordinator.Contact = ExtractContact(data);
                         break;
                     case "\\PentestTeamMember":
-                        if (data.Trim()[0] == '\\')
+                        string[] pentestTeamDelimiters = { "\\\\&", "\\\\" };
+                        string pentestTeamFormattedString = Regex.Replace(data, @"(\\\\\s*)&(\s*)", "\\\\&");
+                        string[] pentestTeamSplitString = pentestTeamFormattedString.Split(pentestTeamDelimiters, StringSplitOptions.RemoveEmptyEntries);
+                        foreach(string str in pentestTeamSplitString)
                         {
-                            var regPattern = @"\\(?=\w)\\?\w+";
-                            var collection = Regex.Matches(data, regPattern);
-                            foreach (Match match in collection)
-                                newProjectInfo.PentestTeam.Add(pentestTeamDictionary[match.Value]);
-                        }
-                        else
-                        {
-                            char[] delimiters = { '{', '}' };
-                            var splitByAmpersand = Regex.Split(data, @"(?<!\\)&")
-                                .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                            var newPerson = new ProjectInformationParticipant();
-                            newPerson.Name = splitByAmpersand[0].Trim();
-                            newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
-                            newPerson.Contact = ExtractContact(
-                                splitByAmpersand[2].Trim()
-                                    .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
-                            newProjectInfo.PentestTeam.Add(newPerson);
+                            if (str.Trim()[0] == '\\')
+                            {
+                                string result = str.Trim();
+                                //string result = Regex.Replace(str, @"\\(\s+)", "");
+                                //var regPattern = @"\\(?=\w)\\?\w+";
+                                //var collection = Regex.Matches(data, regPattern);
+                                //foreach (Match match in collection)
+                                ProjectInformationParticipant newParticipant = pentestTeamDictionary[result];
+                                newParticipant.Department = newParticipant.Department.Replace("\\&", "&");
+                                newProjectInfo.PentestTeam.Add(newParticipant);
+                            }
+                            else
+                            {
+                                char[] delimiters = { '{', '}' };
+                                var splitByAmpersand = Regex.Split(str, @"(?<!\\)&")
+                                    .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                                var newPerson = new ProjectInformationParticipant();
+                                newPerson.Name = splitByAmpersand[0].Trim();
+                                newPerson.Department = splitByAmpersand[1].Trim().Replace("\\", "");
+                                newPerson.Contact = ExtractContact(
+                                    splitByAmpersand[2].Trim()
+                                        .Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[1]);
+                                newProjectInfo.PentestTeam.Add(newPerson);
+                            }
                         }
 
                         break;

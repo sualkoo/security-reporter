@@ -42,33 +42,33 @@ namespace webapiTests.ProjectSearch.Services
 
             ProjectInformationParticipant applicationManager = new ProjectInformationParticipant();
             applicationManager.Name = "Anakin Skywalker";
-            applicationManager.Department = "SHS DI D\\&A CEC ITH EH-PLM";
+            applicationManager.Department = "SHS DI D&A CEC ITH EH-PLM";
             applicationManager.Contact = "anakin.skywalker@siemens-healthineers.com";
 
             expectedProjectInformation.ApplicationManager = applicationManager;
 
             ProjectInformationParticipant businessOwner = new ProjectInformationParticipant();
             businessOwner.Name = "Padme Amidala";
-            businessOwner.Department = "SHS DI D\\&A CEC EPE";
+            businessOwner.Department = "SHS DI D&A CEC EPE";
             businessOwner.Contact = "padme.amidala@siemens-healthineers.com";
             expectedProjectInformation.BusinessOwner = businessOwner;
 
 
             ProjectInformationParticipant businessRepresentative = new ProjectInformationParticipant();
             businessRepresentative.Name = "Luke Skywalker";
-            businessRepresentative.Department = "SHS DI D\\&A CEC ITH EH-PLM";
+            businessRepresentative.Department = "SHS DI D&A CEC ITH EH-PLM";
             businessRepresentative.Contact = "luke.skywalker@siemens-healthineers.com";
             expectedProjectInformation.BusinessRepresentative = businessRepresentative;
 
 
             ProjectInformationParticipant technicalContact1 = new ProjectInformationParticipant();
             technicalContact1.Name = "Obi Wan Kenobi";
-            technicalContact1.Department = "SHS TE DC SVK D\\&A DIG PTM";
+            technicalContact1.Department = "SHS TE DC SVK D&A DIG PTM";
             technicalContact1.Contact = "obi-wan.kenobi@siemens-healthineers.com";
 
             ProjectInformationParticipant technicalContact2 = new ProjectInformationParticipant();
             technicalContact2.Name = "Baby Yoda";
-            technicalContact2.Department = " SHS DI D\\&A CEC ITH EH-R\\&D";
+            technicalContact2.Department = "SHS DI D&A CEC ITH EH-R&D";
             technicalContact2.Contact = "baby.yoda@siemens-healthineers.com";
 
             expectedProjectInformation.TechnicalContacts.Add(technicalContact1);
@@ -77,24 +77,24 @@ namespace webapiTests.ProjectSearch.Services
 
             ProjectInformationParticipant pentestLead = new ProjectInformationParticipant();
             pentestLead.Name = "Lukas Nad";
-            pentestLead.Department = "SHS TE DC CYS CSA P\\&PA";
+            pentestLead.Department = "SHS TE DC CYS CSA P&PA";
             pentestLead.Contact = "lukas.nad@siemens-healthineers.com";
             expectedProjectInformation.PentestLead = pentestLead;
 
             ProjectInformationParticipant pentestCoordinator = new ProjectInformationParticipant();
             pentestCoordinator.Name = "Alzbeta Vojtusova";
-            pentestCoordinator.Department = "SHS TE DC CYS CSA P\\&PA";
+            pentestCoordinator.Department = "SHS TE DC CYS CSA P&PA";
             pentestCoordinator.Contact = "alzbeta.vojtusova@siemens-healthineers.com";
             expectedProjectInformation.PentestCoordinator = pentestCoordinator;
 
             ProjectInformationParticipant pentestTeamMember1 = new ProjectInformationParticipant();
             pentestTeamMember1.Name = "Lukas Nad";
-            pentestTeamMember1.Department = "SHS TE DC CYS CSA P\\&PA";
+            pentestTeamMember1.Department = "SHS TE DC CYS CSA P&PA";
             pentestTeamMember1.Contact = "lukas.nad@siemens-healthineers.com";
 
             ProjectInformationParticipant pentestTeamMember2 = new ProjectInformationParticipant();
             pentestTeamMember2.Name = "Michal Olencin";
-            pentestTeamMember2.Department = "SHS TE DC CYS CSA P\\&PA";
+            pentestTeamMember2.Department = "SHS TE DC CYS CSA P&PA";
             pentestTeamMember2.Contact = "michal.olencin@siemens-healthineers.com";
 
             ProjectInformationParticipant pentestTeamMember3 = new ProjectInformationParticipant();
@@ -106,7 +106,7 @@ namespace webapiTests.ProjectSearch.Services
             expectedProjectInformation.PentestTeam.Add(pentestTeamMember3);
 
             expectedProjectInformation.TargetInfoVersion = "12.1.1.2";
-            expectedProjectInformation.TargetInfoEnvironment = "Testing Environemnt";
+            expectedProjectInformation.TargetInfoEnvironment = "Testing Environment";
             expectedProjectInformation.TargetInfoInternetFacing = true;
             expectedProjectInformation.TargetInfoSNXConnectivity = false;
             expectedProjectInformation.TargetInfoHostingLocation = "Special Network";
