@@ -3,6 +3,7 @@ using webapi.Models;
 using webapi.Service;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace webapi.ProjectManagement.Controllers;
 
@@ -20,7 +21,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("add")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> PostProject(ProjectData project)
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -41,7 +42,7 @@ public class ProjectController : ControllerBase
 
 
     [HttpPost("delete")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteProject(List<string> ids)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -59,7 +60,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("checkFileExists/{id}")]
-    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
+    [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> CheckFileExists(string id)
     {
         string scopeFileName = $"scope_{id}.pdf";
@@ -82,7 +83,7 @@ public class ProjectController : ControllerBase
 
 
     [HttpGet("uploadStatus/{id}")]
-    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
+    [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetUploadStatus(string id)
     {
         try
@@ -106,7 +107,7 @@ public class ProjectController : ControllerBase
 
 
     [HttpGet("retrieve")]
-    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
+    [Authorize(Policy = "AdminCoordinatorClientPolicy")]
     public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter, [FromQuery] SortData sort)
     {
         var items = new CountProjects();
@@ -148,7 +149,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("update")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
@@ -166,7 +167,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("download")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> Download(string name)
     {
         Console.WriteLine("Downloading file..");
@@ -184,7 +185,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("getProject")]
-    // [Authorize(Policy = "AdminCoordinatorPolicy")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> GetProjectById(string id)
     {
         Console.ForegroundColor = ConsoleColor.Green;
@@ -224,6 +225,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("upload")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> UploadFile(IFormFile file, string destination, string id)
     {
         try
@@ -260,6 +262,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpDelete("deleteBlobFile")]
+    [Authorize(Policy = "AdminCoordinatorPolicy")]
     public async Task<IActionResult> DeleteBlobFile(string destination, string id)
     {
             if (string.IsNullOrEmpty(destination))

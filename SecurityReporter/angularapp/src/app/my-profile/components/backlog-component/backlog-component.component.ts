@@ -67,7 +67,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService, private getProjectsService: GetProjectsServiceService) { }
 
-  userRole: string = 'admin';
+  userRole: string = '';
   userId: string = '';
 
   ngOnInit(): void {
@@ -80,7 +80,7 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.userRole = await this.authService.getRole();
 
     if (this.userRole == 'Not signed in!') {
-      this.userRole = 'admin';
+      this.userRole = '';
     }
   }
 

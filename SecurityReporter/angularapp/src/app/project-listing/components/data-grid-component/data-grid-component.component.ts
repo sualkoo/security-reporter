@@ -78,7 +78,7 @@ export class DataGridComponentComponent implements AfterViewInit {
   };
   constructor(private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private authService: AuthService) { }
 
-  userRole: string = 'admin';
+  userRole: string = '';
 
   async ngOnInit() {
     await this.getRole();
@@ -89,7 +89,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     this.userRole = await this.authService.getRole();
 
     if (this.userRole == 'Not signed in!') {
-      this.userRole = 'admin';
+      this.userRole = '';
     }
   }
 
