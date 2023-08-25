@@ -6,6 +6,7 @@ using webapi.Login.Models;
 using webapi.Models;
 using webapi.ProjectSearch.Enums;
 using webapi.MyProfile.Models;
+using webapi.ProjectSearch.Enums;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
 

@@ -16,8 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FiltersComponent } from '../filters/filters.component';
 import { ExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { AuthService } from '../../../services/auth.service';
-import { SortData } from '../../interfaces/sort-data';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { SortData } from '../../interfaces/sort-data';
  
 @Component({
   selector: 'app-data-grid-component',
@@ -76,13 +76,7 @@ export class DataGridComponentComponent implements AfterViewInit {
     columnNumber: 0,
     sortingDescDirection: false,
   };
-
-  constructor(
-    private getProjectsService: GetProjectsServiceService,
-    private router: Router,
-    private dialog: MatDialog,
-    private authService: AuthService
-  ) {}
+  constructor(private getProjectsService: GetProjectsServiceService, private router: Router, private dialog: MatDialog, private authService: AuthService) { }
 
   userRole: string = 'admin';
 
