@@ -31,9 +31,11 @@ namespace cosmosTools
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine();
             Console.WriteLine("Available commands:");
-            Console.WriteLine("add [number] --> add [number] of random items to database");
-            Console.WriteLine("clear        --> deletes all items from database");
-            Console.WriteLine("quit         --> exit program");
+            Console.WriteLine("add      [number] --> add [number] of random items to database");
+            Console.WriteLine("clear             --> deletes all items from database");
+            Console.WriteLine("addroles [number] --> add [number] of random users to database");
+            Console.WriteLine("clearroles        --> deletes all users from database");
+            Console.WriteLine("quit              --> exit program");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
         }

@@ -18,15 +18,23 @@ import { GetProjectService } from '../../../project-editing/services/get-project
 import { GetProjectsServiceService } from '../../../project-listing/services/get-projects-service.service';
 import { AuthService } from '../../../services/auth.service';
 
-
 @Component({
   selector: 'app-backlog-component',
   templateUrl: './backlog-component.component.html',
   styleUrls: ['./backlog-component.component.css'],
   standalone: true,
-  imports: [MatTableModule, MatCheckboxModule, MatPaginatorModule, MatProgressSpinnerModule,
-    CommonModule, MatButtonModule, MatTooltipModule, MatIconModule, FiltersComponent, ExpansionPanelComponent, 
-],
+  imports: [
+    MatTableModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    CommonModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    FiltersComponent,
+    ExpansionPanelComponent,
+  ],
 })
 export class BacklogComponentComponent implements AfterViewInit {
   projects: ProjectInterface[] = [];
@@ -51,7 +59,6 @@ export class BacklogComponentComponent implements AfterViewInit {
     'tko',
   ];
 
-
   dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
   selection = new SelectionModel<ProjectInterface>(true, []);
 
@@ -60,18 +67,19 @@ export class BacklogComponentComponent implements AfterViewInit {
   filters: string = '';
 
   length: number | undefined;
-    count: any;
+  count = 15;
 
   constructor(
     private getBacklogService: GetBacklogService,
     private dialog: MatDialog,
-    private authService: AuthService, private getProjectsService: GetProjectsServiceService) { }
+    private authService: AuthService,
+    private getProjectsService: GetProjectsServiceService
+  ) {}
 
   userRole: string = '';
   userId: string = '';
 
   ngOnInit(): void {
-
     this.getRole();
     this.getInitItems();
   }
@@ -83,7 +91,6 @@ export class BacklogComponentComponent implements AfterViewInit {
       this.userRole = '';
     }
   }
-
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -136,7 +143,6 @@ export class BacklogComponentComponent implements AfterViewInit {
     }
   }
 
-
   getSelectedItems(): void {
     for (const item of this.selection.selected) {
       this.selectedItems.push(item);
@@ -148,13 +154,19 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.databaseError = false;
 
     try {
-      const response = await this.getProjectsService.getProjects(this.paginator.pageSize, this.paginator.pageIndex + 1, '', 0, true);
+      const response = await this.getBacklogService.getBacklogData(
+        this.paginator.pageSize,
+        this.paginator.pageIndex + 1
+      );
 
-      if (response === "No data available.") {
+      if (response === 'No data available.') {
         this.databaseError = false;
       } else {
-        this.projects = response;
-        this.dataSource = new MatTableDataSource<ProjectInterface>(this.projects);
+        this.projects = response.projects;
+        this.count = response.count;
+        this.dataSource = new MatTableDataSource<ProjectInterface>(
+          this.projects
+        );
       }
     } catch (error) {
       this.databaseError = true;
@@ -162,8 +174,6 @@ export class BacklogComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
-
-
 
   getStatusColor(element: any): string {
     switch (element.projectStatus) {
@@ -190,11 +200,8 @@ export class BacklogComponentComponent implements AfterViewInit {
     this.filterError = false;
 
     try {
-      const response = await this.getBacklogService.getBacklogData(
-        15,
-        1,
-        0
-      );
+      const response = await this.getBacklogService.getBacklogData(15, 1);
+      console.log(response.count);
 
       if (response === 'No data available.') {
         this.databaseError = false;
@@ -209,6 +216,4 @@ export class BacklogComponentComponent implements AfterViewInit {
       this.isLoading = false;
     }
   }
-
 }
-

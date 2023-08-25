@@ -4,19 +4,18 @@ import { Observable, catchError } from 'rxjs';
 import { ProjectInterface } from '../../../../project-management/interfaces/project-interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetBacklogService {
-
   private getProjectEndPointURL: string;
 
   constructor(private http: HttpClient) {
-    this.getProjectEndPointURL = "/profile"
+    this.getProjectEndPointURL = '/profile';
   }
 
-  getBacklogData(pageSize: number, pageNumber: number, columnNumber: number): Promise<any> {
-    this.getProjectEndPointURL = '/profile' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber;
-
+  getBacklogData(pageSize: number, pageNumber: number): Promise<any> {
+    this.getProjectEndPointURL =
+      '/profile' + '?pageSize=' + pageSize + '&pageNumber=' + pageNumber;
 
     return new Promise((resolve, reject) => {
       this.http.get(this.getProjectEndPointURL).subscribe(
@@ -24,7 +23,7 @@ export class GetBacklogService {
           if (response !== null && response !== undefined) {
             resolve(response);
           } else {
-            const noDataResponse = "No data available.";
+            const noDataResponse = 'No data available.';
             resolve(noDataResponse);
           }
         },
