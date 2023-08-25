@@ -24,7 +24,7 @@ export class Roles implements CanActivate {
     var userRole = await this.authService.getRole();
 
     if (userRole == 'Not signed in!') {
-      userRole = 'admin';
+      userRole = '';
     }
 
     console.log(userRole);

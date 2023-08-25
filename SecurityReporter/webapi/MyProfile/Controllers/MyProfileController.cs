@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Login.Models;
 using webapi.Service;
@@ -6,9 +7,8 @@ using webapi.Service;
 
 namespace webapi.MyProfile.Controllers;
 
-
-
 [ApiController]
+[Authorize(Policy = "AdminCoordinatorPentesterClientPolicy")]
 public class MyProfileController : ControllerBase
 {
     public ICosmosService CosmosService { get; }
