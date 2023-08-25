@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 using webapi.Enums;
+using webapi.Login.Models;
 using webapi.Models;
 using webapi.Service;
 
@@ -20,7 +21,7 @@ namespace cosmosTools
             CosmosKey = primaryKey;
             DatabaseId = "ProjectDatabase";
             ContainerId = "ProjectContainer";
-            CosmosEndpoint = "https://security-reporter.documents.azure.com:443";
+            CosmosEndpoint = "https://localhost:8081";
             CosmosService = new CosmosService(CosmosKey, DatabaseId, ContainerId, CosmosEndpoint);
 
         }
@@ -89,6 +90,7 @@ namespace cosmosTools
 
             var Generators = new Generators();
             var randomWords = await Generators.GenerateWords();
+            var userRoles = await CosmosService.GetAllUserRoles();
 
             for (int i = 0; i < amount; i++)
             {
@@ -105,7 +107,7 @@ namespace cosmosTools
                     PentestAspects = Generators.GeneratePentest(),
                     ReportStatus = Generators.GenerateReportStatus(),
                     ContactForClients = Generators.GenerateContacts(),
-                    WorkingTeam = Generators.GenerateWorkingTeam(),
+                    WorkingTeam = Generators.GenerateWorkingTeam(userRoles),
                     Comments = Generators.GenerateComment(randomWords),
                 };
 
@@ -126,6 +128,35 @@ namespace cosmosTools
 
                 await CosmosService.AddProject(data);
             }
+        }
+
+
+        public async Task AddRolesToDatabaseAsync(int amount)
+        {
+            Console.WriteLine("Starting with adding items to database");
+
+            var Generators = new Generators();
+            List<string> roles = new List<string> { "admin", "pentester", "client", "client", "client", "client", "client", "client", "default", "coordinator" };
+            var addedCounter = 0;
+
+            while (addedCounter < amount)
+            {
+                UserRole user = new UserRole();
+                user.id = Generators.GenerateRandomEmail(Generators.workingTeam[new Random().Next(0, Generators.workingTeam.Count())]);
+                user.Role = roles[new Random().Next(0, roles.Count())];
+
+                if (await CosmosService.CreateUser(user))
+                {
+                    addedCounter++;
+                }
+            }
+            Console.WriteLine("Finnishing with adding items to database");
+
+
+        }
+        public async Task ClearRoleDatabaseAsync()
+        {
+            await CosmosService.DeleteUsers();
         }
     }
 }

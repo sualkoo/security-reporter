@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Models;
 using webapi.Service;
@@ -60,25 +59,12 @@ public class ProjectController : ControllerBase
     }
 
 
-    [HttpGet("count")]
-    // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    public async Task<IActionResult> GetNumberOfProjects()
-    {
-        int count = await CosmosService.GetNumberOfProjects();
-
-        if (count < 0)
-        {
-            return StatusCode(400, count);
-        }
-
-        return StatusCode(200, count);
-    }
 
     [HttpGet("retrieve")]
     // [Authorize(Policy = "AdminCoordinatorClientPolicy")]
-    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter)
+    public async Task<IActionResult> GetItems([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] FilterData filter, [FromQuery] SortData sort)
     {
-        var items = new List<ProjectList>();
+        var items = new CountProjects();
 
         try
         {
@@ -87,9 +73,9 @@ public class ProjectController : ControllerBase
             Console.ResetColor();
             Console.WriteLine("\t /Project/retrieve");
 
-            items = await CosmosService.GetItems(pageSize, pageNumber, filter);
+            items = await CosmosService.GetItems(pageSize, pageNumber, filter, sort);
 
-            if (items.Count > 0)
+            if (items.Projects.Count > 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Success: Data retrieved successfully.");
@@ -121,9 +107,9 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> UpdateProject(ProjectData project)
     {
         Console.WriteLine("Updating project..");
-        
+
         bool result = await CosmosService.UpdateProject(project);
-        
+
         if (!result)
         {
             Console.WriteLine("Error occured in Project/update put request.");
@@ -228,4 +214,3 @@ public class ProjectController : ControllerBase
         }
     }
 }
-    

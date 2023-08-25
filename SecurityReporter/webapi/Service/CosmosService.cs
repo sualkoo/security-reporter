@@ -1,8 +1,10 @@
 ﻿using Microsoft.Azure.Cosmos;
+using System.ComponentModel;
 using System.Net;
 using webapi.Enums;
-using webapi.Login.Services;
+using webapi.Login.Models;
 using webapi.Models;
+using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Enums;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
@@ -17,16 +19,15 @@ namespace webapi.Service
         private string ContainerName { get; } = "ProjectContainer";
         private string ReportContainerName { get; } = "ReportContainer";
 
-        private ClientMailService clientMailService;
-
-        private RoleService roleService;
+        private string RolesContainerName { get; } = "ProjectRolesContainer";
 
         private readonly IHttpContextAccessor httpContextAccessor;
         private Microsoft.Azure.Cosmos.Container Container { get; }
+        private Microsoft.Azure.Cosmos.Container RolesContainer { get; }
         private Microsoft.Azure.Cosmos.Container ReportContainer { get; }
         private readonly ILogger Logger;
 
-        public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ClientMailService clientMailService, RoleService roleService)
+        public CosmosService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             PrimaryKey = configuration["DB:PrimaryKey"];
             EndpointUri = configuration["DB:EndpointUri"];
@@ -41,14 +42,13 @@ namespace webapi.Service
                 EndpointUri = "https://security-reporter.documents.azure.com:443";
                 PrimaryKey = "6sDm3pLgxLV7WnQqYkYPBmoyapf91CHvD1OpTJVBxNvYh6wRgmTEqJBy7kAR11MiTEEne6QV5G9dACDbdbjQSg==";
             }
-            
+
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
+            RolesContainer = cosmosClient.GetContainer(DatabaseName, RolesContainerName);
             ReportContainer = cosmosClient.GetContainer(DatabaseName, ReportContainerName);
             ILoggerFactory loggerFactory = LoggerProvider.GetLoggerFactory();
             Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-            this.clientMailService = clientMailService;
-            this.roleService = roleService;
             this.httpContextAccessor = httpContextAccessor;
         }
 
@@ -60,11 +60,14 @@ namespace webapi.Service
             EndpointUri = cosmosEndpoint;
             CosmosClient cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
             Container = cosmosClient.GetContainer(DatabaseName, ContainerName);
+            RolesContainer = cosmosClient.GetContainer(DatabaseName, RolesContainerName);
+
         }
 
         public async Task<bool> AddProject(ProjectData data)
         {
             data.RequestCreated = DateTime.Now;
+            data.ProjectNameLower = data.ProjectName.ToLower();
             if (data.Comments != null)
             {
                 data.Comments[0].CreatedAt = DateTime.Now;
@@ -142,62 +145,71 @@ namespace webapi.Service
             return new List<string> { };
         }
 
-        public async Task<int> GetNumberOfProjects()
+        //public async Task<int> GetNumberOfProjects()
+        //{
+
+        //    bool client = false;
+        //    if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        //    {
+        //        if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
+        //        {
+        //            client = true;
+        //        }
+        //    }
+
+        //    var queryString = "SELECT VALUE COUNT(1) FROM c";
+        //    if (client)
+        //    {
+        //        var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
+        //        queryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+        //    }
+
+        //    QueryDefinition query = new QueryDefinition(queryString);
+        //    FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
+
+        //    if (queryResultIterator.HasMoreResults)
+        //    {
+        //        FeedResponse<int> response = await queryResultIterator.ReadNextAsync();
+        //        int count = response.FirstOrDefault();
+        //        return count;
+        //    }
+        //    else
+        //    {
+        //        return -1;
+        //    }
+        //}
+
+        public async Task<CountProjects> GetItems(int pageSize, int pageNumber, FilterData filter, SortData sort)
         {
-
-            bool client = false;
-            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-            {
-                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client")
-                {
-                    client = true;
-                }
-            }
-
-            var queryString = "SELECT VALUE COUNT(1) FROM c";
-            if (client)
-            {
-                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
-                queryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
-            }
-
-            QueryDefinition query = new QueryDefinition(queryString);
-            FeedIterator<int> queryResultIterator = Container.GetItemQueryIterator<int>(query);
-
-            if (queryResultIterator.HasMoreResults)
-            {
-                FeedResponse<int> response = await queryResultIterator.ReadNextAsync();
-                int count = response.FirstOrDefault();
-                return count;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        public async Task<List<ProjectList>> GetItems(int pageSize, int pageNumber, FilterData filter)
-        {
+            var result = new CountProjects();
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
             bool client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                if (await roleService.GetUserRoleBySubjectId(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value) == "client") {
+                if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
+                {
                     client = true;
                 }
             }
 
             var queryString = "SELECT * FROM c";
-            if (client) {
-                var mail = this.clientMailService.GetClientMail(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value);
-                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.ContactForClients) AND (ARRAY_CONTAINS(c.ContactForClients, \"{mail}\"))";
+
+            var countqueryString = "SELECT VALUE COUNT(1) FROM c";
+            if (client)
+            {
+                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
+                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+
+                countqueryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
             }
 
             var queryParameters = new Dictionary<string, object>();
 
             var filterConditions = new List<string>();
+
+
 
             if (!string.IsNullOrWhiteSpace(filter.FilteredProjectName))
             {
@@ -281,12 +293,89 @@ namespace webapi.Service
                 if (client)
                 {
                     queryString += " AND " + string.Join(" AND ", filterConditions);
+                    countqueryString += " AND " + string.Join(" AND ", filterConditions);
                 }
                 else
                 {
                     queryString += " WHERE " + string.Join(" AND ", filterConditions);
+                    countqueryString += " WHERE " + string.Join(" AND ", filterConditions);
                 }
             }
+
+            if (sort.SortingColumns != 0)
+            {
+                switch (sort.SortingColumns)
+                {
+                    case Enums.SortingColumns.ProjectName:
+                        countqueryString += " ORDER BY c.ProjectNameLower";
+                        queryString += " ORDER BY c.ProjectNameLower";
+                        break;
+                    case Enums.SortingColumns.StartDate:
+                        countqueryString += " ORDER BY c.StartDate";
+                        queryString += " ORDER BY c.StartDate";
+                        break;
+                    case Enums.SortingColumns.EndDate:
+                        countqueryString += " ORDER BY c.EndDate";
+                        queryString += " ORDER BY c.EndDate";
+                        break;
+                    case Enums.SortingColumns.ReportDueDate:
+                        countqueryString += " ORDER BY c.ReportDueDate";
+                        queryString += " ORDER BY c.ReportDueDate";
+                        break;
+                    case Enums.SortingColumns.PentestDuration:
+                        countqueryString += " ORDER BY c.PentestDuration";
+                        queryString += " ORDER BY c.PentestDuration";
+                        break;
+                    case Enums.SortingColumns.IKO:
+                        countqueryString += " ORDER BY c.IKO";
+                        queryString += " ORDER BY c.IKO";
+                        break;
+                    case Enums.SortingColumns.TKO:
+                        countqueryString += " ORDER BY c.TKO";
+                        queryString += " ORDER BY c.TKO";
+                        break;
+                }
+
+                if (sort.SortingDescDirection)
+                {
+                    queryString += " DESC";
+                    countqueryString += " DESC";
+                }
+                else
+                {
+                    queryString += " ASC";
+                    countqueryString += " ASC";
+                }
+            }
+
+            if (sort.SortingColumns == 0 && filterConditions.Count == 0)
+            {
+                queryString += " ORDER BY c.RequestCreated DESC";
+                countqueryString += " ORDER BY c.RequestCreated DESC";
+            }
+
+            var count = 0;
+            var countQueryDefinition = new QueryDefinition(countqueryString);
+            foreach (var param in queryParameters)
+            {
+                countQueryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var countResultSetIterator = Container.GetItemQueryIterator<int>(countQueryDefinition);
+            try
+            {
+                while (countResultSetIterator.HasMoreResults)
+                {
+                    var response = await countResultSetIterator.ReadNextAsync();
+                    count = response.Resource.FirstOrDefault();
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
 
             queryString += " OFFSET @skipCount LIMIT @itemCount";
             queryParameters["@skipCount"] = skipCount;
@@ -313,7 +402,101 @@ namespace webapi.Service
                 Console.WriteLine("Error occurred while fetching items from DB: " + ex);
                 throw;
             }
-            return items;
+
+            result.Count = count;
+            result.Projects = items;
+
+            return result;
+
+        }
+
+        public async Task<Profile> GetBacklog(int pageSize, int pageNumber)
+        {
+            var result = new Profile();
+            int skipCount = pageSize * (pageNumber - 1);
+            int itemCount = pageSize;
+
+            bool client = false;
+            if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
+                {
+                    client = true;
+                }
+            }
+            else
+            {
+                result.Count = -1;
+                result.Projects = new List<ProfileBackLog>();
+                return result;
+            }
+
+            var queryString = "SELECT * FROM c";
+
+            var countqueryString = "SELECT VALUE COUNT(1) FROM c";
+            if (client)
+            {
+                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
+                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+
+                countqueryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+            }
+
+            var queryParameters = new Dictionary<string, object>();
+
+            var count = 0;
+            var countQueryDefinition = new QueryDefinition(countqueryString);
+            foreach (var param in queryParameters)
+            {
+                countQueryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var countResultSetIterator = Container.GetItemQueryIterator<int>(countQueryDefinition);
+            try
+            {
+                while (countResultSetIterator.HasMoreResults)
+                {
+                    var response = await countResultSetIterator.ReadNextAsync();
+                    count = response.Resource.FirstOrDefault();
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
+
+            queryString += " OFFSET @skipCount LIMIT @itemCount";
+            queryParameters["@skipCount"] = skipCount;
+            queryParameters["@itemCount"] = itemCount;
+
+            var items = new List<ProfileBackLog>();
+            var queryDefinition = new QueryDefinition(queryString);
+            foreach (var param in queryParameters)
+            {
+                queryDefinition.WithParameter(param.Key, param.Value);
+            }
+            var resultSetIterator = Container.GetItemQueryIterator<ProfileBackLog>(queryDefinition);
+            try
+            {
+                while (resultSetIterator.HasMoreResults)
+                {
+                    var response = await resultSetIterator.ReadNextAsync();
+                    items.AddRange(response.Resource);
+                    Console.WriteLine("Successfully fetched items from DB.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occurred while fetching items from DB: " + ex);
+                throw;
+            }
+
+            result.Count = count;
+            result.Projects = items;
+
+            return result;
 
         }
 
@@ -558,6 +741,59 @@ namespace webapi.Service
             }
         }
 
+        //public async Task<Profile> ProfileItems(string email)
+        //{
+        //    var queryText = $"SELECT VALUE p FROM p JOIN e IN p.WorkingTeam WHERE e = '{email}'"; // Customize your query
+
+        //    var queryDefinition = new QueryDefinition(queryText);
+
+        //    try
+        //    {
+        //        var queryResultSetIterator = Container.GetItemQueryIterator<ProjectData>(queryDefinition);
+
+        //        var myProfile = new Profile();
+
+        //        var results = new List<ProjectData>();
+
+        //        while (queryResultSetIterator.HasMoreResults)
+        //        {
+        //            var response = await queryResultSetIterator.ReadNextAsync();
+        //            results.AddRange(response);
+        //            Console.WriteLine(response);
+        //        }
+        //        Console.WriteLine("Item found successfully.");
+
+        //        myProfile.Projects = results;
+
+        //        UserRole userRole = await GetUserRole(email);
+
+        //        myProfile.Role = userRole.Role;
+
+        //        return myProfile;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Error occurred: " + ex);
+        //        return new Profile();
+        //    }
+        //}
+
+        public async Task<bool> CreateUser(UserRole user)
+        {
+
+            try
+            {
+                await RolesContainer.CreateItemAsync(user, new PartitionKey(user.id));
+                Console.WriteLine(user.id, user.Role);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<List<Tuple<string, int, int>>> GetCriticalityData()
         {
             List<Tuple<string, int, int>> data = new List<Tuple<string, int, int>>();
@@ -683,6 +919,80 @@ namespace webapi.Service
             .ToList();
 
             return data;
+        }
+
+        public async Task<UserRole> GetUserRole(string email)
+        {
+
+            try
+            {
+                UserRole userRole = await RolesContainer.ReadItemAsync<UserRole>(email, new PartitionKey(email));
+                Console.WriteLine(userRole.id, userRole.Role);
+
+                return userRole;
+            }
+            catch (Exception ex)
+            {
+                return new UserRole();
+            }
+        }
+
+        public async Task<List<UserRole>> GetAllUserRoles()
+        {
+            var queryText = $"SELECT * FROM p"; // Customize your query
+
+            var queryDefinition = new QueryDefinition(queryText);
+
+            var queryIterator = RolesContainer.GetItemQueryIterator<UserRole>(queryDefinition);
+
+            var allUsers = new List<UserRole>();
+
+            var itemCount = 0;
+
+            while (queryIterator.HasMoreResults)
+            {
+                var result = await queryIterator.ReadNextAsync();
+
+                foreach (UserRole item in result)
+                {
+                    itemCount++;
+                    if (itemCount > 5)
+                    {
+                        allUsers.Add(item);
+                    }
+
+                }
+            }
+            return allUsers;
+        }
+
+        public async Task DeleteUsers()
+        {
+            Console.WriteLine("Starting of clearing user role DB");
+            var queryText = $"SELECT * FROM p"; // Customize your query
+
+            var queryDefinition = new QueryDefinition(queryText);
+
+            var queryIterator = RolesContainer.GetItemQueryIterator<UserRole>(queryDefinition);
+
+            int itemCount = 0;
+
+            while (queryIterator.HasMoreResults)
+            {
+                var result = await queryIterator.ReadNextAsync();
+
+                foreach (UserRole item in result)
+                {
+                    itemCount++;
+                    if (itemCount > 5)
+                    {
+                        Console.WriteLine("Deleting user: " + item.id + "with role: " + item.Role);
+                        await RolesContainer.DeleteItemAsync<UserRole>(item.id, new PartitionKey(item.id));
+                        // You can handle the delete response if needed
+                    }
+                }
+            }
+            Console.WriteLine("Finnishing of clearing user role DB");
         }
     }
 }

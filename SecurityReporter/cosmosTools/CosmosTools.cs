@@ -35,6 +35,15 @@ class CosmosTools
                 amount = SecondArgumentAsInteger(consoleInput);
                 await Generator.AddItemsToDatabaseAsync(amount);
             }
+            else if (command == "addroles")
+            {
+                amount = SecondArgumentAsInteger(consoleInput);
+                await Generator.AddRolesToDatabaseAsync(amount);
+            }
+            else if (command == "clearroles")
+            {
+                await Generator.ClearRoleDatabaseAsync();
+            }
             else if (command == "clear")
             {
                 await Generator.ClearDatabaseAsync();

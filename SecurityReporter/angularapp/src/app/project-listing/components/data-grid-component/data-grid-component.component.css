@@ -14,6 +14,13 @@
   text-transform: uppercase;
 }
 
+.reset-filters {
+  position: absolute;
+  left: 100px;
+  top: auto;
+}
+
+
 .button-container {
   display: flex;
   justify-content: flex-end;
@@ -131,3 +138,7 @@
     transform: scale(1.1); 
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
   }
+
+.hideSortIcon mat-sort-header-arrow {
+  display: none !important;
+}
