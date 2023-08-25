@@ -7,6 +7,8 @@ const PROXY_CONFIG = [
       "/logout",
       "/api/project-reports",
       "/api/dashboard",
+        "/profile",
+        "/email", 
     ],
     target: "https://localhost:7075",
     secure: false

@@ -9,6 +9,7 @@ using webapi.MyProfile.Models;
 using webapi.ProjectSearch.Enums;
 using webapi.ProjectSearch.Models;
 using webapi.ProjectSearch.Services;
+using User = webapi.Login.Models.User;
 
 namespace webapi.Service
 {
@@ -417,7 +418,7 @@ namespace webapi.Service
             int skipCount = pageSize * (pageNumber - 1);
             int itemCount = pageSize;
 
-            bool client = false;
+            /* client = false;
             if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
                 if ((await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).Role == "client")
@@ -430,18 +431,18 @@ namespace webapi.Service
                 result.Count = -1;
                 result.Projects = new List<ProfileBackLog>();
                 return result;
-            }
+            */
 
-            var queryString = "SELECT * FROM c";
 
-            var countqueryString = "SELECT VALUE COUNT(1) FROM c";
-            if (client)
-            {
-                var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
-                queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+            var mail = (await GetUserRole(httpContextAccessor.HttpContext.User?.FindFirst("sub")?.Value)).id;
+            var queryString = $"SELECT * FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
 
-                countqueryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (c.ProjectStatus = 2 OR c.ProjectStatus = 3) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
-            }
+            var countqueryString = $"SELECT VALUE COUNT(1) FROM c WHERE IS_DEFINED(c.WorkingTeam) AND (ARRAY_CONTAINS(c.WorkingTeam, \"{mail}\"))";
+            Console.WriteLine(countqueryString);
+            Console.WriteLine(queryString);
+            Console.WriteLine(mail);
+
+
 
             var queryParameters = new Dictionary<string, object>();
 

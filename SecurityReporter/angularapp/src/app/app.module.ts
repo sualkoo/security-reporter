@@ -50,6 +50,8 @@ import { AutoLogoutService } from './services/auto-logout.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MyProfileComponent } from './my-profile/component-pages/my-profile-page/my-profile.component';
+import { BacklogComponentComponent } from './my-profile/components/backlog-component/backlog-component.component';
+import { CalendarComponentComponent } from './my-profile/components/calendar-component/calendar-component.component';
 import { FileDragDropComponent } from './project-editing/components/file-drag-drop/file-drag-drop.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -62,6 +64,11 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     ProjectSearchPageComponent,
     AddProjectReportComponent,
     LandingPageComponent,
+    LandingPageComponent,   
+    HighlighterPipe,
+    LoginPageComponent,
+    LandingPageComponent,    
+    LandingPageComponent,
     HighlighterPipe,
     LoginPageComponent,
     FooterComponent,
@@ -70,7 +77,8 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     NavigationBarComponent,
     DefaultPageComponentComponent,
     AfterLoginPageComponent,
- 
+    
+    
   ],
   imports: [
     MatSnackBarModule,
@@ -106,10 +114,16 @@ import { AboutPentestsComponent } from './about-pentests/about-pentests.componen
     DataGridComponentComponent,
     MatButtonModule,
     DeletePopupComponentComponent,
-    MatDialogModule, FiltersComponent, FiltersDatepickerComponent, SliderComponent, ExpansionPanelComponent, InputComponent, RouterModule,
-MyProfileComponent,
-    MatSnackBarModule, 
+    MatDialogModule,
+    FiltersComponent,
+    FiltersDatepickerComponent,
+    SliderComponent,
+    ExpansionPanelComponent,
+    InputComponent,
+    RouterModule,
+    MatSnackBarModule,    
   ],
+
   providers: [Roles, AutoLogoutService],
   bootstrap: [AppComponent],
 })
