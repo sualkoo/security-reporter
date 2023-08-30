@@ -41,6 +41,7 @@ Welcome to the documentation for SecurityReporter, a C# and .NET-based applicati
          }
       - Attribute Role can be admin/client/coordinator/pentester/default.
       - You can add new item by clicking on ProjectRolesDatabase -> ProjectRolesContainer -> Items, then click on New item and then click save.
+      - If you want to login password is same as login email. (Example: username: client@client.sk, password: client@client.sk)
 
 5. Configure the application by updating the `appsettings.json` file or user secrets  with the appropriate values, if you don't specify configuration for CosmosDB or AzureStorage, the application will use production connection by default:
 

@@ -1,4 +1,32 @@
 .comment-container {
-  max-height: 200px; 
+  max-height: 200px;
   overflow-y: auto;
+}
+
+mat-expansion-panel {
+  width: 500px;
+  background-color: #f2f2f2;
+}
+
+mat-divider {
+  margin: 00px 0px 15px 0px;
+}
+
+.pentest-download div {
+  display: flex;
+}
+
+.clickable-item {
+  cursor: pointer;
+}
+
+.not-clickable {
+  cursor: not-allowed;
+}
+
+.icons-group {
+  padding-right: 20px;
+  position: absolute;
+  right: 0;
+  gap: 10px;
 }

@@ -1,158 +1,272 @@
 <div class="button-container">
-
   <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
-    <div matTooltip="No items selected" [matTooltipDisabled]="!areNoBoxesChecked()" matTooltipPosition="below">
+    <div
+      matTooltip="No items selected"
+      [matTooltipDisabled]="!areNoBoxesChecked()"
+      matTooltipPosition="below"
+    >
       <div>
-        <button mat-flat-button color="warn" (click)="openDialog()" class="delete-button" [disabled]="areNoBoxesChecked()" style="margin-right: 5px;">
+        <button
+          mat-flat-button
+          color="warn"
+          (click)="openDialog()"
+          class="delete-button"
+          [disabled]="areNoBoxesChecked()"
+          style="margin-right: 5px"
+        >
           Delete
         </button>
       </div>
     </div>
   </div>
-
-    <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
-      <button mat-flat-button color="blue" class="add-button" (click)="navigateToPage()">
-        Add project
-      </button>
-    </div>
+  <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
+    <button
+      mat-flat-button
+      color="blue"
+      class="add-button"
+      (click)="navigateToPage()"
+    >
+      Add project
+    </button>
   </div>
+</div>
 
-  <div class="expansion-panel">
-    <app-expansion-panel (filtersChangedEvent)="filtersChangedHandler($event)"></app-expansion-panel>
-  </div>
+<div class="reset-filters">
+  <button mat-flat-button color="warn" (click)="resetSorting()">
+    Reset Sorting
+  </button>
+</div>
 
+<div class="expansion-panel">
+  <app-expansion-panel
+    (filtersChangedEvent)="filtersChangedHandler($event)"
+  ></app-expansion-panel>
+</div>
 
-  <div class="list-container">
-    <div class="table-container mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
+<div class="list-container">
+  <div class="table-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
+            <mat-checkbox
+              color="primary"
+              (change)="$event ? toggleAllRows() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()"
+              [aria-label]="checkboxLabel()"
+            >
+            </mat-checkbox>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="handleCheckboxChange(row)"
+              [checked]="selection.isSelected(row)"
+              [aria-label]="checkboxLabel(row)"
+            >
+            </mat-checkbox>
+          </div>
+        </td>
+      </ng-container>
 
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
-              <mat-checkbox color=primary (change)="$event ? toggleAllRows() : null"
-                            [checked]="selection.hasValue() && isAllSelected()"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()"
-                            [aria-label]="checkboxLabel()">
-              </mat-checkbox>
-            </div>
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
-              <mat-checkbox (click)="$event.stopPropagation()"
-                            (change)="handleCheckboxChange(row)"
-                            [checked]="selection.isSelected(row)"
-                            [aria-label]="checkboxLabel(row)">
-              </mat-checkbox>
-             </div>
-          </td>
-        </ng-container>
+      <!-- Project Name Column -->
+      <ng-container matColumnDef="projectName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="projectName"
+          (click)="updateSelectedColumn(1)"
+        >
+          Project Name
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.projectName }}</td>
+      </ng-container>
 
-        <!-- Project Name Column -->
-        <ng-container matColumnDef="projectName">
-          <th mat-header-cell *matHeaderCellDef> Project Name </th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.projectName }}
-          </td>
-        </ng-container>
+      <!-- Edit Button Column -->
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
+            <mat-icon class="edit-icon" (click)="navigateToThePage(element.id)"
+              >edit</mat-icon
+            >
+          </div>
+        </td>
+      </ng-container>
 
-        <!-- Edit Button Column -->
-        <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
-            <div *ngIf="userRole === 'admin' || userRole === 'coordinator'">
-              <mat-icon class="edit-icon" (click)="navigateToThePage(element.id)">edit</mat-icon>
-            </div>
-          </td>
-        </ng-container>
+      <!-- Project Status Column -->
+      <ng-container matColumnDef="projectStatus">
+        <th mat-header-cell *matHeaderCellDef>Project Status</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [style.background-color]="getStatusColor(element)"
+        >
+          <div [style.background-color]="getStatusColor(element)">
+            {{ getStatusString(element.projectStatus) || "-" }}
+          </div>
+        </td>
+      </ng-container>
 
-        <!-- Project Status Column -->
-        <ng-container matColumnDef="projectStatus">
-          <th mat-header-cell *matHeaderCellDef> Project Status </th>
-          <td mat-cell *matCellDef="let element" [style.background-color]="getStatusColor(element)">
-            <div [style.background-color]="getStatusColor(element)">
-              {{ getStatusString(element.projectStatus) || '-' }}
-            </div>
-          </td>
-        </ng-container>
+      <!-- Questionare Column -->
+      <ng-container matColumnDef="questionare">
+        <th mat-header-cell *matHeaderCellDef>Questionare</th>
+        <td mat-cell *matCellDef="let element">
+          {{ getQuestionareString(element.projectQuestionare) || "-" }}
+        </td>
+      </ng-container>
 
-        <!-- Questionare Column -->
-        <ng-container matColumnDef="questionare">
-          <th mat-header-cell *matHeaderCellDef> Questionare </th>
-          <td mat-cell *matCellDef="let element"> {{ getQuestionareString(element.projectQuestionare) || '-' }} </td>
-        </ng-container>
+      <!-- Project Scope Column -->
+      <ng-container matColumnDef="projectScope">
+        <th mat-header-cell *matHeaderCellDef>Project Scope</th>
+        <td mat-cell *matCellDef="let element">
+          {{ getScopeString(element.projectScope) || "-" }}
+        </td>
+      </ng-container>
 
-        <!-- Project Scope Column -->
-        <ng-container matColumnDef="projectScope">
-          <th mat-header-cell *matHeaderCellDef> Project Scope </th>
-          <td mat-cell *matCellDef="let element"> {{ getScopeString(element.projectScope) || '-' }} </td>
-        </ng-container>
+      <!-- Start Column -->
+      <ng-container matColumnDef="start">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="startDate"
+          (click)="updateSelectedColumn(2)"
+        >
+          Start
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.startDate || "-" }}
+        </td>
+      </ng-container>
 
-        <!-- Start Column -->
-        <ng-container matColumnDef="start">
-          <th mat-header-cell *matHeaderCellDef> Start </th>
-          <td mat-cell *matCellDef="let element"> {{ element.startDate || '-' }} </td>
-        </ng-container>
+      <!-- End Column -->
+      <ng-container matColumnDef="end">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="endDate"
+          (click)="updateSelectedColumn(3)"
+        >
+          End
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.endDate || "-" }}</td>
+      </ng-container>
 
-        <!-- End Column -->
-        <ng-container matColumnDef="end">
-          <th mat-header-cell *matHeaderCellDef> End </th>
-          <td mat-cell *matCellDef="let element"> {{ element.endDate || '-' }} </td>
-        </ng-container>
+      <!-- Report Due Column -->
+      <ng-container matColumnDef="reportDue">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="reportDueDate"
+          (click)="updateSelectedColumn(4)"
+        >
+          Report Due
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.reportDueDate || "-" }}
+        </td>
+      </ng-container>
 
-        <!-- Report Due Column -->
-        <ng-container matColumnDef="reportDue">
-          <th mat-header-cell *matHeaderCellDef> Report Due </th>
-          <td mat-cell *matCellDef="let element"> {{ element.reportDueDate || '-' }} </td>
-        </ng-container>
+      <!-- Pentest Duration Column -->
+      <ng-container matColumnDef="pentestDuration">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="pentestDuration"
+          (click)="updateSelectedColumn(5)"
+        >
+          Pentest Duration
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.pentestDuration || "-" }}
+        </td>
+      </ng-container>
 
-        <!-- Pentest Duration Column -->
-        <ng-container matColumnDef="pentestDuration">
-          <th mat-header-cell *matHeaderCellDef> Pentest Duration </th>
-          <td mat-cell *matCellDef="let element"> {{ element.pentestDuration || '-' }} </td>
-        </ng-container>
+      <!-- IKO Column -->
+      <ng-container matColumnDef="iko">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="iko"
+          (click)="updateSelectedColumn(6)"
+        >
+          IKO
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.iko || "-" }}</td>
+      </ng-container>
 
-        <!-- IKO Column -->
-        <ng-container matColumnDef="iko">
-          <th mat-header-cell *matHeaderCellDef> IKO </th>
-          <td mat-cell *matCellDef="let element"> {{ element.iko || '-' }} </td>
-        </ng-container>
+      <!-- TKO Column -->
+      <ng-container matColumnDef="tko">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="tko"
+          (click)="updateSelectedColumn(7)"
+        >
+          TKO
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.tko || "-" }}</td>
+      </ng-container>
 
-        <!-- TKO Column -->
-        <ng-container matColumnDef="tko">
-          <th mat-header-cell *matHeaderCellDef> TKO </th>
-          <td mat-cell *matCellDef="let element"> {{ element.tko || '-' }} </td>
-        </ng-container>
+      <!-- Last Comment Column -->
+      <ng-container matColumnDef="lastComment">
+        <th mat-header-cell *matHeaderCellDef>Last Comment</th>
+        <td mat-cell *matCellDef="let element">
+          <div
+            class="comment-text"
+            [title]="
+              element.comments
+                ? element.comments[element.comments.length - 1].text
+                : '-'
+            "
+          >
+            {{
+              truncateComment(
+                element.comments
+                  ? element.comments[element.comments.length - 1].text
+                  : "-",
+                20
+              )
+            }}
+          </div>
+        </td>
+      </ng-container>
 
-        <!-- Last Comment Column -->
-        <ng-container matColumnDef="lastComment">
-          <th mat-header-cell *matHeaderCellDef> Last Comment </th>
-          <td mat-cell *matCellDef="let element">
-
-            <div class="comment-text" [title]="element.comments ? element.comments[element.comments.length - 1].text : '-'">
-              {{ truncateComment(element.comments ? element.comments[element.comments.length - 1].text : '-', 20) }}
-            </div>
-          </td>
-        </ng-container>
-
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
-            (click)="handleRowClick(row)">
-        </tr>
-
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns">
+        [style.background-color]="isChecked(row) ? '#F2F2F2' : ''"
+        (click)="handleRowClick(row)">
+      </tr>
 
       <!-- Placeholder row when dataSource is empty -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
           <div class="loading-spinner" *ngIf="isLoading">
-            <mat-progress-spinner color="primary" mode="indeterminate" diameter="44"></mat-progress-spinner>
+            <mat-progress-spinner
+              color="primary"
+              mode="indeterminate"
+              diameter="44"
+            ></mat-progress-spinner>
           </div>
-          <div class="no-data" *ngIf="!isLoading && dataSource.data.length === 0 && !databaseError && !filterMessageFlag">
+          <div
+            class="no-data"
+            *ngIf="
+              !isLoading &&
+              dataSource.data.length === 0 &&
+              !databaseError &&
+              !filterMessageFlag
+            "
+          >
             No data available
           </div>
-          <div class="no-data" *ngIf="!isLoading && databaseError && !filterMessageFlag">
+          <div
+            class="no-data"
+            *ngIf="!isLoading && databaseError && !filterMessageFlag"
+          >
             No data available
           </div>
           <div class="database-error" *ngIf="filterError && !databaseError">
@@ -163,11 +277,15 @@
     </table>
   </div>
 
-    <div class="paginator-container mat-elevation-z8">
-      <mat-paginator [length]="length" [pageSize]="15" [pageSizeOptions]="[15, 25, 50]"
-                     (page)="handlePageChange()" (pageSize)="handlePageChange()"
-                     aria-label="Select page">
-      </mat-paginator>
-    </div>
+  <div class="paginator-container mat-elevation-z8">
+    <mat-paginator
+      [length]="count"
+      [pageSize]="15"
+      [pageSizeOptions]="[15, 25, 50]"
+      (page)="handlePageChange()"
+      (pageSize)="handlePageChange()"
+      aria-label="Select page"
+    >
+    </mat-paginator>
   </div>
-
+</div>

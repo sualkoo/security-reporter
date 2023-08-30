@@ -1,0 +1,20 @@
+<p>{{ pentestTitle }}</p>
+<div class="file-upload-container"
+     (drop)="onDrop($event)"
+     (dragover)="onDragOver($event)">
+  <p>Drag and drop or click to select file</p>
+  <input type="file"
+         style="display: none"
+         id={{pentest}}
+         accept="application/pdf"
+         (change)="onFileSelected($event)" />
+  <label for={{pentest}}
+         class="file-input-label"
+         style="background-color: #ec6602">Select file</label>
+</div>
+<ul>
+  <li *ngFor="let file of uploadedFiles">
+    {{ file.name }}
+    <mat-icon [style.color]="'#ec6602'" (click)="upload(file, pentest)" class="upload-icon clickable-item" matTooltip="{{ 'Upload file' }}">cloud_upload</mat-icon>
+  </li>
+</ul>

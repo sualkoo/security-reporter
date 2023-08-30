@@ -93,7 +93,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   adminMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'Project Search', link: '/project-search', disabled: false },
-    { text: 'Project Listing', link: '/list-projects', disabled: false },
+    { text: 'Project Management', link: '/list-projects', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
   ];
 
@@ -111,7 +111,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
 
   coordinatorMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
-    { text: 'Project Listing', link: '/list-projects', disabled: false },
+    { text: 'Project Management', link: '/project-management', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
   ];
@@ -119,7 +119,6 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   clientMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
-    { text: 'Project Listing', link: '/list-projects', disabled: false },
     { text: 'Order a pentest', link: '/in-development', disabled: true },
   ];
 }

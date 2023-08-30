@@ -1,13 +1,10 @@
-﻿
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using webapi.Dashboard.Services;
 using webapi.Login;
-using webapi.Login.Services;
 using webapi.Login.Utils.Authorization;
 using webapi.ProjectSearch.Services;
 using webapi.ProjectSearch.Services.Extractor;
@@ -34,11 +31,6 @@ namespace webapi
             services.AddSingleton<IProjectReportService, ProjectReportService>();
             services.AddSingleton<IPdfBuilder, PdfBuilder>();
             services.AddSingleton<IDashboardService, DashboardService>();
-            services.AddSingleton<RoleService>();
-            services.AddSingleton<ClientMailService>();
-            services.AddSingleton<Users>();
-            services.AddSingleton<CosmosRolesService>();
-            
 
             services.AddSwaggerGen(c =>
             {
@@ -51,6 +43,7 @@ namespace webapi
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryApiScopes(Config.GetApiScopes);
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminCoordinatorPolicy", policy =>
@@ -69,8 +62,13 @@ namespace webapi
                 {
                     policy.Requirements.Add(new RoleRequirement("default"));
                 });
+                options.AddPolicy("AdminCoordinatorPentesterClientPolicy", policy =>
+                {
+                    policy.Requirements.Add(new RoleRequirement("admin", "coordinator", "client", "pentester"));
+                });
             });
             services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+
         }
         public void Configure(IApplicationBuilder app)
         {

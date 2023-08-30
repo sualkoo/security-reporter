@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Azure.Cosmos;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using webapi.Login.Services;
+using webapi.Login.Controllers;
+using webapi.Login.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
+using webapi.Service;
 
 namespace webapi.Login.Utils.Authorization
 {
@@ -17,19 +24,35 @@ namespace webapi.Login.Utils.Authorization
 
     public class RoleAuthorizationHandler : AuthorizationHandler<RoleRequirement>
     {
-        private readonly RoleService roleService;
+        private HttpClient _httpClient;
+        private IHttpContextAccessor _httpContextAccessor;
+        private ICosmosService cosmosService;
 
-        public RoleAuthorizationHandler(RoleService roleService)
+        public RoleAuthorizationHandler(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ICosmosService cosmosService)
         {
-            this.roleService = roleService;
+            _httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
+            this.cosmosService = cosmosService;
         }
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context, RoleRequirement requirement)
         {
-            if (requirement.RequiredRoles.Contains(await roleService.GetUserRoleBySubjectId(context.User?.FindFirst("sub")?.Value)))
+            UserRole result;
+            HttpContext httpContext = _httpContextAccessor.HttpContext;
+
+            var subClaim = httpContext.User.FindFirst("sub");
+            if (subClaim != null)
             {
-                context.Succeed(requirement);
+                string userId = subClaim.Value;
+                result = await cosmosService.GetUserRole(userId);
+
+                if (requirement.RequiredRoles.Contains(result.Role))
+                {
+                    context.Succeed(requirement);
+                }
             }
+
+
+        }
         }
     }
-}

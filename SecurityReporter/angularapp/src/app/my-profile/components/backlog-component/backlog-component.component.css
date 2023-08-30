@@ -1,0 +1,60 @@
+.paginator-container {
+  margin-top: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.list-container th {
+  text-align: center;
+}
+
+.list-container td {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 800px) {
+  .list-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .add-button {
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 494px) {
+  .list-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .paginator-container {
+    padding-bottom: 10px;
+  }
+}
+
+.checked-row {
+  background-color: #F2F2F2;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.mat-cell {
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+
