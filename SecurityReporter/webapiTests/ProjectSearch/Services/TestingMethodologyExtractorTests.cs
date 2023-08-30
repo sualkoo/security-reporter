@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
 
@@ -33,11 +34,7 @@ public class TestingMethodologyExtractorTests
         Assert.IsNotNull(tme);
 
         var parsedMethodology = tme.ExtractTestingMethodology();
-        var testMethodology = new TestingMethodology
-        {
-            ToolsUsed = new List<Tool>(),
-            AttackVectors = new List<string>()
-        };
+        var testMethodology = new TestingMethodology();
 
         parsedMethodology.Should().BeEquivalentTo(testMethodology);
     }
@@ -48,25 +45,45 @@ public class TestingMethodologyExtractorTests
         var entry = zipArchive.GetEntry("TestingMethodology/EmptyCommands/Attack_Vector_Empty.tex");
         var tme = new TestingMethodologyExtractor(entry);
         Assert.IsNotNull(tme);
+        TestingMethodology testMethodology = new TestingMethodology();
+        SetToolsUsed(testMethodology);
+        testMethodology.AttackVectors = @"
+	Tests on \ReportProjectName included, but were not limited to:
 
-        Assert.That(() => tme.ExtractTestingMethodology(),
-            Throws.Exception.With.Message.EqualTo("The LaTeX file is not formatted as required"));
+
+";
+        var parsedMethodology = tme.ExtractTestingMethodology();
+
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
 
         entry = zipArchive.GetEntry("TestingMethodology/EmptyCommands/Attack_Vector_No_Itemize.tex");
         tme = new TestingMethodologyExtractor(entry);
-        Assert.That(() => tme.ExtractTestingMethodology(),
-            Throws.Exception.With.Message.EqualTo("The LaTeX file is not formatted as required"));
+        parsedMethodology = tme.ExtractTestingMethodology();
+
+        testMethodology.AttackVectors = @"
+	Tests on \ReportProjectName included, but were not limited to:
+		\item static analysis,
+		\item file system analysis,
+		\item debugging,
+		\item workflow analysis,
+		\item client-side testing,
+		\item testing for weak cryptography,
+		\item testing error handling.";
+        SetToolsUsed(testMethodology);
+
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
 
         entry = zipArchive.GetEntry("TestingMethodology/EmptyCommands/Empty_Tools_Used.tex");
         tme = new TestingMethodologyExtractor(entry);
-        var parsedMethodology = tme.ExtractTestingMethodology();
-        var testMethodology = new TestingMethodology
-        {
-            ToolsUsed = new List<Tool>()
-        };
+        parsedMethodology = tme.ExtractTestingMethodology();
+        testMethodology = new TestingMethodology();
         SetAttackVectors(testMethodology);
 
-        parsedMethodology.Should().BeEquivalentTo(testMethodology);
+
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
     }
 
     [Test]
@@ -85,7 +102,8 @@ public class TestingMethodologyExtractorTests
         SetToolsUsed(testMethodology);
         SetAttackVectors(testMethodology);
 
-        parsedMethodology.Should().BeEquivalentTo(testMethodology);
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
     }
 
     [Test]
@@ -96,76 +114,80 @@ public class TestingMethodologyExtractorTests
         Assert.IsNotNull(tme);
 
         var parsedMethodology = tme.ExtractTestingMethodology();
-        var testMethdology = new TestingMethodology();
-        SetAttackVectors(testMethdology);
-        testMethdology.ToolsUsed = new List<Tool>();
+        var testMethodology = new TestingMethodology();
+        SetAttackVectors(testMethodology); ;
 
-        parsedMethodology.Should().BeEquivalentTo(testMethdology);
+
+        //testMethdology.ToolsUsed = new List<Tool>();
+
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
 
         entry = zipArchive.GetEntry("TestingMethodology/MissingCommand/Missing_Attack_Vector.tex");
         tme = new TestingMethodologyExtractor(entry);
         Assert.IsNotNull(tme);
 
         parsedMethodology = tme.ExtractTestingMethodology();
-        testMethdology = new TestingMethodology();
-        SetToolsUsed(testMethdology);
-        testMethdology.AttackVectors = new List<string>();
+        testMethodology = new TestingMethodology();
+        SetToolsUsed(testMethodology);
+        //testMethdology.AttackVectors = new List<string>();
 
-        parsedMethodology.Should().BeEquivalentTo(testMethdology);
+        compareStringAttributes(parsedMethodology.ToolsUsed, testMethodology.ToolsUsed);
+        compareStringAttributes(parsedMethodology.AttackVectors, testMethodology.AttackVectors);
 
         entry = zipArchive.GetEntry("TestingMethodology/MissingCommand/Missing_Both.tex");
         tme = new TestingMethodologyExtractor(entry);
         Assert.IsNotNull(tme);
 
         parsedMethodology = tme.ExtractTestingMethodology();
-        testMethdology = new TestingMethodology
-        {
-            ToolsUsed = new List<Tool>(),
-            AttackVectors = new List<string>()
-        };
 
-        parsedMethodology.Should().BeEquivalentTo(testMethdology);
+        testMethodology = new TestingMethodology();
+
+        parsedMethodology.Should().BeEquivalentTo(testMethodology);
     }
 
     private void SetToolsUsed(TestingMethodology testMethodology)
     {
-        testMethodology.ToolsUsed = new List<Tool>();
-        var tool1 = new Tool
-        {
-            ToolName = "adb",
-            Version = "1.0.41",
-            TestType = "Android debugging",
-            WorkType = "Bridge to Andorid device"
-        };
-        var tool2 = new Tool
-        {
-            ToolName = "Android Studio",
-            Version = "2022.2.1",
-            TestType = "Android Development, Emulator",
-            WorkType = "Official integrated development environment for Google's Android operating system, with emulator capabilities."
-        };
-        var tool3 = new Tool();
-        tool3.ToolName = "apktool";
-        tool3.Version = "v2.7.0-dirty";
-        tool3.TestType = "Reverse Engineering";
-        tool3.WorkType = "APK decompiler";
-
-        testMethodology.ToolsUsed.Add(tool1);
-        testMethodology.ToolsUsed.Add(tool2);
-        testMethodology.ToolsUsed.Add(tool3);
+        testMethodology.ToolsUsed = @"
+	\hline
+	adb			& 1.0.41			&	Android debugging	&	Bridge to Andorid device\\
+	\hline
+	Android Studio		& 2022.2.1			&	Android Development, Emulator	&	Official integrated development environment for Google's Android operating system, with emulator capabilities. \\
+	\hline
+	apktool			& v2.7.0-dirty			&	Reverse Engineering	&	APK decompiler\\
+	\hline
+"; 
     }
 
     private void SetAttackVectors(TestingMethodology testMethodology)
     {
-        testMethodology.AttackVectors = new List<string>
-        {
-            "static analysis",
-            "file system analysis",
-            "debugging",
-            "workflow analysis",
-            "client-side testing",
-            "testing for weak cryptography",
-            "testing error handling."
-        };
+        testMethodology.AttackVectors = @"
+
+	Tests on \ReportProjectName included, but were not limited to:
+
+	\begin{itemize}
+		\item static analysis,
+		\item file system analysis,
+		\item debugging,
+		\item workflow analysis,
+		\item client-side testing,
+		\item testing for weak cryptography,
+		\item testing error handling.
+	\end{itemize}
+
+";
+    }
+
+    private void compareStringAttributes(string str1, string str2)
+    {
+        var str1Join = string.Join("",
+                str1.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+
+        var str2Join = string.Join("",
+                str2.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+
+        str1Join.Should().Be(str2Join);
     }
 }

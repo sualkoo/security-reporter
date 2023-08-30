@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using FluentAssertions;
 using NUnit.Framework;
 using webapi.ProjectSearch.Models.ProjectReport;
 using webapi.ProjectSearch.Services.Extractor.DBToZipExtract;
@@ -15,8 +16,8 @@ public class DbScopeAndProceduresExtractorTests
         // Arrange
         var scopeAndProcedures = new ScopeAndProcedures();
 
-        // Scope Procedures - InScope
-        var sp = new ScopeProcedure
+		// Scope Procedures - InScope
+		/*var sp = new ScopeProcedure
         {
 	        Component = "APK file",
 	        Detail = "Android application"
@@ -31,10 +32,37 @@ public class DbScopeAndProceduresExtractorTests
         {
             sp,
             sp1
-        };
+        };*/
+		scopeAndProcedures.WorstCaseScenarios = @"	\hline
+	WS1	&	Information leakage of personal /patient data/customer data	\\
+	WS2	&	Modification or corruption of data	\\
+	WS3	&	Unauthorized read/write access to application/database	\\
+	WS4	&	Asset becomes partly or completely unavailable	\\";
 
-        scopeAndProcedures.WorstCaseScenariosReport = @"\newcommand{\WorstCaseScenariosReport}{
+		scopeAndProcedures.InScope = @"
+	\hline
+	APK file & Android application  \\
+	IPA file & iOS application \\
+	Source code & Static analysis \\	";
 
+
+        scopeAndProcedures.OutOfScope = @"\hline
+	3rd party plugins	&  	 Plugins not developed by Siemens	\\		
+	Underlying operating systems	& 	Android and iOS	\\
+	REST APIs 	& Was already tested \\ ";
+
+		scopeAndProcedures.Environment = @"    
+    \ReportAssessmentTeamLong obtained following access methods to DummyApplication: 
+	\begin{itemize}
+		\item Android APK file,
+		\item iOS IPA file,
+		\item application source code,
+		\item test user credentials.
+	\end{itemize}";
+
+
+
+        scopeAndProcedures.WorstCaseScenariosReport = @"
 \begin{xltabular}{\textwidth}{|l|X|c|c|c|c|c|c|c|}
 	\hline 
 	\cellcolor{grey230}  \textbf{Finding \#} &	 \cellcolor{grey230} \textbf{Description} & \cellcolor{grey230}
@@ -57,11 +85,10 @@ public class DbScopeAndProceduresExtractorTests
 	\hline
 	
 	\caption{Findings case scenarios} \label{table:FindingCaseScenarios}
-\end{xltabular}
-}";
+\end{xltabular}";
 
         // Worst Case Scenario - Scopes
-        scopeAndProcedures.WorstCaseScenarios = new List<string>
+        /*scopeAndProcedures.WorstCaseScenarios = new List<string>
         {
             "Information leakage of personal /patient data/customer data",
             "Modification or corruption of data",
@@ -92,7 +119,7 @@ public class DbScopeAndProceduresExtractorTests
             "iOS IPA file",
             "application source code",
             "test user credentials."
-        };
+        };*/
 
         const string expectedStr = @"%----------------------------------------------------------------------------------------
 %	IN SCOPE
@@ -101,7 +128,8 @@ public class DbScopeAndProceduresExtractorTests
 
 	\hline
 	APK file & Android application \\
-	IPA file & iOS application \\						
+	IPA file & iOS application \\	
+	Source code & Static analysis \\	
 }
 
 
@@ -156,9 +184,10 @@ public class DbScopeAndProceduresExtractorTests
 %	OUT OF SCOPE
 %----------------------------------------------------------------------------------------
 \newcommand{\OutOfScope}{
-    \hline
-	3rd party plugins & Plugins not developed by Siemens \\
-	Underlying operating systems & Android and iOS \\
+        \hline
+	3rd party plugins	&  	 Plugins not developed by Siemens	\\		
+	Underlying operating systems	& 	Android and iOS	\\
+	REST APIs 	& Was already tested \\ 
 }
 
 %----------------------------------------------------------------------------------------
@@ -166,7 +195,7 @@ public class DbScopeAndProceduresExtractorTests
 %----------------------------------------------------------------------------------------
 \newcommand{\Environment}{
     
-    \ReportAssessmentTeamLong TODOTODO.
+    \ReportAssessmentTeamLong obtained following access methods to DummyApplication:
 	\begin{itemize}
 		\item Android APK file,
 		\item iOS IPA file,
@@ -185,8 +214,14 @@ public class DbScopeAndProceduresExtractorTests
         var result = DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(scopeAndProcedures);
         var resultDecoded = Encoding.UTF8.GetString(result);
 
-        // Assert
-        Assert.IsNotNull(result);
-        StringAssert.Contains(StringNormalizer.Normalize(expectedStr), StringNormalizer.Normalize(resultDecoded));
+        Assert.IsNotNull(resultDecoded);
+        var resultDecodedFormatted = string.Join("",
+            resultDecoded.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+        var testFormatted = string.Join("",
+                expectedStr.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries))
+            .ToLowerInvariant();
+
+        resultDecodedFormatted.Should().Be(testFormatted);
     }
 }

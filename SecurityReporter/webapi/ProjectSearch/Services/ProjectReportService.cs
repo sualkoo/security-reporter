@@ -53,23 +53,24 @@ public class ProjectReportService : IProjectReportService
         newReportData.Id = Guid.NewGuid();
         var result = await CosmosService.AddProjectReport(newReportData);
 
-        if (!result)
-            throw new CustomException(StatusCodes.Status500InternalServerError,
-                "Failed to save ProjectReport to database.");
-
-        try
-        {
-            var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-            await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
-                newReportData.DocumentInfo!.ProjectReportName!);
-            await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
-        }
-        catch (Exception)
-        {
-            Logger.LogInformation("PDF generation failed, deleting project report...");
-            await CosmosService.DeleteProjectReports(new List<string> { newReportData.Id.ToString() });
-            throw;
-        }
+            if (!result)
+            {
+                throw new CustomException(StatusCodes.Status500InternalServerError,
+                    "Failed to save ProjectReport to database.");
+            }
+            
+            try
+            {
+                //var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                //await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
+            }
+            catch (Exception)
+            {
+                Logger.LogInformation("PDF generation failed, deleting project report...");
+                await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
+                throw;
+            }
 
         return newReportData;
     }

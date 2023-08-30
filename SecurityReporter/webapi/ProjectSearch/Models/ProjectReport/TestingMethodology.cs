@@ -2,11 +2,20 @@
 
 namespace webapi.ProjectSearch.Models.ProjectReport;
 
-public class TestingMethodology : IEntity
-{
-    [MinLength(1, ErrorMessage = "ToolsUsed must have at least one item.")]
-    public List<Tool>? ToolsUsed { get; set; }
 
-    [MinLength(1, ErrorMessage = "AttackVectors must have at least one item.")]
-    public List<string>? AttackVectors { get; set; }
-}
+    public class TestingMethodology : IEntity
+    {
+    private string toolsUsed = "";
+    private string attackVectors = "";
+
+        [Required(ErrorMessage = "ToolsUsed is required!")]
+    public string? ToolsUsed {
+        get { return toolsUsed; }
+        set { toolsUsed = value; }
+    }
+        [Required(ErrorMessage = "AttackVectors is required!")]
+        public string? AttackVectors {
+            get { return attackVectors; }
+            set { attackVectors = value; }
+        }
+    }

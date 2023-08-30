@@ -23,31 +23,16 @@ public class DbProjectDataParser : IDbProjectDataParser
         logger.LogInformation("Fetched data: " + (data != null ? data.DocumentInfo!.ProjectReportName : null));
         logger.LogInformation("Trying to parse data");
 
-        try
-        {
-            var fileContents = new Dictionary<string, byte[]>
+            try
             {
+                var fileContents = new Dictionary<string, byte[]>()
                 {
-                    "Config/Document_Information.tex",
-                    DbDocumentInformationExtractor.ExtractDocumentInformation(data!.DocumentInfo)
-                },
-                {
-                    "Config/Executive_Summary.tex",
-                    DbExecutiveSummaryExtractor.ExtractExecutiveSummary(data!.ExecutiveSummary)
-                },
-                {
-                    "Config/Project_Information.tex",
-                    DbProjectInformationExtractor.ExtractProjectInformation(data!.ProjectInfo)
-                },
-                {
-                    "Config/Scope_and_Procedures.tex",
-                    DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(data!.ScopeAndProcedures)
-                },
-                {
-                    "Config/Testing_Methodology.tex",
-                    DbTestingMethodologyExtractor.ExtractTestingMethodology(data!.TestingMethodology)
-                }
-            };
+                    { "Config/Document_Information.tex", DbDocumentInformationExtractor.ExtractDocumentInformation(data!.DocumentInfo) },
+                    { "Config/Executive_Summary.tex", DbExecutiveSummaryExtractor.ExtractExecutiveSummary(data!.ExecutiveSummary) },
+                    { "Config/Project_Information.tex", DbProjectInformationExtractor.ExtractProjectInformation(data!.ProjectInfo) },
+                    { "Config/Scope_and_Procedures.tex", DbScopeAndProceduresExtractor.ExtractScopeAndProcedures(data!.ScopeAndProcedures) },
+                    { "Config/Testing_Methodology.tex", DbTestingMethodologyExtractor.ExtractTestingMethodology(data!.TestingMethodology) },
+                };
 
             var zipFileBytes = CreateZipFile(fileContents, data);
 

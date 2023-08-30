@@ -23,7 +23,7 @@ public static class DbFindingsExtractor
 \renewcommand{\TestMethod}{" + finding.TestMethod + @"}
 \renewcommand{\CVSS}{" + finding.CVSS + @"}
 \renewcommand{\CVSSvector}{" + finding.CVSSVector + @"}
-\renewcommand{\CWE}{" + finding.CWE + @"}
+\renewcommand{\CWE}{" + ((finding.CWE != null) ? finding.CWE : "") + @"}
 % Poor-man's combo boxes:
 % High, Medium, Low, Info, TBR (To Be Rated)
 \renewcommand{\Criticality}{" + finding.Criticality + @"}
@@ -43,15 +43,15 @@ public static class DbFindingsExtractor
 %-------------------------------------------
 
 \subsection*{Details}
-" + finding.SubsectionDetails + @"
+" + finding.UnformattedSubsectionDetails + @"
 \subsection*{Impact}
-" + finding.SubsectionImpact + @"
+" + finding.UnformattedSubsectionImpact + @"
 \subsection*{Repeatability}
-" + finding.SubsectionRepeatability + @"
+" + finding.UnformattedSubsectionRepeatability + @"
 \subsection*{Countermeasures}
-" + finding.SubsectionCountermeasures + @"
+" + finding.UnformattedSubsectionCountermeasures + @"
 \subsection*{References}
-" + finding.SubsectionReferences + @"
+" + finding.UnformattedSubsectionReferences + @"
 ";
         var memoryStream = new MemoryStream();
         var bytes = Encoding.UTF8.GetBytes(findingContent);

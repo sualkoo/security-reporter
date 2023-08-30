@@ -2,7 +2,7 @@
 
 public enum Category
 {
-    Undefined,
+    TBR,
     AccessControl,
     ApplicationDesign,
     InformationDisclosure,

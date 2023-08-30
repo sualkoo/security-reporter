@@ -5,34 +5,34 @@ namespace webapi.ProjectSearch.Models.ProjectReport;
 public class ProjectInformation : IEntity
 {
     [Required(ErrorMessage = "ApplicationManager is required!")]
-    public ProjectInformationParticipant? ApplicationManager { get; set; }
+    public ProjectInformationParticipant? ApplicationManager { get; set; } = new ProjectInformationParticipant();
 
     [Required(ErrorMessage = "BusinessOwner is required!")]
-    public ProjectInformationParticipant? BusinessOwner { get; set; }
+    public ProjectInformationParticipant? BusinessOwner { get; set; } = new ProjectInformationParticipant();
 
     [Required(ErrorMessage = "BusinessRepresentative is required!")]
-    public ProjectInformationParticipant? BusinessRepresentative { get; set; }
+    public ProjectInformationParticipant? BusinessRepresentative { get; set; } = new ProjectInformationParticipant();
 
     [MinLength(1, ErrorMessage = "TechnicalContacts must have at least one participant.")]
-    public List<ProjectInformationParticipant>? TechnicalContacts { get; set; }
+    public List<ProjectInformationParticipant>? TechnicalContacts { get; set; } = new List<ProjectInformationParticipant>();
 
     [Required(ErrorMessage = "PentestLead is required!")]
-    public ProjectInformationParticipant? PentestLead { get; set; }
+    public ProjectInformationParticipant? PentestLead { get; set; } = new ProjectInformationParticipant();
 
     [Required(ErrorMessage = "PentestCoordinator is required!")]
-    public ProjectInformationParticipant? PentestCoordinator { get; set; }
+    public ProjectInformationParticipant? PentestCoordinator { get; set; } = new ProjectInformationParticipant();
 
     [MinLength(1, ErrorMessage = "PentestTeam must have at least one participant.")]
-    public List<ProjectInformationParticipant>? PentestTeam { get; set; }
+    public List<ProjectInformationParticipant>? PentestTeam { get; set; } = new List<ProjectInformationParticipant>();
 
     //ProjectReportName in DocumentInformation
     [StringLength(50, ErrorMessage = "TargetInfoVersion cannot exceed 50 characters.")]
     [RegularExpression("^[a-zA-Z0-9.]*$",
         ErrorMessage = "TargetInfoVersion can only contain alphanumeric characters and periods.")]
-    public string? TargetInfoVersion { get; set; }
+    public string? TargetInfoVersion { get; set; } = string.Empty;
 
     //AssetType in DocumentInformation
-    public string? TargetInfoEnvironment { get; set; }
+    public string? TargetInfoEnvironment { get; set; } = string.Empty;
 
     [Range(typeof(bool), "false", "true", ErrorMessage = "TargetInfoInternetFacing must be either true or false!")]
     public bool TargetInfoInternetFacing { get; set; }
@@ -41,25 +41,25 @@ public class ProjectInformation : IEntity
     public bool TargetInfoSNXConnectivity { get; set; }
 
     [StringLength(100, ErrorMessage = "TargetInfoHostingLocation cannot exceed 100 characters.")]
-    public string? TargetInfoHostingLocation { get; set; }
+    public string? TargetInfoHostingLocation { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "TargetInfoHostingProvider cannot exceed 100 characters!")]
-    public string? TargetInfoHostingProvider { get; set; }
+    public string? TargetInfoHostingProvider { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "TargetInfoLifeCyclePhase cannot exceed 100 characters!")]
-    public string? TargetInfoLifeCyclePhase { get; set; }
+    public string? TargetInfoLifeCyclePhase { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "TargetInfoCriticality cannot exceed 100 characters!")]
-    public string? TargetInfoCriticality { get; set; }
+    public string? TargetInfoCriticality { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "TargetInfoAssetID cannot exceed 100 characters!")]
-    public string? TargetInfoAssetID { get; set; }
+    public string? TargetInfoAssetID { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "TargetInfoSHARPUUID cannot exceed 100 characters!")]
-    public string? TargetInfoSHARPUUID { get; set; }
+    public string? TargetInfoSHARPUUID { get; set; } = string.Empty;
 
     [StringLength(5000, ErrorMessage = "TargetInfoDescription cannot exceed 5000 characters!")]
-    public string? TargetInfoDescription { get; set; }
+    public string? TargetInfoDescription { get; set; } = string.Empty;
 
     [Range(0, 1000, ErrorMessage = "TimeFrameTotal must be a non-negative integer not exceeding 1000!")]
     public int TimeFrameTotal { get; set; }

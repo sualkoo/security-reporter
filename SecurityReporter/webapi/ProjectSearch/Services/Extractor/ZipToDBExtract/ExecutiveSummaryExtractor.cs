@@ -13,25 +13,14 @@ public class ExecutiveSummaryExtractor
 
     public string ExtractExecutiveSummary()
     {
-        string line;
-        var readingExecSum = false;
-        var resultString = "";
-
-        if (execSumEntry == null) throw new ArgumentNullException();
-
-        using (var reader = new StreamReader(execSumEntry.Open()))
+        if (execSumEntry == null)
         {
-            while ((line = reader.ReadLine()) != null)
-                if (!string.IsNullOrEmpty(line))
-                {
-                    if (line == "%-<ExecSum>") readingExecSum = false;
-
-                    if (readingExecSum) resultString += line;
-
-                    if (line == "%-<ExecSum>->") readingExecSum = true;
-                }
+            throw new ArgumentNullException();
         }
 
-        return resultString;
+        using (StreamReader reader = new StreamReader(execSumEntry.Open()))
+        {
+            return reader.ReadToEnd();
+        }
     }
 }
