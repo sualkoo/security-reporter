@@ -111,7 +111,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
 
   coordinatorMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
-    { text: 'Project Management', link: '/project-management', disabled: false },
+    { text: 'Project Management', link: '/list-projects', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
   ];
