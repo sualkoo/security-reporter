@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Services;
 
@@ -5,7 +6,7 @@ namespace webapi.ProjectSearch.Controllers;
 
 [ApiController]
 [Route("api/project-reports")]
-// [Authorize(Policy = "AdminPentesterPolicy")]
+[Authorize(Policy = "AdminPentesterPolicy")]
 public class ProjectReportController : ExceptionHandlingControllerBase
 {
     private new readonly ILogger Logger;

@@ -93,40 +93,37 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   adminMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'Project Search', link: '/project-search', disabled: false },
-    {
-      text: 'Project Management',
-      link: '/project-management',
-      disabled: false,
-    },
+    { text: 'Project Management', link: '/list-projects', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
+    { text: 'My Profile', link: '/my-profile', disabled: false}
   ];
 
   defaultMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
     { text: 'Order a pentest', link: '/in-development', disabled: true },
+    { text: 'My Profile', link: '/my-profile', disabled: false }
   ];
 
   pentesterMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'Project Search', link: '/project-search', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
+    { text: 'My Profile', link: '/my-profile', disabled: false }
   ];
 
   coordinatorMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
-    {
-      text: 'Project Management',
-      link: '/project-management',
-      disabled: false,
-    },
+    { text: 'Project Management', link: '/project-management', disabled: false },
     { text: 'Dashboard', link: '/dashboard', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
+    { text: 'My Profile', link: '/my-profile', disabled: false }
   ];
 
   clientMenuItems: { text: string; link: string; disabled?: boolean }[] = [
     { text: 'Home', link: '/welcome', disabled: false },
     { text: 'About pentest', link: '/about-pentests', disabled: false },
     { text: 'Order a pentest', link: '/in-development', disabled: true },
+    { text: 'My Profile', link: '/my-profile', disabled: false }
   ];
 }

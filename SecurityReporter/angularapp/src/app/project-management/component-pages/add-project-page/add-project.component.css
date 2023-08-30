@@ -1,9 +1,9 @@
 .left-column {
-width: 450px;
-display: flex;
-flex-direction: column;
-gap: 10px;
-min-width: 500px;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 500px;
 }
 
 .pm-columns {
@@ -14,7 +14,6 @@ min-width: 500px;
   gap: 120px;
 }
 
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -22,10 +21,10 @@ min-width: 500px;
 }
 
 .pm-background {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .page {
@@ -37,42 +36,43 @@ min-width: 500px;
 }
 
 .pm {
-/*padding: 40px 200px 0px 200px;*/
+  /*padding: 40px 200px 0px 200px;*/
   width: 1200px;
 }
 
-.project-name-input {
-    width: 50%;
-  }
-  
-  .example-full-width {
-    width: 90%;
-  }
-
-  .mat-mdc-radio-button ~ .mat-mdc-radio-button {
-    margin-left: 16px;
-  }
-
-  .two-in-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-.create-button {
-    position: relative;
-    margin-top: 100px;
-    width: 300px;
-    height: 60px;
-    font-size: 15px;
-    font-weight: bolder;
-    text-transform: uppercase;
-    margin-bottom: 30px;
+.projectname-input {
+  display: flex; /* Use flex display */
+  justify-content: space-between;
 }
 
-  .mat-mdc-unelevated-button.mat-warn {
-    --mdc-filled-button-container-color: #ec6602;
-    --mdc-filled-button-label-text-color: #fff;
+.example-full-width {
+  width: 90%;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.two-in-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.create-button {
+  position: relative;
+  margin-top: 100px;
+  width: 300px;
+  height: 60px;
+  font-size: 15px;
+  font-weight: bolder;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.mat-mdc-unelevated-button.mat-warn {
+  --mdc-filled-button-container-color: #ec6602;
+  --mdc-filled-button-label-text-color: #fff;
 }
 
 .comment-input {
@@ -122,7 +122,7 @@ min-width: 500px;
   position: absolute;
   font-size: 15px;
   margin-top: -20px;
-  top: 100%; 
+  top: 100%;
   left: 0;
 }
 
@@ -140,19 +140,16 @@ min-width: 500px;
   position: relative;
 }
 
-
-
-
 @media screen and (max-width: 1000px) {
   .pm-columns {
     flex-direction: column;
-    gap: 10px; 
-    align-items: center; 
+    gap: 10px;
+    align-items: center;
   }
 
   .projectname-input {
     display: flex;
-    justify-content: center ;
+    justify-content: center;
   }
 
   .header {

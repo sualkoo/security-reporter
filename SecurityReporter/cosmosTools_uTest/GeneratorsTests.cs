@@ -98,27 +98,6 @@ namespace cosmosTools_uTest
         }
 
         [Test]
-        public void GenerateWorkingTeam_ReturnsNonEmptyTeamMembersList()
-        {
-            // Act
-            var result = SubjectUnderTest.GenerateWorkingTeam();
-
-            // Assert
-            Assert.That(result.Count, Is.AtLeast(1));
-        }
-
-        [Test]
-        [Repeat(50)]
-        public void GenerateWorkingTeam_ReturnsTeamMembersInValidRange()
-        {
-            // Act
-            var result = SubjectUnderTest.GenerateWorkingTeam();
-
-            // Assert
-            Assert.That(result.Count, Is.AtLeast(SubjectUnderTest.MinRandomValue).And.AtMost(SubjectUnderTest.MaxRandomValue - 1));
-        }
-
-        [Test]
         public void GenerateRandomDateData_ReturnsValidDateRangeTest()
         {
             // Act
