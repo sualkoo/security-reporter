@@ -17,4 +17,4 @@
 - **Description:**
   Descriptions within the Findings section may occasionally include LaTeX commands, although the majority of them are filtered out.
 - **Status:** Open
-- **Related:** `ProjectDataParser.cs` and it's subclasses - `webapi/ProjectSearch/Services/Extractor/ZipToDBExtractor`. Note that we also parse information from DB back to the ZIP, so you need to adjust these too `(DBToZipExtractor)`.
+- **Related:** `ProjectDataParser.cs` and it's subclasses - `webapi/ProjectSearch/Services/Extractor/ZipToDBExtractor`. Note that we also parse information from DB back to the ZIP, so you need to adjust these at `DBToZipExtractor`.
