@@ -61,8 +61,8 @@ public class ProjectReportService : IProjectReportService
             
             try
             {
-                //var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                //await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
+                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
                 await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
             }
             catch (Exception)
