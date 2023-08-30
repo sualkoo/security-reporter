@@ -25,7 +25,11 @@
         <Folder Include="ProjectSearch\Enums\" />
     </ItemGroup>
 
-    <ItemGroup>        <None Include="Properties\serviceDependencies.local.json.user" />
+    <ItemGroup>
+			<ProjectReference Include="..\angularapp\angularapp.esproj">
+				<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			</ProjectReference>
+			<None Include="Properties\serviceDependencies.local.json.user" />
         <None Include="webapi.csproj" />
     </ItemGroup>
 
