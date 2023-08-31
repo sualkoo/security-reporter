@@ -2,9 +2,8 @@
 
 public enum Detectability
 {
-    Undefined,
+    TBR,
     Difficult,
     Average,
     Easy,
-    TBR
 }

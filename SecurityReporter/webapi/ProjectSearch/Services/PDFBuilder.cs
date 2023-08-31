@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
 using webapi.ProjectSearch.Models;
 
@@ -14,9 +15,46 @@ public class PdfBuilder : IPdfBuilder
     {
         this.logger = logger;
     }
+    
+    private void CheckRequiredPrograms()
+    {
+        // Check if pdflatex is installed
+        var pdflatexCheckInfo = new ProcessStartInfo("pdflatex", "--version");
+        pdflatexCheckInfo.RedirectStandardOutput = true;
+        pdflatexCheckInfo.UseShellExecute = false;
+
+        var pdflatexCheckProcess = Process.Start(pdflatexCheckInfo);
+        pdflatexCheckProcess.WaitForExit();
+
+        if (pdflatexCheckProcess.ExitCode != 0)
+        {
+            throw new CustomException(StatusCodes.Status500InternalServerError,
+                "PDFLateX is not installed or could not be found on the system. Make sure you have 'texlive-full' installed on the server.");
+        }
+    }
 
     public async Task<FileContentResult> GeneratePdfFromZip(Stream zipFileStream, Guid projectReportId)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return await GeneratePdfWindows(zipFileStream, projectReportId);
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+            return await GeneratePdfUnix(zipFileStream, projectReportId);
+        }
+     
+        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system on serverside.");
+    }
+
+    private async Task<FileContentResult> GeneratePdfWindows(Stream zipFileStream, Guid projectReportId)
+    {
+        throw new CustomException(StatusCodes.Status500InternalServerError, "This feature is not yet supported on this operating system on serverside (Windows is under development). ");
+    }
+    
+    private async Task<FileContentResult> GeneratePdfUnix(Stream zipFileStream, Guid projectReportId)
+    {
+        CheckRequiredPrograms();
         logger.LogDebug("Extracting LateX source to temporary directory");
         var workingDirectory = Directory.GetCurrentDirectory();
         var latexSourceDir = Path.Combine(workingDirectory, "temp", projectReportId.ToString());
@@ -30,11 +68,15 @@ public class PdfBuilder : IPdfBuilder
             " -halt-on-error -interaction=batchmode Main");
         generatePdfInfo.WorkingDirectory = latexSourceDir;
         generatePdfInfo.UseShellExecute = false;
+        generatePdfInfo.RedirectStandardOutput = true;
+        generatePdfInfo.RedirectStandardError = true;
         var generatePdfProcess = Process.Start(generatePdfInfo);
         generatePdfProcess.WaitForExit();
         if (generatePdfProcess.ExitCode != 0)
+        {
             throw new CustomException(StatusCodes.Status500InternalServerError,
-                "Latex sources cannot be compiled to PDF due to errors.");
+                "Latex sources cannot be compiled to PDF due to errors in source code.");
+        }
 
         var pdfBytes = await File.ReadAllBytesAsync(Path.Combine(latexSourceDir, "Main.pdf"));
 
@@ -47,7 +89,8 @@ public class PdfBuilder : IPdfBuilder
             FileDownloadName = $"{projectReportId}.pdf"
         };
     }
-
+    
+    // Use this if you want to generate PDFs using report-builder docker image
     public async Task<FileContentResult> GeneratePdfFromZipDocker(Stream zipFileStream, Guid projectReportId)
     {
         var containerName = "reportbuilder-instance-" + Guid.NewGuid();

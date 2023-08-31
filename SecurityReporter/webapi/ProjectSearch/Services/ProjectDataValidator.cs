@@ -17,27 +17,27 @@ public class ProjectDataValidator : IProjectDataValidator
     {
         var result = true;
 
-        var validationResults = new[]
-        {
-            DataAnnotation.ValidateEntity(projectReport),
-            DataAnnotation.ValidateEntity<DocumentInformation>(projectReport.DocumentInfo),
-            DataAnnotation.ValidateList(projectReport.DocumentInfo.ReportDocumentHistory),
-            DataAnnotation.ValidateEntity<ProjectInformation>(projectReport.ProjectInfo),
-            DataAnnotation.ValidateTimeFrames(projectReport.ProjectInfo),
-            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.ApplicationManager),
-            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessOwner),
-            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessRepresentative),
-            DataAnnotation.ValidateList(projectReport.ProjectInfo.TechnicalContacts),
-            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestLead),
-            DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestCoordinator),
-            DataAnnotation.ValidateList(projectReport.ProjectInfo.PentestTeam),
-            DataAnnotation.ValidateList(projectReport.Findings),
-            DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
-            DataAnnotation.ValidateList(projectReport.ScopeAndProcedures.InScope),
-            DataAnnotation.ValidateList(projectReport.ScopeAndProcedures.OutOfScope),
-            DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
-            DataAnnotation.ValidateList(projectReport.TestingMethodology.ToolsUsed)
-        };
+            var validationResults = new EntityValidationResult[]
+            {
+                DataAnnotation.ValidateEntity<ProjectReportData>(projectReport),
+                DataAnnotation.ValidateEntity<DocumentInformation>(projectReport.DocumentInfo),
+                DataAnnotation.ValidateList<ReportVersionEntry>(projectReport.DocumentInfo.ReportDocumentHistory),
+                DataAnnotation.ValidateEntity<ProjectInformation>(projectReport.ProjectInfo),
+                DataAnnotation.ValidateTimeFrames(projectReport.ProjectInfo),
+                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.ApplicationManager),
+                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessOwner),
+                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.BusinessRepresentative),
+                DataAnnotation.ValidateList<ProjectInformationParticipant>(projectReport.ProjectInfo.TechnicalContacts),
+                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestLead),
+                DataAnnotation.ValidateEntity(projectReport.ProjectInfo.PentestCoordinator),
+                DataAnnotation.ValidateList<ProjectInformationParticipant>(projectReport.ProjectInfo.PentestTeam),
+                DataAnnotation.ValidateList<Finding>(projectReport.Findings),
+                DataAnnotation.ValidateEntity<ScopeAndProcedures>(projectReport.ScopeAndProcedures),
+                //DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.InScope),
+                //DataAnnotation.ValidateList<ScopeProcedure>(projectReport.ScopeAndProcedures.OutOfScope),
+                DataAnnotation.ValidateEntity<TestingMethodology>(projectReport.TestingMethodology),
+                //DataAnnotation.ValidateList<Tool>(projectReport.TestingMethodology.ToolsUsed),
+            };
 
         var errors = new List<string>();
 

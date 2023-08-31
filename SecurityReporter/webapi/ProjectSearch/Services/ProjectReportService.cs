@@ -9,7 +9,6 @@ public class ProjectReportService : IProjectReportService
 {
     private readonly ILogger Logger;
     private IProjectReportService projectReportServiceImplementation;
-    private bool generatePdfs { get; }
     
     public ProjectReportService(IProjectDataParser parser, IDbProjectDataParser dbParser,
         IProjectDataValidator validator, ICosmosService cosmosService, IPdfBuilder pdfBuilder,
@@ -23,13 +22,6 @@ public class ProjectReportService : IProjectReportService
         AzureBlobService = azureBlobService;
         var loggerFactory = LoggerProvider.GetLoggerFactory();
         Logger = loggerFactory.CreateLogger<ProjectDataValidator>();
-        
-        generatePdfs = false;
-        var pdfGenerationAllowed = configuration["GeneratePdfsFromReports"];
-        if (bool.TryParse(pdfGenerationAllowed, out bool generatePdfsValue))
-        {
-            generatePdfs = generatePdfsValue;
-        }
     }
 
     private IProjectDataValidator Validator { get; }
@@ -61,26 +53,24 @@ public class ProjectReportService : IProjectReportService
         newReportData.Id = Guid.NewGuid();
         var result = await CosmosService.AddProjectReport(newReportData);
 
-        if (!result)
-            throw new CustomException(StatusCodes.Status500InternalServerError,
-                "Failed to save ProjectReport to database.");
-
-        try
-        {
-            if (generatePdfs)
+            if (!result)
+            {
+                throw new CustomException(StatusCodes.Status500InternalServerError,
+                    "Failed to save ProjectReport to database.");
+            }
+            
+            try
             {
                 var generatedPdf = await PdfBuilder.GeneratePdfFromZip(file.OpenReadStream(), newReportData.Id);
-                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id,
-                    newReportData.DocumentInfo!.ProjectReportName!);
+                await AzureBlobService.SaveReportPdf(generatedPdf.FileContents, newReportData.Id, newReportData.DocumentInfo!.ProjectReportName!);
+                await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
             }
-            await AzureBlobService.SaveImagesFromZip(newReportData.Id, newReportData.Findings);
-        }
-        catch (Exception)
-        {
-            Logger.LogInformation("PDF generation failed, deleting project report...");
-            await CosmosService.DeleteProjectReports(new List<string> { newReportData.Id.ToString() });
-            throw;
-        }
+            catch (Exception)
+            {
+                Logger.LogInformation("PDF generation failed, deleting project report...");
+                await CosmosService.DeleteProjectReports(new List<string> {newReportData.Id.ToString()});
+                throw;
+            }
 
         return newReportData;
     }

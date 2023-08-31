@@ -2,10 +2,9 @@
 
 public enum Criticality
 {
-    Undefined,
+    TBR,
     High,
     Medium,
     Low,
     Info,
-    TBR
 }

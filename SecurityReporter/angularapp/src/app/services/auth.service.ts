@@ -33,6 +33,7 @@ export class AuthService {
       },
       (error) => {
         console.error('An error occurred:', error);
+        this.isLoggedIn.next(false);
         return false;
       }
     );

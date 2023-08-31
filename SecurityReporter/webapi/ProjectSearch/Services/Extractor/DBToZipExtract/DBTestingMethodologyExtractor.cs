@@ -7,16 +7,23 @@ public static class DbTestingMethodologyExtractor
 {
     public static byte[] ExtractTestingMethodology(TestingMethodology testingMethodology)
     {
-        var toolsUsed = new List<string>();
-        if (testingMethodology.ToolsUsed != null)
-            foreach (var tool in testingMethodology.ToolsUsed)
-                toolsUsed.Add("\t" + tool.ToolName + " & " + tool.Version + " & " + tool.TestType + " & " +
-                              tool.WorkType + " \\\\\n\t\\hline");
+
+        //var toolsUsed = new List<string>();
+        /*(if (testingMethodology.ToolsUsed != null) {
+            foreach(Tool tool in testingMethodology.ToolsUsed)
+            {
+                toolsUsed.Add("\t" + tool.ToolName + " & " + tool.Version + " & " + tool.TestType + " & " + tool.WorkType + " \\\\\n\t\\hline");
+            }
+        }
 
         var attackVectors = new List<string>();
         if (testingMethodology.AttackVectors != null)
-            foreach (var attackVector in testingMethodology.AttackVectors)
+        {
+            foreach(string attackVector in testingMethodology.AttackVectors)
+            {
                 attackVectors.Add("\t\t\\item " + attackVector);
+            }
+        }*/
 
         var testingMethodologyContent =
             @"%----------------------------------------------------------------------------------------
@@ -25,8 +32,7 @@ public static class DbTestingMethodologyExtractor
 % Not needed for Scope document
 % Required for Report document
 \newcommand{\ToolsUsed}{
-	\hline 
-" + string.Join("\n", toolsUsed) + @"
+" + testingMethodology.ToolsUsed + @"
 } 
 
 
@@ -36,12 +42,8 @@ public static class DbTestingMethodologyExtractor
 % Not needed for Scope document
 % Required for Report document
 \newcommand{\AttackVectors}{
+" + testingMethodology.AttackVectors + @"
 
-	Tests on \ReportProjectName included, but were not limited to:
-
-	\begin{itemize}
-" + string.Join(",\n", attackVectors) + @"
-	\end{itemize}
 
 }";
         Console.WriteLine(testingMethodologyContent);

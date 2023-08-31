@@ -1,75 +1,121 @@
 ﻿using System.IO.Compression;
+using System.Text.RegularExpressions;
 using webapi.ProjectSearch.Models.ProjectReport;
 
-namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract;
-
-public class ScopeAndProceduresExtractor
+namespace webapi.ProjectSearch.Services.Extractor.ZipToDBExtract
 {
-    private readonly ZipArchiveEntry currentEntry;
-    private readonly ScopeAndProcedures newScopeAndProcedures = new();
-
-    public ScopeAndProceduresExtractor(ZipArchiveEntry currentEntry)
+    public class ScopeAndProceduresExtractor
     {
-        this.currentEntry = currentEntry;
-    }
+        string worstCaseScenariosReportRegex = @"\\newcommand{\\(WorstCaseScenariosReport)}(?=\{)[\s\S]*?\{([\s\S]*)\}";
+        string worstCaseScenariosScope = @"\\newcommand{\\(WorstCaseScenariosScope)}{([\s\S]*)\}";
+        string outOfScopeRegex = @"\\newcommand{\\(OutOfScope)}{([\s\S]*)\}";
+        string inScopeRegex = @"\\newcommand{\\(InScope)}{([\s\S]*)\}";
+        string environmentRegex = @"\\newcommand{\\(Environment)}\s*{([\s\S]*?)\n\s*}";
+
+
+
+        private ZipArchiveEntry currentEntry;
+        private ScopeAndProcedures newScopeAndProcedures = new ScopeAndProcedures();
+        public ScopeAndProceduresExtractor(ZipArchiveEntry currentEntry)
+        {
+            this.currentEntry = currentEntry;
+        }
 
     public ScopeAndProcedures ExtractScopeAndProcedures()
     {
         string line;
         if (currentEntry == null) throw new ArgumentNullException();
 
-        using (var reader = new StreamReader(currentEntry.Open()))
-        {
-            char[] delimiters = { '{', '}' };
-            while ((line = reader.ReadLine()) != null)
-                if (!string.IsNullOrEmpty(line) && line.Length > 0)
+            using (StreamReader reader = new StreamReader(currentEntry.Open()))
+            {
+                string fileContent = reader.ReadToEnd();
+                Match worstCaseScenarioReportMatch = Regex.Match(fileContent, worstCaseScenariosReportRegex);
+                Match worstCaseScenarioScope = Regex.Match(fileContent, worstCaseScenariosScope);
+                Match outOfScopeMatch = Regex.Match(fileContent, outOfScopeRegex);
+                Match inScopeMatch = Regex.Match(fileContent, inScopeRegex);
+                Match environmentMatch = Regex.Match(fileContent, environmentRegex);
+
+                AssignNewData(worstCaseScenarioReportMatch.Groups[1].ToString(), worstCaseScenarioReportMatch.Groups[2].ToString());
+                AssignNewData(worstCaseScenarioScope.Groups[1].ToString(), worstCaseScenarioScope.Groups[2].ToString());
+                AssignNewData(outOfScopeMatch.Groups[1].ToString(), outOfScopeMatch.Groups[2].ToString());
+                AssignNewData(inScopeMatch.Groups[1].ToString(), inScopeMatch.Groups[2].ToString());
+                AssignNewData(environmentMatch.Groups[1].ToString(), environmentMatch.Groups[2].ToString());
+
+                return newScopeAndProcedures;
+
+
+                char[] delimiters = { '{', '}' };
+                /*while ((line = reader.ReadLine()) != null)
                 {
-                    var splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                    if (splitLine.Length >= 2)
+                    if (!string.IsNullOrEmpty(line) && line.Length > 0)
                     {
-                        if (splitLine[1] == "\\InScope")
-                            ExtractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
-                        else if (splitLine[1] == "\\OutOfScope")
-                            ExtractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
-                        else if (splitLine[1] == "\\WorstCaseScenariosReport")
-                            ExtractWorstCaseReport(reader, newScopeAndProcedures);
-                        else if (splitLine[1] == "\\WorstCaseScenariosScope")
-                            ExtractScopeAndWorstCase(false, true, reader, newScopeAndProcedures);
-                        else if (splitLine[1] == "\\Environment") ExtractEnvironment(reader, newScopeAndProcedures);
+                        string[] splitLine = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                        if (splitLine.Length >= 2)
+                        {
+                            if (splitLine[1] == "InScope")
+                            {
+                                ExtractScopeAndWorstCase(true, false, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "OutOfScope")
+                            {
+                                ExtractScopeAndWorstCase(false, false, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "WorstCaseScenariosReport")
+                            {
+                                ExtractWorstCaseReport(reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "WorstCaseScenariosScope")
+                            {
+                                ExtractScopeAndWorstCase(false, true, reader, newScopeAndProcedures);
+                            }
+                            else if (splitLine[1] == "Environment")
+                            {
+                                ExtractEnvironment(reader, newScopeAndProcedures);
+                            }
+                        }
                     }
-                }
+                }*/
+            }
         }
 
-        return newScopeAndProcedures;
-    }
-
-    private void ExtractScope(string command, string contents)
-    {
-        var splitString = contents.Split('\\', StringSplitOptions.RemoveEmptyEntries);
-        string[] componentSplit;
-        foreach (var splitLine in splitString)
+        private void AssignNewData(string command, string contents)
         {
-            componentSplit = splitLine.Split('&', StringSplitOptions.RemoveEmptyEntries);
-            if (componentSplit.Length >= 2)
+            switch (command)
             {
-                var scopeProcedure = new ScopeProcedure();
-                scopeProcedure.Component = componentSplit[0];
-                scopeProcedure.Detail = componentSplit[1];
-                switch (command)
+                case "InScope":
+                    newScopeAndProcedures.InScope = contents;
+                    break;
+                case "OutOfScope":
+                    newScopeAndProcedures.OutOfScope = contents;
+                    break;
+                case "WorstCaseScenariosReport":
+                    newScopeAndProcedures.WorstCaseScenariosReport = contents;
+                    break;
+                case "WorstCaseScenariosScope":
+                    newScopeAndProcedures.WorstCaseScenarios = contents;
+                    break;
+                case "Environment":
+                    newScopeAndProcedures.Environment = contents;
+                    break;
+            }
+        }
+
+        /*private void ExtractScope(string command, string contents)
+        {
+            string[] splitString = contents.Split('\\', StringSplitOptions.RemoveEmptyEntries);
+            string[] componentSplit;
+            foreach(string splitLine in splitString)
+            {
+                componentSplit = splitLine.Split('&', StringSplitOptions.RemoveEmptyEntries);
+                if (componentSplit.Length >= 2)
                 {
-                    case "InScope":
-                        newScopeAndProcedures.InScope.Add(scopeProcedure);
-                        break;
-                    case "WorstCaseScenariosScope":
-                        newScopeAndProcedures.WorstCaseScenarios.Add(componentSplit[1]);
-                        break;
-                    case "OutOfScope":
-                        newScopeAndProcedures.OutOfScope.Add(scopeProcedure);
-                        break;
+                    ScopeProcedure scopeProcedure = new ScopeProcedure();
+                    scopeProcedure.Component = componentSplit[0];
+                    scopeProcedure.Detail = componentSplit[1];
+                    
                 }
             }
         }
-    }
 
     private static void ExtractScopeAndWorstCase(bool inScope, bool worstCase, StreamReader reader,
         ScopeAndProcedures newScopeAndProcedures)
@@ -149,27 +195,41 @@ public class ScopeAndProceduresExtractor
         string[] delimiters = { "\\item", "," };
         var newEnvironment = new List<string>();
 
-        while ((line = reader.ReadLine()) != null && read)
-            if (!string.IsNullOrEmpty(line) && line.Length > 0)
+            while ((line = reader.ReadLine()) != null && read)
             {
-                var trimmedLine = line.Trim();
-                if (trimmedLine.Length >= 15 && !readItem)
-                    readItem = trimmedLine == "\\begin{itemize}" ? true : false;
-                else if (trimmedLine.Length >= 12 && readItem)
-                    if (trimmedLine == "\\end{itemize}")
+                if (!string.IsNullOrEmpty(line) && line.Length > 0)
+                {
+                    string trimmedLine = line.Trim();
+                    if (trimmedLine.Length >= 15 && !readItem)
                     {
-                        readItem = false;
-                        read = false;
+                        readItem = trimmedLine == "\\begin{itemize}" ? true : false;
                     }
-
-                if (readItem)
-                    if (trimmedLine.Substring(0, 5) == "\\item")
+                    else if (trimmedLine.Length >= 12 && readItem)
                     {
-                        var splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                        if (splitString.Length > 0) newEnvironment.Add(splitString[0].Trim());
+                        if (trimmedLine == "\\end{itemize}")
+                        {
+                            readItem = false;
+                            read = false;
+                        }
                     }
+                    if (readItem)
+                    {
+                        if (trimmedLine.Substring(0, 5) == "\\item")
+                        {
+                            string[] splitString = trimmedLine.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                            if (splitString.Length > 0)
+                            {
+                                newEnvironment.Add(splitString[0].Trim());
+                            }
+                        }
+                    }
+                }
             }
-
-        if (newEnvironment.Count > 0) newScopeAndProcedures.Environment = newEnvironment;
+            if (newEnvironment.Count > 0)
+            {
+                newScopeAndProcedures.Environment = newEnvironment;
+            }
+        }
+    }*/
     }
 }
